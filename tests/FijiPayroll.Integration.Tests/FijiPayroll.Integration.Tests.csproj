@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.102.2" />
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
@@ -29,6 +30,7 @@
     <ProjectReference Include="..\..\src\FijiPayroll.Domain\FijiPayroll.Domain.csproj" />
     <ProjectReference Include="..\..\src\FijiPayroll.Persistence\FijiPayroll.Persistence.csproj" />
     <ProjectReference Include="..\..\src\FijiPayroll.Shared\FijiPayroll.Shared.csproj" />
+    <ProjectReference Include="..\..\src\FijiPayroll.Infrastructure\FijiPayroll.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

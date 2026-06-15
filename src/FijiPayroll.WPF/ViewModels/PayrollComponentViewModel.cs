@@ -158,7 +158,6 @@ public sealed partial class PayrollComponentViewModel : ObservableObject
             var result = await _componentService.ToggleActiveAsync(dto.Id, !dto.IsActive);
             if (result.IsSuccess)
             {
-                dto.IsActive = !dto.IsActive; // Toggle local state
                 await LoadComponentsAsync(); // Refresh list to apply any display logic
             }
             else

@@ -56,7 +56,8 @@ public sealed class PayrollRunRepository : IPayrollRunRepository
     public async Task<bool> AcquireLockAsync(int runId, Guid requestId, string userName, CancellationToken cancellationToken = default)
     {
         Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction? transaction = null;
-        if (!_context.Database.IsInMemory())
+        bool isSqlServer = _context.Database.ProviderName?.Contains("SqlServer", System.StringComparison.OrdinalIgnoreCase) == true;
+        if (isSqlServer)
         {
             transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellationToken);
         }

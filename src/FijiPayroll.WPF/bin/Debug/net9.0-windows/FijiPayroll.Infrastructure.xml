@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FijiPayroll.Infrastructure</name>
+    </assembly>
+    <members>
+        <member name="T:FijiPayroll.Infrastructure.DependencyInjection">
+            <summary>
+            Extension methods to register all Infrastructure layer services (EventBus, FileStorage, PluginLoader)
+            with the dependency injection container. Called from the WPF composition root.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.DependencyInjection.AddInfrastructure(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>Registers infrastructure services and the plugin loader mechanism.</summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.CorrelationContext">
+            <summary>
+            Scoped implementation of ICorrelationContext generating a unique correlation ID per scope.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.CorrelationContext.CorrelationId">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.EventBus">
+            <summary>
+            Thread-safe, in-memory implementation of IEventBus.
+            Combines MediatR notification dispatching with dynamic runtime subscriber support.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.EventBus.#ctor(MediatR.IMediator)">
+            <summary>Initializes the event bus with MediatR.</summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.EventBus.PublishAsync``1(``0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.EventBus.Subscribe``1(System.Func{``0,System.Threading.Tasks.Task})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.FileStorageProvider">
+            <summary>
+            Provides storage capabilities writing files directly to local disk folders
+            or secure network UNC shares, completely isolated from the database tables.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.FileStorageProvider.#ctor(Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.FileStorageProvider})">
+            <summary>Initializes the storage provider, setting up base directories.</summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.FileStorageProvider.SaveFileAsync(System.String,System.IO.Stream,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.FileStorageProvider.GetFileAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.FileStorageProvider.DeleteFileAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ImportEngine">
+            <summary>
+            Implementation of IImportEngine providing Excel template generation, import parsing, validation,
+            and atomic commit operations using ClosedXML.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ImportEngine.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ITenantProvider,FijiPayroll.Application.Common.Interfaces.ICurrentUserService,FijiPayroll.Application.Common.Interfaces.IReferenceDataCache)">
+            <summary>Initializes the import engine.</summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ImportEngine.GenerateTemplateAsync(System.IO.Stream,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ImportEngine.ValidateImportAsync(System.IO.Stream,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ImportEngine.CommitImportAsync(System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.PluginLoader">
+            <summary>
+            Scans the application folder for dynamically loaded assemblies implementing IModulePlugin,
+            registers their dependencies at startup, and coordinates database updates.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.PluginLoader.#ctor(Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.PluginLoader})">
+            <summary>Initializes the plugin loader.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.PluginLoader.LoadedPlugins">
+            <summary>Gets all active, fully registered plugins.</summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.PluginLoader.DiscoverAndRegisterPlugins(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Discovers dll assemblies in the 'Plugins' subdirectory, instantiates plugin entry points,
+            and triggers their dependency registration logic.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.PluginLoader.InitializePluginsDatabaseAsync(System.IServiceProvider)">
+            <summary>
+            Triggers database migrations or seeding steps for all successfully loaded plugins.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.SearchContentData">
+            <summary>
+            Structured data stored in the SearchIndex.Content property.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.SearchContentData.Title">
+            <summary>Display title.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.SearchContentData.Snippet">
+            <summary>Display snippet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.SearchContentData.EmployeeName">
+            <summary>Employee full name.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.SearchContentData.Department">
+            <summary>Department name.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.SearchContentData.Notes">
+            <summary>Notes or branch/position details.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.SearchContentData.Other">
+            <summary>Other details (TIN, FNPF, Email, etc.).</summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.CachedSearchEntry">
+            <summary>
+            Hybrid cache search entry holding both raw entity and pre-parsed search content.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.SearchService">
+            <summary>
+            Multi-tenant fuzzy search service using SQL table + memory cache hybrid indexer.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.SearchService.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,FijiPayroll.Application.Common.Interfaces.ITenantProvider,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.SearchService})">
+            <summary>
+            Initializes a new instance of SearchService.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.SearchService.IndexEntityAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.SearchService.SearchAsync(System.String,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.SearchService.Dispose">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

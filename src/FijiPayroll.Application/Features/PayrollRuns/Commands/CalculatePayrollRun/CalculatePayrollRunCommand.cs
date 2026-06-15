@@ -2,6 +2,7 @@ using FijiPayroll.Application.Common.Models;
 using FijiPayroll.Application.Common.Interfaces;
 using FijiPayroll.Application.Services;
 using FijiPayroll.Domain.Entities.Payroll;
+using FijiPayroll.Domain.Enumerations;
 using FijiPayroll.Domain.Interfaces;
 using FijiPayroll.Shared.Constants;
 using MediatR;

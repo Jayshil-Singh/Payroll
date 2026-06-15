@@ -1,0 +1,63 @@
+<Window x:Class="FijiPayroll.WPF.Views.ErrorRecoveryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="System Error Recovery"
+        Height="480" Width="640"
+        WindowStartupLocation="CenterScreen"
+        Background="#0F1322"
+        Foreground="#FFFFFF"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        BorderBrush="#EF4444"
+        BorderThickness="1.5">
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <!-- Warning Header -->
+            <RowDefinition Height="Auto" />
+            <!-- Friendly Warning Message -->
+            <RowDefinition Height="Auto" />
+            <!-- Technical Expander -->
+            <RowDefinition Height="*" />
+            <!-- Buttons footer -->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Warning Title -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+            <Border Width="40" Height="40" Background="#EF4444" CornerRadius="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="20" Foreground="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <StackPanel Margin="16,0,0,0" VerticalAlignment="Center">
+                <TextBlock Text="UNEXPECTED APPLICATION ERROR" Foreground="#EF4444" FontWeight="Bold" FontSize="16" />
+                <TextBlock Text="Fiji Payroll Enterprise Diagnostics" Foreground="#A0AEC0" FontSize="11" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Description -->
+        <StackPanel Grid.Row="1" Margin="0,0,0,16">
+            <TextBlock Text="An unhandled exception was captured by the global shell monitor. The payroll engine validation context was preserved." TextWrapping="Wrap" FontSize="13" Foreground="#FFFFFF" />
+            <TextBlock Text="You may choose to ignore the error and attempt to continue working, or perform a safe application restart to ensure state consistency." TextWrapping="Wrap" FontSize="12" Foreground="#A0AEC0" Margin="0,6,0,0" />
+        </StackPanel>
+
+        <!-- Expander Technical Details -->
+        <Border Grid.Row="2" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Technical Details (Stack Trace):" Foreground="#A0AEC0" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8" />
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <TextBox x:Name="StackTraceTextBox" IsReadOnly="True" Background="Transparent" Foreground="#F87171" BorderThickness="0" TextWrapping="Wrap" AcceptsReturn="True" FontFamily="Consolas" FontSize="11" />
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <!-- Footer buttons -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Ignore &amp; Continue" Style="{StaticResource SecondaryButton}" Width="150" Height="36" Click="Continue_Click" Margin="0,0,12,0" />
+            <Button Content="Restart Application" Style="{StaticResource ModernButton}" Width="160" Height="36" Background="#EF4444" Click="Restart_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

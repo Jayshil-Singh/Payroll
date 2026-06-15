@@ -57,15 +57,19 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
             .Options;
 
+        var tenantProvider = Substitute.For<ITenantProvider>();
+        tenantProvider.GetCurrentCompanyId().Returns(1);
+
         var interceptor = new AuditableEntityInterceptor(_currentUserAccessor);
-        _context = new ApplicationDbContext(options, interceptor);
+        _context = new ApplicationDbContext(options, interceptor, tenantProvider);
 
         _compRepository = new PayrollComponentRepository(_context);
         _runRepository = new PayrollRunRepository(_context);
         _taxRepository = new TaxBracketRepository(_context);
         _empRepository = new EmployeeRepository(_context);
+        var mockLookupRepo = Substitute.For<IMasterLookupRepository>();
 
-        _unitOfWork = new UnitOfWork(_context, _compRepository, _runRepository, _empRepository, _taxRepository);
+        _unitOfWork = new UnitOfWork(_context, _compRepository, _runRepository, _empRepository, _taxRepository, mockLookupRepo);
 
         _calculationEngine = new PayrollCalculationEngine();
         _validationService = new PayrollValidationService();

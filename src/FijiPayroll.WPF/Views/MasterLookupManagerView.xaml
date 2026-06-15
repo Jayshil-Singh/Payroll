@@ -1,0 +1,236 @@
+<UserControl x:Class="FijiPayroll.WPF.Views.MasterLookupManagerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:FijiPayroll.WPF.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1024"
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <!-- Converter for visibility based on boolean -->
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <!-- Header -->
+            <RowDefinition Height="Auto"/>
+            <!-- Content -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ── 1. Header ── -->
+        <Border Grid.Row="0" BorderBrush="#D1D5DB" BorderThickness="0,0,0,1" Padding="0,0,0,16" Margin="0,0,0,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Master Reference Data Lookup Manager" FontSize="24" FontWeight="SemiBold" Foreground="#111827"/>
+                    <TextBlock Text="Manage departments, banks, branches, and other standard master reference lookup tables." FontSize="13" Foreground="#6B7280" Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <Button Grid.Column="1" 
+                        Content="Refresh" 
+                        Command="{Binding LoadLookupsCommand}"
+                        Background="#1A56DB" Foreground="White" FontWeight="SemiBold"
+                        Padding="16,8" BorderThickness="0" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- ── 2. Content ── -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Panel: Category Selector & DataGrid -->
+            <Grid Grid.Column="0" Margin="0,0,16,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Category Selector -->
+                <Border Grid.Row="0" Background="White" BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="6" Padding="16" Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="Select Reference Category" FontWeight="Medium" FontSize="13" Foreground="#374151" Margin="0,0,0,6"/>
+                        <ComboBox SelectedItem="{Binding SelectedCategory}" 
+                                  ItemsSource="{Binding Categories}"
+                                  Height="36" VerticalContentAlignment="Center" BorderBrush="#D1D5DB" BorderThickness="1"
+                                  FontSize="14" FontWeight="SemiBold">
+                            <ComboBox.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="4"/>
+                                </Style>
+                            </ComboBox.Resources>
+                        </ComboBox>
+                    </StackPanel>
+                </Border>
+
+                <!-- Lookups DataGrid -->
+                <Border Grid.Row="1" Background="White" BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="6" Padding="1">
+                    <DataGrid ItemsSource="{Binding Lookups}" 
+                              SelectedItem="{Binding SelectedLookup}"
+                              AutoGenerateColumns="False" 
+                              IsReadOnly="True" 
+                              HeadersVisibility="Column" 
+                              GridLinesVisibility="Horizontal"
+                              BorderThickness="0" 
+                              Background="Transparent"
+                              RowHeight="40"
+                              ColumnHeaderHeight="38"
+                              SelectionMode="Single"
+                              CanUserAddRows="False">
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#F3F4F6"/>
+                                <Setter Property="Foreground" Value="#374151"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="Padding" Value="12,0"/>
+                                <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                <Setter Property="BorderBrush" Value="#E5E7EB"/>
+                            </Style>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Padding" Value="12,0"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="DataGridCell">
+                                            <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                                                <ContentPresenter VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Code" Binding="{Binding Code}" Width="100"/>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                            <DataGridTextColumn Header="Order" Binding="{Binding DisplayOrder}" Width="70"/>
+                            <DataGridTemplateColumn Header="Status" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="4" Padding="6,2" HorizontalAlignment="Left"
+                                                Background="{Binding IsActive, Converter={StaticResource BoolToVis}}">
+                                            <!-- Fallback if not active -->
+                                            <TextBlock Text="{Binding IsActive, ConverterParameter=status, Converter={StaticResource BoolToVis}}" 
+                                                       FontSize="11" FontWeight="Medium"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Archived" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <CheckBox IsChecked="{Binding IsArchived, Mode=OneWay}" IsEnabled="False" VerticalAlignment="Center"/>
+                                            <TextBlock Text=" Archived" FontSize="11" Foreground="#9CA3AF" VerticalAlignment="Center"
+                                                       Visibility="{Binding IsArchived, Converter={StaticResource BoolToVis}}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+
+            <!-- Right Panel: Form Editor -->
+            <Border Grid.Column="1" Background="White" BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="6" Padding="20">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <!-- Form Header -->
+                        <TextBlock Text="{Binding IsEditing, ConverterParameter='Edit Reference Item:Create New Reference Item', Converter={StaticResource BoolToVis}}" 
+                                   FontSize="18" FontWeight="SemiBold" Foreground="#111827" Margin="0,0,0,16"/>
+
+                        <!-- Code Field (Disabled when editing) -->
+                        <TextBlock Text="Lookup Code" FontWeight="Medium" FontSize="12" Foreground="#374151" Margin="0,0,0,6"/>
+                        <TextBox Text="{Binding Code, UpdateSourceTrigger=PropertyChanged}" 
+                                 IsEnabled="{Binding IsEditing, ConverterParameter=invert, Converter={StaticResource BoolToVis}}"
+                                 Height="36" Padding="8,4" VerticalContentAlignment="Center" BorderBrush="#D1D5DB" BorderThickness="1" Margin="0,0,0,16"/>
+
+                        <!-- Name Field -->
+                        <TextBlock Text="Lookup Name" FontWeight="Medium" FontSize="12" Foreground="#374151" Margin="0,0,0,6"/>
+                        <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" 
+                                 Height="36" Padding="8,4" VerticalContentAlignment="Center" BorderBrush="#D1D5DB" BorderThickness="1" Margin="0,0,0,16"/>
+
+                        <!-- Dates (From / To) -->
+                        <Grid Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                <TextBlock Text="Effective From" FontWeight="Medium" FontSize="12" Foreground="#374151" Margin="0,0,0,6"/>
+                                <DatePicker SelectedDate="{Binding EffectiveFrom}" Height="36"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <TextBlock Text="Effective To" FontWeight="Medium" FontSize="12" Foreground="#374151" Margin="0,0,0,6"/>
+                                <DatePicker SelectedDate="{Binding EffectiveTo}" Height="36"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Display Order -->
+                        <TextBlock Text="Display Order" FontWeight="Medium" FontSize="12" Foreground="#374151" Margin="0,0,0,6"/>
+                        <TextBox Text="{Binding DisplayOrder, UpdateSourceTrigger=PropertyChanged}" 
+                                 Height="36" Padding="8,4" VerticalContentAlignment="Center" BorderBrush="#D1D5DB" BorderThickness="1" Margin="0,0,0,16"/>
+
+                        <!-- Active Toggle -->
+                        <CheckBox Content="Is Active" IsChecked="{Binding IsActive}" FontWeight="Medium" FontSize="13" Foreground="#374151" Margin="0,0,0,20"/>
+
+                        <!-- Action Buttons -->
+                        <Grid Margin="0,0,0,24">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0" 
+                                    Content="Clear / Cancel" 
+                                    Command="{Binding ClearFormCommand}"
+                                    Height="36" Margin="0,0,8,0"
+                                    Background="#E5E7EB" Foreground="#374151" FontWeight="SemiBold" BorderThickness="0" Cursor="Hand"/>
+
+                            <Button Grid.Column="1" 
+                                    Content="Save Changes" 
+                                    Command="{Binding SaveCommand}"
+                                    Height="36" Margin="8,0,0,0"
+                                    Background="#16A34A" Foreground="White" FontWeight="SemiBold" BorderThickness="0" Cursor="Hand"/>
+                        </Grid>
+
+                        <!-- Archiving section (Visible when editing) -->
+                        <Border BorderBrush="#F3F4F6" BorderThickness="0,1,0,0" Padding="0,16,0,0"
+                                Visibility="{Binding IsEditing, Converter={StaticResource BoolToVis}}">
+                            <StackPanel>
+                                <TextBlock Text="Archive Reference Item" FontSize="14" FontWeight="SemiBold" Foreground="#DC2626" Margin="0,0,0,8"/>
+                                <TextBlock Text="Archiving a reference item makes it permanently archived. Enter the reason below:" FontSize="12" Foreground="#6B7280" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                                
+                                <TextBlock Text="Archive Reason" FontWeight="Medium" FontSize="12" Foreground="#374151" Margin="0,0,0,6"/>
+                                <TextBox Text="{Binding ArchiveReason, UpdateSourceTrigger=PropertyChanged}" 
+                                         Height="60" AcceptsReturn="True" TextWrapping="Wrap" Padding="8" VerticalContentAlignment="Top" BorderBrush="#D1D5DB" BorderThickness="1" Margin="0,0,0,16"/>
+
+                                <Button Content="Archive Item" 
+                                        Command="{Binding ArchiveCommand}"
+                                        Height="36" Background="#DC2626" Foreground="White" FontWeight="SemiBold" BorderThickness="0" Cursor="Hand"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

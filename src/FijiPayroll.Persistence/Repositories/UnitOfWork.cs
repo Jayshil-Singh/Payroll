@@ -15,20 +15,53 @@ public sealed class UnitOfWork : IUnitOfWork
     /// <summary>
     /// Initialises a new instance of the <see cref="UnitOfWork"/> class.
     /// </summary>
-    /// <param name="context">The database context.</param>
-    /// <param name="payrollComponents">The payroll component repository.</param>
     public UnitOfWork(
         ApplicationDbContext context,
         IPayrollComponentRepository payrollComponents,
         IPayrollRunRepository payrollRuns,
         IEmployeeRepository employees,
-        ITaxBracketRepository taxBrackets)
+        ITaxBracketRepository taxBrackets,
+        IMasterLookupRepository masterLookups)
+        : this(context, payrollComponents, payrollRuns, employees, taxBrackets, masterLookups, null!, null!)
+    {
+    }
+
+    /// <summary>
+    /// Initialises a new instance of the <see cref="UnitOfWork"/> class with ImportJobs.
+    /// </summary>
+    public UnitOfWork(
+        ApplicationDbContext context,
+        IPayrollComponentRepository payrollComponents,
+        IPayrollRunRepository payrollRuns,
+        IEmployeeRepository employees,
+        ITaxBracketRepository taxBrackets,
+        IMasterLookupRepository masterLookups,
+        IImportJobRepository importJobs)
+        : this(context, payrollComponents, payrollRuns, employees, taxBrackets, masterLookups, importJobs, null!)
+    {
+    }
+
+    /// <summary>
+    /// Initialises a new instance of the <see cref="UnitOfWork"/> class with ImportJobs and SearchIndexes.
+    /// </summary>
+    public UnitOfWork(
+        ApplicationDbContext context,
+        IPayrollComponentRepository payrollComponents,
+        IPayrollRunRepository payrollRuns,
+        IEmployeeRepository employees,
+        ITaxBracketRepository taxBrackets,
+        IMasterLookupRepository masterLookups,
+        IImportJobRepository importJobs,
+        ISearchIndexRepository searchIndexes)
     {
         _context = context;
         PayrollComponents = payrollComponents;
         PayrollRuns = payrollRuns;
         Employees = employees;
         TaxBrackets = taxBrackets;
+        MasterLookups = masterLookups;
+        ImportJobs = importJobs ?? new ImportJobRepository(context);
+        SearchIndexes = searchIndexes ?? new SearchIndexRepository(context);
     }
 
     /// <inheritdoc/>
@@ -42,6 +75,15 @@ public sealed class UnitOfWork : IUnitOfWork
 
     /// <inheritdoc/>
     public ITaxBracketRepository TaxBrackets { get; }
+
+    /// <inheritdoc/>
+    public IMasterLookupRepository MasterLookups { get; }
+
+    /// <inheritdoc/>
+    public IImportJobRepository ImportJobs { get; }
+
+    /// <inheritdoc/>
+    public ISearchIndexRepository SearchIndexes { get; }
 
     /// <inheritdoc/>
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

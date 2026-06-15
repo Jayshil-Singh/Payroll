@@ -1,0 +1,136 @@
+<UserControl x:Class="FijiPayroll.WPF.Views.EmployeeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FijiPayroll.WPF.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800"
+             Background="Transparent">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="{Binding Title}" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Segoe UI Semibold" />
+            <TextBlock Text="Manage enterprise employee profile data, active job categories, and FNPF/residency details." FontSize="14" Foreground="#A0AEC0" Margin="0,4,0,0" />
+        </StackPanel>
+
+        <!-- Action / Filter Bar -->
+        <Border Grid.Row="1" CornerRadius="6" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="12" Margin="0,0,0,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <!-- Search Input Mock -->
+                    <Border CornerRadius="4" BorderBrush="#2D3748" BorderThickness="1" Background="#0F111A" Width="240" Height="32" Padding="8,4">
+                        <Grid>
+                            <TextBlock Text="Search employees by name, code or TIN..." Foreground="#4A5568" VerticalAlignment="Center" IsHitTestVisible="False" Visibility="Visible"/>
+                            <TextBox BorderThickness="0" Background="Transparent" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+                    <!-- Filter Box Mock -->
+                    <Border CornerRadius="4" BorderBrush="#2D3748" BorderThickness="1" Background="#0F111A" Width="140" Height="32" Margin="12,0,0,0" Padding="8,4">
+                        <TextBlock Text="All Departments" Foreground="#A0AEC0" VerticalAlignment="Center"/>
+                    </Border>
+                </StackPanel>
+                <Button Grid.Column="1" Content="+ Add Employee" Width="130" Height="32" Background="#0D99FF" Foreground="#FFFFFF" FontWeight="SemiBold" BorderThickness="0">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="4"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Grid Shell Placeholder -->
+        <Border Grid.Row="2" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Headers -->
+                <Grid Grid.Row="0" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="150" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Code" Width="80" Foreground="#A0AEC0" FontWeight="SemiBold" />
+                    <TextBlock Grid.Column="1" Text="Full Name" Foreground="#A0AEC0" FontWeight="SemiBold" />
+                    <TextBlock Grid.Column="2" Text="Department" Foreground="#A0AEC0" FontWeight="SemiBold" />
+                    <TextBlock Grid.Column="3" Text="Residency" Foreground="#A0AEC0" FontWeight="SemiBold" />
+                    <TextBlock Grid.Column="4" Text="Base Salary" Foreground="#A0AEC0" FontWeight="SemiBold" />
+                </Grid>
+
+                <!-- Mock Rows List -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <!-- Row 1 -->
+                        <Border BorderBrush="#2E3656" BorderThickness="0,0,0,1" Padding="0,12" Height="48">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="150" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="EMP-001" Width="80" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Text="Jayesh Sharma" Foreground="#FFFFFF" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="Engineering" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Text="Resident" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="4" Text="$3,450.00" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <!-- Row 2 -->
+                        <Border BorderBrush="#2E3656" BorderThickness="0,0,0,1" Padding="0,12" Height="48">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="150" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="EMP-002" Width="80" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Text="Sereana Qila" Foreground="#FFFFFF" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="Human Resources" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Text="Resident" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="4" Text="$2,800.00" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <!-- Row 3 -->
+                        <Border BorderBrush="#2E3656" BorderThickness="0,0,0,1" Padding="0,12" Height="48">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="150" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="EMP-003" Width="80" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Text="Mark Henderson" Foreground="#FFFFFF" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="Finance" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Text="Non-Resident" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="4" Text="$4,200.00" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

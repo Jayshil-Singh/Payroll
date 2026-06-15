@@ -19,6 +19,15 @@ public interface IUnitOfWork : IDisposable
     /// <summary>Repository for tax rules operations.</summary>
     ITaxBracketRepository TaxBrackets { get; }
 
+    /// <summary>Repository for master lookup operations.</summary>
+    IMasterLookupRepository MasterLookups { get; }
+
+    /// <summary>Repository for import job operations.</summary>
+    IImportJobRepository ImportJobs { get; }
+
+    /// <summary>Repository for search index operations.</summary>
+    ISearchIndexRepository SearchIndexes { get; }
+
     /// <summary>
     /// Persists all pending changes tracked by EF Core to the database in a single
     /// atomic operation.

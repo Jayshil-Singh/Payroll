@@ -49,12 +49,19 @@ public sealed class PayrollComponentIntegrationTests : IDisposable
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
             .Options;
 
+        var tenantProvider = Substitute.For<ITenantProvider>();
+        tenantProvider.GetCurrentCompanyId().Returns(1);
+
         var interceptor = new AuditableEntityInterceptor(_currentUserAccessor);
-        _context = new ApplicationDbContext(options, interceptor);
+        _context = new ApplicationDbContext(options, interceptor, tenantProvider);
 
         // 3. Setup Persistence Infrastructure
         _repository = new PayrollComponentRepository(_context);
-        _unitOfWork = new UnitOfWork(_context, _repository);
+        var mockRunRepo = Substitute.For<IPayrollRunRepository>();
+        var mockEmpRepo = Substitute.For<IEmployeeRepository>();
+        var mockTaxRepo = Substitute.For<ITaxBracketRepository>();
+        var mockLookupRepo = Substitute.For<IMasterLookupRepository>();
+        _unitOfWork = new UnitOfWork(_context, _repository, mockRunRepo, mockEmpRepo, mockTaxRepo, mockLookupRepo);
     }
 
     [Fact]

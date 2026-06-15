@@ -27,6 +27,18 @@ public static class PermissionConstants
     public const string PayrollReverse   = "Payroll.Reverse";
     public const string PayrollExport    = "Payroll.Export";
 
+    // ─── Payroll Runs ────────────────────────────────────────────────────────────
+    /// <summary>Permission to view payroll run records.</summary>
+    public const string PayrollRunsView    = "PayrollRuns.View";
+    /// <summary>Permission to create new payroll runs.</summary>
+    public const string PayrollRunsCreate  = "PayrollRuns.Create";
+    /// <summary>Permission to edit / manage payroll run state.</summary>
+    public const string PayrollRunsEdit    = "PayrollRuns.Edit";
+    /// <summary>Permission to approve a payroll run.</summary>
+    public const string PayrollRunsApprove = "PayrollRuns.Approve";
+    /// <summary>Permission to post (finalise) a payroll run.</summary>
+    public const string PayrollRunsPost    = "PayrollRuns.Post";
+
     // ─── Payroll Components ─────────────────────────────────────────────────────
     public const string PayrollComponentsView   = "PayrollComponents.View";
     public const string PayrollComponentsCreate = "PayrollComponents.Create";

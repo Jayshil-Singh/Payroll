@@ -64,6 +64,69 @@ internal sealed class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
                .IsRequired()
                .HasDefaultValue(true);
 
+        builder.Property(x => x.EmploymentType)
+               .HasColumnType("nvarchar(50)")
+               .IsRequired()
+               .HasConversion<string>()
+               .HasDefaultValue(Domain.Enumerations.EmploymentType.Permanent);
+
+        builder.Property(x => x.Branch)
+               .HasColumnType("nvarchar(100)")
+               .IsRequired()
+               .HasDefaultValue(string.Empty);
+
+        builder.Property(x => x.Position)
+               .HasColumnType("nvarchar(100)")
+               .IsRequired()
+               .HasDefaultValue(string.Empty);
+
+        builder.Property(x => x.DataQualityScore)
+               .HasColumnType("float")
+               .IsRequired()
+               .HasDefaultValue(0.0);
+
+        builder.Property(x => x.Email)
+               .HasColumnType("nvarchar(255)")
+               .IsRequired()
+               .HasDefaultValue(string.Empty);
+
+        builder.OwnsMany(x => x.PaymentMethods, pm =>
+        {
+            pm.ToTable("EmployeePaymentMethods", "company");
+            pm.WithOwner().HasForeignKey("EmployeeId");
+            pm.Property<int>("Id").ValueGeneratedOnAdd();
+            pm.HasKey("Id");
+
+            pm.Property(p => p.MethodType)
+              .HasColumnType("nvarchar(50)")
+              .IsRequired()
+              .HasConversion<string>();
+
+            pm.Property(p => p.BankName)
+              .HasColumnType("nvarchar(100)")
+              .IsRequired(false);
+
+            pm.Property(p => p.BankAccountNumber)
+              .HasColumnType("nvarchar(50)")
+              .IsRequired(false);
+
+            pm.Property(p => p.BankSortCode)
+              .HasColumnType("nvarchar(20)")
+              .IsRequired(false);
+
+            pm.Property(p => p.MobileNumber)
+              .HasColumnType("nvarchar(20)")
+              .IsRequired(false);
+
+            pm.Property(p => p.Percentage)
+              .HasColumnType("decimal(18,2)")
+              .IsRequired();
+
+            pm.Property(p => p.IsPrimary)
+              .IsRequired()
+              .HasDefaultValue(true);
+        });
+
         // Soft Delete
         builder.Property(x => x.IsDeleted)
                .IsRequired()

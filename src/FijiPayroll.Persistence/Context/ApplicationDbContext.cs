@@ -3,6 +3,8 @@ using FijiPayroll.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Reflection;
+using FijiPayroll.Application.Common.Interfaces;
+using FijiPayroll.Domain.Entities.Audit;
 
 namespace FijiPayroll.Persistence.Context;
 
@@ -13,7 +15,12 @@ namespace FijiPayroll.Persistence.Context;
 public class ApplicationDbContext : DbContext
 {
     private readonly AuditableEntityInterceptor? _auditableEntityInterceptor;
+    private readonly AuditLogInterceptor? _auditLogInterceptor;
+    private readonly ITenantProvider? _tenantProvider;
     private IDbContextTransaction? _currentTransaction;
+
+    /// <summary>Gets the current resolved company tenant ID.</summary>
+    public int CurrentCompanyId => _tenantProvider?.GetCurrentCompanyId() ?? 1;
 
     /// <summary>
     /// Initialises a new instance of the <see cref="ApplicationDbContext"/> class.
@@ -26,22 +33,41 @@ public class ApplicationDbContext : DbContext
     }
 
     /// <summary>
-    /// Initialises a new instance of the <see cref="ApplicationDbContext"/> class with interceptor.
+    /// Initialises a new instance of the <see cref="ApplicationDbContext"/> class with interceptors and tenant provider.
     /// </summary>
-    /// <param name="options">Context configuration options.</param>
-    /// <param name="auditableEntityInterceptor">The interceptor for stamping audit fields.</param>
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
-        AuditableEntityInterceptor auditableEntityInterceptor)
+        AuditableEntityInterceptor auditableEntityInterceptor,
+        ITenantProvider tenantProvider)
+        : this(options, auditableEntityInterceptor, null!, tenantProvider)
+    {
+    }
+
+    /// <summary>
+    /// Initialises a new instance of the <see cref="ApplicationDbContext"/> class with interceptors, audit interceptor, and tenant provider.
+    /// </summary>
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options,
+        AuditableEntityInterceptor auditableEntityInterceptor,
+        AuditLogInterceptor auditLogInterceptor,
+        ITenantProvider tenantProvider)
         : base(options)
     {
         _auditableEntityInterceptor = auditableEntityInterceptor;
+        _auditLogInterceptor = auditLogInterceptor;
+        _tenantProvider = tenantProvider;
     }
 
     /// <summary>
     /// Gets or sets the payroll components DbSet.
     /// </summary>
     public DbSet<PayrollComponent> PayrollComponents => Set<PayrollComponent>();
+
+    /// <summary>Gets or sets the companies DbSet.</summary>
+    public DbSet<Company> Companies => Set<Company>();
+
+    /// <summary>Gets or sets the master lookups DbSet.</summary>
+    public DbSet<MasterLookup> MasterLookups => Set<MasterLookup>();
 
     /// <summary>Gets or sets the employees DbSet.</summary>
     public DbSet<FijiPayroll.Domain.Entities.Company.Employee> Employees => Set<FijiPayroll.Domain.Entities.Company.Employee>();
@@ -63,6 +89,18 @@ public class ApplicationDbContext : DbContext
 
     /// <summary>Gets or sets the payroll run state histories DbSet.</summary>
     public DbSet<FijiPayroll.Domain.Entities.Payroll.PayrollRunStateHistory> PayrollRunStateHistories => Set<FijiPayroll.Domain.Entities.Payroll.PayrollRunStateHistory>();
+
+    /// <summary>Gets or sets the audit logs DbSet.</summary>
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+
+    /// <summary>Gets or sets the entity events (transactional outbox) DbSet.</summary>
+    public DbSet<EntityEvent> EntityEvents => Set<EntityEvent>();
+
+    /// <summary>Gets or sets the import jobs DbSet.</summary>
+    public DbSet<ImportJob> ImportJobs => Set<ImportJob>();
+
+    /// <summary>Gets or sets the search indexes DbSet.</summary>
+    public DbSet<SearchIndex> SearchIndexes => Set<SearchIndex>();
 
     /// <summary>
     /// Begins a database transaction asynchronously.
@@ -152,9 +190,9 @@ public class ApplicationDbContext : DbContext
         var entries = ChangeTracker.Entries<FijiPayroll.Domain.Entities.Payroll.PayrollRunEmployeeTrace>();
         foreach (var entry in entries)
         {
-            if (entry.State == EntityState.Modified)
+            if (entry.State == EntityState.Modified || entry.State == EntityState.Deleted)
             {
-                throw new InvalidOperationException("TRACE_RULE_VIOLATION: Updates or modifications to PayrollRunEmployeeTrace records are strictly prohibited.");
+                throw new InvalidOperationException("TRACE_RULE_VIOLATION: Updates, modifications, or deletions of PayrollRunEmployeeTrace records are strictly prohibited.");
             }
         }
     }
@@ -167,6 +205,11 @@ public class ApplicationDbContext : DbContext
             optionsBuilder.AddInterceptors(_auditableEntityInterceptor);
         }
 
+        if (_auditLogInterceptor is not null)
+        {
+            optionsBuilder.AddInterceptors(_auditLogInterceptor);
+        }
+
         base.OnConfiguring(optionsBuilder);
     }
 
@@ -177,5 +220,30 @@ public class ApplicationDbContext : DbContext
 
         // Apply all entity configurations in the assembly
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        // Enforce global multi-tenancy query filters
+        modelBuilder.Entity<FijiPayroll.Domain.Entities.Company.Employee>()
+            .HasQueryFilter(e => e.CompanyId == CurrentCompanyId && !e.IsDeleted);
+
+        modelBuilder.Entity<FijiPayroll.Domain.Entities.Company.PayrollComponent>()
+            .HasQueryFilter(pc => pc.CompanyId == CurrentCompanyId && !pc.IsDeleted);
+
+        modelBuilder.Entity<FijiPayroll.Domain.Entities.Company.MasterLookup>()
+            .HasQueryFilter(ml => ml.CompanyId == CurrentCompanyId && !ml.IsDeleted);
+
+        modelBuilder.Entity<FijiPayroll.Domain.Entities.Payroll.PayrollRun>()
+            .HasQueryFilter(pr => pr.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<AuditLog>()
+            .HasQueryFilter(al => al.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<EntityEvent>()
+            .HasQueryFilter(ee => ee.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<ImportJob>()
+            .HasQueryFilter(ij => ij.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<SearchIndex>()
+            .HasQueryFilter(si => si.CompanyId == CurrentCompanyId);
     }
 }

@@ -1,8 +1,10 @@
 using FijiPayroll.Domain.Interfaces;
+using FijiPayroll.Application.Common.Interfaces;
 using FijiPayroll.Persistence.Context;
 using FijiPayroll.Persistence.Interceptors;
 using FijiPayroll.Persistence.Repositories;
 using FijiPayroll.Persistence.Seeders;
+using FijiPayroll.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,9 +27,10 @@ public static class DependencyInjection
         this IServiceCollection services,
         string connectionString)
     {
-        // Register the audit interceptor. It depends on ICurrentUserAccessor, which is
+        // Register the audit interceptors. They depend on ICurrentUserAccessor, which is
         // registered in the Infrastructure layer.
         services.AddScoped<AuditableEntityInterceptor>();
+        services.AddScoped<AuditLogInterceptor>();
 
         // Register the EF Core DbContext using SQL Server
         services.AddDbContext<ApplicationDbContext>((sp, options) =>
@@ -40,6 +43,9 @@ public static class DependencyInjection
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         services.AddScoped<IPayrollRunRepository, PayrollRunRepository>();
         services.AddScoped<ITaxBracketRepository, TaxBracketRepository>();
+        services.AddScoped<IMasterLookupRepository, MasterLookupRepository>();
+        services.AddScoped<IImportJobRepository, ImportJobRepository>();
+        services.AddScoped<ISearchIndexRepository, SearchIndexRepository>();
 
         // Register the Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -48,6 +54,9 @@ public static class DependencyInjection
         services.AddScoped<PayrollComponentSeeder>();
         services.AddScoped<TaxBracketSeeder>();
         services.AddScoped<EmployeeSeeder>();
+
+        // Register the Reference Data Cache
+        services.AddSingleton<IReferenceDataCache, ReferenceDataCache>();
 
         return services;
     }

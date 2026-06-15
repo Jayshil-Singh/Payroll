@@ -1,0 +1,254 @@
+<Window x:Class="FijiPayroll.WPF.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:FijiPayroll.WPF.ViewModels"
+        xmlns:sec="clr-namespace:FijiPayroll.WPF.Helpers"
+        mc:Ignorable="d"
+        Title="Fiji Enterprise Payroll System" 
+        Height="800" Width="1200"
+        MinHeight="600" MinWidth="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource BrushBgDeep}"
+        FontFamily="{DynamicResource FontMain}">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- Sidebar Panel Column -->
+            <ColumnDefinition Width="260" />
+            <!-- Workspace Content Column -->
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- LEFT SIDEBAR: Navigation Panel -->
+        <Grid Grid.Column="0" Background="{DynamicResource BrushBgSidebar}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Brand Logo & Header -->
+            <StackPanel Grid.Row="0" Margin="24,32,24,32">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Styled Fiji Blue Emblem -->
+                    <Border Width="36" Height="36" Background="{DynamicResource BrushAccent}" CornerRadius="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="FJ" Foreground="#FFFFFF" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    
+                    <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="FIJI PAYROLL" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" FontSize="16" />
+                        <TextBlock Text="Enterprise Suite" Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" Margin="0,1,0,0" />
+                    </StackPanel>
+                </Grid>
+                
+                <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Margin="0,20,0,0" />
+            </StackPanel>
+
+            <!-- Navigation Links -->
+            <StackPanel Grid.Row="1" Margin="8,0,8,0">
+                
+                <!-- Dashboard Nav Button -->
+                <RadioButton Style="{StaticResource SidebarNavItem}" IsChecked="True" Command="{Binding NavigateDashboardCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Width="24" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" />
+                        <TextBlock Text="Dashboard" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+
+                <!-- Employee Module Nav Button -->
+                <RadioButton Style="{StaticResource SidebarNavItem}" Command="{Binding NavigateEmployeeCommand}" Visibility="{Binding HasEmployeeAccess, Converter={StaticResource BoolToVisConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE716;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Width="24" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" />
+                        <TextBlock Text="Employees" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+
+                <!-- Payroll Calculation Module Nav Button -->
+                <RadioButton Style="{StaticResource SidebarNavItem}" Command="{Binding NavigatePayrollCommand}" Visibility="{Binding HasPayrollAccess, Converter={StaticResource BoolToVisConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE8A5;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Width="24" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" />
+                        <TextBlock Text="Payroll Cycles" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+
+                <!-- Setup / Configuration Wizard Nav Button -->
+                <RadioButton Style="{StaticResource SidebarNavItem}" Command="{Binding NavigateSetupCommand}" Visibility="{Binding HasSetupAccess, Converter={StaticResource BoolToVisConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Width="24" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" />
+                        <TextBlock Text="Component Setup" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+
+                <!-- Statutory Reports / Exports Nav Button -->
+                <RadioButton Style="{StaticResource SidebarNavItem}" Command="{Binding NavigateReportsCommand}" Visibility="{Binding HasReportsAccess, Converter={StaticResource BoolToVisConverter}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE9F9;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Width="24" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" />
+                        <TextBlock Text="Statutory Reports" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+
+                <!-- System Admin Settings Nav Button - Secured via Attached Properties -->
+                <RadioButton Style="{StaticResource SidebarNavItem}" Command="{Binding NavigateAdminCommand}"
+                             sec:Security.RequiredPermission="AdminAccess"
+                             sec:Security.RestrictionAction="Hide">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Width="24" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" />
+                        <TextBlock Text="Administration" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+
+            </StackPanel>
+
+            <!-- User Session Details Footer -->
+            <Border Grid.Row="2" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,1,0,0" Padding="16" Background="#0A0E17">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border Width="36" Height="36" CornerRadius="18" Background="#232B45" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="16" Foreground="{DynamicResource BrushTextSecondary}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    
+                    <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="HR Admin Account" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" FontSize="12" />
+                        <TextBlock Text="admin@fijipayroll.gov.fj" Foreground="{DynamicResource BrushTextSecondary}" FontSize="10" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- RIGHT WORKSPACE CONTENT AREA -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <!-- Header Status Topbar -->
+                <RowDefinition Height="Auto" />
+                <!-- Page Content Region -->
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Header Panel -->
+            <Border Grid.Row="0" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Padding="24,12" Background="{DynamicResource BrushBgDeep}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <!-- Navigation Back/Forward & Breadcrumbs -->
+                        <ColumnDefinition Width="*" />
+                        <!-- Theme Toggle and Database Sync Info -->
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Left: Navigation History & Breadcrumbs -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Back button -->
+                        <Button Command="{Binding GoBackCommand}" Content="&#xE0C4;" ToolTip="Go Back" FontFamily="Segoe MDL2 Assets" Background="Transparent" Foreground="{DynamicResource BrushTextPrimary}" BorderThickness="0" Width="32" Height="32" Cursor="Hand" Margin="0,0,4,0"/>
+                        <!-- Forward button -->
+                        <Button Command="{Binding GoForwardCommand}" Content="&#xE0C5;" ToolTip="Go Forward" FontFamily="Segoe MDL2 Assets" Background="Transparent" Foreground="{DynamicResource BrushTextPrimary}" BorderThickness="0" Width="32" Height="32" Cursor="Hand" Margin="0,0,16,0"/>
+                        
+                        <!-- Derived Breadcrumbs -->
+                        <TextBlock Text="{Binding BreadcrumbPath}" Foreground="{DynamicResource BrushTextSecondary}" FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Right: Theme Switcher & Connection Details -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Theme switch button -->
+                        <Button Command="{Binding ToggleThemeCommand}" Content="&#xE706;" ToolTip="Toggle Theme Mode" FontFamily="Segoe MDL2 Assets" Background="Transparent" Foreground="{DynamicResource BrushTextPrimary}" BorderThickness="0" Width="32" Height="32" Cursor="Hand" Margin="0,0,20,0"/>
+
+                        <!-- Connection Status -->
+                        <Ellipse Width="8" Height="8" Fill="{DynamicResource BrushAlertGreen}" VerticalAlignment="Center" />
+                        <TextBlock Text="FRCS Sync Active" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="8,0,20,0" VerticalAlignment="Center" />
+
+                        <TextBlock Text="Mode: " Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" VerticalAlignment="Center" />
+                        <TextBlock Text="Deterministic" Foreground="{DynamicResource BrushAccent}" FontWeight="Bold" FontSize="12" Margin="4,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Dynamic Workspace Content Region -->
+            <Grid Grid.Row="1" Background="{DynamicResource BrushBgDeep}">
+                <!-- Data Templates defined in App resources automatically render the correct view for the CurrentViewModel -->
+                <ContentControl Content="{Binding CurrentViewModel}" />
+            </Grid>
+        </Grid>
+
+        <!-- SYSTEM TOAST FLOATING POPUPS -->
+        <ItemsControl x:Name="ToastContainer" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,24,24" Panel.ZIndex="100" Width="360">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderThickness="1" BorderBrush="{DynamicResource BrushBorder}" Margin="0,10,0,0" Padding="16" SnapsToDevicePixels="True">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- Left Status Indicator Bar -->
+                            <Border Grid.Column="0" Width="4" CornerRadius="2" Margin="0,0,12,0" Background="{Binding Path=TypeBrush}" />
+                            
+                            <!-- Content Details -->
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="{Binding Title}" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" FontSize="13" />
+                                <TextBlock Text="{Binding Message}" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="0,4,0,0" TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <!-- Close Command Button -->
+                            <Button Grid.Column="2" Content="&#xE711;" FontFamily="Segoe MDL2 Assets" Background="Transparent" Foreground="{DynamicResource BrushTextSecondary}" BorderThickness="0" Cursor="Hand" Click="DismissToast_Click" VerticalAlignment="Top" Margin="8,0,0,0" FontSize="10" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- CUSTOM DIALOG MODAL LAYER OVERLAY -->
+        <Grid x:Name="DialogOverlay" Grid.ColumnSpan="2" Background="#C0090D1A" Visibility="Collapsed" Panel.ZIndex="200" MouseDown="DialogOverlay_MouseDown">
+            <Border CornerRadius="12" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Width="450" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="24">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Header -->
+                    <TextBlock x:Name="DialogTitle" Grid.Row="0" Text="System Confirmation" Style="{StaticResource Header2}" Margin="0,0,0,12" />
+
+                    <!-- Message text -->
+                    <TextBlock x:Name="DialogMessage" Grid.Row="1" Text="Are you sure you want to perform this operation?" TextWrapping="Wrap" FontSize="14" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,24" />
+
+                    <!-- Action buttons -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="DialogCancelButton" Content="Cancel" Style="{StaticResource SecondaryButton}" Width="90" Click="DialogCancel_Click" Margin="0,0,12,0" />
+                        <Button x:Name="DialogOkButton" Content="Confirm" Style="{StaticResource ModernButton}" Width="100" Click="DialogOk_Click" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- GLOBAL LOADING STATE SCREEN INDICATOR OVERLAY -->
+        <Grid x:Name="LoadingOverlay" Grid.ColumnSpan="2" Background="#E00B0E18" Visibility="{Binding IsLoadingGlobal, Converter={StaticResource BoolToVisConverter}}" Panel.ZIndex="300">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                
+                <!-- Fluent Spin Ring / Loading dots custom style -->
+                <Grid Width="50" Height="50" Margin="0,0,0,20">
+                    <ProgressBar IsIndeterminate="True" Width="40" Height="40" Background="Transparent" Foreground="{DynamicResource BrushAccent}" BorderThickness="0"/>
+                </Grid>
+                
+                <!-- Loading text details -->
+                <TextBlock Text="{Binding LoadingMessageGlobal, TargetNullValue='Processing payroll cycle, please wait...'}" Foreground="{DynamicResource BrushTextPrimary}" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                <TextBlock Text="Executing deterministic Fiji tax &amp; FNPF rules engine" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="0,6,0,0" HorizontalAlignment="Center" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

@@ -24,7 +24,7 @@ public sealed class PayrollValidationService
 
         if (context.TaxRules == null || context.TaxRules.Count == 0)
         {
-            errors.Add($"Statutory configuration error: No active tax rules snapshot loaded for tax version '{context.TaxVersion}'.");
+            errors.Add($"TAX_ENGINE_ERROR: No active tax rules snapshot loaded for tax version '{context.TaxVersion}'.");
         }
 
         if (context.Employees == null || context.Employees.Count == 0)

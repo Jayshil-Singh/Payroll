@@ -1,29 +1,65 @@
+using FijiPayroll.WPF.Infrastructure;
+using FijiPayroll.WPF.Services;
 using FijiPayroll.WPF.ViewModels;
 using FijiPayroll.WPF.Views;
 using Microsoft.Extensions.DependencyInjection;
+using FijiPayroll.Application.Common.Interfaces;
 
 namespace FijiPayroll.WPF;
 
 /// <summary>
 /// Dependency Injection registration for the WPF presentation layer.
-/// Registers all views and view models in the service collection.
+/// Registers all views, view models, UI services, and infrastructure monitors.
 /// </summary>
 public static class DependencyInjection
 {
     /// <summary>
-    /// Registers WPF view models and views in the DI container.
+    /// Registers WPF view models, views, UI services, and hardening infrastructure
+    /// into the DI container.
     /// </summary>
-    /// <param name="services">The service collection to register into.</param>
-    /// <returns>The same <see cref="IServiceCollection"/> for chaining.</returns>
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
-        // Register ViewModels
+        // ── Core UI Services (Singletons) ────────────────────────────────────
+        services.AddSingleton<INavigationService, NavigationService>();
+        services.AddSingleton<INotificationService, NotificationService>();
+        services.AddSingleton<IDialogService, DialogService>();
+        services.AddSingleton<ILoadingService, LoadingService>();
+        services.AddSingleton<IApplicationStateStore, ApplicationStateStore>();
+        services.AddSingleton<ITenantProvider, WpfTenantProvider>();
+
+        // ILogBuffer is registered in App.xaml.cs before BuildServiceProvider (needs shared instance)
+        // so we do not re-register it here.
+
+        // ── Infrastructure Monitors (Singletons) ─────────────────────────────
+        // PriorityDispatcherQueue is instantiated in App.xaml.cs and passed in directly.
+        // The following are registered via App.xaml.cs before AddPresentation:
+        //   - PriorityDispatcherQueue
+        //   - SystemHealthMonitor
+        //   - SystemIntegrityValidator
+        //   - MemorySmoothingScheduler
+        //   - ViewModelLeakDetector
+
+        // ── ViewModels (Main & Module Shells) ────────────────────────────────
+        services.AddSingleton<MainViewModel>();
+        services.AddTransient<DashboardViewModel>();
+        services.AddTransient<EmployeeViewModel>();
+        services.AddTransient<PayrollViewModel>();
+        services.AddTransient<SetupViewModel>();
+        services.AddTransient<ReportsViewModel>();
+        services.AddTransient<AdminViewModel>();
+        services.AddTransient<LogViewerViewModel>();
+
+        // Existing feature ViewModels
         services.AddTransient<PayrollComponentViewModel>();
         services.AddTransient<PayrollRunViewModel>();
+        services.AddTransient<MasterLookupManagerViewModel>();
 
-        // Register Views
+        // ── Views ────────────────────────────────────────────────────────────
+        services.AddTransient<MainWindow>();
         services.AddTransient<PayrollComponentView>();
         services.AddTransient<PayrollRunView>();
+        services.AddTransient<MasterLookupManagerView>();
+        services.AddTransient<LogViewerView>();
 
         return services;
     }

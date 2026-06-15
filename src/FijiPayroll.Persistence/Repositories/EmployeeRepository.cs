@@ -38,6 +38,14 @@ public sealed class EmployeeRepository : IEmployeeRepository
     }
 
     /// <inheritdoc />
+    public async Task<Employee?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Employees
+            .Include(e => e.PaymentMethods) // Include owned payment methods collection
+            .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public async Task AddAsync(Employee employee, CancellationToken cancellationToken = default)
     {
         await _context.Employees.AddAsync(employee, cancellationToken);

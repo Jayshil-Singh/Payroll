@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FijiPayroll.Shared</name>
+    </assembly>
+    <members>
+        <member name="T:FijiPayroll.Shared.Constants.AppConstants">
+            <summary>
+            Global application-level constants used across all layers.
+            </summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.ApplicationName">
+            <summary>The application display name.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.ApplicationVersion">
+            <summary>The application version.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.DefaultCurrency">
+            <summary>The default currency used in Fiji.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.WorkingDaysPerYear">
+            <summary>Number of working days assumed per year for daily rate calculations.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.DefaultHoursPerWeek">
+            <summary>Default standard working hours per week.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.DefaultDaysPerWeek">
+            <summary>Default standard working days per week.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.DefaultOvertimeMultiplier">
+            <summary>Default overtime rate multiplier (time and a half).</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.DoubleTimeMultiplier">
+            <summary>Double-time multiplier for public holidays.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.MoneyStoragePrecision">
+            <summary>Decimal precision stored in the database for monetary values.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.MoneyDisplayPrecision">
+            <summary>Decimal precision displayed for monetary values.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.LeaveAccrualPrecision">
+            <summary>Decimal precision for leave accrual stored values.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.AccountLockoutMinutes">
+            <summary>Maximum account lockout minutes after failed login attempts.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.MaxFailedLoginAttempts">
+            <summary>Maximum consecutive failed login attempts before lockout.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.LogFilePath">
+            <summary>Log file path pattern.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.LicenseFileExtension">
+            <summary>License file extension.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.DefaultPageSize">
+            <summary>Page size for paginated queries.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.AppConstants.MaxExportRecords">
+            <summary>Maximum records for an export operation.</summary>
+        </member>
+        <member name="T:FijiPayroll.Shared.Constants.FijiTaxConstants">
+            <summary>
+            Fiji-specific tax constants sourced from FRCS regulations.
+            These values must be reviewed and updated at the start of each fiscal year.
+            </summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.FnpfEmployeeRatePercent">
+            <summary>FNPF employee contribution rate as a percentage (8%).</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.FnpfEmployerRatePercent">
+            <summary>FNPF employer contribution rate as a percentage (10%).</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.ResidentTaxFreeThreshold">
+            <summary>Upper bound of the 0% PAYE tax bracket for residents (FJD).</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.ResidentBracket18From">
+            <summary>Lower bound of the 18% PAYE tax bracket for residents (FJD).</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.ResidentBracket18To">
+            <summary>Upper bound of the 18% PAYE tax bracket for residents (FJD).</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.ResidentRate18">
+            <summary>Marginal rate for the 18% bracket (expressed as a fraction).</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.ResidentBracket20From">
+            <summary>Lower bound of the 20% PAYE tax bracket for residents (FJD).</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.ResidentRate20">
+            <summary>Marginal rate for the 20% bracket (expressed as a fraction).</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.NonResidentFlatRate">
+            <summary>Flat PAYE rate applied to all non-resident income (20%).</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.WeeklyPeriodsPerYear">
+            <summary>Number of weekly pay periods in a year.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.FortnightlyPeriodsPerYear">
+            <summary>Number of fortnightly pay periods in a year.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.BiMonthlyPeriodsPerYear">
+            <summary>Number of bi-monthly (semi-monthly) pay periods in a year.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.MonthlyPeriodsPerYear">
+            <summary>Number of monthly pay periods in a year.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.MinimumAnnualLeaveDays">
+            <summary>Minimum statutory annual leave entitlement in days per year (Employment Relations Act).</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.MinimumSickLeaveDays">
+            <summary>Minimum statutory sick leave entitlement in days per year.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.AnnualLeaveAccrualRatePerDay">
+            <summary>Daily leave accrual rate for annual leave (10 days / 260 working days).</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.AnnualLeaveLoadingPercent">
+            <summary>Annual leave loading percentage when leave is taken (if configured).</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.PayeComponentCode">
+            <summary>System component code for PAYE tax deduction.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.FnpfEmployeeComponentCode">
+            <summary>System component code for FNPF employee contribution.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.FnpfEmployerComponentCode">
+            <summary>System component code for FNPF employer contribution.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.FijiTaxConstants.BasicSalaryComponentCode">
+            <summary>System component code for basic salary/wage.</summary>
+        </member>
+        <member name="T:FijiPayroll.Shared.Constants.PermissionConstants">
+            <summary>
+            Fine-grained permission codes used throughout the RBAC system.
+            Format: [Module].[Action]
+            </summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.PermissionConstants.PayrollRunsView">
+            <summary>Permission to view payroll run records.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.PermissionConstants.PayrollRunsCreate">
+            <summary>Permission to create new payroll runs.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.PermissionConstants.PayrollRunsEdit">
+            <summary>Permission to edit / manage payroll run state.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.PermissionConstants.PayrollRunsApprove">
+            <summary>Permission to approve a payroll run.</summary>
+        </member>
+        <member name="F:FijiPayroll.Shared.Constants.PermissionConstants.PayrollRunsPost">
+            <summary>Permission to post (finalise) a payroll run.</summary>
+        </member>
+        <member name="T:FijiPayroll.Shared.Extensions.DecimalExtensions">
+            <summary>
+            Extension methods for <see cref="T:System.Decimal"/> values, providing
+            Fiji payroll-specific formatting and rounding utilities.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Extensions.DecimalExtensions.RoundMoney(System.Decimal)">
+            <summary>
+            Rounds a monetary value to 2 decimal places using midpoint rounding
+            away from zero, as required by the FRCS rounding policy.
+            </summary>
+            <param name="value">The monetary amount.</param>
+            <returns>Amount rounded to 2 decimal places.</returns>
+        </member>
+        <member name="M:FijiPayroll.Shared.Extensions.DecimalExtensions.RoundMoneyStorage(System.Decimal)">
+            <summary>
+            Rounds a monetary value to 4 decimal places for internal storage,
+            used for gross pay and intermediate calculations.
+            </summary>
+            <param name="value">The monetary amount.</param>
+            <returns>Amount rounded to 4 decimal places.</returns>
+        </member>
+        <member name="M:FijiPayroll.Shared.Extensions.DecimalExtensions.RoundLeaveAccrual(System.Decimal)">
+            <summary>
+            Rounds a leave accrual quantity to 4 decimal places.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Extensions.DecimalExtensions.ToFjdString(System.Decimal)">
+            <summary>
+            Formats a decimal as a Fiji Dollar currency string (e.g., "$1,234.56").
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Extensions.DecimalExtensions.IsPositive(System.Decimal)">
+            <summary>
+            Returns <c>true</c> if the value is greater than zero.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Extensions.DecimalExtensions.IsZeroOrNegative(System.Decimal)">
+            <summary>
+            Returns <c>true</c> if the value is zero or negative.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Extensions.DecimalExtensions.ToFraction(System.Decimal)">
+            <summary>
+            Converts a percentage value (e.g., 8.0) to its decimal fraction equivalent (0.08).
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Shared.Guards.Guard">
+            <summary>
+            Provides defensive guard clauses to validate arguments and state
+            before executing business logic. Throws standard .NET exceptions
+            with descriptive messages without relying on external libraries.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Guards.Guard.AgainstNull``1(``0,System.String)">
+            <summary>
+            Throws <see cref="T:System.ArgumentNullException"/> if <paramref name="value"/> is <c>null</c>.
+            </summary>
+            <typeparam name="T">Any reference type.</typeparam>
+            <param name="value">The value to check.</param>
+            <param name="paramName">Automatically inferred from the caller expression.</param>
+            <returns>The non-null value.</returns>
+        </member>
+        <member name="M:FijiPayroll.Shared.Guards.Guard.AgainstNullOrWhiteSpace(System.String,System.String)">
+            <summary>
+            Throws <see cref="T:System.ArgumentException"/> if <paramref name="value"/> is <c>null</c>,
+            empty, or consists only of white-space characters.
+            </summary>
+            <param name="value">The string value to check.</param>
+            <param name="paramName">Automatically inferred from the caller expression.</param>
+            <returns>The trimmed, non-empty string.</returns>
+        </member>
+        <member name="M:FijiPayroll.Shared.Guards.Guard.AgainstNegativeOrZero(System.Decimal,System.String)">
+            <summary>
+            Throws <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/>
+            is less than or equal to zero.
+            </summary>
+            <param name="value">The decimal value to check.</param>
+            <param name="paramName">Automatically inferred from the caller expression.</param>
+            <returns>The validated positive value.</returns>
+        </member>
+        <member name="M:FijiPayroll.Shared.Guards.Guard.AgainstNegative(System.Decimal,System.String)">
+            <summary>
+            Throws <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/>
+            is less than zero.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Guards.Guard.AgainstMaxLength(System.String,System.Int32,System.String)">
+            <summary>
+            Throws <see cref="T:System.ArgumentOutOfRangeException"/> if <paramref name="value"/>
+            exceeds <paramref name="maxLength"/> characters.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Guards.Guard.AgainstInvalidEnum``1(``0,System.String)">
+            <summary>
+            Throws <see cref="T:System.ArgumentException"/> if <paramref name="value"/> is not
+            a defined member of the enumeration <typeparamref name="TEnum"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Guards.Guard.AgainstCondition(System.Boolean,System.String)">
+            <summary>
+            Throws <see cref="T:System.InvalidOperationException"/> with <paramref name="message"/>
+            if <paramref name="condition"/> is <c>true</c>.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Shared.Utilities.LevenshteinDistance">
+            <summary>
+            Utility class to calculate Levenshtein Distance and verify fuzzy matches.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Utilities.LevenshteinDistance.Calculate(System.String,System.String)">
+            <summary>
+            Computes the Levenshtein distance between two strings using an optimized two-row algorithm.
+            </summary>
+            <param name="s">First string.</param>
+            <param name="t">Second string.</param>
+            <returns>The Levenshtein distance as an integer.</returns>
+        </member>
+        <member name="M:FijiPayroll.Shared.Utilities.LevenshteinDistance.IsFuzzyMatch(System.String,System.String,System.Int32@)">
+            <summary>
+            Determines whether the search target matches the search source fuzzily.
+            Rules:
+            - Max distance of 2 for short strings (length &lt;= 5)
+            - 20% of length for longer strings (length &gt; 5)
+            </summary>
+            <param name="source">The query string or original source text.</param>
+            <param name="target">The candidate target string to test match against.</param>
+            <param name="distance">The calculated Levenshtein distance between strings.</param>
+            <returns>True if the distance satisfies the threshold rules; otherwise, false.</returns>
+        </member>
+    </members>
+</doc>

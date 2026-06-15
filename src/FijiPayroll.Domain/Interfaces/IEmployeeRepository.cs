@@ -21,6 +21,11 @@ public interface IEmployeeRepository
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Retrieves an employee by their primary key.
+    /// </summary>
+    Task<Employee?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Registers a new employee.
     /// </summary>
     Task AddAsync(Employee employee, CancellationToken cancellationToken = default);

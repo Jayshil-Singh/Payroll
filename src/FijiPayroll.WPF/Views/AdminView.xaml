@@ -1,0 +1,107 @@
+<UserControl x:Class="FijiPayroll.WPF.Views.AdminView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FijiPayroll.WPF.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800"
+             Background="Transparent">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,24">
+            <TextBlock Text="{Binding Title}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Segoe UI Semibold" />
+            <TextBlock Text="System administration tools, role-based permission grids, and transaction audit trails." FontSize="14" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,0" />
+        </StackPanel>
+
+        <!-- Main Workspace -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="320" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Role Access Mapping Grid -->
+            <Border Grid.Column="0" Margin="0,0,16,0" CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="User Accounts &amp; Security Roles" FontSize="16" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,0,0,8" />
+                    <TextBlock Grid.Row="1" Text="Configure active user logons and allocate system permission tags." FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,16" />
+
+                    <!-- User List Mock -->
+                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <!-- User 1 -->
+                            <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Padding="0,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="100" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Jayesh Sharma" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" FontSize="13" />
+                                        <TextBlock Text="jayshil.singh@company.com" Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="HR Administrator" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"/>
+                                    <Border Grid.Column="2" Background="{DynamicResource BrushAccent}" Padding="8,4" CornerRadius="4" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <TextBlock Text="Active" Foreground="#FFFFFF" FontSize="11" FontWeight="SemiBold"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <!-- User 2 -->
+                            <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Padding="0,10">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="100" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Sereana Qila" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" FontSize="13" />
+                                        <TextBlock Text="sereana.q@company.com" Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="Payroll Specialist" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"/>
+                                    <Border Grid.Column="2" Background="{DynamicResource BrushAccent}" Padding="8,4" CornerRadius="4" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                        <TextBlock Text="Active" Foreground="#FFFFFF" FontSize="11" FontWeight="SemiBold"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <!-- Admin Action Utilities Pane -->
+            <StackPanel Grid.Column="1">
+                <!-- Backup Tools -->
+                <Border CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20" Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="Database Backup" FontSize="16" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,0,0,8" />
+                        <TextBlock Text="Create a snapshot backup of the current database configuration." FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" />
+                        <Button Content="Backup Database Now" Margin="0,16,0,0" Height="32" Style="{StaticResource SecondaryButton}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Audit logs overview -->
+                <Border CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20">
+                    <StackPanel>
+                        <TextBlock Text="Audit Trails Overview" FontSize="16" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,0,0,8" />
+                        <TextBlock Text="Verify security access logs and transition history logs." FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" />
+                        <Button Content="Open Access Audit Logs" Command="{Binding DataContext.NavigateLogViewerCommand, RelativeSource={RelativeSource AncestorType=Window}}" Margin="0,16,0,0" Height="32" Style="{StaticResource SecondaryButton}" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

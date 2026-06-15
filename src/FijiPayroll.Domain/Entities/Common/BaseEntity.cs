@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using FijiPayroll.Domain.Events;
+
 namespace FijiPayroll.Domain.Entities.Common;
 
 /// <summary>
@@ -6,6 +9,30 @@ namespace FijiPayroll.Domain.Entities.Common;
 /// </summary>
 public abstract class BaseEntity
 {
+    private readonly List<IDomainEvent> _domainEvents = new();
+
+    /// <summary>
+    /// Gets the read-only collection of domain events associated with the entity.
+    /// </summary>
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    /// <summary>
+    /// Registers a domain event.
+    /// </summary>
+    public void AddDomainEvent(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
+
+    /// <summary>
+    /// Clears the domain events.
+    /// </summary>
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
+    }
+
     /// <summary>
     /// Database-generated primary key. Zero indicates a transient (unsaved) entity.
     /// </summary>

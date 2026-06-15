@@ -1,0 +1,35 @@
+<UserControl x:Class="FijiPayroll.WPF.Views.SetupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:views="clr-namespace:FijiPayroll.WPF.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800"
+             Background="Transparent">
+    <Grid>
+        <TabControl Background="Transparent" BorderThickness="0" Margin="0">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="HeaderTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" FontSize="14" FontWeight="SemiBold" Padding="12,8"/>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </TabControl.Resources>
+            
+            <TabItem Header="Payroll Components">
+                <views:PayrollComponentView DataContext="{Binding ComponentViewModel}" />
+            </TabItem>
+            
+            <TabItem Header="Master Lookups">
+                <views:MasterLookupManagerView DataContext="{Binding LookupManagerViewModel}" />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
