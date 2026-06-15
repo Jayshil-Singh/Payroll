@@ -1,0 +1,368 @@
+<UserControl x:Class="FijiPayroll.WPF.Views.PayrollComponentView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:FijiPayroll.WPF.ViewModels"
+             xmlns:enum="clr-namespace:FijiPayroll.Domain.Enumerations;assembly=FijiPayroll.Domain"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1024"
+             Background="#F9FAFB">
+
+    <UserControl.Resources>
+        <!-- Converter to display Yes/No instead of True/False -->
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        
+        <!-- ObjectDataProvider to get ComponentType enum values -->
+        <ObjectDataProvider x:Key="ComponentTypesProvider" 
+                            MethodName="GetValues" 
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enum:ComponentType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <!-- Header -->
+            <RowDefinition Height="Auto"/>
+            <!-- Filter Bar -->
+            <RowDefinition Height="Auto"/>
+            <!-- Data Grid -->
+            <RowDefinition Height="*"/>
+            <!-- Pagination / Footer -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ── 1. Header ── -->
+        <Border Grid.Row="0" BorderBrush="#D1D5DB" BorderThickness="0,0,0,1" Padding="0,0,0,16" Margin="0,0,0,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Payroll Components" FontSize="24" FontWeight="SemiBold" Foreground="#111827"/>
+                    <TextBlock Text="Manage and configure earnings, allowances, deductions, benefits, and statutory items." FontSize="13" Foreground="#6B7280" Margin="0,4,0,0"/>
+                </StackPanel>
+                
+                <!-- Refresh / Load Button -->
+                <Button Grid.Column="1" 
+                        Content="Refresh List" 
+                        Command="{Binding LoadComponentsCommand}"
+                        Background="#1A56DB" Foreground="White" FontWeight="SemiBold"
+                        Padding="16,8" BorderThickness="0" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- ── 2. Filter Bar ── -->
+        <Border Grid.Row="1" Background="White" BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="6" Padding="16" Margin="0,0,0,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="280"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Search Box -->
+                <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                    <TextBlock Text="Search Code or Name" FontWeight="Medium" FontSize="13" Foreground="#374151" Margin="0,0,0,6"/>
+                    <TextBox Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" 
+                             Height="36" Padding="8,4" VerticalContentAlignment="Center" BorderBrush="#D1D5DB" BorderThickness="1">
+                        <TextBox.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </TextBox.Resources>
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding LoadComponentsCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
+                </StackPanel>
+
+                <!-- Component Type Filter -->
+                <StackPanel Grid.Column="1" Margin="0,0,16,0">
+                    <TextBlock Text="Filter by Type" FontWeight="Medium" FontSize="13" Foreground="#374151" Margin="0,0,0,6"/>
+                    <ComboBox SelectedItem="{Binding SelectedTypeFilter}" 
+                              ItemsSource="{Binding Source={StaticResource ComponentTypesProvider}}"
+                              Height="36" VerticalContentAlignment="Center" BorderBrush="#D1D5DB" BorderThickness="1">
+                        <ComboBox.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </ComboBox.Resources>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- Active Only Toggle -->
+                <StackPanel Grid.Column="2" VerticalAlignment="Center" Margin="0,18,0,0">
+                    <CheckBox IsChecked="{Binding ActiveOnly}" Content="Active Components Only" FontWeight="Medium" FontSize="13" Foreground="#374151" Cursor="Hand"/>
+                </StackPanel>
+
+                <!-- Clear / Filter Buttons -->
+                <StackPanel Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="36">
+                    <Button Content="Reset" 
+                            Command="{Binding LoadComponentsCommand}"
+                            Background="Transparent" BorderBrush="#D1D5DB" BorderThickness="1" Foreground="#374151" FontWeight="Medium"
+                            Padding="16,0" Margin="0,0,8,0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button Content="Apply Filters" 
+                            Command="{Binding LoadComponentsCommand}"
+                            Background="#1A56DB" Foreground="White" FontWeight="SemiBold"
+                            Padding="16,0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ── 3. Data Grid ── -->
+        <Grid Grid.Row="2">
+            <!-- Loading Indicator Overlay -->
+            <Grid Panel.ZIndex="10" Background="#80F9FAFB" Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <ProgressBar IsIndeterminate="True" Width="200" Height="4"/>
+                    <TextBlock Text="Loading components..." FontSize="14" Foreground="#374151" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Main DataGrid -->
+            <Border BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="6" Background="White">
+                <DataGrid ItemsSource="{Binding Components}" 
+                          AutoGenerateColumns="False" 
+                          CanUserAddRows="False" 
+                          CanUserDeleteRows="False"
+                          BorderThickness="0" 
+                          Background="Transparent"
+                          RowHeight="44" 
+                          HeadersVisibility="Column" 
+                          GridLinesVisibility="Horizontal"
+                          HorizontalGridLinesBrush="#E5E7EB" 
+                          AlternatingRowBackground="#F9FAFB">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#F3F4F6"/>
+                            <Setter Property="Foreground" Value="#374151"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="FontSize" Value="13"/>
+                            <Setter Property="Padding" Value="12,8"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter Property="BorderBrush" Value="#D1D5DB"/>
+                        </Style>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Padding" Value="12,8"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridCell">
+                                        <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                                            <ContentPresenter VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.Resources>
+
+                    <DataGrid.Columns>
+                        <!-- Code -->
+                        <DataGridTextColumn Header="Code" Binding="{Binding ComponentCode}" Width="120" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Foreground" Value="#111827"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Name -->
+                        <DataGridTextColumn Header="Name" Binding="{Binding ComponentName}" Width="*" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#374151"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Type -->
+                        <DataGridTextColumn Header="Type" Binding="{Binding ComponentType}" Width="130" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#374151"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Calculation Method -->
+                        <DataGridTextColumn Header="Method" Binding="{Binding CalculationMethod}" Width="130" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#374151"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Display Order -->
+                        <DataGridTextColumn Header="Order" Binding="{Binding DisplayOrder}" Width="80" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#374151"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Status (Active) -->
+                        <DataGridTemplateColumn Header="Status" Width="100" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="12" Padding="8,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                                        <Setter Property="Background" Value="#DEF7EC"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                        <Setter Property="Background" Value="#F3F4F6"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock FontSize="11" FontWeight="Medium">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                                            <Setter Property="Text" Value="Active"/>
+                                                            <Setter Property="Foreground" Value="#03543F"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                            <Setter Property="Text" Value="Inactive"/>
+                                                            <Setter Property="Foreground" Value="#4B5563"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Actions -->
+                        <DataGridTemplateColumn Header="Actions" Width="200" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <!-- Toggle Active Button -->
+                                        <Button Content="Toggle Status" 
+                                                Command="{Binding DataContext.ToggleActiveCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" BorderThickness="0" Foreground="#1A56DB" FontWeight="Medium" 
+                                                Padding="4,2" Cursor="Hand" Margin="0,0,8,0"/>
+
+                                        <!-- Duplicate Button -->
+                                        <Button Content="Duplicate" 
+                                                Command="{Binding DataContext.DuplicateCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" BorderThickness="0" Foreground="#057A55" FontWeight="Medium" 
+                                                Padding="4,2" Cursor="Hand" Margin="0,0,8,0"/>
+
+                                        <!-- Delete Button (Only visible for non-system components) -->
+                                        <Button Content="Delete" 
+                                                Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" BorderThickness="0" Foreground="#C81E1E" FontWeight="Medium" 
+                                                Padding="4,2" Cursor="Hand">
+                                            <Button.Style>
+                                                <Style TargetType="Button">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsSystemComponent}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsSystemComponent}" Value="False">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </Grid>
+
+        <!-- ── 4. Pagination / Footer ── -->
+        <Border Grid.Row="3" Background="#F3F4F6" BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,16,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Status Info -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Total Records: " Foreground="#4B5563"/>
+                    <TextBlock Text="{Binding TotalCount}" FontWeight="Bold" Foreground="#111827"/>
+                    <TextBlock Text=" | Page " Foreground="#4B5563" Margin="8,0,0,0"/>
+                    <TextBlock Text="{Binding PageNumber}" FontWeight="Bold" Foreground="#111827"/>
+                    <TextBlock Text=" of " Foreground="#4B5563"/>
+                    <TextBlock Text="{Binding TotalPages}" FontWeight="Bold" Foreground="#111827"/>
+                </StackPanel>
+
+                <!-- Page Navigation Buttons -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="&lt; Previous" 
+                            Command="{Binding PreviousPageCommand}"
+                            Background="White" BorderBrush="#D1D5DB" BorderThickness="1" Foreground="#374151" FontWeight="Medium"
+                            Padding="12,6" Margin="0,0,8,0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button Content="Next &gt;" 
+                            Command="{Binding NextPageCommand}"
+                            Background="White" BorderBrush="#D1D5DB" BorderThickness="1" Foreground="#374151" FontWeight="Medium"
+                            Padding="12,6" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

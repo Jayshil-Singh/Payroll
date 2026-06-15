@@ -1,0 +1,85 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3211134E-28A0-4ED9-BEA0-C6FA216DA51D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FijiPayroll.Shared", "src\FijiPayroll.Shared\FijiPayroll.Shared.csproj", "{8F577615-7F5E-4261-AE9F-F7F98680948C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FijiPayroll.Domain", "src\FijiPayroll.Domain\FijiPayroll.Domain.csproj", "{66186015-2D7D-4413-8F6D-6FEBF556A1E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FijiPayroll.Application", "src\FijiPayroll.Application\FijiPayroll.Application.csproj", "{9F4F033D-1290-490B-8DB0-06EB7F60E7EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FijiPayroll.Persistence", "src\FijiPayroll.Persistence\FijiPayroll.Persistence.csproj", "{152E21B5-46D0-4B3C-B717-8F819D348BA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FijiPayroll.Infrastructure", "src\FijiPayroll.Infrastructure\FijiPayroll.Infrastructure.csproj", "{0B56E644-9C28-4A83-86F7-4614AC69A2FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FijiPayroll.WPF", "src\FijiPayroll.WPF\FijiPayroll.WPF.csproj", "{49EFF449-23A8-4F65-9D02-448797825FF0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{44BA2CD9-4868-44F3-83D6-C45DE88AB85A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FijiPayroll.Domain.Tests", "tests\FijiPayroll.Domain.Tests\FijiPayroll.Domain.Tests.csproj", "{309CF818-70CB-4288-8456-CA4739E2DBE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FijiPayroll.Application.Tests", "tests\FijiPayroll.Application.Tests\FijiPayroll.Application.Tests.csproj", "{ECCDAA04-3883-46F0-806A-CF899D866627}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FijiPayroll.Integration.Tests", "tests\FijiPayroll.Integration.Tests\FijiPayroll.Integration.Tests.csproj", "{C81C7945-8B52-4879-9729-B256494ECCB1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F577615-7F5E-4261-AE9F-F7F98680948C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F577615-7F5E-4261-AE9F-F7F98680948C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F577615-7F5E-4261-AE9F-F7F98680948C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F577615-7F5E-4261-AE9F-F7F98680948C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66186015-2D7D-4413-8F6D-6FEBF556A1E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66186015-2D7D-4413-8F6D-6FEBF556A1E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66186015-2D7D-4413-8F6D-6FEBF556A1E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66186015-2D7D-4413-8F6D-6FEBF556A1E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F4F033D-1290-490B-8DB0-06EB7F60E7EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F4F033D-1290-490B-8DB0-06EB7F60E7EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F4F033D-1290-490B-8DB0-06EB7F60E7EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F4F033D-1290-490B-8DB0-06EB7F60E7EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{152E21B5-46D0-4B3C-B717-8F819D348BA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{152E21B5-46D0-4B3C-B717-8F819D348BA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{152E21B5-46D0-4B3C-B717-8F819D348BA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{152E21B5-46D0-4B3C-B717-8F819D348BA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B56E644-9C28-4A83-86F7-4614AC69A2FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B56E644-9C28-4A83-86F7-4614AC69A2FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B56E644-9C28-4A83-86F7-4614AC69A2FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B56E644-9C28-4A83-86F7-4614AC69A2FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49EFF449-23A8-4F65-9D02-448797825FF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49EFF449-23A8-4F65-9D02-448797825FF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49EFF449-23A8-4F65-9D02-448797825FF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49EFF449-23A8-4F65-9D02-448797825FF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{309CF818-70CB-4288-8456-CA4739E2DBE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{309CF818-70CB-4288-8456-CA4739E2DBE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{309CF818-70CB-4288-8456-CA4739E2DBE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{309CF818-70CB-4288-8456-CA4739E2DBE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECCDAA04-3883-46F0-806A-CF899D866627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECCDAA04-3883-46F0-806A-CF899D866627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECCDAA04-3883-46F0-806A-CF899D866627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECCDAA04-3883-46F0-806A-CF899D866627}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C81C7945-8B52-4879-9729-B256494ECCB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C81C7945-8B52-4879-9729-B256494ECCB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C81C7945-8B52-4879-9729-B256494ECCB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C81C7945-8B52-4879-9729-B256494ECCB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8F577615-7F5E-4261-AE9F-F7F98680948C} = {3211134E-28A0-4ED9-BEA0-C6FA216DA51D}
+		{66186015-2D7D-4413-8F6D-6FEBF556A1E2} = {3211134E-28A0-4ED9-BEA0-C6FA216DA51D}
+		{9F4F033D-1290-490B-8DB0-06EB7F60E7EA} = {3211134E-28A0-4ED9-BEA0-C6FA216DA51D}
+		{152E21B5-46D0-4B3C-B717-8F819D348BA7} = {3211134E-28A0-4ED9-BEA0-C6FA216DA51D}
+		{0B56E644-9C28-4A83-86F7-4614AC69A2FE} = {3211134E-28A0-4ED9-BEA0-C6FA216DA51D}
+		{49EFF449-23A8-4F65-9D02-448797825FF0} = {3211134E-28A0-4ED9-BEA0-C6FA216DA51D}
+		{309CF818-70CB-4288-8456-CA4739E2DBE3} = {44BA2CD9-4868-44F3-83D6-C45DE88AB85A}
+		{ECCDAA04-3883-46F0-806A-CF899D866627} = {44BA2CD9-4868-44F3-83D6-C45DE88AB85A}
+		{C81C7945-8B52-4879-9729-B256494ECCB1} = {44BA2CD9-4868-44F3-83D6-C45DE88AB85A}
+	EndGlobalSection
+EndGlobal

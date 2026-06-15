@@ -1,0 +1,230 @@
+<UserControl x:Class="FijiPayroll.WPF.Views.PayrollRunView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:FijiPayroll.WPF.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="768" d:DesignWidth="1280"
+             Background="#F9FAFB">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <!-- Header -->
+            <RowDefinition Height="Auto"/>
+            <!-- Content Grid split -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ── 1. Header ── -->
+        <Border Grid.Row="0" BorderBrush="#D1D5DB" BorderThickness="0,0,0,1" Padding="0,0,0,16" Margin="0,0,0,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Payroll Calculation Dashboard" FontSize="24" FontWeight="SemiBold" Foreground="#111827"/>
+                    <TextBlock Text="Manage period calculations, approvals, posting locks, and audit snapshots trace." FontSize="13" Foreground="#6B7280" Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <!-- Refresh Button -->
+                <Button Grid.Column="1" 
+                        Content="Refresh Run Headers" 
+                        Command="{Binding LoadRunsCommand}"
+                        Background="#1A56DB" Foreground="White" FontWeight="SemiBold"
+                        Padding="16,8" BorderThickness="0" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- ── 2. Content ── -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <!-- Run Listing -->
+                <ColumnDefinition Width="380"/>
+                <!-- Splitter -->
+                <ColumnDefinition Width="16"/>
+                <!-- Detailed view -->
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Loading overlay -->
+            <Grid Grid.ColumnSpan="3" Panel.ZIndex="100" Background="#80F9FAFB" Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <ProgressBar IsIndeterminate="True" Width="200" Height="4"/>
+                    <TextBlock Text="Executing in background..." FontSize="14" Foreground="#374151" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Left pane: Run headers list -->
+            <Border Grid.Column="0" BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="6" Background="White" Padding="12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Pay Periods" FontSize="16" FontWeight="SemiBold" Foreground="#374151" Margin="0,0,0,12"/>
+
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Runs}" 
+                             SelectedItem="{Binding SelectedRunDetail, Mode=TwoWay}"
+                             BorderThickness="0" Background="Transparent"
+                             HorizontalContentAlignment="Stretch">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="4"/>
+                                <Setter Property="Margin" Value="0,0,0,8"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Background="White" Padding="12" Cursor="Hand" x:Name="ItemBorder">
+                                                <ContentPresenter/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="ItemBorder" Property="BorderBrush" Value="#2563EB"/>
+                                                    <Setter TargetName="ItemBorder" Property="Background" Value="#F0F9FF"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Grid.Row="0" Text="{Binding PeriodName}" FontWeight="SemiBold" FontSize="14" Foreground="#111827"/>
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,4,0,4">
+                                        <TextBlock Text="{Binding RunCode}" Foreground="#4B5563" FontSize="12" Margin="0,0,12,0"/>
+                                        <TextBlock Text="{Binding Frequency}" Foreground="#4B5563" FontSize="12"/>
+                                    </StackPanel>
+                                    <Border Grid.Row="2" CornerRadius="12" Padding="8,2" HorizontalAlignment="Left" Background="#E5F3FF">
+                                        <TextBlock Text="{Binding Status}" FontSize="11" FontWeight="Medium" Foreground="#1D4ED8"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <!-- Right pane: Details & Calculations -->
+            <Border Grid.Column="2" BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="6" Background="White" Padding="20">
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedRunDetail}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Run Info & Action buttons -->
+                    <Grid Grid.Row="0" Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="{Binding SelectedRunDetail.PeriodName}" FontSize="20" FontWeight="SemiBold" Foreground="#111827"/>
+                            <TextBlock Text="{Binding SelectedRunDetail.RunCode}" FontSize="13" Foreground="#4B5563" Margin="0,4,0,0"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                <TextBlock Text="Status: " Foreground="#4B5563" FontSize="13"/>
+                                <TextBlock Text="{Binding SelectedRunDetail.Status}" FontWeight="Bold" Foreground="#2563EB" FontSize="13"/>
+                                <TextBlock Text=" | Hash: " Foreground="#4B5563" FontSize="13" Margin="12,0,0,0"/>
+                                <TextBlock Text="{Binding SelectedRunDetail.SnapshotHash, TargetNullValue='N/A'}" Foreground="#4B5563" FontSize="13"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Action Toolbar -->
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Content="Calculate" Command="{Binding CalculateCommand}" CommandParameter="{Binding SelectedRunDetail}"
+                                    Background="#2563EB" Foreground="White" FontWeight="SemiBold" Padding="12,6" Margin="0,0,8,0" Cursor="Hand" BorderThickness="0"/>
+                            <Button Content="Reset to Draft" Command="{Binding ResetCommand}" CommandParameter="{Binding SelectedRunDetail}"
+                                    Background="#D1D5DB" Foreground="#374151" FontWeight="Medium" Padding="12,6" Margin="0,0,8,0" Cursor="Hand" BorderThickness="0"/>
+                            <Button Content="Approve" Command="{Binding ApproveCommand}" CommandParameter="{Binding SelectedRunDetail}"
+                                    Background="#057A55" Foreground="White" FontWeight="SemiBold" Padding="12,6" Margin="0,0,8,0" Cursor="Hand" BorderThickness="0"/>
+                            <Button Content="Post" Command="{Binding PostCommand}" CommandParameter="{Binding SelectedRunDetail}"
+                                    Background="#7E3AF2" Foreground="White" FontWeight="SemiBold" Padding="12,6" Margin="0,0,8,0" Cursor="Hand" BorderThickness="0"/>
+                            <Button Content="Override Lock" Command="{Binding AdminOverrideLockCommand}" CommandParameter="{Binding SelectedRunDetail}"
+                                    Background="#E02424" Foreground="White" FontWeight="SemiBold" Padding="12,6" Cursor="Hand" BorderThickness="0"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Separator Grid.Row="1" Background="#E5E7EB" Margin="0,0,0,16"/>
+
+                    <!-- Employees calculation details -->
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="200"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Calculated Employee Table -->
+                        <Border Grid.Row="0" BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="6" Background="White" Margin="0,0,0,16">
+                            <DataGrid ItemsSource="{Binding SelectedRunDetail.Employees}" 
+                                      AutoGenerateColumns="False" 
+                                      CanUserAddRows="False" 
+                                      CanUserDeleteRows="False"
+                                      BorderThickness="0" 
+                                      Background="Transparent"
+                                      RowHeight="38"
+                                      x:Name="EmployeesGrid">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="ID" Binding="{Binding EmployeeId}" Width="60"/>
+                                    <DataGridTextColumn Header="Employee Name" Binding="{Binding EmployeeName}" Width="*"/>
+                                    <DataGridTextColumn Header="TIN" Binding="{Binding Tin}" Width="100"/>
+                                    <DataGridTextColumn Header="Gross Pay" Binding="{Binding GrossPay, StringFormat=C}" Width="100"/>
+                                    <DataGridTextColumn Header="PAYE Tax" Binding="{Binding PayeTax, StringFormat=C}" Width="100"/>
+                                    <DataGridTextColumn Header="FNPF EE" Binding="{Binding FnpfEmployeeContribution, StringFormat=C}" Width="90"/>
+                                    <DataGridTextColumn Header="Net Pay" Binding="{Binding NetPay, StringFormat=C}" Width="100"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+
+                        <TextBlock Grid.Row="1" Text="Step-Level Calculation Trace" FontSize="14" FontWeight="SemiBold" Foreground="#374151" Margin="0,0,0,8"/>
+
+                        <!-- Step Trace Debug Log -->
+                        <Border Grid.Row="2" BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="6" Background="#F9FAFB" Padding="12">
+                            <TextBox Text="{Binding SelectedItem.TraceText, ElementName=EmployeesGrid, Mode=OneWay}" 
+                                     IsReadOnly="True" 
+                                     AcceptsReturn="True" 
+                                     TextWrapping="Wrap"
+                                     VerticalScrollBarVisibility="Auto" 
+                                     FontFamily="Consolas" 
+                                     FontSize="12" 
+                                     Background="Transparent" 
+                                     BorderThickness="0"/>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
