@@ -16,6 +16,9 @@
     <DataTemplate DataType="{x:Type vm:SetupViewModel}">
         <v:SetupView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:CompanySetupDashboardViewModel}">
+        <v:CompanySetupDashboardView />
+    </DataTemplate>
     <DataTemplate DataType="{x:Type vm:ReportsViewModel}">
         <v:ReportsView />
     </DataTemplate>
@@ -24,6 +27,18 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:LogViewerViewModel}">
         <v:LogViewerView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ApprovalDashboardViewModel}">
+        <v:ApprovalDashboardView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:PendingApprovalsViewModel}">
+        <v:PendingApprovalsView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ComplianceCenterViewModel}">
+        <v:ComplianceCenterView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:DiagnosticsDashboardViewModel}">
+        <v:DiagnosticsDashboardView />
     </DataTemplate>
 
     <!-- Fonts -->

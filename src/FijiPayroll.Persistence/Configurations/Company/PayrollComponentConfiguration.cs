@@ -95,6 +95,22 @@ internal sealed class PayrollComponentConfiguration
                .HasDefaultValue(true)
                .IsRequired();
 
+        builder.Property(x => x.Status)
+               .HasColumnType("nvarchar(20)")
+               .HasDefaultValue(FijiPayroll.Domain.Enumerations.ComponentStatus.Active)
+               .HasConversion<string>()
+               .IsRequired();
+
+        builder.HasMany(x => x.Rules)
+               .WithOne(x => x.Component)
+               .HasForeignKey(x => x.ComponentId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(x => x.Dependencies)
+               .WithOne(x => x.ParentComponent)
+               .HasForeignKey(x => x.ParentComponentId)
+               .OnDelete(DeleteBehavior.Cascade);
+
         // ── Description ───────────────────────────────────────────────────────────
         builder.Property(x => x.Description)
                .HasColumnType("nvarchar(500)")

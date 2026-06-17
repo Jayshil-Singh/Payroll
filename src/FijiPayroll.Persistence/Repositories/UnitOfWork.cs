@@ -22,7 +22,7 @@ public sealed class UnitOfWork : IUnitOfWork
         IEmployeeRepository employees,
         ITaxBracketRepository taxBrackets,
         IMasterLookupRepository masterLookups)
-        : this(context, payrollComponents, payrollRuns, employees, taxBrackets, masterLookups, null!, null!)
+        : this(context, payrollComponents, payrollRuns, employees, taxBrackets, masterLookups, null!, null!, null!, null!)
     {
     }
 
@@ -37,7 +37,7 @@ public sealed class UnitOfWork : IUnitOfWork
         ITaxBracketRepository taxBrackets,
         IMasterLookupRepository masterLookups,
         IImportJobRepository importJobs)
-        : this(context, payrollComponents, payrollRuns, employees, taxBrackets, masterLookups, importJobs, null!)
+        : this(context, payrollComponents, payrollRuns, employees, taxBrackets, masterLookups, importJobs, null!, null!, null!)
     {
     }
 
@@ -53,6 +53,25 @@ public sealed class UnitOfWork : IUnitOfWork
         IMasterLookupRepository masterLookups,
         IImportJobRepository importJobs,
         ISearchIndexRepository searchIndexes)
+        : this(context, payrollComponents, payrollRuns, employees, taxBrackets, masterLookups, importJobs, searchIndexes, null!, null!)
+    {
+    }
+
+    /// <summary>
+    /// Initialises a new instance of the <see cref="UnitOfWork"/> class with all repositories.
+    /// </summary>
+    public UnitOfWork(
+        ApplicationDbContext context,
+        IPayrollComponentRepository payrollComponents,
+        IPayrollRunRepository payrollRuns,
+        IEmployeeRepository employees,
+        ITaxBracketRepository taxBrackets,
+        IMasterLookupRepository masterLookups,
+        IImportJobRepository importJobs,
+        ISearchIndexRepository searchIndexes,
+        IApprovalWorkflowRepository workflows,
+        ISetupRepository? setup = null,
+        IComplianceRepository? compliance = null)
     {
         _context = context;
         PayrollComponents = payrollComponents;
@@ -62,6 +81,9 @@ public sealed class UnitOfWork : IUnitOfWork
         MasterLookups = masterLookups;
         ImportJobs = importJobs ?? new ImportJobRepository(context);
         SearchIndexes = searchIndexes ?? new SearchIndexRepository(context);
+        Workflows = workflows ?? new ApprovalWorkflowRepository(context);
+        Setup = setup ?? new SetupRepository(context);
+        Compliance = compliance ?? new ComplianceRepository(context);
     }
 
     /// <inheritdoc/>
@@ -84,6 +106,15 @@ public sealed class UnitOfWork : IUnitOfWork
 
     /// <inheritdoc/>
     public ISearchIndexRepository SearchIndexes { get; }
+
+    /// <inheritdoc/>
+    public IApprovalWorkflowRepository Workflows { get; }
+
+    /// <inheritdoc/>
+    public ISetupRepository Setup { get; }
+
+    /// <inheritdoc/>
+    public IComplianceRepository Compliance { get; }
 
     /// <inheritdoc/>
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

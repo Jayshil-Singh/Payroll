@@ -44,6 +44,7 @@ public sealed class PriorityDispatcherQueue : IDisposable
     private readonly Timer _starvationTimer;
     private readonly long[] _lastServiced = new long[3];
     private int _cyclePosition;
+    private int _isDrainingScheduled;
     private volatile bool _disposed;
 
     // Dispatcher priority mapping
@@ -86,7 +87,11 @@ public sealed class PriorityDispatcherQueue : IDisposable
         }
 
         queue.Enqueue(action);
-        DrainViaWeightedRoundRobin();
+
+        if (Interlocked.CompareExchange(ref _isDrainingScheduled, 1, 0) == 0)
+        {
+            DrainViaWeightedRoundRobin();
+        }
     }
 
     /// <summary>
@@ -96,7 +101,7 @@ public sealed class PriorityDispatcherQueue : IDisposable
     {
         if (_disposed) return;
 
-        SafeDispatcher.BeginInvoke(() =>
+        SafeDispatcher.SafeBeginInvoke(() =>
         {
             int totalCycles = Weights[0] + Weights[1] + Weights[2];
             int dispatched = 0;
@@ -117,10 +122,26 @@ public sealed class PriorityDispatcherQueue : IDisposable
                 }
             }
 
-            // If items remain, schedule another drain pass
+            // If items remain, schedule another drain pass, else reset the scheduled flag
             bool hasMore = false;
             for (int i = 0; i < 3; i++) hasMore |= !_queues[i].IsEmpty;
-            if (hasMore) DrainViaWeightedRoundRobin();
+
+            if (hasMore && !_disposed)
+            {
+                DrainViaWeightedRoundRobin();
+            }
+            else
+            {
+                Interlocked.Exchange(ref _isDrainingScheduled, 0);
+
+                // Double check if new items arrived after checking hasMore but before resetting flag
+                bool doubleCheck = false;
+                for (int i = 0; i < 3; i++) doubleCheck |= !_queues[i].IsEmpty;
+                if (doubleCheck && !_disposed && Interlocked.CompareExchange(ref _isDrainingScheduled, 1, 0) == 0)
+                {
+                    DrainViaWeightedRoundRobin();
+                }
+            }
 
         }, DispatcherPriority.Normal);
     }
@@ -151,7 +172,10 @@ public sealed class PriorityDispatcherQueue : IDisposable
             if (elapsed >= StarvationThresholdMs)
             {
                 _logger?.LogDebug("[PriorityQueue] Starvation flush: slot {Slot} at {Elapsed}ms", slot, elapsed);
-                DrainViaWeightedRoundRobin();
+                if (Interlocked.CompareExchange(ref _isDrainingScheduled, 1, 0) == 0)
+                {
+                    DrainViaWeightedRoundRobin();
+                }
                 break;
             }
         }

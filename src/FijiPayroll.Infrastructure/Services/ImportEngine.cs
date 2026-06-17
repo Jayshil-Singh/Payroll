@@ -457,7 +457,7 @@ public sealed class ImportEngine : IImportEngine
                 foreach (var emp in employeesToImport)
                 {
                     var residency = emp.ResidencyStatus;
-                    var freq = Enum.Parse<PayrollFrequency>(emp.Frequency, true);
+                    var freq = Enum.Parse<PayrollFrequencyType>(emp.Frequency, true);
                     var empType = Enum.Parse<EmploymentType>(emp.EmploymentType, true);
 
                     var employee = Employee.Create(

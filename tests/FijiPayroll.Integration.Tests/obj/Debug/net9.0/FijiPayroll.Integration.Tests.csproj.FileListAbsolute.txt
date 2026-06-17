@@ -186,3 +186,6 @@ C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Integration.Tests\bin\D
 C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Integration.Tests\bin\Debug\net9.0\FijiPayroll.Infrastructure.dll
 C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Integration.Tests\bin\Debug\net9.0\FijiPayroll.Infrastructure.pdb
 C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Integration.Tests\bin\Debug\net9.0\FijiPayroll.Infrastructure.xml
+C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Integration.Tests\bin\Debug\net9.0\FijiPayroll.SDK.dll
+C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Integration.Tests\bin\Debug\net9.0\FijiPayroll.SDK.pdb
+C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Integration.Tests\bin\Debug\net9.0\FijiPayroll.SDK.xml

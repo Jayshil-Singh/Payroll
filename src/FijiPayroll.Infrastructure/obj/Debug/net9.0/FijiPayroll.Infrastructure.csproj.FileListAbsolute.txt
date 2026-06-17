@@ -23,3 +23,6 @@ C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Infrastructure\obj\Debug\
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Infrastructure\obj\Debug\net9.0\FijiPayroll.Infrastructure.xml
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Infrastructure\obj\Debug\net9.0\FijiPayroll.Infrastructure.pdb
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Infrastructure\obj\Debug\net9.0\ref\FijiPayroll.Infrastructure.dll
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Infrastructure\bin\Debug\net9.0\FijiPayroll.SDK.dll
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Infrastructure\bin\Debug\net9.0\FijiPayroll.SDK.pdb
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Infrastructure\bin\Debug\net9.0\FijiPayroll.SDK.xml

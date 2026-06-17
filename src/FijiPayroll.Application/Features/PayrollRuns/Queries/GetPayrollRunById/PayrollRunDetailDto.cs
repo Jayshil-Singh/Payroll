@@ -16,7 +16,7 @@ public sealed record PayrollRunDetailDto
     public DateTime StartDate { get; init; }
     public DateTime EndDate { get; init; }
     public DateTime PaymentDate { get; init; }
-    public PayrollFrequency Frequency { get; init; }
+    public PayrollFrequencyType Frequency { get; init; }
     public PayrollRunStatus Status { get; init; }
     public string? Description { get; init; }
     public string? SnapshotHash { get; init; }

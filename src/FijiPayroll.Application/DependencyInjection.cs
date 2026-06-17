@@ -48,6 +48,17 @@ public static class DependencyInjection
         services.AddScoped<IPayrollRunService, PayrollRunService>();
         services.AddScoped<PayrollCalculationEngine>();
         services.AddScoped<PayrollValidationService>();
+        services.AddScoped<IFiscalCalendarGenerator, FiscalCalendarGenerator>();
+        services.AddScoped<IPayScheduleGenerator, PayScheduleGenerator>();
+        services.AddScoped<ISetupWorkflowService, SetupWorkflowService>();
+
+        // ── Rule Engine and Platform Services ───────────────────
+        services.AddScoped<BusinessCalendarService>();
+        services.AddScoped<RulePackageManager>();
+        services.AddScoped<SimulationEngine>();
+        services.AddScoped<RuleSimulationEngine>();
+        services.AddScoped<ComplianceValidationService>();
+        services.AddScoped<FijiPayroll.Shared.Formula.RuleExecutionPipeline>();
 
         return services;
     }

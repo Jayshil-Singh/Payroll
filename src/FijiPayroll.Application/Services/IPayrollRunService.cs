@@ -24,7 +24,7 @@ public interface IPayrollRunService
     /// </summary>
     Task<Result<PagedResult<PayrollRunSummaryDto>>> GetListAsync(
         int companyId,
-        PayrollFrequency? frequencyFilter = null,
+        PayrollFrequencyType? frequencyFilter = null,
         PayrollRunStatus? statusFilter = null,
         int pageNumber = 1,
         int pageSize = 25,
@@ -40,7 +40,7 @@ public interface IPayrollRunService
         DateTime startDate,
         DateTime endDate,
         DateTime paymentDate,
-        PayrollFrequency frequency,
+        PayrollFrequencyType frequency,
         string? description,
         CancellationToken cancellationToken = default);
 

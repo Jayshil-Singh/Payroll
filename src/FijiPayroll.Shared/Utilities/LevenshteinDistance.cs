@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 
 namespace FijiPayroll.Shared.Utilities;
 
@@ -18,37 +19,105 @@ public static class LevenshteinDistance
         if (s == null) throw new ArgumentNullException(nameof(s));
         if (t == null) throw new ArgumentNullException(nameof(t));
 
+        return Calculate(s.AsSpan(), t.AsSpan());
+    }
+
+    /// <summary>
+    /// Computes the Levenshtein distance between two character spans.
+    /// </summary>
+    private static int Calculate(ReadOnlySpan<char> s, ReadOnlySpan<char> t)
+    {
         int n = s.Length;
         int m = t.Length;
 
         if (n == 0) return m;
         if (m == 0) return n;
 
-        int[] p = new int[n + 1];
-        int[] d = new int[n + 1];
+        int length = n + 1;
+        int[]? rentedP = null;
+        int[]? rentedD = null;
+        Span<int> p = length <= 256 ? stackalloc int[length] : (rentedP = ArrayPool<int>.Shared.Rent(length));
+        Span<int> d = length <= 256 ? stackalloc int[length] : (rentedD = ArrayPool<int>.Shared.Rent(length));
 
-        for (int i = 0; i <= n; i++)
+        try
         {
-            p[i] = i;
-        }
-
-        for (int j = 1; j <= m; j++)
-        {
-            char tj = t[j - 1];
-            d[0] = j;
-
-            for (int i = 1; i <= n; i++)
+            for (int i = 0; i < length; i++)
             {
-                int cost = (s[i - 1] == tj) ? 0 : 1;
-                d[i] = Math.Min(Math.Min(d[i - 1] + 1, p[i] + 1), p[i - 1] + cost);
+                p[i] = i;
             }
 
-            int[] temp = p;
-            p = d;
-            d = temp;
-        }
+            for (int j = 1; j <= m; j++)
+            {
+                char tj = t[j - 1];
+                d[0] = j;
 
-        return p[n];
+                for (int i = 1; i <= n; i++)
+                {
+                    int cost = (s[i - 1] == tj) ? 0 : 1;
+                    d[i] = Math.Min(Math.Min(d[i - 1] + 1, p[i] + 1), p[i - 1] + cost);
+                }
+
+                Span<int> temp = p;
+                p = d;
+                d = temp;
+            }
+
+            return p[n];
+        }
+        finally
+        {
+            if (rentedP != null) ArrayPool<int>.Shared.Return(rentedP);
+            if (rentedD != null) ArrayPool<int>.Shared.Return(rentedD);
+        }
+    }
+
+    /// <summary>
+    /// Computes the Levenshtein distance between two character spans case-insensitively.
+    /// </summary>
+    private static int CalculateCaseInsensitive(ReadOnlySpan<char> s, ReadOnlySpan<char> t)
+    {
+        int n = s.Length;
+        int m = t.Length;
+
+        if (n == 0) return m;
+        if (m == 0) return n;
+
+        int length = n + 1;
+        int[]? rentedP = null;
+        int[]? rentedD = null;
+        Span<int> p = length <= 256 ? stackalloc int[length] : (rentedP = ArrayPool<int>.Shared.Rent(length));
+        Span<int> d = length <= 256 ? stackalloc int[length] : (rentedD = ArrayPool<int>.Shared.Rent(length));
+
+        try
+        {
+            for (int i = 0; i < length; i++)
+            {
+                p[i] = i;
+            }
+
+            for (int j = 1; j <= m; j++)
+            {
+                char tj = char.ToLowerInvariant(t[j - 1]);
+                d[0] = j;
+
+                for (int i = 1; i <= n; i++)
+                {
+                    int cost = (char.ToLowerInvariant(s[i - 1]) == tj) ? 0 : 1;
+                    d[i] = Math.Min(Math.Min(d[i - 1] + 1, p[i] + 1), p[i - 1] + cost);
+                }
+
+                Span<int> temp = p;
+                p = d;
+                d = temp;
+            }
+
+            return p[n];
+        }
+        finally
+        {
+            if (rentedP != null) ArrayPool<int>.Shared.Return(rentedP);
+            if (rentedD != null) ArrayPool<int>.Shared.Return(rentedD);
+        }
     }
 
     /// <summary>
@@ -66,26 +135,26 @@ public static class LevenshteinDistance
         if (source == null) throw new ArgumentNullException(nameof(source));
         if (target == null) throw new ArgumentNullException(nameof(target));
 
-        string s = source.Trim().ToLowerInvariant();
-        string t = target.Trim().ToLowerInvariant();
+        ReadOnlySpan<char> s = source.AsSpan().Trim();
+        ReadOnlySpan<char> t = target.AsSpan().Trim();
 
-        if (s == t)
+        if (s.Equals(t, StringComparison.OrdinalIgnoreCase))
         {
             distance = 0;
             return true;
         }
 
-        distance = Calculate(s, t);
         int maxLen = Math.Max(s.Length, t.Length);
+        int allowedDistance = maxLen <= 5 ? 2 : (int)Math.Floor(maxLen * 0.20);
 
-        if (maxLen <= 5)
+        int lenDiff = Math.Abs(s.Length - t.Length);
+        if (lenDiff > allowedDistance)
         {
-            return distance <= 2;
+            distance = lenDiff;
+            return false;
         }
-        else
-        {
-            int threshold = (int)Math.Floor(maxLen * 0.20);
-            return distance <= threshold;
-        }
+
+        distance = CalculateCaseInsensitive(s, t);
+        return distance <= allowedDistance;
     }
 }

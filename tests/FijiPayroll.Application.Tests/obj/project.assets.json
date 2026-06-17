@@ -665,6 +665,7 @@
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
           "FijiPayroll.Domain": "1.0.0",
+          "FijiPayroll.SDK": "1.0.0",
           "FijiPayroll.Shared": "1.0.0",
           "FluentValidation": "11.9.0",
           "FluentValidation.DependencyInjectionExtensions": "11.9.0",
@@ -691,6 +692,16 @@
         },
         "runtime": {
           "bin/placeholder/FijiPayroll.Domain.dll": {}
+        }
+      },
+      "FijiPayroll.SDK/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/FijiPayroll.SDK.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/FijiPayroll.SDK.dll": {}
         }
       },
       "FijiPayroll.Shared/1.0.0": {
@@ -1647,6 +1658,11 @@
       "type": "project",
       "path": "../../src/FijiPayroll.Domain/FijiPayroll.Domain.csproj",
       "msbuildProject": "../../src/FijiPayroll.Domain/FijiPayroll.Domain.csproj"
+    },
+    "FijiPayroll.SDK/1.0.0": {
+      "type": "project",
+      "path": "../../src/FijiPayroll.SDK/FijiPayroll.SDK.csproj",
+      "msbuildProject": "../../src/FijiPayroll.SDK/FijiPayroll.SDK.csproj"
     },
     "FijiPayroll.Shared/1.0.0": {
       "type": "project",

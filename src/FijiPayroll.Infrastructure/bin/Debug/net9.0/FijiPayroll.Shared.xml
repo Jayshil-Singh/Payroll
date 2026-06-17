@@ -197,6 +197,154 @@
             Converts a percentage value (e.g., 8.0) to its decimal fraction equivalent (0.08).
             </summary>
         </member>
+        <member name="T:FijiPayroll.Shared.Formula.FormulaOptimizer">
+            <summary>
+            Optimizes the formula AST by folding constant expressions.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Shared.Formula.FormulaParser">
+            <summary>
+            Parses lexical tokens into an executable AST.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Shared.Formula.FormulaTokenizer">
+            <summary>
+            Tokenizes raw formula expressions into lexical tokens.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Shared.Formula.IFormulaCache">
+            <summary>
+            Cache interface for compiled AST rules to avoid parsing overhead.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Formula.IFormulaCache.GetOrAdd(System.Int32,System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32,System.String,System.Func{FijiPayroll.Shared.Formula.AstNode})">
+            <summary>
+            Gets or compiles and adds a rule AST node to the cache.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Shared.Formula.RuleDependencyGraph">
+            <summary>
+            Represents a directed acyclic graph (DAG) of component dependencies and handles topological sort and validations.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Formula.RuleDependencyGraph.AddNode(System.String)">
+            <summary>
+            Adds a component node and its code.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Formula.RuleDependencyGraph.AddDependency(System.String,System.String)">
+            <summary>
+            Adds a dependency edge: parent depends on child.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Formula.RuleDependencyGraph.Validate">
+            <summary>
+            Validates the graph for cycles, missing dependencies, and unused references.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Shared.Formula.RuleExecutionContext">
+            <summary>
+            Immutable execution context mapping variables and tenant boundaries for a rule calculation.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Formula.RuleExecutionContext.#ctor(System.Int32,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Int32,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Decimal},System.Threading.CancellationToken)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Shared.Formula.RuleExecutionContext"/> class.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionContext.CompanyId">
+            <summary>Gets the company tenant ID.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionContext.BranchId">
+            <summary>Gets the branch ID.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionContext.DepartmentId">
+            <summary>Gets the department ID.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionContext.EmployeeId">
+            <summary>Gets the employee ID.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionContext.PayrollRunId">
+            <summary>Gets the payroll run ID.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionContext.RuleSetId">
+            <summary>Gets the rule set ID.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionContext.FiscalYear">
+            <summary>Gets the fiscal year.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionContext.PayrollFrequency">
+            <summary>Gets the payroll frequency (e.g. Weekly, Fortnightly, Monthly).</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionContext.Currency">
+            <summary>Gets the currency code (e.g. FJD).</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionContext.Culture">
+            <summary>Gets the culture code (e.g. en-FJ).</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionContext.Variables">
+            <summary>Gets the read-only dictionary of variables available to the engine.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionContext.CancellationToken">
+            <summary>Gets the cancellation token for the rule execution.</summary>
+        </member>
+        <member name="T:FijiPayroll.Shared.Formula.RuleExecutionPipeline">
+            <summary>
+            Orchestrates the execution of a business rule through a complete validation, compilation, caching, and metrics pipeline.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Formula.RuleExecutionPipeline.#ctor(FijiPayroll.Shared.Formula.IFormulaCache)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Shared.Formula.RuleExecutionPipeline"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Formula.RuleExecutionPipeline.ExecuteAsync(System.String,FijiPayroll.Shared.Formula.RuleExecutionContext,System.Int32,System.Int32,System.String)">
+            <summary>
+            Executes the pipeline for the given formula expression text.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Shared.Formula.RuleExecutionResult">
+            <summary>
+            Contains the output and execution metrics/trace from a business rule execution.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Formula.RuleExecutionResult.#ctor(System.Decimal,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.Double,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String},System.String,System.Int32,System.String)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Shared.Formula.RuleExecutionResult"/> class.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionResult.Value">
+            <summary>Gets the calculated value.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionResult.VariablesUsed">
+            <summary>Gets the list of variables referenced during evaluation.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionResult.RulesExecuted">
+            <summary>Gets the list of rule codes/IDs evaluated.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionResult.ExecutionTime">
+            <summary>Gets the time taken in milliseconds to evaluate the rule.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionResult.Warnings">
+            <summary>Gets any warning messages produced during compilation or execution.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionResult.Errors">
+            <summary>Gets any error messages produced during compilation or execution.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionResult.ExecutionHash">
+            <summary>Gets the SHA256 audit hash of the expression.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionResult.RuleVersion">
+            <summary>Gets the version of the rule executed.</summary>
+        </member>
+        <member name="P:FijiPayroll.Shared.Formula.RuleExecutionResult.ExecutionTrace">
+            <summary>Gets a detailed trace log of the calculation steps.</summary>
+        </member>
+        <member name="T:FijiPayroll.Shared.Formula.RuleSemanticValidator">
+            <summary>
+            Performs semantic checks on the formula AST (e.g., matching argument counts, valid variable references, forbidden functions).
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Shared.Guards.Guard">
             <summary>
             Provides defensive guard clauses to validate arguments and state
@@ -267,6 +415,16 @@
             <param name="s">First string.</param>
             <param name="t">Second string.</param>
             <returns>The Levenshtein distance as an integer.</returns>
+        </member>
+        <member name="M:FijiPayroll.Shared.Utilities.LevenshteinDistance.Calculate(System.ReadOnlySpan{System.Char},System.ReadOnlySpan{System.Char})">
+            <summary>
+            Computes the Levenshtein distance between two character spans.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Utilities.LevenshteinDistance.CalculateCaseInsensitive(System.ReadOnlySpan{System.Char},System.ReadOnlySpan{System.Char})">
+            <summary>
+            Computes the Levenshtein distance between two character spans case-insensitively.
+            </summary>
         </member>
         <member name="M:FijiPayroll.Shared.Utilities.LevenshteinDistance.IsFuzzyMatch(System.String,System.String,System.Int32@)">
             <summary>

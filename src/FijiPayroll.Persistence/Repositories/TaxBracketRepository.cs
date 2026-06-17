@@ -25,7 +25,7 @@ public sealed class TaxBracketRepository : ITaxBracketRepository
     /// <inheritdoc />
     public async Task<IReadOnlyList<TaxBracket>> GetBracketsByVersionAndFrequencyAsync(
         string taxVersion,
-        PayrollFrequency frequency,
+        PayrollFrequencyType frequency,
         CancellationToken cancellationToken = default)
     {
         return await _context.TaxBrackets

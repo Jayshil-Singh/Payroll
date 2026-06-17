@@ -41,7 +41,7 @@ public sealed class TaxBracket : AuditableEntity
     /// <summary>
     /// Pay frequency of the pay group.
     /// </summary>
-    public PayrollFrequency Frequency { get; private set; }
+    public PayrollFrequencyType Frequency { get; private set; }
 
     /// <summary>
     /// Lower boundary of taxable income for this bracket.
@@ -95,7 +95,7 @@ public sealed class TaxBracket : AuditableEntity
     public static TaxBracket Create(
         string taxVersion,
         string residencyStatus,
-        PayrollFrequency frequency,
+        PayrollFrequencyType frequency,
         decimal lowerLimit,
         decimal upperLimit,
         decimal taxRate,

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using FijiPayroll.Application.Features.PayrollComponents.Queries.GetPayrollComponentList;
 using FijiPayroll.Application.Services;
 using FijiPayroll.Domain.Enumerations;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -15,6 +16,7 @@ namespace FijiPayroll.WPF.ViewModels;
 public sealed partial class PayrollComponentViewModel : ObservableObject
 {
     private readonly IPayrollComponentService _componentService;
+    private readonly IServiceProvider _serviceProvider;
     private int _companyId = 1; // Default company context
 
     [ObservableProperty]
@@ -53,9 +55,11 @@ public sealed partial class PayrollComponentViewModel : ObservableObject
     /// Initialises a new instance of the <see cref="PayrollComponentViewModel"/> class.
     /// </summary>
     /// <param name="componentService">The payroll component application service.</param>
-    public PayrollComponentViewModel(IPayrollComponentService componentService)
+    /// <param name="serviceProvider">The DI service provider for resolving editor windows.</param>
+    public PayrollComponentViewModel(IPayrollComponentService componentService, IServiceProvider serviceProvider)
     {
         _componentService = componentService;
+        _serviceProvider  = serviceProvider;
 
         LoadComponentsCommand = new AsyncRelayCommand(LoadComponentsAsync);
         NextPageCommand = new AsyncRelayCommand(GoToNextPageAsync, () => PageNumber < TotalPages);
@@ -63,6 +67,11 @@ public sealed partial class PayrollComponentViewModel : ObservableObject
         ToggleActiveCommand = new AsyncRelayCommand<PayrollComponentSummaryDto>(ToggleActiveAsync);
         DuplicateCommand = new AsyncRelayCommand<PayrollComponentSummaryDto>(DuplicateAsync);
         DeleteCommand = new AsyncRelayCommand<PayrollComponentSummaryDto>(DeleteAsync);
+        CreateNewCommand = new AsyncRelayCommand(CreateNewAsync);
+        EditCommand = new AsyncRelayCommand<PayrollComponentSummaryDto>(EditAsync);
+        OpenSimulationCommand = new RelayCommand(OpenSimulation);
+        OpenCloneWizardCommand = new RelayCommand(OpenCloneWizard);
+        OpenPackageManagerCommand = new RelayCommand(OpenPackageManager);
     }
 
     /// <summary>Gets the load components command.</summary>
@@ -82,6 +91,21 @@ public sealed partial class PayrollComponentViewModel : ObservableObject
 
     /// <summary>Gets the delete component command.</summary>
     public IAsyncRelayCommand<PayrollComponentSummaryDto> DeleteCommand { get; }
+
+    /// <summary>Gets the command that opens the editor window in create mode.</summary>
+    public IAsyncRelayCommand CreateNewCommand { get; }
+
+    /// <summary>Gets the command that opens the editor window in edit mode for the selected component.</summary>
+    public IAsyncRelayCommand<PayrollComponentSummaryDto> EditCommand { get; }
+
+    /// <summary>Gets the command that opens the simulation panel.</summary>
+    public IRelayCommand OpenSimulationCommand { get; }
+
+    /// <summary>Gets the command that opens the clone wizard.</summary>
+    public IRelayCommand OpenCloneWizardCommand { get; }
+
+    /// <summary>Gets the command that opens the package manager dashboard.</summary>
+    public IRelayCommand OpenPackageManagerCommand { get; }
 
     /// <summary>
     /// Loads components based on search terms, filter types, and page numbers.
@@ -247,5 +271,77 @@ public sealed partial class PayrollComponentViewModel : ObservableObject
         {
             IsLoading = false;
         }
+    }
+
+    private async Task CreateNewAsync(CancellationToken cancellationToken)
+    {
+        var formVm = _serviceProvider.GetRequiredService<PayrollComponentFormViewModel>();
+        var window = new Views.PayrollComponentEditorWindow(formVm)
+        {
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        bool saved = window.ShowDialog() == true;
+        if (saved)
+        {
+            await LoadComponentsAsync();
+        }
+    }
+
+    private async Task EditAsync(PayrollComponentSummaryDto? dto, CancellationToken cancellationToken)
+    {
+        if (dto is null) return;
+
+        var formVm = _serviceProvider.GetRequiredService<PayrollComponentFormViewModel>();
+
+        // Load existing data into the form ViewModel before showing the window
+        await formVm.LoadForEditAsync(dto.Id, cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(formVm.ErrorMessage))
+        {
+            MessageBox.Show(formVm.ErrorMessage, "Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        var window = new Views.PayrollComponentEditorWindow(formVm)
+        {
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        bool saved = window.ShowDialog() == true;
+        if (saved)
+        {
+            await LoadComponentsAsync();
+        }
+    }
+
+    private void OpenSimulation()
+    {
+        var vm = _serviceProvider.GetRequiredService<ComponentSimulationViewModel>();
+        var window = new Views.ComponentSimulationWindow(vm)
+        {
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+        window.ShowDialog();
+    }
+
+    private void OpenCloneWizard()
+    {
+        var vm = _serviceProvider.GetRequiredService<CloneWizardViewModel>();
+        var window = new Views.CloneWizardWindow(vm)
+        {
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+        window.ShowDialog();
+    }
+
+    private void OpenPackageManager()
+    {
+        var vm = _serviceProvider.GetRequiredService<PackageManagerViewModel>();
+        var window = new Views.PackageManagerWindow(vm)
+        {
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+        window.ShowDialog();
     }
 }

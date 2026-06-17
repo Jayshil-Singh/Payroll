@@ -103,7 +103,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             StartDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             EndDate: new DateTime(2026, 6, 7, 0, 0, 0, DateTimeKind.Utc),
             PaymentDate: new DateTime(2026, 6, 10, 0, 0, 0, DateTimeKind.Utc),
-            Frequency: PayrollFrequency.Fortnightly,
+            Frequency: PayrollFrequencyType.Fortnightly,
             Description: "First week of June"
         );
 
@@ -133,7 +133,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             startDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             endDate: new DateTime(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc),
             paymentDate: new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
-            frequency: PayrollFrequency.Fortnightly,
+            frequency: PayrollFrequencyType.Fortnightly,
             description: "Fortnightly payroll"
         );
         await _unitOfWork.PayrollRuns.AddAsync(run);
@@ -196,7 +196,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             startDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             endDate: new DateTime(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc),
             paymentDate: new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
-            frequency: PayrollFrequency.Fortnightly,
+            frequency: PayrollFrequencyType.Fortnightly,
             description: "Concurrency"
         );
         await _unitOfWork.PayrollRuns.AddAsync(run);
@@ -239,7 +239,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             startDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             endDate: new DateTime(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc),
             paymentDate: new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
-            frequency: PayrollFrequency.Fortnightly,
+            frequency: PayrollFrequencyType.Fortnightly,
             description: "Reset"
         );
         await _unitOfWork.PayrollRuns.AddAsync(run);
@@ -285,7 +285,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             startDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             endDate: new DateTime(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc),
             paymentDate: new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
-            frequency: PayrollFrequency.Fortnightly,
+            frequency: PayrollFrequencyType.Fortnightly,
             description: "Lock override"
         );
         await _unitOfWork.PayrollRuns.AddAsync(run);
@@ -327,7 +327,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             startDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             endDate: new DateTime(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc),
             paymentDate: new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
-            frequency: PayrollFrequency.Fortnightly,
+            frequency: PayrollFrequencyType.Fortnightly,
             description: "Error test"
         );
         await _unitOfWork.PayrollRuns.AddAsync(run);
@@ -369,7 +369,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
                 residencyStatus: "Resident",
                 department: "Scalability",
                 baseSalary: 1200.00m + (i % 100),
-                frequency: PayrollFrequency.Fortnightly,
+                frequency: PayrollFrequencyType.Fortnightly,
                 isFnpfExempt: false,
                 isTaxExempt: false,
                 isActive: true
@@ -392,7 +392,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             startDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             endDate: new DateTime(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc),
             paymentDate: new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
-            frequency: PayrollFrequency.Fortnightly,
+            frequency: PayrollFrequencyType.Fortnightly,
             description: "Scalability benchmark"
         );
         await _unitOfWork.PayrollRuns.AddAsync(run);
@@ -428,7 +428,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             startDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             endDate: new DateTime(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc),
             paymentDate: new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
-            frequency: PayrollFrequency.Fortnightly,
+            frequency: PayrollFrequencyType.Fortnightly,
             description: "Duplicate request ID"
         );
         await _unitOfWork.PayrollRuns.AddAsync(run);
@@ -471,7 +471,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             startDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             endDate: new DateTime(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc),
             paymentDate: new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
-            frequency: PayrollFrequency.Fortnightly,
+            frequency: PayrollFrequencyType.Fortnightly,
             description: "Trace lock test"
         );
         await _unitOfWork.PayrollRuns.AddAsync(run);
@@ -513,7 +513,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             startDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             endDate: new DateTime(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc),
             paymentDate: new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
-            frequency: PayrollFrequency.Fortnightly,
+            frequency: PayrollFrequencyType.Fortnightly,
             description: "Ordering verification"
         );
         await _unitOfWork.PayrollRuns.AddAsync(run);
@@ -606,7 +606,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             startDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             endDate: new DateTime(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc),
             paymentDate: new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
-            frequency: PayrollFrequency.Fortnightly,
+            frequency: PayrollFrequencyType.Fortnightly,
             description: "Stress test"
         );
         await _unitOfWork.PayrollRuns.AddAsync(run);
@@ -646,7 +646,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             startDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             endDate: new DateTime(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc),
             paymentDate: new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
-            frequency: PayrollFrequency.Fortnightly,
+            frequency: PayrollFrequencyType.Fortnightly,
             description: "Safety check"
         );
         await _unitOfWork.PayrollRuns.AddAsync(run);
@@ -686,7 +686,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             startDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             endDate: new DateTime(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc),
             paymentDate: new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
-            frequency: PayrollFrequency.Fortnightly,
+            frequency: PayrollFrequencyType.Fortnightly,
             description: "Delete safety check"
         );
         await _unitOfWork.PayrollRuns.AddAsync(run);
@@ -725,7 +725,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
                 residencyStatus: "Resident",
                 department: "ScaleOrder",
                 baseSalary: 1000.00m + i,
-                frequency: PayrollFrequency.Fortnightly,
+                frequency: PayrollFrequencyType.Fortnightly,
                 isFnpfExempt: false,
                 isTaxExempt: false,
                 isActive: true
@@ -748,7 +748,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
             startDate: new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
             endDate: new DateTime(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc),
             paymentDate: new DateTime(2026, 6, 15, 0, 0, 0, DateTimeKind.Utc),
-            frequency: PayrollFrequency.Fortnightly,
+            frequency: PayrollFrequencyType.Fortnightly,
             description: "Ordering correctness check"
         );
         await _unitOfWork.PayrollRuns.AddAsync(run);

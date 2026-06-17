@@ -149,6 +149,21 @@ public sealed class PayrollComponent : SoftDeleteEntity
     /// </summary>
     public bool IsActive { get; private set; }
 
+    /// <summary>
+    /// Gets the current lifecycle status of the component.
+    /// </summary>
+    public ComponentStatus Status { get; private set; } = ComponentStatus.Active;
+
+    /// <summary>
+    /// Gets the collection of executable rules associated with this component.
+    /// </summary>
+    public ICollection<PayrollComponentRule> Rules { get; private set; } = new List<PayrollComponentRule>();
+
+    /// <summary>
+    /// Gets the dependencies for this payroll component.
+    /// </summary>
+    public ICollection<PayrollComponentDependency> Dependencies { get; private set; } = new List<PayrollComponentDependency>();
+
     // ─── Factory Method ──────────────────────────────────────────────────────────
 
     /// <summary>
@@ -257,6 +272,7 @@ public sealed class PayrollComponent : SoftDeleteEntity
     public void Activate()
     {
         IsActive = true;
+        Status = ComponentStatus.Active;
     }
 
     /// <summary>
@@ -275,6 +291,7 @@ public sealed class PayrollComponent : SoftDeleteEntity
         }
 
         IsActive = false;
+        Status = ComponentStatus.Inactive;
     }
 
     /// <summary>
@@ -293,6 +310,16 @@ public sealed class PayrollComponent : SoftDeleteEntity
 
         base.SoftDelete(deletedBy);
         IsActive = false;
+        Status = ComponentStatus.Archived;
+    }
+
+    /// <summary>
+    /// Sets this component status to Draft.
+    /// </summary>
+    public void Draft()
+    {
+        IsActive = false;
+        Status = ComponentStatus.Draft;
     }
 
     /// <summary>

@@ -12,7 +12,7 @@ namespace FijiPayroll.Application.Features.PayrollRuns.Queries.GetPayrollRunList
 
 public sealed record GetPayrollRunListQuery(
     int CompanyId,
-    PayrollFrequency? FrequencyFilter,
+    PayrollFrequencyType? FrequencyFilter,
     PayrollRunStatus? StatusFilter,
     int PageNumber,
     int PageSize

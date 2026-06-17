@@ -28,6 +28,15 @@ public interface IUnitOfWork : IDisposable
     /// <summary>Repository for search index operations.</summary>
     ISearchIndexRepository SearchIndexes { get; }
 
+    /// <summary>Repository for approval workflow operations.</summary>
+    IApprovalWorkflowRepository Workflows { get; }
+
+    /// <summary>Repository for Company Setup Wizard operations.</summary>
+    ISetupRepository Setup { get; }
+
+    /// <summary>Repository for Compliance aggregate operations.</summary>
+    IComplianceRepository Compliance { get; }
+
     /// <summary>
     /// Persists all pending changes tracked by EF Core to the database in a single
     /// atomic operation.

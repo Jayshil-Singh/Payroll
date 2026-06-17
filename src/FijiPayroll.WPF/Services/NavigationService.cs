@@ -70,6 +70,7 @@ public sealed class NavigationService : INavigationService, IDisposable
                 nameof(ReportsViewModel)    => "Home > Statutory Reports",
                 nameof(AdminViewModel)      => "Home > Administration",
                 nameof(LogViewerViewModel)  => "Home > Administration > Log Viewer",
+                nameof(CompanySetupDashboardViewModel) => "Home > Onboarding Wizard",
                 var n                       => $"Home > {n.Replace("ViewModel", "")}"
             };
         }

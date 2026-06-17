@@ -216,6 +216,27 @@
         <member name="M:FijiPayroll.Application.Common.Interfaces.IImportEngine.CommitImportAsync(System.Guid,System.Threading.CancellationToken)">
             <summary>Commits the temporary imported database records to the primary master schema.</summary>
         </member>
+        <member name="T:FijiPayroll.Application.Common.Interfaces.IJsonSeedLoader">
+            <summary>
+            Service interface responsible for loading static compliance and lookup reference data from JSON files.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Common.Interfaces.IJsonSeedLoader.SeedBanksAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Loads banks and branches reference data for the specified company tenant.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Common.Interfaces.ILicenseFingerprintProvider">
+            <summary>
+            Service interface for generating unique system hardware fingerprints.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Common.Interfaces.ILicenseFingerprintProvider.GenerateFingerprintAsync">
+            <summary>
+            Generates a resilient hardware fingerprint containing the Installation ID and Machine ID Hash.
+            </summary>
+            <returns>A task representing the asynchronous fingerprint generation, containing the LicenseFingerprint.</returns>
+        </member>
         <member name="T:FijiPayroll.Application.Common.Interfaces.IModulePlugin">
             <summary>
             Defines the startup contract for modular system plugins.
@@ -317,6 +338,28 @@
         </member>
         <member name="M:FijiPayroll.Application.Common.Interfaces.MediatRNotificationWrapper`1.#ctor(`0)">
             <summary>Initializes the wrapper.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Common.Models.LicenseFingerprint">
+            <summary>
+            Represents a hardened machine license fingerprint.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Common.Models.LicenseFingerprint.#ctor(System.String,System.String)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Application.Common.Models.LicenseFingerprint"/> record.
+            </summary>
+            <param name="installationId">The unique installation identifier.</param>
+            <param name="machineIdHash">The hardware-tied machine identification hash.</param>
+        </member>
+        <member name="P:FijiPayroll.Application.Common.Models.LicenseFingerprint.InstallationId">
+            <summary>
+            Gets the unique installation identifier.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Common.Models.LicenseFingerprint.MachineIdHash">
+            <summary>
+            Gets the hardware-tied machine identification hash.
+            </summary>
         </member>
         <member name="T:FijiPayroll.Application.Common.Models.PagedResult`1">
             <summary>
@@ -459,6 +502,265 @@
             <param name="services">The service collection to register into.</param>
             <returns>The same <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for chaining.</returns>
         </member>
+        <member name="T:FijiPayroll.Application.Features.CompanySetup.Commands.CreateCompanyWizard.CreateCompanyWizardCommand">
+            <summary>
+            CQRS Command to finalize onboarding for a company wizard setup run, using transactions.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.CompanySetup.Commands.CreateCompanyWizard.CreateCompanyWizardCommand.#ctor(System.Int32,System.Guid)">
+            <summary>
+            CQRS Command to finalize onboarding for a company wizard setup run, using transactions.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.CompanySetup.Commands.CreateCompanyWizard.CreateCompanyWizardCommandHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.CompanySetup.Commands.CreateCompanyWizard.CreateCompanyWizardCommand"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.CompanySetup.Commands.CreateCompanyWizard.CreateCompanyWizardCommandHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Services.ISetupWorkflowService,FijiPayroll.Application.Common.Interfaces.ICurrentUserService,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Features.CompanySetup.Commands.CreateCompanyWizard.CreateCompanyWizardCommandHandler})">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Application.Features.CompanySetup.Commands.CreateCompanyWizard.CreateCompanyWizardCommandHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.CompanySetup.Commands.CreateCompanyWizard.CreateCompanyWizardCommandHandler.Handle(FijiPayroll.Application.Features.CompanySetup.Commands.CreateCompanyWizard.CreateCompanyWizardCommand,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.CompanySetup.Commands.CreateCompanyWizard.CreateCompanyWizardCommandValidator">
+            <summary>
+            Validator for <see cref="T:FijiPayroll.Application.Features.CompanySetup.Commands.CreateCompanyWizard.CreateCompanyWizardCommand"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.CompanySetup.Commands.CreateCompanyWizard.CreateCompanyWizardCommandValidator.#ctor">
+            <summary>
+            Initialises validation rules.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.CompanySetup.EventHandlers.CompanySetupCompletedEventHandler">
+            <summary>
+            Background MediatR handler to react to the <see cref="T:FijiPayroll.Domain.Events.CompanySetupCompletedEvent"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.CompanySetup.EventHandlers.CompanySetupCompletedEventHandler.#ctor(FijiPayroll.Application.Common.Interfaces.ISearchService,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Features.CompanySetup.EventHandlers.CompanySetupCompletedEventHandler})">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Application.Features.CompanySetup.EventHandlers.CompanySetupCompletedEventHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.CompanySetup.EventHandlers.CompanySetupCompletedEventHandler.Handle(FijiPayroll.Application.Common.Interfaces.MediatRNotificationWrapper{FijiPayroll.Domain.Events.CompanySetupCompletedEvent},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.CompanySetup.Queries.ValidateCompanyWizard.ValidateCompanyWizardQuery">
+            <summary>
+            CQRS Query to perform a dry-run validation check across all Company Setup Wizard steps.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.CompanySetup.Queries.ValidateCompanyWizard.ValidateCompanyWizardQuery.#ctor(System.Int32)">
+            <summary>
+            CQRS Query to perform a dry-run validation check across all Company Setup Wizard steps.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.CompanySetup.Queries.ValidateCompanyWizard.ValidateCompanyWizardQueryHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.CompanySetup.Queries.ValidateCompanyWizard.ValidateCompanyWizardQuery"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.CompanySetup.Queries.ValidateCompanyWizard.ValidateCompanyWizardQueryHandler.#ctor(FijiPayroll.Application.Services.ISetupWorkflowService,FijiPayroll.Application.Common.Interfaces.ICurrentUserService)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Application.Features.CompanySetup.Queries.ValidateCompanyWizard.ValidateCompanyWizardQueryHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.CompanySetup.Queries.ValidateCompanyWizard.ValidateCompanyWizardQueryHandler.Handle(FijiPayroll.Application.Features.CompanySetup.Queries.ValidateCompanyWizard.ValidateCompanyWizardQuery,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.CompanySetup.Queries.ValidateCompanyWizard.ValidateCompanyWizardQueryValidator">
+            <summary>
+            Validator for <see cref="T:FijiPayroll.Application.Features.CompanySetup.Queries.ValidateCompanyWizard.ValidateCompanyWizardQuery"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.CompanySetup.Queries.ValidateCompanyWizard.ValidateCompanyWizardQueryValidator.#ctor">
+            <summary>
+            Initialises validation rules.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Commands.LockPeriodCommand">
+            <summary>
+            CQRS Command to transition a compliance period state to Locked or Open.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.LockPeriodCommand.#ctor(System.Int32,System.Boolean)">
+            <summary>
+            CQRS Command to transition a compliance period state to Locked or Open.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Commands.LockPeriodCommandHandler">
+            <summary>
+            Handles LockPeriodCommand.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.LockPeriodCommandHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Features.Compliance.Commands.LockPeriodCommandHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.LockPeriodCommandHandler.Handle(FijiPayroll.Application.Features.Compliance.Commands.LockPeriodCommand,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Commands.RunSimulationCommand">
+            <summary>
+            CQRS Command to execute statutory rule changes simulation.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.RunSimulationCommand.#ctor(System.Int32,System.Int32,System.Collections.Generic.List{FijiPayroll.Application.Services.RuleSimulationEngine.RuleOverride})">
+            <summary>
+            CQRS Command to execute statutory rule changes simulation.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Commands.RunSimulationCommandHandler">
+            <summary>
+            Handles RunSimulationCommand.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.RunSimulationCommandHandler.#ctor(FijiPayroll.Application.Services.RuleSimulationEngine)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Features.Compliance.Commands.RunSimulationCommandHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.RunSimulationCommandHandler.Handle(FijiPayroll.Application.Features.Compliance.Commands.RunSimulationCommand,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Commands.StartComplianceJobCommand">
+            <summary>
+            CQRS Command to schedule and start a compliance background job.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.StartComplianceJobCommand.#ctor(System.Int32,System.String)">
+            <summary>
+            CQRS Command to schedule and start a compliance background job.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Commands.StartComplianceJobCommandHandler">
+            <summary>
+            Handles StartComplianceJobCommand.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.StartComplianceJobCommandHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Features.Compliance.Commands.StartComplianceJobCommandHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.StartComplianceJobCommandHandler.Handle(FijiPayroll.Application.Features.Compliance.Commands.StartComplianceJobCommand,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Commands.SubmitOverrideCommand">
+            <summary>
+            CQRS Command to request an override of compliance limits or rules.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.SubmitOverrideCommand.#ctor(System.Int32,System.String,System.Decimal,FijiPayroll.Domain.Enumerations.ApprovalRole,System.String)">
+            <summary>
+            CQRS Command to request an override of compliance limits or rules.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Commands.SubmitOverrideCommandHandler">
+            <summary>
+            Handles SubmitOverrideCommand.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.SubmitOverrideCommandHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Features.Compliance.Commands.SubmitOverrideCommandHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.SubmitOverrideCommandHandler.Handle(FijiPayroll.Application.Features.Compliance.Commands.SubmitOverrideCommand,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.ComplianceDashboardModel">
+            <summary>Represents compliance dashboard details.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.ComplianceDashboardModel.#ctor(System.String,System.String,System.Int32,System.Collections.Generic.List{FijiPayroll.Application.Features.Compliance.Queries.SubmissionSummary})">
+            <summary>Represents compliance dashboard details.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.SubmissionSummary">
+            <summary>Represents a summary representation of submission documents.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.SubmissionSummary.#ctor(System.Int32,System.String,System.String,System.DateTime,System.String)">
+            <summary>Represents a summary representation of submission documents.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.GetComplianceDashboardQuery">
+            <summary>
+            CQRS Query to retrieve summary dashboard statistics for the compliance management view.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.GetComplianceDashboardQuery.#ctor(System.Int32)">
+            <summary>
+            CQRS Query to retrieve summary dashboard statistics for the compliance management view.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.GetComplianceDashboardQueryHandler">
+            <summary>
+            Handles GetComplianceDashboardQuery.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.GetComplianceDashboardQueryHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Features.Compliance.Queries.GetComplianceDashboardQueryHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.GetComplianceDashboardQueryHandler.Handle(FijiPayroll.Application.Features.Compliance.Queries.GetComplianceDashboardQuery,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.DiagnosticsInfoModel">
+            <summary>Represents diagnostics HUD layout values.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.DiagnosticsInfoModel.#ctor(System.Int32,System.Int64,System.Double,System.Int32,System.Int32,System.Int32,System.Int32,System.Double)">
+            <summary>Represents diagnostics HUD layout values.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.GetDiagnosticsInfoQuery">
+            <summary>
+            CQRS Query to retrieve real-time system performance diagnostics and thread metrics.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.GetDiagnosticsInfoQueryHandler">
+            <summary>
+            Handles GetDiagnosticsInfoQuery.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.GetDiagnosticsInfoQueryHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Features.Compliance.Queries.GetDiagnosticsInfoQueryHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.GetDiagnosticsInfoQueryHandler.Handle(FijiPayroll.Application.Features.Compliance.Queries.GetDiagnosticsInfoQuery,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.ReconciliationVarianceModel">
+            <summary>Represents variance reconciliation details.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.ReconciliationVarianceModel.#ctor(System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.String)">
+            <summary>Represents variance reconciliation details.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.GetReconciliationVarianceQuery">
+            <summary>
+            CQRS Query to calculate reconciliation variance between payroll ledgers and export documents.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.GetReconciliationVarianceQuery.#ctor(System.Int32)">
+            <summary>
+            CQRS Query to calculate reconciliation variance between payroll ledgers and export documents.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.GetReconciliationVarianceQueryHandler">
+            <summary>
+            Handles GetReconciliationVarianceQuery.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.GetReconciliationVarianceQueryHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Features.Compliance.Queries.GetReconciliationVarianceQueryHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.GetReconciliationVarianceQueryHandler.Handle(FijiPayroll.Application.Features.Compliance.Queries.GetReconciliationVarianceQuery,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="T:FijiPayroll.Application.Features.Employees.Commands.CreateEmployee.PaymentMethodInput">
             <summary>
             Input model representing a payment method allocation for an employee.
@@ -474,7 +776,7 @@
             CQRS Command to create a new Employee master data record.
             </summary>
         </member>
-        <member name="M:FijiPayroll.Application.Features.Employees.Commands.CreateEmployee.CreateEmployeeCommand.#ctor(System.Int32,System.String,System.String,System.String,System.String,System.String,System.Decimal,FijiPayroll.Domain.Enumerations.PayrollFrequency,System.Boolean,System.Boolean,System.Boolean,FijiPayroll.Domain.Enumerations.EmploymentType,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Features.Employees.Commands.CreateEmployee.PaymentMethodInput})">
+        <member name="M:FijiPayroll.Application.Features.Employees.Commands.CreateEmployee.CreateEmployeeCommand.#ctor(System.Int32,System.String,System.String,System.String,System.String,System.String,System.Decimal,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.Boolean,System.Boolean,System.Boolean,FijiPayroll.Domain.Enumerations.EmploymentType,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Features.Employees.Commands.CreateEmployee.PaymentMethodInput})">
             <summary>
             CQRS Command to create a new Employee master data record.
             </summary>
@@ -503,7 +805,7 @@
             CQRS Command to update an existing Employee record.
             </summary>
         </member>
-        <member name="M:FijiPayroll.Application.Features.Employees.Commands.UpdateEmployee.UpdateEmployeeCommand.#ctor(System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.String,System.Decimal,FijiPayroll.Domain.Enumerations.PayrollFrequency,System.Boolean,System.Boolean,System.Boolean,FijiPayroll.Domain.Enumerations.EmploymentType,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Features.Employees.Commands.CreateEmployee.PaymentMethodInput})">
+        <member name="M:FijiPayroll.Application.Features.Employees.Commands.UpdateEmployee.UpdateEmployeeCommand.#ctor(System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.String,System.Decimal,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.Boolean,System.Boolean,System.Boolean,FijiPayroll.Domain.Enumerations.EmploymentType,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Features.Employees.Commands.CreateEmployee.PaymentMethodInput})">
             <summary>
             CQRS Command to update an existing Employee record.
             </summary>
@@ -654,6 +956,18 @@
         </member>
         <member name="M:FijiPayroll.Application.Features.Lookups.Queries.GetLookups.GetLookupsQueryHandler.Handle(FijiPayroll.Application.Features.Lookups.Queries.GetLookups.GetLookupsQuery,System.Threading.CancellationToken)">
             <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.PayrollComponents.Commands.CloneComponents.CloneComponentsCommand">
+            <summary>
+            Command to clone payroll components from a source company to a target company.
+            Supports Merge, Replace, or Skip modes.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.PayrollComponents.Commands.CloneComponents.CloneComponentsCommand.#ctor(System.Int32,System.Int32,System.String,System.Collections.Generic.IReadOnlyList{System.Int32})">
+            <summary>
+            Command to clone payroll components from a source company to a target company.
+            Supports Merge, Replace, or Skip modes.
+            </summary>
         </member>
         <member name="T:FijiPayroll.Application.Features.PayrollComponents.Commands.CreatePayrollComponent.CreatePayrollComponentCommand">
              <summary>
@@ -1196,6 +1510,60 @@
         <member name="M:FijiPayroll.Application.Features.Search.Queries.SearchQueryHandler.Handle(FijiPayroll.Application.Features.Search.Queries.SearchQuery,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
+        <member name="T:FijiPayroll.Application.Features.Workflows.Queries.GetPendingWorkflows.GetPendingWorkflowsQuery">
+            <summary>
+            Query to retrieve all pending workflows for the current tenant.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Workflows.Queries.GetPendingWorkflows.GetPendingWorkflowsQueryHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Workflows.Queries.GetPendingWorkflows.GetPendingWorkflowsQuery"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Workflows.Queries.GetPendingWorkflows.GetPendingWorkflowsQueryHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ITenantProvider)">
+            <summary>
+            Initializes dependencies.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Workflows.Queries.GetPendingWorkflows.GetPendingWorkflowsQueryHandler.Handle(FijiPayroll.Application.Features.Workflows.Queries.GetPendingWorkflows.GetPendingWorkflowsQuery,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Services.BusinessCalendarService">
+            <summary>
+            Service providing unified calendar and period functions for Fiji Enterprise platform.
+            Handles public holidays, weekends, leave days, and fiscal tax periods.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BusinessCalendarService.IsPublicHoliday(System.DateTime)">
+            <summary>
+            Gets whether a date is a public holiday in Fiji.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BusinessCalendarService.IsWeekend(System.DateTime)">
+            <summary>
+            Gets whether a date is a weekend day.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BusinessCalendarService.GetWorkingDays(System.DateTime,System.DateTime)">
+            <summary>
+            Calculates working days between start and end dates.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BusinessCalendarService.GetFinancialYear(System.DateTime)">
+            <summary>
+            Determines the financial year for a given date.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BusinessCalendarService.GetFnpfPeriodCode(System.DateTime)">
+            <summary>
+            Determines if a date falls in a given FNPF period.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BusinessCalendarService.GetFrcsPeriodCode(System.DateTime)">
+            <summary>
+            Determines if a date falls in a given FRCS tax period.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Application.Services.CalculationResultSnapshot">
             <summary>
             Output data structure holding the results of in-memory payroll calculation.
@@ -1210,6 +1578,49 @@
             <summary>
             Computed line item result.
             </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.ComplianceValidationService">
+            <summary>
+            Composite validation engine implementing compliance validation pipelines over payroll runs, returns, and bank files.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.ComplianceValidationService.#ctor(System.Collections.Generic.IEnumerable{FijiPayroll.SDK.Interfaces.IComplianceValidator},Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Services.ComplianceValidationService})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Services.ComplianceValidationService"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.ComplianceValidationService.ValidateDataset(System.Int32,System.Object)">
+            <summary>
+            Evaluates a target compliance dataset against all registered validation rule checks.
+            </summary>
+            <param name="companyId">The company tenant context identifier.</param>
+            <param name="payload">The dataset to validate (e.g. enumerable of PaymentDetail or a payroll run).</param>
+            <returns>A sequence of validation warning and error issues.</returns>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.FiscalCalendarGenerator">
+            <summary>
+            Service implementation of the IFiscalCalendarGenerator.
+            Handles weekly, fortnightly, monthly, and custom calendar period generations.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.FiscalCalendarGenerator.GenerateCalendarAsync(System.Int32,System.Int32,System.DateTime,FijiPayroll.Domain.Enumerations.CalendarType,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Services.IFiscalCalendarGenerator">
+            <summary>
+            Service interface for generating fiscal calendars and period breakdowns.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.IFiscalCalendarGenerator.GenerateCalendarAsync(System.Int32,System.Int32,System.DateTime,FijiPayroll.Domain.Enumerations.CalendarType,System.String)">
+            <summary>
+            Generates a new FiscalCalendar with periods breakdown based on calendar type.
+            </summary>
+            <param name="companyId">The company identifier.</param>
+            <param name="fiscalYear">The fiscal year number (e.g. 2026).</param>
+            <param name="startDate">The start date of the fiscal year.</param>
+            <param name="calendarType">The calendar division structure type.</param>
+            <param name="generatedBy">The username of the generating administrator.</param>
+            <returns>A task representing the asynchronous generation, returning the generated FiscalCalendar.</returns>
         </member>
         <member name="T:FijiPayroll.Application.Services.IPayrollComponentService">
             <summary>
@@ -1257,6 +1668,42 @@
             <param name="cancellationToken">Cancellation token.</param>
             <returns>A result containing the new component's ID.</returns>
         </member>
+        <member name="M:FijiPayroll.Application.Services.IPayrollComponentService.CreateAsync(System.Int32,System.String,System.String,FijiPayroll.Domain.Enumerations.ComponentType,FijiPayroll.Domain.Enumerations.CalculationMethod,System.Nullable{System.Decimal},System.String,System.Boolean,System.Boolean,System.Int32,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new payroll component.
+            </summary>
+            <param name="companyId">The owning company identifier.</param>
+            <param name="componentCode">Unique uppercase code. Max 20 chars.</param>
+            <param name="componentName">Human-readable name. Max 200 chars.</param>
+            <param name="componentType">Classification: Earning, Deduction, Allowance, Benefit, Statutory.</param>
+            <param name="calculationMethod">Fixed, Percentage, Formula, or Manual.</param>
+            <param name="calculationValue">Dollar amount or % value; null for Formula/Manual.</param>
+            <param name="formula">Formula expression; null for non-Formula methods.</param>
+            <param name="isTaxable">Whether this component contributes to PAYE taxable income.</param>
+            <param name="isFnpfApplicable">Whether this component contributes to FNPF-applicable gross.</param>
+            <param name="displayOrder">Non-negative sort order on payslips.</param>
+            <param name="description">Optional internal description. Max 500 chars.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A result containing the new component's ID.</returns>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.IPayrollComponentService.UpdateAsync(System.Int32,System.String,FijiPayroll.Domain.Enumerations.ComponentType,FijiPayroll.Domain.Enumerations.CalculationMethod,System.Nullable{System.Decimal},System.String,System.Boolean,System.Boolean,System.Int32,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Updates an existing payroll component.
+            System components restrict changes to name and display order only.
+            </summary>
+            <param name="id">Primary key of the component to update.</param>
+            <param name="componentName">Updated display name. Max 200 chars.</param>
+            <param name="componentType">Updated classification (restricted for system components).</param>
+            <param name="calculationMethod">Updated calculation method (restricted for system components).</param>
+            <param name="calculationValue">Updated dollar amount or percentage.</param>
+            <param name="formula">Updated formula expression.</param>
+            <param name="isTaxable">Updated taxability flag.</param>
+            <param name="isFnpfApplicable">Updated FNPF applicability flag.</param>
+            <param name="displayOrder">Updated display order.</param>
+            <param name="description">Updated description. Max 500 chars.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A result representing success or failure.</returns>
+        </member>
         <member name="M:FijiPayroll.Application.Services.IPayrollComponentService.DeleteAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Soft-deletes a payroll component.
@@ -1276,12 +1723,12 @@
             Fetches detailed payroll run details, containing non-superseded employees lists.
             </summary>
         </member>
-        <member name="M:FijiPayroll.Application.Services.IPayrollRunService.GetListAsync(System.Int32,System.Nullable{FijiPayroll.Domain.Enumerations.PayrollFrequency},System.Nullable{FijiPayroll.Domain.Enumerations.PayrollRunStatus},System.Int32,System.Int32,System.Threading.CancellationToken)">
+        <member name="M:FijiPayroll.Application.Services.IPayrollRunService.GetListAsync(System.Int32,System.Nullable{FijiPayroll.Domain.Enumerations.PayrollFrequencyType},System.Nullable{FijiPayroll.Domain.Enumerations.PayrollRunStatus},System.Int32,System.Int32,System.Threading.CancellationToken)">
             <summary>
             Fetches paginated payroll runs.
             </summary>
         </member>
-        <member name="M:FijiPayroll.Application.Services.IPayrollRunService.CreateAsync(System.Int32,System.String,System.String,System.DateTime,System.DateTime,System.DateTime,FijiPayroll.Domain.Enumerations.PayrollFrequency,System.String,System.Threading.CancellationToken)">
+        <member name="M:FijiPayroll.Application.Services.IPayrollRunService.CreateAsync(System.Int32,System.String,System.String,System.DateTime,System.DateTime,System.DateTime,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.String,System.Threading.CancellationToken)">
             <summary>
             Creates a new payroll run header.
             </summary>
@@ -1310,6 +1757,112 @@
         <member name="M:FijiPayroll.Application.Services.IPayrollRunService.AdminOverrideLockAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>
             Forced recovery of stuck locks by administrator.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.IPayScheduleGenerator">
+            <summary>
+            Service interface for generating pay period schedules.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.IPayScheduleGenerator.GenerateSchedulesAsync(System.Int32,FijiPayroll.Domain.Entities.Company.PayrollFrequencyDefinition,FijiPayroll.Domain.Entities.Company.FiscalCalendar)">
+            <summary>
+            Generates a list of pay period schedules for a given frequency definition and fiscal calendar.
+            </summary>
+            <param name="companyId">The company identifier.</param>
+            <param name="frequencyDefinition">The payroll frequency definition configuration.</param>
+            <param name="fiscalCalendar">The fiscal calendar configuration.</param>
+            <returns>A task representing the asynchronous generation, returning a read-only list of generated PayPeriodSchedule.</returns>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.ISetupWorkflowService">
+            <summary>
+            Service interface for managing the guided Company Setup Wizard onboarding workflow.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.ISetupWorkflowService.GetOrCreateSetupStateAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves the current wizard setup state of a company, creating it if it doesn't exist.
+            </summary>
+            <param name="companyId">The company identifier.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A task returning the current CompanySetupState.</returns>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.ISetupWorkflowService.GetSetupTasksAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all completed setup tasks for a company setup wizard.
+            </summary>
+            <param name="companyId">The company identifier.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A task returning a read-only list of completed CompanySetupTask.</returns>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.ISetupWorkflowService.CompleteStepAsync(System.Int32,FijiPayroll.Domain.Enumerations.WizardStep,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Completes the specified step in the guided setup wizard, transitioning to the next step.
+            </summary>
+            <param name="companyId">The company identifier.</param>
+            <param name="step">The step to mark as completed.</param>
+            <param name="completedBy">The username of the administrator who completed the step.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A task returning a Result indicating success or list of errors.</returns>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.ISetupWorkflowService.SkipStepAsync(System.Int32,FijiPayroll.Domain.Enumerations.WizardStep,System.Threading.CancellationToken)">
+            <summary>
+            Skips the specified wizard step.
+            </summary>
+            <param name="companyId">The company identifier.</param>
+            <param name="step">The step to skip.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A task returning a Result indicating success or list of errors.</returns>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.ISetupWorkflowService.ResetSetupAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Resets the company setup wizard state to the Welcome step and clears all completed tasks.
+            </summary>
+            <param name="companyId">The company identifier.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A task returning a Result indicating success or list of errors.</returns>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.ISetupWorkflowService.ValidateSetupAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Runs a comprehensive dry-run validation checks checklist across all wizard steps.
+            </summary>
+            <param name="companyId">The company identifier.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A task returning a ValidationResultDto containing validation results.</returns>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.ISetupWorkflowService.GetCompanyAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves the company details by identifier.
+            </summary>
+            <param name="companyId">The company identifier.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A task returning the Company entity, or null if not found.</returns>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.ValidationResultDto">
+            <summary>
+            Data Transfer Object representing dry-run wizard validation checklist results.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.ValidationResultDto.#ctor(System.Boolean,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String})">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Application.Services.ValidationResultDto"/> record.
+            </summary>
+            <param name="isValid">True if all requirements are satisfied.</param>
+            <param name="errors">The list of blocking error messages.</param>
+            <param name="warnings">The list of non-blocking warning messages.</param>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.ValidationResultDto.IsValid">
+            <summary>
+            Gets a value indicating whether the wizard is in a valid state for finalization.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.ValidationResultDto.Errors">
+            <summary>
+            Gets the list of blocking error messages.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.ValidationResultDto.Warnings">
+            <summary>
+            Gets the list of non-blocking warning messages.
             </summary>
         </member>
         <member name="T:FijiPayroll.Application.Services.PayrollCalculationEngine">
@@ -1341,6 +1894,12 @@
             <inheritdoc/>
         </member>
         <member name="M:FijiPayroll.Application.Services.PayrollComponentService.GetListAsync(System.Int32,System.String,System.Nullable{FijiPayroll.Domain.Enumerations.ComponentType},System.Boolean,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.PayrollComponentService.CreateAsync(System.Int32,System.String,System.String,FijiPayroll.Domain.Enumerations.ComponentType,FijiPayroll.Domain.Enumerations.CalculationMethod,System.Nullable{System.Decimal},System.String,System.Boolean,System.Boolean,System.Int32,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.PayrollComponentService.UpdateAsync(System.Int32,System.String,FijiPayroll.Domain.Enumerations.ComponentType,FijiPayroll.Domain.Enumerations.CalculationMethod,System.Nullable{System.Decimal},System.String,System.Boolean,System.Boolean,System.Int32,System.String,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
         <member name="M:FijiPayroll.Application.Services.PayrollComponentService.ToggleActiveAsync(System.Int32,System.Boolean,System.Threading.CancellationToken)">
@@ -1411,10 +1970,10 @@
         <member name="M:FijiPayroll.Application.Services.PayrollRunService.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
-        <member name="M:FijiPayroll.Application.Services.PayrollRunService.GetListAsync(System.Int32,System.Nullable{FijiPayroll.Domain.Enumerations.PayrollFrequency},System.Nullable{FijiPayroll.Domain.Enumerations.PayrollRunStatus},System.Int32,System.Int32,System.Threading.CancellationToken)">
+        <member name="M:FijiPayroll.Application.Services.PayrollRunService.GetListAsync(System.Int32,System.Nullable{FijiPayroll.Domain.Enumerations.PayrollFrequencyType},System.Nullable{FijiPayroll.Domain.Enumerations.PayrollRunStatus},System.Int32,System.Int32,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
-        <member name="M:FijiPayroll.Application.Services.PayrollRunService.CreateAsync(System.Int32,System.String,System.String,System.DateTime,System.DateTime,System.DateTime,FijiPayroll.Domain.Enumerations.PayrollFrequency,System.String,System.Threading.CancellationToken)">
+        <member name="M:FijiPayroll.Application.Services.PayrollRunService.CreateAsync(System.Int32,System.String,System.String,System.DateTime,System.DateTime,System.DateTime,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.String,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
         <member name="M:FijiPayroll.Application.Services.PayrollRunService.CalculateAsync(System.Int32,System.Guid,System.Threading.CancellationToken)">
@@ -1454,6 +2013,15 @@
             Validates the execution context. Throws an exception or returns a list of validation errors.
             </summary>
         </member>
+        <member name="T:FijiPayroll.Application.Services.PayScheduleGenerator">
+            <summary>
+            Service implementation of the IPayScheduleGenerator.
+            Generates periodic schedules with cutoffs and payment date alignments.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.PayScheduleGenerator.GenerateSchedulesAsync(System.Int32,FijiPayroll.Domain.Entities.Company.PayrollFrequencyDefinition,FijiPayroll.Domain.Entities.Company.FiscalCalendar)">
+            <inheritdoc />
+        </member>
         <member name="T:FijiPayroll.Application.Services.ResetOperationContext">
             <summary>
             Execution context wrapper to track ongoing reset operations across handlers.
@@ -1462,6 +2030,137 @@
         <member name="P:FijiPayroll.Application.Services.ResetOperationContext.IsResetting">
             <summary>
             Gets or sets a value indicating whether the current execution thread is resetting a payroll run.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.RulePackageManager">
+            <summary>
+            Service managing statutory rule packages with digital signature verification.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.RulePackageManager.PackageManifest">
+            <summary>
+            Represents a rule package manifest structure.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.RulePackageManager.PackageValidationResult">
+            <summary>
+            Represents result of package validation.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.RulePackageManager.ValidatePackageAsync(System.String)">
+            <summary>
+            Validates package files, digital signatures, and dependency structures.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.RulePackageManager.ActivatePackageAsync(System.String)">
+            <summary>
+            Activates a validated package rules in the platform.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.RulePackageManager.DeactivatePackageAsync(System.String)">
+            <summary>
+            Deactivates a statutory package rules.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.RulePackageManager.RollbackPackageAsync(System.String)">
+            <summary>
+            Performs a database rollback for a package installation.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.RuleSimulationEngine">
+            <summary>
+            Execution engine for running dry-run simulations of statutory rule changes over finalized payroll ledgers.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.RuleSimulationEngine.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Services.RuleSimulationEngine})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Services.RuleSimulationEngine"/> class.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.RuleSimulationEngine.RuleOverride">
+            <summary>
+            Represents a rule override parameter.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.RuleSimulationEngine.RuleOverride.#ctor(System.String,System.String)">
+            <summary>
+            Represents a rule override parameter.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.RuleSimulationEngine.RuleSimulationResult">
+            <summary>
+            Represents a summary variance report for the entire simulation run.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.RuleSimulationEngine.EmployeeVariance">
+            <summary>
+            Represents variance details for an individual employee.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.RuleSimulationEngine.SimulateRuleChangeAsync(System.Int32,System.Int32,System.Collections.Generic.List{FijiPayroll.Application.Services.RuleSimulationEngine.RuleOverride},System.Threading.CancellationToken)">
+            <summary>
+            Runs a compliance calculation simulation over the payroll ledger items for a pay run, applying rule overrides in-memory.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.SetupWorkflowService">
+            <summary>
+            Service implementation for managing the guided Company Setup Wizard onboarding workflow.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.SetupWorkflowService.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICorrelationContext)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Application.Services.SetupWorkflowService"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.SetupWorkflowService.GetOrCreateSetupStateAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Application.Services.SetupWorkflowService.GetSetupTasksAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Application.Services.SetupWorkflowService.CompleteStepAsync(System.Int32,FijiPayroll.Domain.Enumerations.WizardStep,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Application.Services.SetupWorkflowService.SkipStepAsync(System.Int32,FijiPayroll.Domain.Enumerations.WizardStep,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Application.Services.SetupWorkflowService.ResetSetupAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Application.Services.SetupWorkflowService.ValidateSetupAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Application.Services.SetupWorkflowService.GetCompanyAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Services.SimulationEngine">
+            <summary>
+            Execution engine for running payroll calculations simulations without affecting live database records.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.SimulationEngine.#ctor(FijiPayroll.Shared.Formula.RuleExecutionPipeline)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Application.Services.SimulationEngine"/> class.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.SimulationEngine.SimulationContext">
+            <summary>
+            Represents a simulation input context.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.SimulationEngine.SimulationResult">
+            <summary>
+            Represents simulation run comparison results.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.SimulationEngine.RunSimulationAsync(FijiPayroll.Application.Services.SimulationEngine.SimulationContext)">
+            <summary>
+            Evaluates original rule vs overriden rule parameters and returns comparison report.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.SimulationEngine.ExportSimulationPdfAsync(FijiPayroll.Application.Services.SimulationEngine.SimulationResult)">
+            <summary>
+            Exports simulation scenario values as a PDF file stream byte array.
             </summary>
         </member>
     </members>

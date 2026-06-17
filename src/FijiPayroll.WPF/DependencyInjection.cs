@@ -1,9 +1,10 @@
+using FijiPayroll.Application.Common.Interfaces;
+using FijiPayroll.Application.Services;
 using FijiPayroll.WPF.Infrastructure;
 using FijiPayroll.WPF.Services;
 using FijiPayroll.WPF.ViewModels;
 using FijiPayroll.WPF.Views;
 using Microsoft.Extensions.DependencyInjection;
-using FijiPayroll.Application.Common.Interfaces;
 
 namespace FijiPayroll.WPF;
 
@@ -45,21 +46,45 @@ public static class DependencyInjection
         services.AddTransient<EmployeeViewModel>();
         services.AddTransient<PayrollViewModel>();
         services.AddTransient<SetupViewModel>();
+        services.AddTransient<CompanySetupDashboardViewModel>();
         services.AddTransient<ReportsViewModel>();
         services.AddTransient<AdminViewModel>();
         services.AddTransient<LogViewerViewModel>();
+        services.AddTransient<ComplianceCenterViewModel>();
+        services.AddTransient<DiagnosticsDashboardViewModel>();
 
         // Existing feature ViewModels
         services.AddTransient<PayrollComponentViewModel>();
+        // PayrollComponentFormViewModel requires a runtime companyId; resolved via factory
+        services.AddTransient<PayrollComponentFormViewModel>(sp =>
+            new PayrollComponentFormViewModel(
+                sp.GetRequiredService<IPayrollComponentService>(),
+                companyId: 1)); // Default company; replace with ITenantProvider if multi-company needed
         services.AddTransient<PayrollRunViewModel>();
         services.AddTransient<MasterLookupManagerViewModel>();
+        services.AddTransient<ApprovalDashboardViewModel>();
+        services.AddTransient<PendingApprovalsViewModel>();
+        services.AddTransient<ComponentSimulationViewModel>();
+        services.AddTransient<CloneWizardViewModel>();
+        services.AddTransient<PackageManagerViewModel>();
+        services.AddTransient<StagedImportViewModel>();
 
         // ── Views ────────────────────────────────────────────────────────────
         services.AddTransient<MainWindow>();
         services.AddTransient<PayrollComponentView>();
+        services.AddTransient<PayrollComponentEditorWindow>();
         services.AddTransient<PayrollRunView>();
         services.AddTransient<MasterLookupManagerView>();
         services.AddTransient<LogViewerView>();
+        services.AddTransient<ApprovalDashboardView>();
+        services.AddTransient<PendingApprovalsView>();
+        services.AddTransient<ComponentSimulationWindow>();
+        services.AddTransient<CloneWizardWindow>();
+        services.AddTransient<PackageManagerWindow>();
+        services.AddTransient<StagedImportWindow>();
+        services.AddTransient<CompanySetupDashboardView>();
+        services.AddTransient<ComplianceCenterView>();
+        services.AddTransient<DiagnosticsDashboardView>();
 
         return services;
     }

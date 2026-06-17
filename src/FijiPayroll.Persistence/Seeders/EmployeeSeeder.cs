@@ -41,7 +41,7 @@ public sealed class EmployeeSeeder
                 residencyStatus: "Resident",
                 department: "Finance",
                 baseSalary: 1500.00m, // Fortnightly rate
-                frequency: PayrollFrequency.Fortnightly,
+                frequency: PayrollFrequencyType.Fortnightly,
                 isFnpfExempt: false,
                 isTaxExempt: false,
                 isActive: true
@@ -54,7 +54,7 @@ public sealed class EmployeeSeeder
                 residencyStatus: "Resident",
                 department: "Engineering",
                 baseSalary: 5000.00m, // Monthly rate
-                frequency: PayrollFrequency.Monthly,
+                frequency: PayrollFrequencyType.Monthly,
                 isFnpfExempt: false,
                 isTaxExempt: false,
                 isActive: true
@@ -67,7 +67,7 @@ public sealed class EmployeeSeeder
                 residencyStatus: "NonResident",
                 department: "Consulting",
                 baseSalary: 6000.00m, // Monthly rate
-                frequency: PayrollFrequency.Monthly,
+                frequency: PayrollFrequencyType.Monthly,
                 isFnpfExempt: true,
                 isTaxExempt: false,
                 isActive: true
@@ -80,7 +80,7 @@ public sealed class EmployeeSeeder
                 residencyStatus: "Resident",
                 department: "Logistics",
                 baseSalary: 800.00m, // Fortnightly rate -> Annualised is 20,800 (under 30k threshold -> $0 PAYE)
-                frequency: PayrollFrequency.Fortnightly,
+                frequency: PayrollFrequencyType.Fortnightly,
                 isFnpfExempt: false,
                 isTaxExempt: false,
                 isActive: true

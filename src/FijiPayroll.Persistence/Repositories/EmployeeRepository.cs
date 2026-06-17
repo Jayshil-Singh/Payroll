@@ -25,7 +25,7 @@ public sealed class EmployeeRepository : IEmployeeRepository
     /// <inheritdoc />
     public async Task<IReadOnlyList<Employee>> GetByCompanyAndFrequencyAsync(
         int companyId,
-        PayrollFrequency frequency,
+        PayrollFrequencyType frequency,
         CancellationToken cancellationToken = default)
     {
         // ORDERING RULE: Must enforce ORDER BY EmployeeId at database level.
@@ -49,5 +49,45 @@ public sealed class EmployeeRepository : IEmployeeRepository
     public async Task AddAsync(Employee employee, CancellationToken cancellationToken = default)
     {
         await _context.Employees.AddAsync(employee, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<(IReadOnlyList<Employee> Items, int TotalCount)> GetPagedAsync(
+        int companyId,
+        string? searchTerm,
+        string? departmentFilter,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        var query = _context.Employees.Where(e => e.CompanyId == companyId);
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            query = query.Where(e => e.FullName.Contains(searchTerm));
+        }
+
+        if (!string.IsNullOrWhiteSpace(departmentFilter))
+        {
+            query = query.Where(e => e.Department == departmentFilter);
+        }
+
+        int totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
+            .OrderBy(e => e.FullName)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return (items, totalCount);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<Employee>> GetByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken = default)
+    {
+        return await _context.Employees
+            .Where(e => ids.Contains(e.Id))
+            .ToListAsync(cancellationToken);
     }
 }

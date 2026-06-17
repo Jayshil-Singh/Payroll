@@ -97,5 +97,8 @@ internal sealed class PayrollRunEmployeeConfiguration : IEntityTypeConfiguration
                .WithOne()
                .HasForeignKey(x => x.PayrollRunEmployeeId)
                .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasIndex(x => x.PayrollRunId);
+        builder.HasIndex(x => x.EmployeeId);
     }
 }

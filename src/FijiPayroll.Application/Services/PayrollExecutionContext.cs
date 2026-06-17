@@ -16,7 +16,7 @@ public sealed class PayrollExecutionContext
     public string PeriodName { get; init; } = string.Empty;
     public DateTime StartDate { get; init; }
     public DateTime EndDate { get; init; }
-    public PayrollFrequency Frequency { get; init; }
+    public PayrollFrequencyType Frequency { get; init; }
     public string TaxVersion { get; init; } = string.Empty;
     public Guid CalculationRequestId { get; init; }
 

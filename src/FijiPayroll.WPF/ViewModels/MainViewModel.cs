@@ -55,9 +55,13 @@ public sealed class MainViewModel : ViewModelBase
         NavigateEmployeeCommand = new RelayCommand(() => _navigationService.NavigateTo<EmployeeViewModel>());
         NavigatePayrollCommand = new RelayCommand(() => _navigationService.NavigateTo<PayrollViewModel>());
         NavigateSetupCommand = new RelayCommand(() => _navigationService.NavigateTo<SetupViewModel>());
+        NavigateCompanySetupWizardCommand = new RelayCommand(() => _navigationService.NavigateTo<CompanySetupDashboardViewModel>());
         NavigateReportsCommand = new RelayCommand(() => _navigationService.NavigateTo<ReportsViewModel>());
+        NavigateApprovalsCommand = new RelayCommand(() => _navigationService.NavigateTo<ApprovalDashboardViewModel>());
         NavigateAdminCommand = new RelayCommand(() => _navigationService.NavigateTo<AdminViewModel>());
         NavigateLogViewerCommand = new RelayCommand(() => _navigationService.NavigateTo<LogViewerViewModel>());
+        NavigateComplianceCommand = new RelayCommand(() => _navigationService.NavigateTo<ComplianceCenterViewModel>());
+        NavigateDiagnosticsCommand = new RelayCommand(() => _navigationService.NavigateTo<DiagnosticsDashboardViewModel>());
 
         // Navigation History Commands
         GoBackCommand = new RelayCommand(() => _navigationService.GoBack(), () => _navigationService.CanGoBack);
@@ -121,9 +125,13 @@ public sealed class MainViewModel : ViewModelBase
     public ICommand NavigateEmployeeCommand { get; }
     public ICommand NavigatePayrollCommand { get; }
     public ICommand NavigateSetupCommand { get; }
+    public ICommand NavigateCompanySetupWizardCommand { get; }
     public ICommand NavigateReportsCommand { get; }
+    public ICommand NavigateApprovalsCommand { get; }
     public ICommand NavigateAdminCommand { get; }
     public ICommand NavigateLogViewerCommand { get; }
+    public ICommand NavigateComplianceCommand { get; }
+    public ICommand NavigateDiagnosticsCommand { get; }
 
     // History and Utility Commands
     public ICommand GoBackCommand { get; }

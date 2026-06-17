@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FijiPayroll.Platform</name>
+    </assembly>
+    <members>
+        <member name="T:FijiPayroll.Platform.Configuration.ConfigurationManager">
+            <summary>
+            Manages company configuration export and import operations using the .companyconfig format.
+            Supports optional AES encryption.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Configuration.ConfigurationManager.ExportConfigAsync``1(System.String,``0,System.String)">
+            <summary>
+            Exports the configuration object to a .companyconfig file.
+            </summary>
+            <typeparam name="T">The configuration model type.</typeparam>
+            <param name="filePath">The target file path to write to.</param>
+            <param name="configData">The configuration data object.</param>
+            <param name="encryptionKey">Optional key to encrypt the configuration content.</param>
+        </member>
+        <member name="M:FijiPayroll.Platform.Configuration.ConfigurationManager.ImportConfigAsync``1(System.String,System.String)">
+            <summary>
+            Imports configuration from a .companyconfig file.
+            </summary>
+            <typeparam name="T">The configuration model type.</typeparam>
+            <param name="filePath">The source file path to read from.</param>
+            <param name="encryptionKey">Optional key used to decrypt the configuration content.</param>
+            <returns>The deserialized configuration object.</returns>
+        </member>
+        <member name="T:FijiPayroll.Platform.Notifications.NotificationEngine">
+            <summary>
+            A high-performance, asynchronous notification queue engine that dispatches messages to various notification services.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Notifications.NotificationEngine.#ctor(System.Collections.Generic.IEnumerable{FijiPayroll.SDK.Interfaces.INotificationService},Microsoft.Extensions.Logging.ILogger{FijiPayroll.Platform.Notifications.NotificationEngine})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Platform.Notifications.NotificationEngine"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Notifications.NotificationEngine.Start">
+            <summary>
+            Starts the background notification processing loop.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Notifications.NotificationEngine.Stop">
+            <summary>
+            Stops the background notification processing loop.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Notifications.NotificationEngine.QueueNotificationAsync(System.String,System.String,System.String,System.String)">
+            <summary>
+            Queues a new notification message.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Notifications.NotificationEngine.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Platform.Packages.PackageManager">
+            <summary>
+            Manages validation, checksum verification, and cryptographic signature checking on enterprise package distributions.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Packages.PackageManager.#ctor(Microsoft.Extensions.Logging.ILogger{FijiPayroll.Platform.Packages.PackageManager})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Platform.Packages.PackageManager"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Packages.PackageManager.ComputeChecksum(System.String)">
+            <summary>
+            Computes the SHA256 checksum of a package file.
+            </summary>
+            <param name="filePath">Path to the package file.</param>
+            <returns>Uppercase hexadecimal SHA256 hash string.</returns>
+        </member>
+        <member name="M:FijiPayroll.Platform.Packages.PackageManager.VerifyPackageSignature(System.String,System.String,System.String)">
+            <summary>
+            Verifies the cryptographic RSA signature of a package's hash.
+            </summary>
+            <param name="packagePath">The path to the package file.</param>
+            <param name="signatureBase64">The base64-encoded signature of the package hash.</param>
+            <param name="publicKeyPem">The RSA public key in PEM format.</param>
+            <returns>True if the signature is valid; otherwise false.</returns>
+        </member>
+        <member name="T:FijiPayroll.Platform.Plugins.PluginLoader">
+            <summary>
+            Dynamically loads plugin assemblies and instantiates implementation types.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Plugins.PluginLoader.#ctor(Microsoft.Extensions.Logging.ILogger{FijiPayroll.Platform.Plugins.PluginLoader})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Platform.Plugins.PluginLoader"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Plugins.PluginLoader.LoadPlugins``1(System.String)">
+            <summary>
+            Scan and load instances of type <typeparamref name="T"/> from assembly files in the specified directory.
+            </summary>
+            <typeparam name="T">The interface or contract type to discover.</typeparam>
+            <param name="directoryPath">The absolute path to the plugins directory.</param>
+            <returns>A sequence of instantiated plugin components.</returns>
+        </member>
+        <member name="T:FijiPayroll.Platform.Recovery.RecoveryManager">
+            <summary>
+            Manages disaster recovery operations by backing up and restoring database states 
+            using compressed and encrypted .drpack files.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Recovery.RecoveryManager.#ctor(Microsoft.Extensions.Logging.ILogger{FijiPayroll.Platform.Recovery.RecoveryManager})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Platform.Recovery.RecoveryManager"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Recovery.RecoveryManager.CreateBackupAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Backs up the database file to an encrypted .drpack file.
+            </summary>
+            <param name="dbFilePath">Path to the active SQLite/SQL Server local DB file, or database backup source.</param>
+            <param name="targetDrpackPath">Target output .drpack file path.</param>
+            <param name="encryptionKey">Key used to encrypt the backup package.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+        </member>
+        <member name="M:FijiPayroll.Platform.Recovery.RecoveryManager.RestoreBackupAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Decrypts and restores the database file from a .drpack package.
+            </summary>
+            <param name="drpackPath">Source .drpack package path.</param>
+            <param name="restoreDbFilePath">Target database output file path.</param>
+            <param name="encryptionKey">Key used to decrypt the package.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+        </member>
+        <member name="T:FijiPayroll.Platform.Scheduler.BackgroundScheduler">
+            <summary>
+            A thread-safe, robust background scheduler that processes daily, weekly, fortnightly, monthly, quarterly, yearly, and manual tasks.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Scheduler.BackgroundScheduler.#ctor(Microsoft.Extensions.Logging.ILogger{FijiPayroll.Platform.Scheduler.BackgroundScheduler})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Platform.Scheduler.BackgroundScheduler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Scheduler.BackgroundScheduler.RegisterJob(System.String,System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task},System.String,System.DateTime)">
+            <summary>
+            Registers or updates a scheduled background job.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Scheduler.BackgroundScheduler.TriggerJob(System.String)">
+            <summary>
+            Triggers a registered job immediately.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Scheduler.BackgroundScheduler.Start">
+            <summary>
+            Starts the scheduler background loop.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Scheduler.BackgroundScheduler.Stop">
+            <summary>
+            Stops the scheduler background loop.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Scheduler.BackgroundScheduler.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Platform.State.StateManager">
+            <summary>
+            Controls system-wide state transactions, managing locked periods, double-payment guards, and system maintenance modes.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Platform.State.StateManager.IsMaintenanceMode">
+            <summary>
+            Gets or sets a value indicating whether the system is in maintenance mode.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.State.StateManager.IsPeriodLocked(System.Int32)">
+            <summary>
+            Checks if a pay period is locked for changes.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.State.StateManager.LockPeriod(System.Int32)">
+            <summary>
+            Locks a pay period.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.State.StateManager.UnlockPeriod(System.Int32)">
+            <summary>
+            Unlocks a pay period.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.State.StateManager.TryAcquireOperationLock(System.String)">
+            <summary>
+            Attempts to acquire an exclusive lock on an operation to prevent double execution (e.g. processing same bank file twice).
+            </summary>
+            <param name="operationKey">The unique operation signature key.</param>
+            <returns>True if the lock was successfully acquired; false if it's already active.</returns>
+        </member>
+        <member name="M:FijiPayroll.Platform.State.StateManager.ReleaseOperationLock(System.String)">
+            <summary>
+            Releases an exclusive lock on an operation.
+            </summary>
+            <param name="operationKey">The unique operation signature key.</param>
+        </member>
+        <member name="T:FijiPayroll.Platform.Versions.VersionManager">
+            <summary>
+            Manages system-wide engine versions and allows pinning versions for individual payroll runs to guarantee reproducibility.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Versions.VersionManager.GetCurrentPlatformVersions">
+            <summary>
+            Gets the current baseline versions of the running platform engines.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Platform.Versions.VersionManager.PinVersionsForRun(System.Int32,FijiPayroll.SDK.Contracts.VersionContract)">
+            <summary>
+            Pins the engine versions for a specific payroll run.
+            </summary>
+            <param name="payrollRunId">The payroll run identifier.</param>
+            <param name="versions">The version set to pin.</param>
+        </member>
+        <member name="M:FijiPayroll.Platform.Versions.VersionManager.GetVersionsForRun(System.Int32)">
+            <summary>
+            Gets the pinned versions for a specific payroll run, fallback to current platform versions if not pinned.
+            </summary>
+            <param name="payrollRunId">The payroll run identifier.</param>
+            <returns>The pinned version details.</returns>
+        </member>
+    </members>
+</doc>

@@ -48,18 +48,68 @@
                     <TextBlock Text="Manage and configure earnings, allowances, deductions, benefits, and statutory items." FontSize="13" Foreground="#6B7280" Margin="0,4,0,0"/>
                 </StackPanel>
                 
-                <!-- Refresh / Load Button -->
-                <Button Grid.Column="1" 
-                        Content="Refresh List" 
-                        Command="{Binding LoadComponentsCommand}"
-                        Background="#1A56DB" Foreground="White" FontWeight="SemiBold"
-                        Padding="16,8" BorderThickness="0" Cursor="Hand">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="6"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
+                <!-- Header Actions -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <!-- Refresh Button -->
+                    <Button Content="Refresh"
+                            Command="{Binding LoadComponentsCommand}"
+                            Background="Transparent" BorderBrush="#D1D5DB" BorderThickness="1" Foreground="#374151" FontWeight="Medium"
+                            Padding="14,8" Margin="0,0,10,0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+
+                    <!-- Rule Simulation Button -->
+                    <Button Content="⚡ Rule Simulation"
+                            Command="{Binding OpenSimulationCommand}"
+                            Background="#2E3656" BorderBrush="#3F4972" BorderThickness="1" Foreground="White" FontWeight="SemiBold"
+                            Padding="14,8" Margin="0,0,10,0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+
+                    <!-- Clone Wizard Button -->
+                    <Button Content="📋 Clone Wizard"
+                            Command="{Binding OpenCloneWizardCommand}"
+                            Background="#2E3656" BorderBrush="#3F4972" BorderThickness="1" Foreground="White" FontWeight="SemiBold"
+                            Padding="14,8" Margin="0,0,10,0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+
+                    <!-- Package Manager Button -->
+                    <Button Content="📦 Package Manager"
+                            Command="{Binding OpenPackageManagerCommand}"
+                            Background="#2E3656" BorderBrush="#3F4972" BorderThickness="1" Foreground="White" FontWeight="SemiBold"
+                            Padding="14,8" Margin="0,0,10,0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+
+                    <!-- New Component Button -->
+                    <Button Content="+ New Component"
+                            Command="{Binding CreateNewCommand}"
+                            Background="#1A56DB" Foreground="White" FontWeight="SemiBold"
+                            Padding="16,8" BorderThickness="0" Cursor="Hand">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="6"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
             </Grid>
         </Border>
 
@@ -275,10 +325,17 @@
                         </DataGridTemplateColumn>
 
                         <!-- Actions -->
-                        <DataGridTemplateColumn Header="Actions" Width="200" IsReadOnly="True">
+                        <DataGridTemplateColumn Header="Actions" Width="260" IsReadOnly="True">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <!-- Edit Button -->
+                                        <Button Content="Edit"
+                                                Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" BorderThickness="0" Foreground="#374151" FontWeight="SemiBold"
+                                                Padding="4,2" Cursor="Hand" Margin="0,0,8,0"/>
+
                                         <!-- Toggle Active Button -->
                                         <Button Content="Toggle Status" 
                                                 Command="{Binding DataContext.ToggleActiveCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 

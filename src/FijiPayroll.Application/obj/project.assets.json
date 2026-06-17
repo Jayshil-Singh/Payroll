@@ -145,6 +145,16 @@
           "bin/placeholder/FijiPayroll.Domain.dll": {}
         }
       },
+      "FijiPayroll.SDK/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/FijiPayroll.SDK.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/FijiPayroll.SDK.dll": {}
+        }
+      },
       "FijiPayroll.Shared/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
@@ -393,6 +403,11 @@
       "path": "../FijiPayroll.Domain/FijiPayroll.Domain.csproj",
       "msbuildProject": "../FijiPayroll.Domain/FijiPayroll.Domain.csproj"
     },
+    "FijiPayroll.SDK/1.0.0": {
+      "type": "project",
+      "path": "../FijiPayroll.SDK/FijiPayroll.SDK.csproj",
+      "msbuildProject": "../FijiPayroll.SDK/FijiPayroll.SDK.csproj"
+    },
     "FijiPayroll.Shared/1.0.0": {
       "type": "project",
       "path": "../FijiPayroll.Shared/FijiPayroll.Shared.csproj",
@@ -402,6 +417,7 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "FijiPayroll.Domain >= 1.0.0",
+      "FijiPayroll.SDK >= 1.0.0",
       "FijiPayroll.Shared >= 1.0.0",
       "FluentValidation >= 11.9.0",
       "FluentValidation.DependencyInjectionExtensions >= 11.9.0",
@@ -438,6 +454,9 @@
           "projectReferences": {
             "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\FijiPayroll.Domain.csproj": {
               "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\FijiPayroll.Domain.csproj"
+            },
+            "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.SDK\\FijiPayroll.SDK.csproj": {
+              "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.SDK\\FijiPayroll.SDK.csproj"
             },
             "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj": {
               "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj"

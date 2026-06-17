@@ -46,14 +46,22 @@ public static class DependencyInjection
         services.AddScoped<IMasterLookupRepository, MasterLookupRepository>();
         services.AddScoped<IImportJobRepository, ImportJobRepository>();
         services.AddScoped<ISearchIndexRepository, SearchIndexRepository>();
+        services.AddScoped<IApprovalWorkflowRepository, ApprovalWorkflowRepository>();
+        services.AddScoped<IComplianceRepository, ComplianceRepository>();
 
         // Register the Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // Register Approval Engine
+        services.AddScoped<IApprovalEngine, ApprovalEngine>();
 
         // Register Seeder services
         services.AddScoped<PayrollComponentSeeder>();
         services.AddScoped<TaxBracketSeeder>();
         services.AddScoped<EmployeeSeeder>();
+        services.AddScoped<RuleModuleSeeder>();
+        services.AddScoped<ComplianceSeeder>();
+        services.AddScoped<IJsonSeedLoader, JsonSeedLoader>();
 
         // Register the Reference Data Cache
         services.AddSingleton<IReferenceDataCache, ReferenceDataCache>();

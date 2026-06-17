@@ -126,3 +126,6 @@ C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Application.Tests\obj\D
 C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Application.Tests\obj\Debug\net9.0\FijiPayroll.Application.Tests.pdb
 C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Application.Tests\obj\Debug\net9.0\FijiPayroll.Application.Tests.genruntimeconfig.cache
 C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Application.Tests\obj\Debug\net9.0\ref\FijiPayroll.Application.Tests.dll
+C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Application.Tests\bin\Debug\net9.0\FijiPayroll.SDK.dll
+C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Application.Tests\bin\Debug\net9.0\FijiPayroll.SDK.pdb
+C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Application.Tests\bin\Debug\net9.0\FijiPayroll.SDK.xml

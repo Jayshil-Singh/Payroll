@@ -1,0 +1,595 @@
+<Window x:Class="FijiPayroll.WPF.Views.PayrollComponentEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:vm="clr-namespace:FijiPayroll.WPF.ViewModels"
+        xmlns:conv="clr-namespace:FijiPayroll.WPF.Converters"
+        mc:Ignorable="d"
+        Title="{Binding WindowTitle}"
+        Width="780"
+        MinWidth="680"
+        Height="710"
+        MinHeight="600"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResizeWithGrip"
+        Background="#F9FAFB"
+        ShowInTaskbar="False"
+        d:DataContext="{d:DesignInstance vm:PayrollComponentFormViewModel}">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <!-- Inverse boolean to visibility (hidden when true) -->
+        <Style x:Key="FormSectionBorder" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+        </Style>
+
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="Margin" Value="0,0,0,14"/>
+        </Style>
+
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+
+        <Style x:Key="FieldInput" TargetType="TextBox">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="#D1D5DB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#111827"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="#1A56DB"/>
+                            </Trigger>
+                            <Trigger Property="IsReadOnly" Value="True">
+                                <Setter Property="Background" Value="#F3F4F6"/>
+                                <Setter Property="Foreground" Value="#6B7280"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FieldComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="#D1D5DB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#111827"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#1A56DB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1648C8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#1240AE"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="#9CA3AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SecondaryButton" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderBrush" Value="#D1D5DB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#F3F4F6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Title Bar -->
+            <RowDefinition Height="64"/>
+            <!-- Scrollable Content -->
+            <RowDefinition Height="*"/>
+            <!-- Footer Actions -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ── Title Bar ─────────────────────────────────────────────── -->
+        <Border Grid.Row="0"
+                Background="#1E2A3A"
+                Padding="24,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding WindowTitle}"
+                               FontSize="17"
+                               FontWeight="SemiBold"
+                               Foreground="White"/>
+                    <TextBlock FontSize="12"
+                               Foreground="#9CA3AF"
+                               Margin="0,2,0,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsEditMode}" Value="True">
+                                        <Setter Property="Text" Value="Modify component properties. System fields are protected."/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsEditMode}" Value="False">
+                                        <Setter Property="Text" Value="Define a new payroll earnings, deduction, allowance, benefit, or statutory item."/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+
+                <!-- System Component Badge -->
+                <Border Grid.Column="1"
+                        Background="#374151"
+                        CornerRadius="4"
+                        Padding="10,4"
+                        Visibility="{Binding IsSystemComponent, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="SYSTEM COMPONENT"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="#F59E0B"/>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ── Loading Overlay ──────────────────────────────────────── -->
+        <Grid Grid.Row="1"
+              Grid.RowSpan="2"
+              Panel.ZIndex="50"
+              Background="#80F9FAFB"
+              Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="180" Height="4"/>
+                <TextBlock Text="Processing..." FontSize="13" Foreground="#374151" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- ── Scrollable Form Body ─────────────────────────────────── -->
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      Padding="24,20,24,8">
+            <StackPanel>
+
+                <!-- Error / Success Banners -->
+                <Border Background="#FEF2F2"
+                        BorderBrush="#FECACA"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Padding="14,10"
+                        Margin="0,0,0,12"
+                        Visibility="{Binding ErrorMessage, Converter={StaticResource BoolToVis}}">
+                    <DockPanel>
+                        <TextBlock Text="⚠" Foreground="#B91C1C" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   Foreground="#B91C1C"
+                                   FontSize="13"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Center"/>
+                    </DockPanel>
+                </Border>
+
+                <Border Background="#F0FDF4"
+                        BorderBrush="#BBF7D0"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Padding="14,10"
+                        Margin="0,0,0,12"
+                        Visibility="{Binding SuccessMessage, Converter={StaticResource BoolToVis}}">
+                    <DockPanel>
+                        <TextBlock Text="✓" Foreground="#15803D" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="{Binding SuccessMessage}"
+                                   Foreground="#15803D"
+                                   FontSize="13"
+                                   VerticalAlignment="Center"/>
+                    </DockPanel>
+                </Border>
+
+                <!-- ── Section 1: Identity ──────────────────────────────── -->
+                <Border Style="{StaticResource FormSectionBorder}">
+                    <StackPanel>
+                        <TextBlock Text="Component Identity" Style="{StaticResource SectionTitle}"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Component Code -->
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Component Code *" Style="{StaticResource FieldLabel}"/>
+                                <TextBox x:Name="TxtComponentCode"
+                                         Text="{Binding ComponentCode, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource FieldInput}"
+                                         IsReadOnly="{Binding IsEditMode}"
+                                         CharacterCasing="Upper"
+                                         MaxLength="20"
+                                         ToolTip="Unique alphanumeric identifier (e.g., BASIC_SAL). Max 20 characters."/>
+                            </StackPanel>
+
+                            <!-- Component Name -->
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Component Name *" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding ComponentName, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource FieldInput}"
+                                         MaxLength="200"
+                                         ToolTip="Human-readable name displayed on payslips. Max 200 characters."/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,12,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Component Type -->
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Component Type *" Style="{StaticResource FieldLabel}"/>
+                                <ComboBox SelectedItem="{Binding SelectedComponentType}"
+                                          ItemsSource="{Binding ComponentTypes}"
+                                          Style="{StaticResource FieldComboBox}"
+                                          IsEnabled="{Binding IsSystemComponent, Converter={x:Static conv:InverseBoolConverter.Instance}}"
+                                          ToolTip="Classification of the component. System components cannot change type."/>
+                            </StackPanel>
+
+                            <!-- Display Order -->
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Display Order" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding DisplayOrder, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource FieldInput}"
+                                         ToolTip="Sort position on the payslip (0 = first)."/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Section 2: Calculation ───────────────────────────── -->
+                <Border Style="{StaticResource FormSectionBorder}">
+                    <StackPanel>
+                        <TextBlock Text="Calculation Configuration" Style="{StaticResource SectionTitle}"/>
+
+                        <!-- Calculation Method -->
+                        <StackPanel>
+                            <TextBlock Text="Calculation Method *" Style="{StaticResource FieldLabel}"/>
+                            <ComboBox SelectedItem="{Binding SelectedCalculationMethod}"
+                                      ItemsSource="{Binding CalculationMethods}"
+                                      Style="{StaticResource FieldComboBox}"
+                                      IsEnabled="{Binding IsSystemComponent, Converter={x:Static conv:InverseBoolConverter.Instance}}"
+                                      ToolTip="How the component's value is determined each pay period."/>
+                        </StackPanel>
+
+                        <!-- Fixed / Percentage Value Panel -->
+                        <StackPanel Margin="0,12,0,0"
+                                    Visibility="{Binding ShowValueField, Converter={StaticResource BoolToVis}}">
+                            <TextBlock Text="{Binding ValueFieldLabel}" Style="{StaticResource FieldLabel}"/>
+                            <TextBox Text="{Binding CalculationValue, StringFormat='N2', UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource FieldInput}"
+                                     Width="240"
+                                     HorizontalAlignment="Left"
+                                     ToolTip="Enter the fixed dollar amount or percentage value."/>
+                        </StackPanel>
+
+                        <!-- Formula Panel -->
+                        <StackPanel Margin="0,12,0,0"
+                                    Visibility="{Binding ShowFormulaField, Converter={StaticResource BoolToVis}}">
+                            <DockPanel Margin="0,0,0,4">
+                                <TextBlock Text="Formula Expression *" Style="{StaticResource FieldLabel}" DockPanel.Dock="Left"/>
+                                <Button Content="Validate Formula"
+                                        Command="{Binding ValidateFormulaCommand}"
+                                        Style="{StaticResource SecondaryButton}"
+                                        HorizontalAlignment="Right"
+                                        DockPanel.Dock="Right"
+                                        Padding="12,4"
+                                        FontSize="12"/>
+                            </DockPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="12"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Left Side: Editor + AST Inspector -->
+                                <StackPanel Grid.Column="0">
+                                    <TextBox Text="{Binding Formula, UpdateSourceTrigger=PropertyChanged}"
+                                             Style="{StaticResource FieldInput}"
+                                             Height="Auto"
+                                             MinHeight="60"
+                                             Padding="10,8"
+                                             AcceptsReturn="False"
+                                             TextWrapping="Wrap"
+                                             VerticalScrollBarVisibility="Auto"
+                                             ToolTip="Enter a formula using supported variables."/>
+
+                                    <TextBlock Text="Parsed AST (Visual Inspector):" Style="{StaticResource FieldLabel}" Margin="0,8,0,4"/>
+                                    
+                                    <TreeView ItemsSource="{Binding FormulaAstNodes}" 
+                                              Background="#F9FAFB" 
+                                              BorderBrush="#D1D5DB" 
+                                              BorderThickness="1" 
+                                              Height="140" 
+                                              ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                        <TreeView.ItemTemplate>
+                                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                                <StackPanel Orientation="Horizontal" Margin="2">
+                                                    <Border CornerRadius="4" Padding="4,2" Margin="0,0,6,0">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding NodeType}" Value="Function">
+                                                                        <Setter Property="Background" Value="#1E3A8A"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding NodeType}" Value="Operator">
+                                                                        <Setter Property="Background" Value="#374151"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding NodeType}" Value="Variable">
+                                                                        <Setter Property="Background" Value="#065F46"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding NodeType}" Value="Number">
+                                                                        <Setter Property="Background" Value="#6B7280"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <TextBlock Text="{Binding NodeType}" FontSize="9" Foreground="White" FontWeight="Bold"/>
+                                                    </Border>
+                                                    <TextBlock Text="{Binding DisplayText}" Foreground="#111827" VerticalAlignment="Center" FontSize="12"/>
+                                                </StackPanel>
+                                            </HierarchicalDataTemplate>
+                                        </TreeView.ItemTemplate>
+                                    </TreeView>
+                                </StackPanel>
+
+                                <!-- Right Side: Quick Builder Tool (Variables & Functions) -->
+                                <Border Grid.Column="2" 
+                                        Background="#F0F9FF"
+                                        BorderBrush="#BAE6FD"
+                                        BorderThickness="1"
+                                        CornerRadius="6"
+                                        Padding="10">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Text="Formula Builder" FontSize="12" FontWeight="Bold" Foreground="#0369A1" Margin="0,0,0,6"/>
+                                        
+                                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                            <StackPanel>
+                                                <!-- Variables -->
+                                                <TextBlock Text="Variables (Click to insert):" FontSize="11" FontWeight="SemiBold" Foreground="#047857" Margin="0,4,0,4"/>
+                                                <WrapPanel>
+                                                    <Button Content="{}{GrossPay}" Command="{Binding InsertFormulaElementCommand}" CommandParameter="{}{GrossPay}" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="6,2" Margin="0,0,4,4"/>
+                                                    <Button Content="{}{AnnualSalary}" Command="{Binding InsertFormulaElementCommand}" CommandParameter="{}{AnnualSalary}" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="6,2" Margin="0,0,4,4"/>
+                                                    <Button Content="{}{HoursWorked}" Command="{Binding InsertFormulaElementCommand}" CommandParameter="{}{HoursWorked}" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="6,2" Margin="0,0,4,4"/>
+                                                    <Button Content="{}{DailyRate}" Command="{Binding InsertFormulaElementCommand}" CommandParameter="{}{DailyRate}" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="6,2" Margin="0,0,4,4"/>
+                                                    <Button Content="{}{OvertimeHours}" Command="{Binding InsertFormulaElementCommand}" CommandParameter="{}{OvertimeHours}" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="6,2" Margin="0,0,4,4"/>
+                                                </WrapPanel>
+
+                                                <!-- Functions -->
+                                                <TextBlock Text="Functions (Click to insert):" FontSize="11" FontWeight="SemiBold" Foreground="#1D4ED8" Margin="0,8,0,4"/>
+                                                <WrapPanel>
+                                                    <Button Content="ROUND()" Command="{Binding InsertFormulaElementCommand}" CommandParameter="ROUND(" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="6,2" Margin="0,0,4,4"/>
+                                                    <Button Content="IF()" Command="{Binding InsertFormulaElementCommand}" CommandParameter="IF(" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="6,2" Margin="0,0,4,4"/>
+                                                    <Button Content="MIN()" Command="{Binding InsertFormulaElementCommand}" CommandParameter="MIN(" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="6,2" Margin="0,0,4,4"/>
+                                                    <Button Content="MAX()" Command="{Binding InsertFormulaElementCommand}" CommandParameter="MAX(" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="6,2" Margin="0,0,4,4"/>
+                                                    <Button Content="ABS()" Command="{Binding InsertFormulaElementCommand}" CommandParameter="ABS(" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="6,2" Margin="0,0,4,4"/>
+                                                </WrapPanel>
+
+                                                <!-- Operators -->
+                                                <TextBlock Text="Operators:" FontSize="11" FontWeight="SemiBold" Foreground="#4B5563" Margin="0,8,0,4"/>
+                                                <WrapPanel>
+                                                    <Button Content="+" Command="{Binding InsertFormulaElementCommand}" CommandParameter="+" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="8,2" Margin="0,0,4,4"/>
+                                                    <Button Content="-" Command="{Binding InsertFormulaElementCommand}" CommandParameter="-" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="8,2" Margin="0,0,4,4"/>
+                                                    <Button Content="*" Command="{Binding InsertFormulaElementCommand}" CommandParameter="*" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="8,2" Margin="0,0,4,4"/>
+                                                    <Button Content="/" Command="{Binding InsertFormulaElementCommand}" CommandParameter="/" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="8,2" Margin="0,0,4,4"/>
+                                                    <Button Content="," Command="{Binding InsertFormulaElementCommand}" CommandParameter="," Style="{StaticResource SecondaryButton}" FontSize="10" Padding="8,2" Margin="0,0,4,4"/>
+                                                    <Button Content=")" Command="{Binding InsertFormulaElementCommand}" CommandParameter=")" Style="{StaticResource SecondaryButton}" FontSize="10" Padding="8,2" Margin="0,0,4,4"/>
+                                                </WrapPanel>
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Section 3: Statutory Flags ───────────────────────── -->
+                <Border Style="{StaticResource FormSectionBorder}">
+                    <StackPanel>
+                        <TextBlock Text="Statutory &amp; Tax Treatment" Style="{StaticResource SectionTitle}"/>
+
+                        <UniformGrid Columns="2" Rows="1">
+                            <!-- Taxable Flag -->
+                            <Border Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="14" Margin="0,0,8,0">
+                                <StackPanel>
+                                    <CheckBox IsChecked="{Binding IsTaxable}"
+                                              IsEnabled="{Binding IsSystemComponent, Converter={x:Static conv:InverseBoolConverter.Instance}}"
+                                              FontWeight="SemiBold"
+                                              FontSize="13"
+                                              Foreground="#111827"
+                                              Cursor="Hand"
+                                              Content="PAYE Taxable"/>
+                                    <TextBlock Text="This component contributes to the employee's PAYE taxable income base."
+                                               FontSize="11"
+                                               Foreground="#6B7280"
+                                               TextWrapping="Wrap"
+                                               Margin="22,4,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- FNPF Applicable Flag -->
+                            <Border Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="14" Margin="0,0,0,0">
+                                <StackPanel>
+                                    <CheckBox IsChecked="{Binding IsFnpfApplicable}"
+                                              IsEnabled="{Binding IsSystemComponent, Converter={x:Static conv:InverseBoolConverter.Instance}}"
+                                              FontWeight="SemiBold"
+                                              FontSize="13"
+                                              Foreground="#111827"
+                                              Cursor="Hand"
+                                              Content="FNPF Applicable"/>
+                                    <TextBlock Text="This component is included in the FNPF-applicable gross for contribution calculations."
+                                               FontSize="11"
+                                               Foreground="#6B7280"
+                                               TextWrapping="Wrap"
+                                               Margin="22,4,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+                    </StackPanel>
+                </Border>
+
+                <!-- ── Section 4: Description ───────────────────────────── -->
+                <Border Style="{StaticResource FormSectionBorder}">
+                    <StackPanel>
+                        <TextBlock Text="Internal Notes" Style="{StaticResource SectionTitle}"/>
+                        <TextBlock Text="Description (optional)" Style="{StaticResource FieldLabel}"/>
+                        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource FieldInput}"
+                                 Height="Auto"
+                                 MinHeight="72"
+                                 Padding="10,8"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto"
+                                 MaxLength="500"
+                                 ToolTip="Internal description. Not printed on payslips. Max 500 characters."/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- ── Footer Actions ─────────────────────────────────────────── -->
+        <Border Grid.Row="2"
+                Background="White"
+                BorderBrush="#E5E7EB"
+                BorderThickness="0,1,0,0"
+                Padding="24,14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left: Required field note -->
+                <TextBlock Grid.Column="0"
+                           Text="* Required fields"
+                           FontSize="12"
+                           Foreground="#9CA3AF"
+                           VerticalAlignment="Center"/>
+
+                <!-- Right: Action Buttons -->
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+
+                    <Button Content="Cancel"
+                            Command="{Binding CancelCommand}"
+                            Style="{StaticResource SecondaryButton}"
+                            Margin="0,0,12,0"/>
+
+                    <Button Command="{Binding SaveCommand}"
+                            Style="{StaticResource PrimaryButton}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock>
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsEditMode}" Value="True">
+                                                    <Setter Property="Text" Value="Save Changes"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsEditMode}" Value="False">
+                                                    <Setter Property="Text" Value="Create Component"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -93,6 +93,15 @@
                     </StackPanel>
                 </Border>
 
+                <!-- Data Import Engine -->
+                <Border CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20" Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="Staged Import Engine" FontSize="16" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,0,0,8" />
+                        <TextBlock Text="Load and validate external spreadsheets in staging tables before master schema commit." FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" />
+                        <Button Content="Open Staged Imports" Command="{Binding OpenStagedImportCommand}" Margin="0,16,0,0" Height="32" Style="{StaticResource SecondaryButton}" />
+                    </StackPanel>
+                </Border>
+
                 <!-- Audit logs overview -->
                 <Border CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20">
                     <StackPanel>

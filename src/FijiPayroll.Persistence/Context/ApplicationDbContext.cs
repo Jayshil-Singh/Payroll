@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Storage;
 using System.Reflection;
 using FijiPayroll.Application.Common.Interfaces;
 using FijiPayroll.Domain.Entities.Audit;
+using FijiPayroll.Domain.Entities.Payroll;
+using FijiPayroll.Persistence.Converters;
 
 namespace FijiPayroll.Persistence.Context;
 
@@ -41,6 +43,7 @@ public class ApplicationDbContext : DbContext
         ITenantProvider tenantProvider)
         : this(options, auditableEntityInterceptor, null!, tenantProvider)
     {
+        SetTenantKey(tenantProvider);
     }
 
     /// <summary>
@@ -56,6 +59,22 @@ public class ApplicationDbContext : DbContext
         _auditableEntityInterceptor = auditableEntityInterceptor;
         _auditLogInterceptor = auditLogInterceptor;
         _tenantProvider = tenantProvider;
+        SetTenantKey(tenantProvider);
+    }
+
+    private static void SetTenantKey(ITenantProvider tenantProvider)
+    {
+        if (tenantProvider is not null)
+        {
+            try
+            {
+                TenantEncryptionValueConverter.CurrentKey = tenantProvider.GetCurrentTenantSecurityKey();
+            }
+            catch
+            {
+                // Fallback for design-time/migration scenarios
+            }
+        }
     }
 
     /// <summary>
@@ -101,6 +120,57 @@ public class ApplicationDbContext : DbContext
 
     /// <summary>Gets or sets the search indexes DbSet.</summary>
     public DbSet<SearchIndex> SearchIndexes => Set<SearchIndex>();
+
+    /// <summary>Gets or sets the approval workflows DbSet.</summary>
+    public DbSet<ApprovalWorkflow> ApprovalWorkflows => Set<ApprovalWorkflow>();
+
+    /// <summary>Gets or sets the workflow step logs DbSet.</summary>
+    public DbSet<WorkflowStepLog> WorkflowStepLogs => Set<WorkflowStepLog>();
+
+    // ── Rule Engine and Staging DbSets ──────────────────────────────────────
+
+    public DbSet<RuleModule> RuleModules => Set<RuleModule>();
+    public DbSet<RuleSet> RuleSets => Set<RuleSet>();
+    public DbSet<PayrollComponentRule> PayrollComponentRules => Set<PayrollComponentRule>();
+    public DbSet<PayrollComponentDependency> PayrollComponentDependencies => Set<PayrollComponentDependency>();
+    public DbSet<PayrollComponentVersion> PayrollComponentVersions => Set<PayrollComponentVersion>();
+    public DbSet<RuleExecutionMetric> RuleExecutionMetrics => Set<RuleExecutionMetric>();
+    public DbSet<ImportSession> ImportSessions => Set<ImportSession>();
+    public DbSet<ImportSessionRow> ImportSessionRows => Set<ImportSessionRow>();
+    public DbSet<ExportHistory> ExportHistories => Set<ExportHistory>();
+
+    // ── Onboarding and Setup Wizard DbSets ──────────────────────────────────
+    public DbSet<CompanySetupState> CompanySetupStates => Set<CompanySetupState>();
+    public DbSet<CompanySetupTask> CompanySetupTasks => Set<CompanySetupTask>();
+    public DbSet<SetupExecutionRecord> SetupExecutionRecords => Set<SetupExecutionRecord>();
+    public DbSet<SetupCheckpoint> SetupCheckpoints => Set<SetupCheckpoint>();
+    public DbSet<CompanySetupAudit> CompanySetupAudits => Set<CompanySetupAudit>();
+    public DbSet<CompanySeedVersion> CompanySeedVersions => Set<CompanySeedVersion>();
+    public DbSet<FiscalCalendar> FiscalCalendars => Set<FiscalCalendar>();
+    public DbSet<FiscalPeriod> FiscalPeriods => Set<FiscalPeriod>();
+    public DbSet<PayrollFrequencyDefinition> PayrollFrequencyDefinitions => Set<PayrollFrequencyDefinition>();
+    public DbSet<PayPeriodSchedule> PayPeriodSchedules => Set<PayPeriodSchedule>();
+    public DbSet<FnpfConfiguration> FnpfConfigurations => Set<FnpfConfiguration>();
+    public DbSet<BankMaster> BankMasters => Set<BankMaster>();
+    public DbSet<BankBranch> BankBranches => Set<BankBranch>();
+    public DbSet<CompanyBankAccount> CompanyBankAccounts => Set<CompanyBankAccount>();
+    public DbSet<ApprovalConfig> ApprovalConfigs => Set<ApprovalConfig>();
+
+    // ── Compliance and Platform Hardening DbSets ────────────────────────────
+    public DbSet<CompliancePeriod> CompliancePeriods => Set<CompliancePeriod>();
+    public DbSet<ComplianceBatch> ComplianceBatches => Set<ComplianceBatch>();
+    public DbSet<PayrollLedger> PayrollLedgers => Set<PayrollLedger>();
+    public DbSet<ComplianceEvent> ComplianceEvents => Set<ComplianceEvent>();
+    public DbSet<ApprovalMatrix> ApprovalMatrices => Set<ApprovalMatrix>();
+    public DbSet<ComplianceSnapshot> ComplianceSnapshots => Set<ComplianceSnapshot>();
+    public DbSet<ComplianceAmendment> ComplianceAmendments => Set<ComplianceAmendment>();
+    public DbSet<StatutoryRule> StatutoryRules => Set<StatutoryRule>();
+    public DbSet<FileLayoutDefinition> FileLayoutDefinitions => Set<FileLayoutDefinition>();
+    public DbSet<ComplianceJob> ComplianceJobs => Set<ComplianceJob>();
+    public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<FRCSSubmission> FRCSSubmissions => Set<FRCSSubmission>();
+    public DbSet<FNPFSubmission> FNPFSubmissions => Set<FNPFSubmission>();
+    public DbSet<BankFile> BankFiles => Set<BankFile>();
 
     /// <summary>
     /// Begins a database transaction asynchronously.
@@ -245,5 +315,87 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<SearchIndex>()
             .HasQueryFilter(si => si.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<ApprovalWorkflow>()
+            .HasQueryFilter(aw => aw.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<RuleSet>()
+            .HasQueryFilter(rs => rs.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<CompanySetupState>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<CompanySetupTask>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<SetupExecutionRecord>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<SetupCheckpoint>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<CompanySetupAudit>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<CompanySeedVersion>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<FiscalCalendar>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<FiscalPeriod>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<PayrollFrequencyDefinition>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<PayPeriodSchedule>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<FnpfConfiguration>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<BankMaster>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<BankBranch>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<CompanyBankAccount>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<ApprovalConfig>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        // Compliance multi-tenant filters
+        modelBuilder.Entity<CompliancePeriod>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<ComplianceBatch>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollLedger>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<ComplianceEvent>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<ApprovalMatrix>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<ComplianceJob>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<Notification>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<FRCSSubmission>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<FNPFSubmission>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<BankFile>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
     }
 }

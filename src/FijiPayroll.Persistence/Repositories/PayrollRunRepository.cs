@@ -134,7 +134,7 @@ public sealed class PayrollRunRepository : IPayrollRunRepository
     /// <inheritdoc />
     public async Task<(IReadOnlyList<PayrollRun> Items, int TotalCount)> GetPagedAsync(
         int companyId,
-        PayrollFrequency? frequencyFilter,
+        PayrollFrequencyType? frequencyFilter,
         PayrollRunStatus? statusFilter,
         int pageNumber,
         int pageSize,

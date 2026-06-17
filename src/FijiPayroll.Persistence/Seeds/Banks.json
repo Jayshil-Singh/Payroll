@@ -1,0 +1,34 @@
+[
+  {
+    "BankCode": "BSP",
+    "BankName": "Bank South Pacific",
+    "IsActive": true,
+    "Branches": [
+      {
+        "BranchCode": "SUVA",
+        "BranchName": "Suva Main Branch",
+        "BsbCode": "039-001",
+        "IsActive": true
+      },
+      {
+        "BranchCode": "LAUT",
+        "BranchName": "Lautoka Branch",
+        "BsbCode": "039-002",
+        "IsActive": true
+      }
+    ]
+  },
+  {
+    "BankCode": "ANZ",
+    "BankName": "ANZ Banking Group",
+    "IsActive": true,
+    "Branches": [
+      {
+        "BranchCode": "SUVAMN",
+        "BranchName": "ANZ Suva Main",
+        "BsbCode": "019-001",
+        "IsActive": true
+      }
+    ]
+  }
+]

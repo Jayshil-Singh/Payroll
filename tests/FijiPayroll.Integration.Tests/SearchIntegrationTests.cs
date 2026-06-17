@@ -109,7 +109,7 @@ public sealed class SearchIntegrationTests : IDisposable
             residencyStatus: "Resident",
             department: "Engineering",
             baseSalary: 4000m,
-            frequency: FijiPayroll.Domain.Enumerations.PayrollFrequency.Monthly,
+            frequency: FijiPayroll.Domain.Enumerations.PayrollFrequencyType.Monthly,
             isFnpfExempt: false,
             isTaxExempt: false,
             isActive: true,

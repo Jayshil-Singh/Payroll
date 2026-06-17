@@ -90,11 +90,43 @@
                     </StackPanel>
                 </RadioButton>
 
+                <!-- Company Onboarding Setup Wizard Nav Button -->
+                <RadioButton Style="{StaticResource SidebarNavItem}" Command="{Binding NavigateCompanySetupWizardCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE9F5;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Width="24" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" />
+                        <TextBlock Text="Onboarding Wizard" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+
                 <!-- Statutory Reports / Exports Nav Button -->
                 <RadioButton Style="{StaticResource SidebarNavItem}" Command="{Binding NavigateReportsCommand}" Visibility="{Binding HasReportsAccess, Converter={StaticResource BoolToVisConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#xE9F9;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Width="24" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" />
                         <TextBlock Text="Statutory Reports" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+
+                <!-- Approval Workflow Engine Nav Button -->
+                <RadioButton Style="{StaticResource SidebarNavItem}" Command="{Binding NavigateApprovalsCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Width="24" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" />
+                        <TextBlock Text="Approvals" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+
+                <!-- Compliance Center Nav Button -->
+                <RadioButton Style="{StaticResource SidebarNavItem}" Command="{Binding NavigateComplianceCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE9F9;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Width="24" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" />
+                        <TextBlock Text="Compliance Center" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+
+                <!-- Diagnostics HUD Nav Button -->
+                <RadioButton Style="{StaticResource SidebarNavItem}" Command="{Binding NavigateDiagnosticsCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xEBE8;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Width="24" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" />
+                        <TextBlock Text="Diagnostics HUD" VerticalAlignment="Center" />
                     </StackPanel>
                 </RadioButton>
 

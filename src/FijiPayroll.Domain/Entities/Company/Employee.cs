@@ -79,7 +79,7 @@ public sealed class Employee : SoftDeleteEntity
     /// <summary>
     /// Target pay frequency.
     /// </summary>
-    public PayrollFrequency Frequency { get; private set; }
+    public PayrollFrequencyType Frequency { get; private set; }
 
     /// <summary>
     /// True if employee is exempt from FNPF contributions.
@@ -165,7 +165,7 @@ public sealed class Employee : SoftDeleteEntity
         string residencyStatus,
         string department,
         decimal baseSalary,
-        PayrollFrequency frequency,
+        PayrollFrequencyType frequency,
         bool isFnpfExempt,
         bool isTaxExempt,
         bool isActive,
@@ -204,7 +204,7 @@ public sealed class Employee : SoftDeleteEntity
         string residencyStatus,
         string department,
         decimal baseSalary,
-        PayrollFrequency frequency,
+        PayrollFrequencyType frequency,
         bool isFnpfExempt,
         bool isTaxExempt,
         bool isActive,

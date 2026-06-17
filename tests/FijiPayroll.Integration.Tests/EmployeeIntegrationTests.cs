@@ -81,7 +81,7 @@ public sealed class EmployeeIntegrationTests : IDisposable
             ResidencyStatus: "Resident",
             Department: "HR",
             BaseSalary: 2500m,
-            Frequency: PayrollFrequency.Fortnightly,
+            Frequency: PayrollFrequencyType.Fortnightly,
             IsFnpfExempt: false,
             IsTaxExempt: false,
             IsActive: true,
@@ -118,7 +118,7 @@ public sealed class EmployeeIntegrationTests : IDisposable
     public async Task UpdateEmployee_ValidRequest_ModifiesPropertiesAndUpdatesMethods()
     {
         // Arrange
-        var emp = Employee.Create(1, "Original Name", "998877665", "12345-F", "Resident", "Finance", 2000m, PayrollFrequency.Fortnightly, false, false, true, EmploymentType.Permanent, "Suva", "Officer", "original@company.com");
+        var emp = Employee.Create(1, "Original Name", "998877665", "12345-F", "Resident", "Finance", 2000m, PayrollFrequencyType.Fortnightly, false, false, true, EmploymentType.Permanent, "Suva", "Officer", "original@company.com");
         emp.AddPaymentMethod(EmployeePaymentMethod.Create(PaymentMethodType.Cash, 100m, true));
         await _context.Employees.AddAsync(emp);
         await _context.SaveChangesAsync();
@@ -140,7 +140,7 @@ public sealed class EmployeeIntegrationTests : IDisposable
             ResidencyStatus: "Resident",
             Department: "HR",
             BaseSalary: 3000m,
-            Frequency: PayrollFrequency.Fortnightly,
+            Frequency: PayrollFrequencyType.Fortnightly,
             IsFnpfExempt: false,
             IsTaxExempt: false,
             IsActive: true,

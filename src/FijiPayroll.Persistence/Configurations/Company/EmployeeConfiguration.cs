@@ -134,6 +134,9 @@ internal sealed class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         
         builder.HasQueryFilter(x => !x.IsDeleted);
 
+        builder.HasIndex(x => new { x.CompanyId, x.Tin });
+        builder.HasIndex(x => new { x.CompanyId, x.FnpfNumber });
+
         // Audit Columns
         builder.Property(x => x.CreatedBy)
                .HasColumnType("nvarchar(100)")

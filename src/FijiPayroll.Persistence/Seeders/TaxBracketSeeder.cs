@@ -34,10 +34,10 @@ public sealed class TaxBracketSeeder
         var brackets = new List<TaxBracket>();
         var frequencies = new[]
         {
-            PayrollFrequency.Weekly,
-            PayrollFrequency.Fortnightly,
-            PayrollFrequency.BiMonthly,
-            PayrollFrequency.Monthly
+            PayrollFrequencyType.Weekly,
+            PayrollFrequencyType.Fortnightly,
+            PayrollFrequencyType.BiMonthly,
+            PayrollFrequencyType.Monthly
         };
 
         string version = "2025-2026";

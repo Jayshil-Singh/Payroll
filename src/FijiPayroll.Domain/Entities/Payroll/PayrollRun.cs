@@ -65,7 +65,7 @@ public sealed class PayrollRun : AuditableEntity
     /// <summary>
     /// Pay frequency of the run.
     /// </summary>
-    public PayrollFrequency Frequency { get; private set; }
+    public PayrollFrequencyType Frequency { get; private set; }
 
     /// <summary>
     /// Current state machine status.
@@ -291,7 +291,7 @@ public sealed class PayrollRun : AuditableEntity
         DateTime startDate,
         DateTime endDate,
         DateTime paymentDate,
-        PayrollFrequency frequency,
+        PayrollFrequencyType frequency,
         string? description)
     {
         if (startDate >= endDate)

@@ -5,7 +5,7 @@ namespace FijiPayroll.Domain.Enumerations;
 /// Used to determine the number of pay periods per year and therefore
 /// the annualisation factor in PAYE calculations.
 /// </summary>
-public enum PayrollFrequency
+public enum PayrollFrequencyType
 {
     /// <summary>Paid every 7 days. 52 periods per year.</summary>
     Weekly = 1,

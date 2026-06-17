@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FijiPayroll.Domain\FijiPayroll.Domain.csproj" />
     <ProjectReference Include="..\FijiPayroll.Shared\FijiPayroll.Shared.csproj" />
+    <ProjectReference Include="..\FijiPayroll.SDK\FijiPayroll.SDK.csproj" />
   </ItemGroup>
 
 </Project>

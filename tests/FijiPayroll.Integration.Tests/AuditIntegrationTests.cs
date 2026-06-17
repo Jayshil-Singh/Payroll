@@ -93,7 +93,7 @@ public sealed class AuditIntegrationTests : IDisposable
             ResidencyStatus: "Resident",
             Department: "QA",
             BaseSalary: 2000m,
-            Frequency: PayrollFrequency.Fortnightly,
+            Frequency: PayrollFrequencyType.Fortnightly,
             IsFnpfExempt: false,
             IsTaxExempt: false,
             IsActive: true,
@@ -136,7 +136,7 @@ public sealed class AuditIntegrationTests : IDisposable
     public async Task UpdateEmployee_ShouldLogOnlyChangedFields()
     {
         // Arrange
-        var employee = Employee.Create(1, "Before Update", "123456789", "98765-A", "Resident", "QA", 2000m, PayrollFrequency.Fortnightly, false, false, true, EmploymentType.Permanent, "Suva", "QA Engineer", "audit@company.com");
+        var employee = Employee.Create(1, "Before Update", "123456789", "98765-A", "Resident", "QA", 2000m, PayrollFrequencyType.Fortnightly, false, false, true, EmploymentType.Permanent, "Suva", "QA Engineer", "audit@company.com");
         await _context.Employees.AddAsync(employee);
         await _context.SaveChangesAsync();
 
@@ -161,7 +161,7 @@ public sealed class AuditIntegrationTests : IDisposable
             ResidencyStatus: "Resident", // Unchanged
             Department: "QA",          // Unchanged
             BaseSalary: 2500m,         // Changed salary
-            Frequency: PayrollFrequency.Fortnightly,
+            Frequency: PayrollFrequencyType.Fortnightly,
             IsFnpfExempt: false,
             IsTaxExempt: false,
             IsActive: true,
@@ -190,7 +190,7 @@ public sealed class AuditIntegrationTests : IDisposable
     public async Task DeactivateEmployee_ShouldRaiseEmployeeTerminatedEvent()
     {
         // Arrange
-        var employee = Employee.Create(1, "Terminated Employee", "123456789", "98765-A", "Resident", "QA", 2000m, PayrollFrequency.Fortnightly, false, false, true, EmploymentType.Permanent, "Suva", "QA Engineer", "audit@company.com");
+        var employee = Employee.Create(1, "Terminated Employee", "123456789", "98765-A", "Resident", "QA", 2000m, PayrollFrequencyType.Fortnightly, false, false, true, EmploymentType.Permanent, "Suva", "QA Engineer", "audit@company.com");
         await _context.Employees.AddAsync(employee);
         await _context.SaveChangesAsync();
 
@@ -214,7 +214,7 @@ public sealed class AuditIntegrationTests : IDisposable
             ResidencyStatus: "Resident",
             Department: "QA",
             BaseSalary: 2000m,
-            Frequency: PayrollFrequency.Fortnightly,
+            Frequency: PayrollFrequencyType.Fortnightly,
             IsFnpfExempt: false,
             IsTaxExempt: false,
             IsActive: false, // Set to inactive (termination)

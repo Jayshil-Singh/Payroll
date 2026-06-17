@@ -16,7 +16,7 @@ public interface ITaxBracketRepository
     /// </summary>
     Task<IReadOnlyList<TaxBracket>> GetBracketsByVersionAndFrequencyAsync(
         string taxVersion,
-        PayrollFrequency frequency,
+        PayrollFrequencyType frequency,
         CancellationToken cancellationToken = default);
 
     /// <summary>

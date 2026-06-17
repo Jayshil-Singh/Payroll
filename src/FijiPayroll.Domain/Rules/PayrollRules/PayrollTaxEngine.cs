@@ -17,7 +17,7 @@ public static class PayrollTaxEngine
     public static decimal CalculatePaye(
         decimal periodTaxableGross,
         decimal periodFnpfEmployeeContribution,
-        PayrollFrequency frequency,
+        PayrollFrequencyType frequency,
         string residencyStatus,
         string taxVersion,
         IEnumerable<TaxBracket> taxBrackets)
@@ -25,10 +25,10 @@ public static class PayrollTaxEngine
         // 1. Get periods count per year
         int periodsPerYear = frequency switch
         {
-            PayrollFrequency.Weekly => 52,
-            PayrollFrequency.Fortnightly => 26,
-            PayrollFrequency.BiMonthly => 24,
-            PayrollFrequency.Monthly => 12,
+            PayrollFrequencyType.Weekly => 52,
+            PayrollFrequencyType.Fortnightly => 26,
+            PayrollFrequencyType.BiMonthly => 24,
+            PayrollFrequencyType.Monthly => 12,
             _ => throw new ArgumentException($"Invalid frequency '{frequency}'")
         };
 

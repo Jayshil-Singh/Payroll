@@ -25,3 +25,6 @@ C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Persistence\obj\Debug\net
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Persistence\obj\Debug\net9.0\FijiPayroll.Persistence.pdb
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Persistence\obj\Debug\net9.0\FijiPayroll.Persistence.genruntimeconfig.cache
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Persistence\obj\Debug\net9.0\ref\FijiPayroll.Persistence.dll
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Persistence\bin\Debug\net9.0\FijiPayroll.SDK.dll
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Persistence\bin\Debug\net9.0\FijiPayroll.SDK.pdb
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.Persistence\bin\Debug\net9.0\FijiPayroll.SDK.xml

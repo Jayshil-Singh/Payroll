@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FijiPayroll.SDK</name>
+    </assembly>
+    <members>
+        <member name="T:FijiPayroll.SDK.Contracts.PaymentDetail">
+            <summary>
+            Shared data transfer object representing a single bank transaction detail.
+            Passed to bank direct-credit generators.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.SDK.Contracts.PaymentDetail.#ctor(System.Int32,System.String,System.String,System.String,System.Decimal,System.String,System.String,System.Decimal,System.Decimal,System.String,System.Decimal,System.Decimal,System.String,System.String)">
+            <summary>
+            Shared data transfer object representing a single bank transaction detail.
+            Passed to bank direct-credit generators.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.SDK.Contracts.PluginManifest">
+            <summary>
+            Descriptor representing a pluggable module's metadata, capability parameters, and compatibility requirements.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.SDK.Contracts.PluginManifest.PluginId">
+            <summary>Gets or sets the unique plugin identifier.</summary>
+        </member>
+        <member name="P:FijiPayroll.SDK.Contracts.PluginManifest.PluginName">
+            <summary>Gets or sets the display name of the plugin.</summary>
+        </member>
+        <member name="P:FijiPayroll.SDK.Contracts.PluginManifest.Provider">
+            <summary>Gets or sets the developer or provider entity name.</summary>
+        </member>
+        <member name="P:FijiPayroll.SDK.Contracts.PluginManifest.Version">
+            <summary>Gets or sets the plugin assembly version.</summary>
+        </member>
+        <member name="P:FijiPayroll.SDK.Contracts.PluginManifest.Description">
+            <summary>Gets or sets the description of plugin features.</summary>
+        </member>
+        <member name="P:FijiPayroll.SDK.Contracts.PluginManifest.MinEngineVersion">
+            <summary>Gets or sets the minimal platform calculation engine version required.</summary>
+        </member>
+        <member name="P:FijiPayroll.SDK.Contracts.PluginManifest.EffectiveFrom">
+            <summary>Gets or sets the date the plugin layout becomes active.</summary>
+        </member>
+        <member name="P:FijiPayroll.SDK.Contracts.PluginManifest.EffectiveTo">
+            <summary>Gets or sets the date the plugin layout ceases to be active (nullable).</summary>
+        </member>
+        <member name="P:FijiPayroll.SDK.Contracts.PluginManifest.SupportedCapabilities">
+            <summary>Gets or sets the capabilities registry keys supported by this plugin (e.g., specific bank codes or report names).</summary>
+        </member>
+        <member name="T:FijiPayroll.SDK.Contracts.ValidationIssue">
+            <summary>
+            Represents a validation warning or error produced during compliance auditing operations.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.SDK.Contracts.ValidationIssue.#ctor(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Represents a validation warning or error produced during compliance auditing operations.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.SDK.Contracts.VersionContract">
+            <summary>
+            Immutable version contract representing pinned versions of different calculation engines and legislative rules.
+            Ensures that historical payroll cycles are reproducible.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.SDK.Contracts.VersionContract.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Immutable version contract representing pinned versions of different calculation engines and legislative rules.
+            Ensures that historical payroll cycles are reproducible.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.SDK.Interfaces.IBankFileGenerator">
+            <summary>
+            Defines the plugin extension boundary for implementing direct-credit clearing file layouts in Fiji.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.SDK.Interfaces.IBankFileGenerator.BankCode">
+            <summary>Gets the unique bank code (e.g. "BSP", "ANZ", "WBC").</summary>
+        </member>
+        <member name="P:FijiPayroll.SDK.Interfaces.IBankFileGenerator.BankName">
+            <summary>Gets the user-friendly bank name.</summary>
+        </member>
+        <member name="M:FijiPayroll.SDK.Interfaces.IBankFileGenerator.Generate(System.String,System.String,System.String,System.DateTime,System.String,System.Collections.Generic.IEnumerable{FijiPayroll.SDK.Contracts.PaymentDetail},System.String,System.String,System.String,System.Char)">
+            <summary>
+            Formats the direct-credit dataset into a structured file output.
+            </summary>
+            <param name="companyName">The corporate payer name.</param>
+            <param name="companyAccount">The employer's credit source account number.</param>
+            <param name="bsb">The employer's bank BSB code (optional/required by bank).</param>
+            <param name="paymentDate">The processing date.</param>
+            <param name="reference">Payment description code.</param>
+            <param name="payments">The sequence of employee payment details.</param>
+            <param name="headerTemplate">Format string template for the file header.</param>
+            <param name="detailTemplate">Format string template for each detail row.</param>
+            <param name="footerTemplate">Format string template for the file trailer.</param>
+            <param name="delimiter">The column delimiter character.</param>
+            <returns>Formated text file content block.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:FijiPayroll.SDK.Interfaces.IComplianceFileService" -->
+        <member name="M:FijiPayroll.SDK.Interfaces.IComplianceFileService.GenerateFrcsCsv(System.String,System.Collections.Generic.IEnumerable{FijiPayroll.SDK.Contracts.PaymentDetail},System.Int32,System.Int32)">
+            <summary>
+            Builds the comma-separated data lines for the FRCS Monthly Employer Return (MER).
+            </summary>
+            <param name="employerTin">9-digit employer Tax Identification Number.</param>
+            <param name="payments">Sequence of employee payment records containing gross, allowances, and PAYE.</param>
+            <param name="month">1-indexed period month (MM).</param>
+            <param name="year">Four-digit period year (YYYY).</param>
+            <returns>UTF-8 formatted comma-separated content block without headers.</returns>
+        </member>
+        <member name="M:FijiPayroll.SDK.Interfaces.IComplianceFileService.GenerateFnpfCsv(System.String,System.String,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{FijiPayroll.SDK.Contracts.PaymentDetail})">
+            <summary>
+            Builds the comma-separated contribution columns for the FNPF remittance portal.
+            </summary>
+            <param name="employerNumber">FNPF employer registration number.</param>
+            <param name="employerName">FNPF company name.</param>
+            <param name="month">1-indexed period month.</param>
+            <param name="year">Four-digit period year.</param>
+            <param name="payments">Sequence of employee payment records containing employee/employer contribution amounts.</param>
+            <returns>UTF-8 formatted CSV block with FNPF header columns.</returns>
+        </member>
+        <member name="T:FijiPayroll.SDK.Interfaces.IComplianceValidator">
+            <summary>
+            Interface for legislative or bank rules validation engines.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.SDK.Interfaces.IComplianceValidator.RuleCode">
+            <summary>Gets the unique registry rule identifier code.</summary>
+        </member>
+        <member name="P:FijiPayroll.SDK.Interfaces.IComplianceValidator.RuleName">
+            <summary>Gets the display name of the validation check.</summary>
+        </member>
+        <member name="M:FijiPayroll.SDK.Interfaces.IComplianceValidator.Validate(System.Int32,System.Object)">
+            <summary>
+            Evaluates the target context payload and returns a list of validation issues.
+            </summary>
+            <param name="companyId">The company identifier context.</param>
+            <param name="payload">The target model or dataset to validate.</param>
+            <returns>Sequence of validation warnings or errors.</returns>
+        </member>
+        <member name="T:FijiPayroll.SDK.Interfaces.IExportProvider">
+            <summary>
+            Defines the contract for exporting tabular datasets to Excel spreadsheets using ClosedXML.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.SDK.Interfaces.IExportProvider.ExportExcelAsync(System.Data.DataSet,System.IO.Stream,System.Threading.CancellationToken)">
+            <summary>
+            Exports a DataSet to an Excel sheet stream.
+            </summary>
+            <param name="dataSet">The source dataset to export.</param>
+            <param name="destinationStream">The target output stream to write the Excel file.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+        </member>
+        <member name="T:FijiPayroll.SDK.Interfaces.IImportProvider">
+            <summary>
+            Defines the contract for importing tabular data from Excel spreadsheets using ClosedXML.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.SDK.Interfaces.IImportProvider.ImportExcelAsync(System.IO.Stream,System.Threading.CancellationToken)">
+            <summary>
+            Reads an Excel sheet and converts it into a DataSet.
+            </summary>
+            <param name="fileStream">The input file stream containing the spreadsheet.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A DataSet containing the worksheet data.</returns>
+        </member>
+        <member name="T:FijiPayroll.SDK.Interfaces.ILicenseProvider">
+            <summary>
+            Defines the contract for validating company licenses using RSA signatures.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.SDK.Interfaces.ILicenseProvider.ValidateLicenseAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Validates the license signature against a public key.
+            </summary>
+            <param name="licenseXml">The serialized license XML string containing the signature.</param>
+            <param name="publicKeyPem">The RSA public key in PEM format used for validation.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>True if the license signature is valid; otherwise false.</returns>
+        </member>
+        <member name="T:FijiPayroll.SDK.Interfaces.INotificationService">
+            <summary>
+            Interface defining alert transmission methods across notification channels (Email, Teams, Slack, Webhooks, etc.).
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.SDK.Interfaces.INotificationService.SendAsync(System.String,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Dispatches an alert asynchronously.
+            </summary>
+            <param name="channel">The target channel (e.g., "Email", "SMS", "Teams").</param>
+            <param name="recipient">The recipient address, phone number, or webhook URL.</param>
+            <param name="subject">The notification subject header.</param>
+            <param name="message">The notification body content.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+        </member>
+        <member name="T:FijiPayroll.SDK.Interfaces.IReportProvider">
+            <summary>
+            Defines the integration gateway for paginated reporting services (such as SQL Server Reporting Services).
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.SDK.Interfaces.IReportProvider.RenderReportAsync(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Threading.CancellationToken)">
+            <summary>
+            Renders a template report with parameter variables.
+            </summary>
+            <param name="reportName">The name or path of the report layout definition.</param>
+            <param name="format">The target output file format ("PDF", "Excel", "CSV", "Word").</param>
+            <param name="parameters">Filter parameters passed to query scopes.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Rendered file content bytes.</returns>
+        </member>
+        <member name="T:FijiPayroll.SDK.Interfaces.IRuleProvider">
+            <summary>
+            Defines the contract for fetching dynamic statutory rules and rates (e.g. FNPF rates, PAYE brackets).
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.SDK.Interfaces.IRuleProvider.GetRuleValueAsync(System.String,System.String,System.DateTime,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a statutory rule value as a string.
+            </summary>
+            <param name="authority">The statutory authority (e.g. "FRCS", "FNPF").</param>
+            <param name="ruleCode">The unique rule identifier code.</param>
+            <param name="date">The effective date for checking the rule value.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Dynamic rule value as a string.</returns>
+        </member>
+        <member name="M:FijiPayroll.SDK.Interfaces.IRuleProvider.GetDecimalRuleValueAsync(System.String,System.String,System.DateTime,System.Decimal,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a statutory rule value parsed as a decimal.
+            </summary>
+            <param name="authority">The statutory authority (e.g. "FRCS", "FNPF").</param>
+            <param name="ruleCode">The unique rule identifier code.</param>
+            <param name="date">The effective date for checking the rule value.</param>
+            <param name="defaultValue">The fallback value if the rule is not found or parsing fails.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Dynamic rule value parsed as a decimal, or the default value.</returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,91 @@
+<UserControl x:Class="FijiPayroll.WPF.Views.ApprovalDashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FijiPayroll.WPF.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800"
+             Background="Transparent">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Page Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,24">
+            <TextBlock Text="Approval Workflows" 
+                       FontSize="28" 
+                       FontWeight="Bold" 
+                       Foreground="#FFFFFF" 
+                       FontFamily="Segoe UI Semibold" />
+            <TextBlock Text="Monitor, review, and execute approvals for master data changes and payroll runs." 
+                       FontSize="14" 
+                       Foreground="#A0AEC0" 
+                       Margin="0,4,0,0" />
+        </StackPanel>
+
+        <!-- KPI Stats Grid -->
+        <Grid Grid.Row="1" Margin="0,0,0,24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Card 1: Total Pending -->
+            <Border Grid.Column="0" Margin="0,0,8,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="16">
+                <StackPanel>
+                    <TextBlock Text="Total Pending Tasks" FontSize="12" Foreground="#A0AEC0" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding TotalPendingCount}" FontSize="32" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,8,0,0" />
+                    <TextBlock Text="Requires review" FontSize="11" Foreground="#ED8936" Margin="0,4,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Card 2: Employee Pending -->
+            <Border Grid.Column="1" Margin="8,0,8,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="16">
+                <StackPanel>
+                    <TextBlock Text="Employee Requests" FontSize="12" Foreground="#A0AEC0" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding EmployeePendingCount}" FontSize="32" Foreground="#0D99FF" FontWeight="Bold" Margin="0,8,0,0" />
+                    <TextBlock Text="TIN/FNPF data modifications" FontSize="11" Foreground="#A0AEC0" Margin="0,4,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Card 3: Payroll Run Pending -->
+            <Border Grid.Column="2" Margin="8,0,8,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="16">
+                <StackPanel>
+                    <TextBlock Text="Payroll Run Approvals" FontSize="12" Foreground="#A0AEC0" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding PayrollRunPendingCount}" FontSize="32" Foreground="#E53E3E" FontWeight="Bold" Margin="0,8,0,0" />
+                    <TextBlock Text="Awaiting final disbursements" FontSize="11" Foreground="#A0AEC0" Margin="0,4,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Card 4: Other Pending -->
+            <Border Grid.Column="3" Margin="8,0,0,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="16">
+                <StackPanel>
+                    <TextBlock Text="Other Lookups" FontSize="12" Foreground="#A0AEC0" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding OtherPendingCount}" FontSize="32" Foreground="#38B2AC" FontWeight="Bold" Margin="0,8,0,0" />
+                    <TextBlock Text="Configuration changes" FontSize="11" Foreground="#A0AEC0" Margin="0,4,0,0" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Main Workspace Action Link -->
+        <Border Grid.Row="2" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="32">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="&#xE8D7;" FontFamily="Segoe MDL2 Assets" FontSize="64" Foreground="{DynamicResource BrushAccent}" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                <TextBlock Text="Actions Required" Style="{StaticResource Header2}" HorizontalAlignment="Center" Margin="0,0,0,8" />
+                <TextBlock Text="Review the detailed list of requests to execute approvals, rejections, or perform bulk processing." 
+                           Style="{StaticResource BodyText}" TextAlignment="Center" MaxWidth="400" Margin="0,0,0,24"/>
+                <Button Content="View Pending Approvals Table" 
+                        Command="{Binding NavigateToPendingCommand}" 
+                        Style="{StaticResource ModernButton}" 
+                        Padding="24,12" 
+                        HorizontalAlignment="Center" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

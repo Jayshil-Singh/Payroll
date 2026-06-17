@@ -43,6 +43,7 @@ public partial class App : System.Windows.Application
     private SystemIntegrityValidator? _integrityValidator;
     private MemorySmoothingScheduler? _memoryScheduler;
     private PriorityDispatcherQueue? _priorityQueue;
+    private ComplianceJobProcessor? _complianceJobProcessor;
 
     public IServiceProvider? ServiceProvider => _serviceProvider;
     public string CurrentTheme => _currentTheme;
@@ -130,6 +131,9 @@ public partial class App : System.Windows.Application
                 splash.UpdateProgress(60, "Running Seeders", "Loading Fiji tax tables & company components...");
                 await Task.Delay(300);
 
+                var ruleModuleSeeder = scope.ServiceProvider.GetRequiredService<RuleModuleSeeder>();
+                await ruleModuleSeeder.SeedAsync();
+
                 var taxSeeder = scope.ServiceProvider.GetRequiredService<TaxBracketSeeder>();
                 await taxSeeder.SeedAsync();
 
@@ -138,7 +142,10 @@ public partial class App : System.Windows.Application
 
                 var employeeSeeder = scope.ServiceProvider.GetRequiredService<EmployeeSeeder>();
                 await employeeSeeder.SeedAsync();
-                _logger.LogInformation("FRCS tax tables and employee structures seeded successfully.");
+
+                var complianceSeeder = scope.ServiceProvider.GetRequiredService<ComplianceSeeder>();
+                await complianceSeeder.SeedAsync();
+                _logger.LogInformation("FRCS tax tables, employee structures, and compliance rules/layouts seeded successfully.");
 
                 // ── Stage 4: State Recovery ──────────────────────────────────────────
                 splash.UpdateProgress(75, "Recovering State", "Restoring last session...");
@@ -159,6 +166,9 @@ public partial class App : System.Windows.Application
 
                 _memoryScheduler = _serviceProvider.GetRequiredService<MemorySmoothingScheduler>();
                 _memoryScheduler.Start();
+
+                _complianceJobProcessor = _serviceProvider.GetRequiredService<ComplianceJobProcessor>();
+                _complianceJobProcessor.Start();
 
                 _logger.LogInformation("All background monitors started.");
 
@@ -207,7 +217,8 @@ public partial class App : System.Windows.Application
                 Task.Run(() => _healthMonitor?.Dispose()),
                 Task.Run(() => _integrityValidator?.Dispose()),
                 Task.Run(() => _memoryScheduler?.Dispose()),
-                Task.Run(() => _priorityQueue?.Dispose())
+                Task.Run(() => _priorityQueue?.Dispose()),
+                Task.Run(() => _complianceJobProcessor?.Dispose())
             ).Wait(shutdownCts.Token);
         }
         catch (OperationCanceledException)

@@ -1,5 +1,7 @@
 using FijiPayroll.Application.Common.Interfaces;
 using FijiPayroll.Infrastructure.Services;
+using FijiPayroll.Infrastructure.Services.BankGenerators;
+using FijiPayroll.SDK.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,6 +30,28 @@ public static class DependencyInjection
 
         // Register the Search Service
         services.AddSingleton<ISearchService, SearchService>();
+
+        // Register the Compliance services
+        services.AddScoped<IComplianceFileService, ComplianceFileService>();
+        services.AddScoped<INotificationService, NotificationService>();
+
+        // Register Bank generators
+        services.AddScoped<IBankFileGenerator, BSPBankGenerator>();
+        services.AddScoped<IBankFileGenerator, ANZBankGenerator>();
+        services.AddScoped<IBankFileGenerator, WestpacBankGenerator>();
+        services.AddScoped<IBankFileGenerator, BREDBankGenerator>();
+        services.AddScoped<IBankFileGenerator, HFCBankGenerator>();
+        services.AddScoped<IBankFileGenerator, KontikiBankGenerator>();
+
+        // Register background job processor as singleton
+        services.AddSingleton<ComplianceJobProcessor>();
+
+        // Register the License Fingerprint Provider
+        services.AddSingleton<ILicenseFingerprintProvider, LicenseFingerprintProvider>();
+
+        // Register Rule Cache and IMemoryCache
+        services.AddMemoryCache();
+        services.AddSingleton<FijiPayroll.Shared.Formula.IFormulaCache, MemoryFormulaCache>();
 
         // Register the Plugin Loader as a singleton
         var pluginLoader = new PluginLoader();

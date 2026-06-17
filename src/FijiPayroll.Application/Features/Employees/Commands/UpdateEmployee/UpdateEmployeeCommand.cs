@@ -17,7 +17,7 @@ public sealed record UpdateEmployeeCommand(
     string ResidencyStatus,
     string Department,
     decimal BaseSalary,
-    PayrollFrequency Frequency,
+    PayrollFrequencyType Frequency,
     bool IsFnpfExempt,
     bool IsTaxExempt,
     bool IsActive,

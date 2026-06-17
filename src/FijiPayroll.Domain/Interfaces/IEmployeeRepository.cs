@@ -17,7 +17,7 @@ public interface IEmployeeRepository
     /// </summary>
     Task<IReadOnlyList<Employee>> GetByCompanyAndFrequencyAsync(
         int companyId,
-        PayrollFrequency frequency,
+        PayrollFrequencyType frequency,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -29,4 +29,27 @@ public interface IEmployeeRepository
     /// Registers a new employee.
     /// </summary>
     Task AddAsync(Employee employee, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves a server-side filtered and paginated list of employees.
+    /// </summary>
+    /// <param name="companyId">The company identifier.</param>
+    /// <param name="searchTerm">Optional search term to filter by name.</param>
+    /// <param name="departmentFilter">Optional department to filter by.</param>
+    /// <param name="pageNumber">The 1-based page number.</param>
+    /// <param name="pageSize">The page size.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A tuple containing the read-only list of employees and the total count.</returns>
+    Task<(IReadOnlyList<Employee> Items, int TotalCount)> GetPagedAsync(
+        int companyId,
+        string? searchTerm,
+        string? departmentFilter,
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves a list of employees matching the specified IDs.
+    /// </summary>
+    Task<IReadOnlyList<Employee>> GetByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken = default);
 }

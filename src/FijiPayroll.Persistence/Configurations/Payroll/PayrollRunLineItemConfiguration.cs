@@ -51,5 +51,8 @@ internal sealed class PayrollRunLineItemConfiguration : IEntityTypeConfiguration
 
         builder.Property(x => x.ReferenceComponentId)
                .IsRequired();
+
+        builder.HasIndex(x => x.PayrollRunEmployeeId);
+        builder.HasIndex(x => x.ComponentId);
     }
 }

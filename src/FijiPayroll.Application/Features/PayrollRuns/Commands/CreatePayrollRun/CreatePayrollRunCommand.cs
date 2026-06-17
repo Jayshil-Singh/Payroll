@@ -18,7 +18,7 @@ public sealed record CreatePayrollRunCommand(
     DateTime StartDate,
     DateTime EndDate,
     DateTime PaymentDate,
-    PayrollFrequency Frequency,
+    PayrollFrequencyType Frequency,
     string? Description
 ) : IRequest<Result<int>>;
 
