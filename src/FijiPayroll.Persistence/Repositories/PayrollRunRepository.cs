@@ -26,6 +26,7 @@ public sealed class PayrollRunRepository : IPayrollRunRepository
     public async Task<PayrollRun?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await _context.PayrollRuns
+            .IgnoreQueryFilters()
             .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
     }
 
@@ -33,6 +34,7 @@ public sealed class PayrollRunRepository : IPayrollRunRepository
     public async Task<PayrollRun?> GetByIdWithDetailsAsync(int id, CancellationToken cancellationToken = default)
     {
         var run = await _context.PayrollRuns
+            .IgnoreQueryFilters()
             .Include(r => r.StateHistory)
             .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
 

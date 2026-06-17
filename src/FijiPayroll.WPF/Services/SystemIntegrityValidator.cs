@@ -100,6 +100,12 @@ public sealed class SystemIntegrityValidator : IDisposable
         if (_disposed) return;
         _disposed = true;
         _cts.Cancel();
+        try
+        {
+            // Thread safety: Await background audit loop to exit gracefully with a 1000ms timeout
+            _auditTask?.Wait(TimeSpan.FromMilliseconds(1000));
+        }
+        catch { }
         _cts.Dispose();
     }
 }

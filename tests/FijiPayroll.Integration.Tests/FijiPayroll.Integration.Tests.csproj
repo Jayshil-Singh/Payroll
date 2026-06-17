@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
@@ -31,6 +32,7 @@
     <ProjectReference Include="..\..\src\FijiPayroll.Persistence\FijiPayroll.Persistence.csproj" />
     <ProjectReference Include="..\..\src\FijiPayroll.Shared\FijiPayroll.Shared.csproj" />
     <ProjectReference Include="..\..\src\FijiPayroll.Infrastructure\FijiPayroll.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\FijiPayroll.WPF\FijiPayroll.WPF.csproj" />
   </ItemGroup>
 
 </Project>

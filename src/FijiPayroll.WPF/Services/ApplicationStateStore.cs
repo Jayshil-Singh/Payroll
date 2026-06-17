@@ -230,7 +230,44 @@ public sealed class ApplicationStateStore : IApplicationStateStore, IDisposable
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    {
+        var app = System.Windows.Application.Current;
+        if (app == null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return;
+        }
+
+        var dispatcher = app.Dispatcher;
+        if (dispatcher == null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return;
+        }
+
+        // Thread safety: Avoid cross-thread exceptions in WPF binding engine
+        if (dispatcher.CheckAccess())
+        {
+            // Invoke directly if already on UI thread to bypass scheduling queue overhead
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        else
+        {
+            // Fall back to non-blocking asynchronous BeginInvoke to keep background thread processing free of deadlocks
+            try
+            {
+                if (!dispatcher.HasShutdownStarted && !dispatcher.HasShutdownFinished)
+                {
+                    dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                    }));
+                }
+            }
+            catch (TaskCanceledException) { }
+            catch (ObjectDisposedException) { }
+        }
+    }
 
     public void Dispose()
     {

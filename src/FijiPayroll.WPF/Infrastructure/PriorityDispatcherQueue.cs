@@ -34,6 +34,19 @@ public sealed class PriorityDispatcherQueue : IDisposable
     // WRR weights per priority level
     private static readonly int[] Weights = { 10, 7, 3 }; // sum = 20
 
+    // Static cached array for weighted slots to avoid GC pressure in hot path
+    private static readonly int[] WeightedSlots = BuildWeightedSlots();
+
+    private static int[] BuildWeightedSlots()
+    {
+        int[] expanded = new int[Weights[0] + Weights[1] + Weights[2]]; // 20
+        int idx = 0;
+        for (int s = 0; s < 3; s++)
+            for (int w = 0; w < Weights[s]; w++)
+                expanded[idx++] = s;
+        return expanded;
+    }
+
     // Aging: milliseconds before a starved slot gets a one-shot boost
     private static readonly int StarvationThresholdMs = 1000;
 
@@ -96,6 +109,7 @@ public sealed class PriorityDispatcherQueue : IDisposable
 
     /// <summary>
     /// Drains queued work items onto the UI dispatcher using WRR scheduling.
+    /// Thread safety: The method executes on the UI thread via SafeDispatcher.
     /// </summary>
     private void DrainViaWeightedRoundRobin()
     {
@@ -103,43 +117,63 @@ public sealed class PriorityDispatcherQueue : IDisposable
 
         SafeDispatcher.SafeBeginInvoke(() =>
         {
-            int totalCycles = Weights[0] + Weights[1] + Weights[2];
-            int dispatched = 0;
-
-            // One full WRR sweep per drain call (20 slots max)
-            for (int cycle = 0; cycle < totalCycles && !_disposed; cycle++)
+            try
             {
-                int slot = GetNextWeightedSlot();
-                if (_queues[slot].TryDequeue(out var action))
+                int totalCycles = Weights[0] + Weights[1] + Weights[2];
+                int dispatched = 0;
+
+                // One full WRR sweep per drain call (20 slots max)
+                for (int cycle = 0; cycle < totalCycles && !_disposed; cycle++)
                 {
-                    Interlocked.Exchange(ref _lastServiced[slot], Environment.TickCount64);
-                    try { action(); }
-                    catch (Exception ex)
+                    int slot = GetNextWeightedSlot();
+                    if (_queues[slot].TryDequeue(out var action))
                     {
-                        _logger?.LogError(ex, "[PriorityQueue] Unhandled action error in slot {Slot}", slot);
+                        Interlocked.Exchange(ref _lastServiced[slot], Environment.TickCount64);
+                        try { action(); }
+                        catch (Exception ex)
+                        {
+                            _logger?.LogError(ex, "[PriorityQueue] Unhandled action error in slot {Slot}", slot);
+                        }
+                        dispatched++;
                     }
-                    dispatched++;
                 }
-            }
 
-            // If items remain, schedule another drain pass, else reset the scheduled flag
-            bool hasMore = false;
-            for (int i = 0; i < 3; i++) hasMore |= !_queues[i].IsEmpty;
+                // If items remain, schedule another drain pass, else reset the scheduled flag
+                bool hasMore = false;
+                for (int i = 0; i < 3; i++) hasMore |= !_queues[i].IsEmpty;
 
-            if (hasMore && !_disposed)
-            {
-                DrainViaWeightedRoundRobin();
-            }
-            else
-            {
-                Interlocked.Exchange(ref _isDrainingScheduled, 0);
-
-                // Double check if new items arrived after checking hasMore but before resetting flag
-                bool doubleCheck = false;
-                for (int i = 0; i < 3; i++) doubleCheck |= !_queues[i].IsEmpty;
-                if (doubleCheck && !_disposed && Interlocked.CompareExchange(ref _isDrainingScheduled, 1, 0) == 0)
+                if (hasMore && !_disposed)
                 {
                     DrainViaWeightedRoundRobin();
+                }
+                else
+                {
+                    Interlocked.Exchange(ref _isDrainingScheduled, 0);
+
+                    // Double check if new items arrived after checking hasMore but before resetting flag
+                    bool doubleCheck = false;
+                    for (int i = 0; i < 3; i++) doubleCheck |= !_queues[i].IsEmpty;
+                    if (doubleCheck && !_disposed && Interlocked.CompareExchange(ref _isDrainingScheduled, 1, 0) == 0)
+                    {
+                        DrainViaWeightedRoundRobin();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "[PriorityQueue] Critical error inside drain execution loop");
+            }
+            finally
+            {
+                // Thread safety: Guarantee state flag is reset if no further drainage is scheduled
+                bool hasMore = false;
+                if (!_disposed)
+                {
+                    for (int i = 0; i < 3; i++) hasMore |= !_queues[i].IsEmpty;
+                }
+                if (!hasMore || _disposed)
+                {
+                    Interlocked.Exchange(ref _isDrainingScheduled, 0);
                 }
             }
 
@@ -148,15 +182,8 @@ public sealed class PriorityDispatcherQueue : IDisposable
 
     private int GetNextWeightedSlot()
     {
-        // Simple WRR: cycle through slots by weight
-        int[] expanded = new int[Weights[0] + Weights[1] + Weights[2]]; // 20
-        int idx = 0;
-        for (int s = 0; s < 3; s++)
-            for (int w = 0; w < Weights[s]; w++)
-                expanded[idx++] = s;
-
-        int slot = expanded[_cyclePosition % expanded.Length];
-        _cyclePosition = (_cyclePosition + 1) % expanded.Length;
+        int slot = WeightedSlots[_cyclePosition % WeightedSlots.Length];
+        _cyclePosition = (_cyclePosition + 1) % WeightedSlots.Length;
         return slot;
     }
 

@@ -1678,6 +1678,141 @@
             Factory method to construct a new ComplianceSnapshot.
             </summary>
         </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.EvidencePack">
+            <summary>
+            Root domain model representing an immutable, audit-grade compliance evidence pack for a finalized payroll run.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.CorrelationId">
+            <summary>Gets the unique identifier of the evidence pack verification session.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.GeneratedUtc">
+            <summary>Gets the timestamp when this evidence pack was generated.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.GeneratedBy">
+            <summary>Gets the user who initiated the evidence pack generation.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.ExecutiveSummary">
+            <summary>Gets the Executive Summary details.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.LedgerIntegrity">
+            <summary>Gets the Ledger Integrity Manifest.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.ReportSnapshotIndex">
+            <summary>Gets the SSRS Report Snapshot Index details.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.EmployeeEvidence">
+            <summary>Gets the employee-level evidence details.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.ValidationOutput">
+            <summary>Gets the validation outputs representing compliance audit issues.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.Traceability">
+            <summary>Gets the Traceability Evidence containing step-level calculation traces.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.Reconciliation">
+            <summary>Gets the Reconciliation Summary logs.</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.ExecutiveSummary">
+            <summary>
+            High-level executive metadata summary of the payroll run.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.ExecutiveSummary.#ctor(System.Int32,System.Int32,System.String,System.Decimal,System.Decimal,System.Decimal,System.Decimal)">
+            <summary>
+            High-level executive metadata summary of the payroll run.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.LedgerIntegrityManifest">
+            <summary>
+            Manifest asserting the data integrity hash of the raw PayrollLedger records.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.LedgerIntegrityManifest.#ctor(System.String,System.Int32,System.DateTime,System.String)">
+            <summary>
+            Manifest asserting the data integrity hash of the raw PayrollLedger records.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.SSRSReportSnapshot">
+            <summary>
+            Snapshot details of a single rendered report template.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.SSRSReportSnapshot.#ctor(System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String},System.DateTime,System.String)">
+            <summary>
+            Snapshot details of a single rendered report template.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.SSRSReportSnapshotIndex">
+            <summary>
+            Index collection containing all SSRS Report snapshots.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.SSRSReportSnapshotIndex.#ctor(System.Collections.Generic.IReadOnlyList{FijiPayroll.Domain.Entities.Payroll.SSRSReportSnapshot})">
+            <summary>
+            Index collection containing all SSRS Report snapshots.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.EmployeeLevelEvidence">
+            <summary>
+            Individual ledger breakdown details captured for an employee.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.EmployeeLevelEvidence.#ctor(System.Int32,System.String,System.String,System.String,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Int32)">
+            <summary>
+            Individual ledger breakdown details captured for an employee.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.EvidenceValidationIssue">
+            <summary>
+            Represents a validation issue returned by FRCS/FNPF audits.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.EvidenceValidationIssue.#ctor(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Represents a validation issue returned by FRCS/FNPF audits.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.ComplianceValidationOutput">
+            <summary>
+            Composite validation errors generated against FRCS and FNPF rules.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.ComplianceValidationOutput.#ctor(System.Collections.Generic.IReadOnlyList{FijiPayroll.Domain.Entities.Payroll.EvidenceValidationIssue},System.Collections.Generic.IReadOnlyList{FijiPayroll.Domain.Entities.Payroll.EvidenceValidationIssue})">
+            <summary>
+            Composite validation errors generated against FRCS and FNPF rules.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.EmployeeTraceEvidence">
+            <summary>
+            Detailed metadata containing progressive rule step values.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.EmployeeTraceEvidence.#ctor(System.Int32,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyDictionary{System.String,System.Decimal})">
+            <summary>
+            Detailed metadata containing progressive rule step values.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.TraceabilityEvidence">
+            <summary>
+            Collection of all execution traces for audit analysis.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.TraceabilityEvidence.#ctor(System.Collections.Generic.IReadOnlyList{FijiPayroll.Domain.Entities.Payroll.EmployeeTraceEvidence})">
+            <summary>
+            Collection of all execution traces for audit analysis.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.ReconciliationSummary">
+            <summary>
+            Ledger totals vs compliance export variance checks.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.ReconciliationSummary.#ctor(System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.String)">
+            <summary>
+            Ledger totals vs compliance export variance checks.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Entities.Payroll.FileLayoutDefinition">
             <summary>
             Domain model storing custom string formatting templates for bank files, FNPF columns, and FRCS exports.
@@ -3054,6 +3189,29 @@
             <summary>
             Retrieves a list of employees matching the specified IDs.
             </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.IEvidencePackGeneratorService">
+            <summary>
+            Defines the domain contract for generating the compliance evidence pack and packaging it into a ZIP archive.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IEvidencePackGeneratorService.GenerateEvidencePackAsync(System.Int32,System.Int32,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Generates a complete, structured compliance evidence pack for a finalized payroll run.
+            </summary>
+            <param name="companyId">The company tenant context identifier.</param>
+            <param name="payrollRunId">The payroll run identifier.</param>
+            <param name="requestedBy">The username of the user triggering the generation.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A structured <see cref="T:FijiPayroll.Domain.Entities.Payroll.EvidencePack"/> domain model.</returns>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IEvidencePackGeneratorService.GenerateEvidenceZipArchiveAsync(FijiPayroll.Domain.Entities.Payroll.EvidencePack,System.Threading.CancellationToken)">
+            <summary>
+            Packages the evidence pack and all its associated artifacts (JSON, PDF, SSRS snapshots) into a ZIP archive.
+            </summary>
+            <param name="evidencePack">The generated evidence pack domain model.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>The byte array representing the ZIP archive.</returns>
         </member>
         <member name="T:FijiPayroll.Domain.Interfaces.IImportJobRepository">
             <summary>

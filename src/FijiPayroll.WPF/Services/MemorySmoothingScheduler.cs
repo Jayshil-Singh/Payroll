@@ -121,6 +121,12 @@ public sealed class MemorySmoothingScheduler : IDisposable
         if (_disposed) return;
         _disposed = true;
         _cts.Cancel();
+        try
+        {
+            // Thread safety: Await background memory scheduler loop to exit gracefully with a 1000ms timeout
+            _schedulerTask?.Wait(TimeSpan.FromMilliseconds(1000));
+        }
+        catch { }
         _cts.Dispose();
     }
 }

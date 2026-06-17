@@ -457,27 +457,27 @@
         }
       }
     },
-    "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\tests\\FijiPayroll.Integration.Tests\\FijiPayroll.Integration.Tests.csproj": {
+    "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.WPF\\FijiPayroll.WPF.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\tests\\FijiPayroll.Integration.Tests\\FijiPayroll.Integration.Tests.csproj",
-        "projectName": "FijiPayroll.Integration.Tests",
-        "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\tests\\FijiPayroll.Integration.Tests\\FijiPayroll.Integration.Tests.csproj",
+        "projectUniqueName": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.WPF\\FijiPayroll.WPF.csproj",
+        "projectName": "FijiPayroll.WPF",
+        "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.WPF\\FijiPayroll.WPF.csproj",
         "packagesPath": "C:\\Users\\jayshil.singh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\tests\\FijiPayroll.Integration.Tests\\obj\\",
+        "outputPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.WPF\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\jayshil.singh\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net9.0"
+          "net9.0-windows"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net9.0": {
-            "targetAlias": "net9.0",
+          "net9.0-windows7.0": {
+            "targetAlias": "net9.0-windows",
             "projectReferences": {
               "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\FijiPayroll.Application.csproj": {
                 "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\FijiPayroll.Application.csproj"
@@ -510,8 +510,99 @@
         "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
-        "net9.0": {
-          "targetAlias": "net9.0",
+        "net9.0-windows7.0": {
+          "targetAlias": "net9.0-windows",
+          "dependencies": {
+            "CommunityToolkit.Mvvm": {
+              "target": "Package",
+              "version": "[8.2.2, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\tests\\FijiPayroll.Integration.Tests\\FijiPayroll.Integration.Tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\tests\\FijiPayroll.Integration.Tests\\FijiPayroll.Integration.Tests.csproj",
+        "projectName": "FijiPayroll.Integration.Tests",
+        "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\tests\\FijiPayroll.Integration.Tests\\FijiPayroll.Integration.Tests.csproj",
+        "packagesPath": "C:\\Users\\jayshil.singh\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\tests\\FijiPayroll.Integration.Tests\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\jayshil.singh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0-windows"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0-windows7.0": {
+            "targetAlias": "net9.0-windows",
+            "projectReferences": {
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\FijiPayroll.Application.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\FijiPayroll.Application.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\FijiPayroll.Domain.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\FijiPayroll.Domain.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Infrastructure\\FijiPayroll.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Infrastructure\\FijiPayroll.Infrastructure.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Persistence\\FijiPayroll.Persistence.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Persistence\\FijiPayroll.Persistence.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.WPF\\FijiPayroll.WPF.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.WPF\\FijiPayroll.WPF.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0-windows7.0": {
+          "targetAlias": "net9.0-windows",
           "dependencies": {
             "ClosedXML": {
               "target": "Package",
@@ -564,6 +655,9 @@
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
             }
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"

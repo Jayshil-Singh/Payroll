@@ -48,7 +48,7 @@ public sealed class CalculatedLineItemResult
     public string ComponentCode { get; init; } = string.Empty;
     public string ComponentName { get; init; } = string.Empty;
     public ComponentType ComponentType { get; init; }
-    public decimal Amount { get; init; }
+    public decimal Amount { get; set; }
     public bool IsTaxable { get; init; }
     public bool AffectsFnpf { get; init; }
     public bool EmployerContributionFlag { get; init; }

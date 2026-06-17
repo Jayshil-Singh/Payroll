@@ -152,6 +152,12 @@ public sealed class SystemHealthMonitor : IDisposable
         if (_disposed) return;
         _disposed = true;
         _cts.Cancel();
+        try
+        {
+            // Thread safety: Await background watchdog loop to exit gracefully with a 1000ms timeout
+            _watchdogTask?.Wait(TimeSpan.FromMilliseconds(1000));
+        }
+        catch { }
         _cts.Dispose();
         _recoveryLock.Dispose();
     }

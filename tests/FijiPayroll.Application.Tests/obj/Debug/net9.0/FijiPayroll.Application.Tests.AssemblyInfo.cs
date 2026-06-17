@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FijiPayroll.Application.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ad5f992215ecb860a8c7942505b1ac77129ad687")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8f7a40c1b4172a77dc5f5d0145a945e0665a5d81")]
 [assembly: System.Reflection.AssemblyProductAttribute("FijiPayroll.Application.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FijiPayroll.Application.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

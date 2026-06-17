@@ -1,0 +1,157 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EvidencePack",
+  "description": "JSON schema for the immutable, audit-grade compliance evidence bundle.",
+  "type": "object",
+  "properties": {
+    "CorrelationId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "GeneratedUtc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "GeneratedBy": {
+      "type": "string"
+    },
+    "ExecutiveSummary": {
+      "type": "object",
+      "properties": {
+        "CompanyId": { "type": "integer" },
+        "PayrollRunId": { "type": "integer" },
+        "Period": { "type": "string" },
+        "TotalGross": { "type": "number" },
+        "TotalPAYE": { "type": "number" },
+        "TotalFNPF": { "type": "number" },
+        "TotalNetPay": { "type": "number" }
+      },
+      "required": ["CompanyId", "PayrollRunId", "Period", "TotalGross", "TotalPAYE", "TotalFNPF", "TotalNetPay"]
+    },
+    "LedgerIntegrity": {
+      "type": "object",
+      "properties": {
+        "PayrollLedgerHash": { "type": "string" },
+        "RecordCount": { "type": "integer" },
+        "VerificationTimestamp": { "type": "string", "format": "date-time" },
+        "IntegrityStatus": { "type": "string", "enum": ["PASS", "FAIL"] }
+      },
+      "required": ["PayrollLedgerHash", "RecordCount", "VerificationTimestamp", "IntegrityStatus"]
+    },
+    "ReportSnapshotIndex": {
+      "type": "object",
+      "properties": {
+        "Snapshots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ReportName": { "type": "string" },
+              "ParameterSet": {
+                "type": "object",
+                "additionalProperties": { "type": "string" }
+              },
+              "RenderTimestamp": { "type": "string", "format": "date-time" },
+              "ReportHash": { "type": "string" }
+            },
+            "required": ["ReportName", "ParameterSet", "RenderTimestamp", "ReportHash"]
+          }
+        }
+      },
+      "required": ["Snapshots"]
+    },
+    "EmployeeEvidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "EmployeeId": { "type": "integer" },
+          "Tin": { "type": "string" },
+          "FnpfNumber": { "type": "string" },
+          "EmployeeName": { "type": "string" },
+          "Gross": { "type": "number" },
+          "PAYE": { "type": "number" },
+          "FNPFEmployee": { "type": "number" },
+          "FNPFEmployer": { "type": "number" },
+          "NetPay": { "type": "number" },
+          "LedgerReferenceId": { "type": "integer" }
+        },
+        "required": ["EmployeeId", "Tin", "FnpfNumber", "EmployeeName", "Gross", "PAYE", "FNPFEmployee", "FNPFEmployer", "NetPay", "LedgerReferenceId"]
+      }
+    },
+    "ValidationOutput": {
+      "type": "object",
+      "properties": {
+        "FrcsValidationResults": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EvidenceValidationIssue"
+          }
+        },
+        "FnpfValidationResults": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EvidenceValidationIssue"
+          }
+        }
+      },
+      "required": ["FrcsValidationResults", "FnpfValidationResults"]
+    },
+    "Traceability": {
+      "type": "object",
+      "properties": {
+        "EmployeeTraces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "EmployeeId": { "type": "integer" },
+              "EmployeeName": { "type": "string" },
+              "TraceTextSummary": { "type": "string" },
+              "OrderedStepReferenceIds": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "ComponentValues": {
+                "type": "object",
+                "additionalProperties": { "type": "number" }
+              }
+            },
+            "required": ["EmployeeId", "EmployeeName", "TraceTextSummary", "OrderedStepReferenceIds", "ComponentValues"]
+          }
+        }
+      },
+      "required": ["EmployeeTraces"]
+    },
+    "Reconciliation": {
+      "type": "object",
+      "properties": {
+        "LedgerGross": { "type": "number" },
+        "SubmissionGross": { "type": "number" },
+        "GrossVariance": { "type": "number" },
+        "LedgerPaye": { "type": "number" },
+        "SubmissionPaye": { "type": "number" },
+        "PayeVariance": { "type": "number" },
+        "LedgerFnpf": { "type": "number" },
+        "SubmissionFnpf": { "type": "number" },
+        "FnpfVariance": { "type": "number" },
+        "Status": { "type": "string", "enum": ["PASS", "FAIL"] }
+      },
+      "required": ["LedgerGross", "SubmissionGross", "GrossVariance", "LedgerPaye", "SubmissionPaye", "PayeVariance", "LedgerFnpf", "SubmissionFnpf", "FnpfVariance", "Status"]
+    }
+  },
+  "required": ["CorrelationId", "GeneratedUtc", "GeneratedBy", "ExecutiveSummary", "LedgerIntegrity", "ReportSnapshotIndex", "EmployeeEvidence", "ValidationOutput", "Traceability", "Reconciliation"],
+  "definitions": {
+    "EvidenceValidationIssue": {
+      "type": "object",
+      "properties": {
+        "Severity": { "type": "string" },
+        "Message": { "type": "string" },
+        "AffectedEmployee": { "type": "string" },
+        "RuleCode": { "type": "string" },
+        "RecommendedAction": { "type": "string" }
+      },
+      "required": ["Severity", "Message", "AffectedEmployee", "RuleCode", "RecommendedAction"]
+    }
+  }
+}

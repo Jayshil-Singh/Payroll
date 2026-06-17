@@ -416,6 +416,16 @@
             <param name="t">Second string.</param>
             <returns>The Levenshtein distance as an integer.</returns>
         </member>
+        <member name="M:FijiPayroll.Shared.Utilities.LevenshteinDistance.Calculate(System.ReadOnlySpan{System.Char},System.ReadOnlySpan{System.Char})">
+            <summary>
+            Computes the Levenshtein distance between two character spans.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Shared.Utilities.LevenshteinDistance.CalculateCaseInsensitive(System.ReadOnlySpan{System.Char},System.ReadOnlySpan{System.Char})">
+            <summary>
+            Computes the Levenshtein distance between two character spans case-insensitively.
+            </summary>
+        </member>
         <member name="M:FijiPayroll.Shared.Utilities.LevenshteinDistance.IsFuzzyMatch(System.String,System.String,System.Int32@)">
             <summary>
             Determines whether the search target matches the search source fuzzily.

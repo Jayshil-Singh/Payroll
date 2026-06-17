@@ -769,6 +769,78 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         employeeIds.Should().BeInAscendingOrder();
     }
 
+    [Fact]
+    public void Calculate_ShouldScaleDownVoluntaryDeductions_WhenNetPayIsNegative()
+    {
+        // Arrange
+        var context = new PayrollExecutionContext
+        {
+            PayrollRunId = 1,
+            CompanyId = 1,
+            RunCode = "PR-TEST-NEG",
+            PeriodName = "Test Period",
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddDays(7),
+            Frequency = PayrollFrequencyType.Weekly,
+            TaxVersion = "2025-2026",
+            CalculationRequestId = Guid.NewGuid(),
+            Employees = new List<EmployeeSnapshot>
+            {
+                new EmployeeSnapshot
+                {
+                    EmployeeId = 1,
+                    FullName = "John Neg",
+                    Tin = "123456789",
+                    FnpfNumber = "12345",
+                    ResidencyStatus = "Resident",
+                    Department = "HR",
+                    BaseSalary = 100.00m, // Gross salary: $100
+                    IsFnpfExempt = true, // Simplify: no FNPF
+                    IsTaxExempt = true, // Simplify: no PAYE
+                    HoursWorked = 40m,
+                    OvertimeHours = 0m,
+                    ComponentOverrides = Array.Empty<EmployeeComponentOverrideSnapshot>()
+                }
+            }.AsReadOnly(),
+            TaxRules = new List<FijiPayroll.Domain.Entities.Company.TaxBracket>(),
+            Components = new List<PayrollComponentSnapshot>
+            {
+                new PayrollComponentSnapshot
+                {
+                    Id = 1,
+                    ComponentCode = "BASIC",
+                    ComponentName = "Basic Salary",
+                    ComponentType = ComponentType.Earning,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 100.00m,
+                    IsTaxable = false,
+                    IsFnpfApplicable = false
+                },
+                new PayrollComponentSnapshot
+                {
+                    Id = 2,
+                    ComponentCode = "VOL_DED",
+                    ComponentName = "Voluntary Deduction",
+                    ComponentType = ComponentType.Deduction,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 150.00m, // Deduction: $150 (exceeds $100 gross!)
+                    IsTaxable = false,
+                    IsFnpfApplicable = false
+                }
+            }.AsReadOnly()
+        };
+
+        // Act
+        var result = _calculationEngine.Calculate(context);
+
+        // Assert
+        result.Should().NotBeNull();
+        var empResult = result.Employees.Single();
+        empResult.NetPay.Should().Be(0.00m); // Net pay floor rule forced to 0
+        empResult.TotalDeductions.Should().Be(100.00m); // Voluntary deduction reduced from $150 to $100
+        empResult.LineItems.Single(l => l.ComponentCode == "VOL_DED").Amount.Should().Be(-100.00m);
+    }
+
     public void Dispose()
     {
         _context.Dispose();

@@ -33,7 +33,7 @@ public sealed class PayrollCalculationEngine
             trace.AppendLine($"[Trace] Frequency: {context.Frequency}");
             trace.AppendLine($"[Trace] Residency: {emp.ResidencyStatus}");
 
-            decimal basicSalary = emp.BaseSalary;
+            decimal basicSalary = Math.Round(emp.BaseSalary, 2, MidpointRounding.AwayFromZero);
             decimal totalEarnings = basicSalary;
             decimal totalAllowances = 0;
             decimal totalDeductions = 0;
@@ -269,16 +269,49 @@ public sealed class PayrollCalculationEngine
             }
 
             // Compute gross pay
-            decimal grossPay = totalEarnings;
+            decimal grossPay = Math.Round(totalEarnings, 2, MidpointRounding.AwayFromZero);
 
             // Compute final net pay
-            decimal netPay = grossPay + totalAllowances - totalDeductions;
+            decimal netPay = Math.Round(grossPay + totalAllowances - totalDeductions, 2, MidpointRounding.AwayFromZero);
             trace.AppendLine($"[Trace] Calculated Net Pay raw: {netPay:C}");
 
             // Apply net pay floor rule: net pay must never be negative
             if (netPay < 0)
             {
-                trace.AppendLine($"[Warning] Net pay floor rule triggered. Raw Net Pay ({netPay:C}) is negative. Adjusting Net Pay to $0.00.");
+                decimal shortfall = -netPay;
+                // Find all voluntary (non-statutory) deduction line items
+                var voluntaryDeductionLines = calculatedLines
+                    .Where(l => l.ComponentType == ComponentType.Deduction
+                             && !l.ComponentCode.Equals("FNPF_EE", StringComparison.OrdinalIgnoreCase)
+                             && !l.ComponentCode.Equals("FNPF-EMP", StringComparison.OrdinalIgnoreCase)
+                             && !l.ComponentCode.Equals(FijiTaxConstants.FnpfEmployeeComponentCode, StringComparison.OrdinalIgnoreCase)
+                             && !l.ComponentCode.Equals("PAYE", StringComparison.OrdinalIgnoreCase)
+                             && !l.ComponentCode.Equals(FijiTaxConstants.PayeComponentCode, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                foreach (var line in voluntaryDeductionLines)
+                {
+                    if (shortfall <= 0) break;
+
+                    decimal originalDeductionVal = -line.Amount;
+                    if (originalDeductionVal <= 0) continue;
+
+                    decimal reduction = Math.Round(Math.Min(originalDeductionVal, shortfall), 2, MidpointRounding.AwayFromZero);
+                    line.Amount += reduction; // makes it closer to 0 (less negative)
+                    totalDeductions = Math.Round(totalDeductions - reduction, 2, MidpointRounding.AwayFromZero);
+                    shortfall = Math.Round(shortfall - reduction, 2, MidpointRounding.AwayFromZero);
+
+                    trace.AppendLine($"[Warning] Net pay floor rule: Reduced voluntary deduction '{line.ComponentName}' ({line.ComponentCode}) by {reduction:C} (New: {-line.Amount:C}) to avoid negative net pay.");
+                }
+
+                // Recalculate net pay after adjustments
+                netPay = Math.Round(grossPay + totalAllowances - totalDeductions, 2, MidpointRounding.AwayFromZero);
+            }
+
+            // Apply net pay floor rule: final fallback for statutory deductions excess
+            if (netPay < 0)
+            {
+                trace.AppendLine($"[Warning] Net pay floor rule triggered. Statutory deductions ({totalDeductions:C}) exceed gross + allowances ({grossPay + totalAllowances:C}). Adjusting Net Pay to $0.00.");
                 netPay = 0;
             }
 

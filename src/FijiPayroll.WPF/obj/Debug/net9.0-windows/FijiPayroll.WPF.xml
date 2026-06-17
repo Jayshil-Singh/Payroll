@@ -226,6 +226,7 @@
         <member name="M:FijiPayroll.WPF.Infrastructure.PriorityDispatcherQueue.DrainViaWeightedRoundRobin">
             <summary>
             Drains queued work items onto the UI dispatcher using WRR scheduling.
+            Thread safety: The method executes on the UI thread via SafeDispatcher.
             </summary>
         </member>
         <member name="M:FijiPayroll.WPF.Infrastructure.PriorityDispatcherQueue.PendingCount(FijiPayroll.WPF.Infrastructure.DispatchPriority)">
@@ -805,6 +806,12 @@
         </member>
         <member name="M:FijiPayroll.WPF.Services.NavigationService.RestoreLastState">
             <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.WPF.Services.NavigationScopeHandle">
+            <summary>
+            Reference-counted wrapper around IServiceScope to manage UI ViewModel lifetimes safely.
+            Thread safety: All internal count modifications are synchronized using lock.
+            </summary>
         </member>
         <member name="T:FijiPayroll.WPF.Services.NotificationService">
             <summary>

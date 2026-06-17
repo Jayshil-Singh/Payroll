@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "u1yGVIlRXMg=",
+  "dgSpecHash": "9CY1i9HfDnI=",
   "success": true,
   "projectFilePath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\tests\\FijiPayroll.Integration.Tests\\FijiPayroll.Integration.Tests.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "C:\\Users\\jayshil.singh\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
     "C:\\Users\\jayshil.singh\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\jayshil.singh\\.nuget\\packages\\closedxml\\0.102.2\\closedxml.0.102.2.nupkg.sha512",
+    "C:\\Users\\jayshil.singh\\.nuget\\packages\\communitytoolkit.mvvm\\8.2.2\\communitytoolkit.mvvm.8.2.2.nupkg.sha512",
     "C:\\Users\\jayshil.singh\\.nuget\\packages\\coverlet.collector\\6.0.2\\coverlet.collector.6.0.2.nupkg.sha512",
     "C:\\Users\\jayshil.singh\\.nuget\\packages\\documentformat.openxml\\2.16.0\\documentformat.openxml.2.16.0.nupkg.sha512",
     "C:\\Users\\jayshil.singh\\.nuget\\packages\\excelnumberformat\\1.1.0\\excelnumberformat.1.1.0.nupkg.sha512",

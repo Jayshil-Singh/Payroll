@@ -41,6 +41,24 @@
         <member name="M:FijiPayroll.Application.Common.Behaviours.ValidationBehaviour`2.Handle(`0,MediatR.RequestHandlerDelegate{`1},System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="T:FijiPayroll.Application.Common.Exceptions.EvidencePackTamperedException">
+            <summary>
+            Exception thrown when cryptographic verification, hash validation, or tenant isolation check fails.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Common.Exceptions.EvidencePackTamperedException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Common.Exceptions.EvidencePackTamperedException"/> class.
+            </summary>
+            <param name="message">The message explaining the tamper detection details.</param>
+        </member>
+        <member name="M:FijiPayroll.Application.Common.Exceptions.EvidencePackTamperedException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Common.Exceptions.EvidencePackTamperedException"/> class.
+            </summary>
+            <param name="message">The message explaining the tamper detection details.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
         <member name="T:FijiPayroll.Application.Common.Exceptions.ForbiddenAccessException">
             <summary>
             Thrown by command handlers when the current user does not hold
@@ -581,6 +599,39 @@
             Initialises validation rules.
             </summary>
         </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Commands.EvidencePackResultModel">
+            <summary>
+            Result model returning the generated compliance pack details.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.EvidencePackResultModel.#ctor(System.Guid,System.Byte[],System.String,System.Byte[])">
+            <summary>
+            Result model returning the generated compliance pack details.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Commands.GenerateEvidencePackCommand">
+            <summary>
+            MediatR Command to generate an immutable compliance evidence pack for a payroll run.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.GenerateEvidencePackCommand.#ctor(System.Int32,System.String)">
+            <summary>
+            MediatR Command to generate an immutable compliance evidence pack for a payroll run.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Commands.GenerateEvidencePackCommandHandler">
+            <summary>
+            Command Handler for <see cref="T:FijiPayroll.Application.Features.Compliance.Commands.GenerateEvidencePackCommand"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.GenerateEvidencePackCommandHandler.#ctor(FijiPayroll.Domain.Interfaces.IEvidencePackGeneratorService,FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ITenantProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Features.Compliance.Commands.GenerateEvidencePackCommandHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Commands.GenerateEvidencePackCommandHandler.Handle(FijiPayroll.Application.Features.Compliance.Commands.GenerateEvidencePackCommand,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
         <member name="T:FijiPayroll.Application.Features.Compliance.Commands.LockPeriodCommand">
             <summary>
             CQRS Command to transition a compliance period state to Locked or Open.
@@ -760,6 +811,29 @@
         </member>
         <member name="M:FijiPayroll.Application.Features.Compliance.Queries.GetReconciliationVarianceQueryHandler.Handle(FijiPayroll.Application.Features.Compliance.Queries.GetReconciliationVarianceQuery,System.Threading.CancellationToken)">
             <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.VerifyEvidencePackQuery">
+            <summary>
+            MediatR Query to cryptographically verify a signed compliance evidence pack zip.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.VerifyEvidencePackQuery.#ctor(System.Byte[])">
+            <summary>
+            MediatR Query to cryptographically verify a signed compliance evidence pack zip.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.VerifyEvidencePackQueryHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Compliance.Queries.VerifyEvidencePackQuery"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.VerifyEvidencePackQueryHandler.#ctor(FijiPayroll.Domain.Interfaces.ISignatureVerifierService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Features.Compliance.Queries.VerifyEvidencePackQueryHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.VerifyEvidencePackQueryHandler.Handle(FijiPayroll.Application.Features.Compliance.Queries.VerifyEvidencePackQuery,System.Threading.CancellationToken)">
+            <inheritdoc />
         </member>
         <member name="T:FijiPayroll.Application.Features.Employees.Commands.CreateEmployee.PaymentMethodInput">
             <summary>
@@ -1596,6 +1670,84 @@
             <param name="companyId">The company tenant context identifier.</param>
             <param name="payload">The dataset to validate (e.g. enumerable of PaymentDetail or a payroll run).</param>
             <returns>A sequence of validation warning and error issues.</returns>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.EvidencePack.DeterministicHashGenerator">
+            <summary>
+            Cryptographic utility for calculating deterministic SHA-256 hashes across compliance data.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.DeterministicHashGenerator.ComputeSha256Hash(System.String)">
+            <summary>
+            Computes the SHA-256 hash of a string input using UTF-8 encoding.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.DeterministicHashGenerator.ComputeSha256Hash(System.Byte[])">
+            <summary>
+            Computes the SHA-256 hash of a raw byte array.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder">
+            <summary>
+            A fluent builder pattern to assemble and validate <see cref="N:FijiPayroll.Application.Services.EvidencePack"/> instances.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder.WithCorrelationId(System.Guid)">
+            <summary>Sets the correlation ID.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder.WithGeneratedUtc(System.DateTime)">
+            <summary>Sets the generation timestamp.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder.WithGeneratedBy(System.String)">
+            <summary>Sets the user who triggered the package generation.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder.WithSignature(System.String,System.Nullable{System.DateTime})">
+            <summary>Sets the cryptographic signature metadata.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder.WithBuildVersion(System.String,System.String,System.String,System.String)">
+            <summary>Sets the build version metadata.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder.WithExecutiveSummary(FijiPayroll.Domain.Entities.Payroll.ExecutiveSummary)">
+            <summary>Sets the Executive Summary.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder.WithLedgerIntegrity(FijiPayroll.Domain.Entities.Payroll.LedgerIntegrityManifest)">
+            <summary>Sets the Ledger Integrity Manifest.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder.WithReportSnapshotIndex(FijiPayroll.Domain.Entities.Payroll.SSRSReportSnapshotIndex)">
+            <summary>Sets the SSRS Report Snapshot Index.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder.WithEmployeeEvidence(System.Collections.Generic.IEnumerable{FijiPayroll.Domain.Entities.Payroll.EmployeeLevelEvidence})">
+            <summary>Sets the employee-level evidence collection.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder.WithValidationOutput(FijiPayroll.Domain.Entities.Payroll.ComplianceValidationOutput)">
+            <summary>Sets the compliance validation output.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder.WithTraceability(FijiPayroll.Domain.Entities.Payroll.TraceabilityEvidence)">
+            <summary>Sets the traceability evidence.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder.WithReconciliation(FijiPayroll.Domain.Entities.Payroll.ReconciliationSummary)">
+            <summary>Sets the reconciliation summary.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.EvidencePackBuilder.Build">
+            <summary>
+            Builds and validates the complete <see cref="N:FijiPayroll.Application.Services.EvidencePack"/> instance.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.EvidencePack.LedgerIntegrityVerifier">
+            <summary>
+            Verifies the integrity of the immutable PayrollLedger records by re-computing and validating their SHA-256 hashes.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.LedgerIntegrityVerifier.VerifyLedgerIntegrity(System.Collections.Generic.IEnumerable{FijiPayroll.Domain.Entities.Payroll.PayrollLedger})">
+            <summary>
+            Computes the master hash for a dataset of ledgers and validates that all individual record hashes match.
+            </summary>
+            <param name="ledgers">The ledger records to verify.</param>
+            <returns>A tuple containing the master hash, the record count, and the overall verification status (PASS or FAIL).</returns>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.LedgerIntegrityVerifier.FormatLedgerRecord(FijiPayroll.Domain.Entities.Payroll.PayrollLedger)">
+            <summary>
+            Formats a single ledger record deterministically for hashing.
+            </summary>
         </member>
         <member name="T:FijiPayroll.Application.Services.FiscalCalendarGenerator">
             <summary>

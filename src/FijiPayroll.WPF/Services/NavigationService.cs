@@ -35,6 +35,7 @@ public sealed class NavigationService : INavigationService, IDisposable
     private readonly List<Type> _backStack = new();
     private readonly List<Type> _forwardStack = new();
     private ViewModelBase? _currentView;
+    private NavigationScopeHandle? _currentScopeHandle;
     private volatile bool _disposed;
 
     public NavigationService(IServiceProvider serviceProvider, ILogger<NavigationService> logger)
@@ -96,7 +97,7 @@ public sealed class NavigationService : INavigationService, IDisposable
     {
         if (_disposed) return;
 
-        // Serialize — only one navigation at a time
+        // Thread safety: Serialize all navigation requests using SemaphoreSlim lock
         if (!await _navigationLock.WaitAsync(TimeSpan.FromSeconds(5)))
         {
             _logger.LogWarning("[Navigation] Lock timeout — navigation to {VM} dropped.", viewModelType.Name);
@@ -105,21 +106,32 @@ public sealed class NavigationService : INavigationService, IDisposable
 
         try
         {
-            // Suppress consecutive duplicate
+            // Suppress consecutive duplicate navigation
             if (_currentView != null && _currentView.GetType() == viewModelType)
                 return;
 
-            // Take an immutable snapshot BEFORE any mutation
+            // Phase 1: Prepare navigation (Create scope, resolve next VM, validate)
             var snapshot = TakeSnapshot();
+            var nextScopeHandle = new NavigationScopeHandle(_serviceProvider.CreateScope());
+            ViewModelBase nextVm;
+            try
+            {
+                nextVm = (ViewModelBase)nextScopeHandle.ServiceProvider.GetRequiredService(viewModelType);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[Navigation] Phase 1 preparation failed: failed to resolve {VM}", viewModelType.Name);
+                nextScopeHandle.Dispose();
+                return;
+            }
 
-            ViewModelBase? outgoingVm = null;
+            // Phase 2: Commit navigation (Atomic stack updates and UI transitions)
+            var outgoingVm = _currentView;
+            var outgoingScopeHandle = _currentScopeHandle;
+
             using var txn = new NavigationTransactionScope(snapshot, ApplySnapshot);
             try
             {
-                outgoingVm = _currentView;
-
-                var nextVm = (ViewModelBase)_serviceProvider.GetRequiredService(viewModelType);
-
                 // Atomic stack update inside lock
                 if (outgoingVm != null)
                 {
@@ -128,37 +140,30 @@ public sealed class NavigationService : INavigationService, IDisposable
                 }
                 if (clearForwardHistory) _forwardStack.Clear();
 
-                // Commit state
+                // Commit transaction state
                 txn.Commit();
 
-                // Switch view on UI thread
+                // Switch view on UI thread with confirmation callback
                 await SafeDispatcher.InvokeAsync(() =>
                 {
                     _currentView = nextVm;
+                    _currentScopeHandle = nextScopeHandle;
                     CurrentViewChanged?.Invoke();
                 });
 
-                // Persist in background
+                // UI transition has successfully completed. Safe to persist state.
                 _ = SaveStateAsync(viewModelType.Name);
 
                 _logger.LogDebug("[Navigation] Navigated to {VM}", viewModelType.Name);
+
+                // Dispose of the old scope only after UI confirmation that the switch is done
+                outgoingScopeHandle?.Release();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "[Navigation] Transaction failed for {VM} — rolling back.", viewModelType.Name);
+                _logger.LogError(ex, "[Navigation] Phase 2 commit failed for {VM} — rolling back.", viewModelType.Name);
+                nextScopeHandle.Dispose();
                 // txn.Dispose() will auto-rollback since Commit was not called
-            }
-            finally
-            {
-                // Dispose outgoing ViewModel after navigation completes
-                if (outgoingVm is IDisposable disposable)
-                {
-                    try { disposable.Dispose(); }
-                    catch (Exception ex)
-                    {
-                        _logger.LogWarning(ex, "[Navigation] ViewModel disposal error for {VM}", outgoingVm.GetType().Name);
-                    }
-                }
             }
         }
         finally
@@ -200,7 +205,7 @@ public sealed class NavigationService : INavigationService, IDisposable
         }
         finally { _navigationLock.Release(); }
 
-        // Navigate outside the lock
+        // Navigate outside the lock using the safe two-phase system
         await NavigateInternalAsync(_backStack.Count > 0
             ? _backStack[^1]
             : typeof(DashboardViewModel), clearForwardHistory: false);
@@ -230,25 +235,45 @@ public sealed class NavigationService : INavigationService, IDisposable
 
     private async Task NavigateInternalAsync(Type vmType, bool clearForwardHistory)
     {
-        // Direct VM switch without extra stack mutation (stacks already updated by caller)
+        // Thread safety: Serialize all navigation requests using SemaphoreSlim lock
         if (!await _navigationLock.WaitAsync(TimeSpan.FromSeconds(5))) return;
         try
         {
             if (_currentView?.GetType() == vmType) return;
 
+            // Phase 1: Prepare
+            var nextScopeHandle = new NavigationScopeHandle(_serviceProvider.CreateScope());
+            ViewModelBase nextVm;
+            try
+            {
+                nextVm = (ViewModelBase)nextScopeHandle.ServiceProvider.GetRequiredService(vmType);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[Navigation] NavigateInternalAsync Phase 1 failed for {VM}", vmType.Name);
+                nextScopeHandle.Dispose();
+                return;
+            }
+
+            // Phase 2: Commit
             var outgoing = _currentView;
-            var nextVm = (ViewModelBase)_serviceProvider.GetRequiredService(vmType);
+            var outgoingScopeHandle = _currentScopeHandle;
 
             await SafeDispatcher.InvokeAsync(() =>
             {
                 _currentView = nextVm;
+                _currentScopeHandle = nextScopeHandle;
                 CurrentViewChanged?.Invoke();
             });
 
             _ = SaveStateAsync(vmType.Name);
 
-            if (outgoing is IDisposable d)
-                try { d.Dispose(); } catch { }
+            // Safe disposal of old scope handle after UI confirmation
+            outgoingScopeHandle?.Release();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "[Navigation] NavigateInternalAsync Phase 2 failed for {VM}", vmType.Name);
         }
         finally { _navigationLock.Release(); }
     }
@@ -306,11 +331,17 @@ public sealed class NavigationService : INavigationService, IDisposable
         {
             try
             {
-                var vm = (ViewModelBase)_serviceProvider.GetRequiredService(snapshot.CurrentViewType);
+                var nextScopeHandle = new NavigationScopeHandle(_serviceProvider.CreateScope());
+                var vm = (ViewModelBase)nextScopeHandle.ServiceProvider.GetRequiredService(snapshot.CurrentViewType);
                 SafeDispatcher.SafeBeginInvoke(() =>
                 {
+                    var outgoingScopeHandle = _currentScopeHandle;
                     _currentView = vm;
+                    _currentScopeHandle = nextScopeHandle;
                     CurrentViewChanged?.Invoke();
+
+                    // Release the old scope handle only after UI confirmation
+                    outgoingScopeHandle?.Release();
                 });
             }
             catch (Exception ex)
@@ -355,6 +386,59 @@ public sealed class NavigationService : INavigationService, IDisposable
         if (_disposed) return;
         _disposed = true;
         _navigationLock.Dispose();
-        if (_currentView is IDisposable d) try { d.Dispose(); } catch { }
+        _currentScopeHandle?.Release();
+    }
+}
+
+/// <summary>
+/// Reference-counted wrapper around IServiceScope to manage UI ViewModel lifetimes safely.
+/// Thread safety: All internal count modifications are synchronized using lock.
+/// </summary>
+public sealed class NavigationScopeHandle : IDisposable
+{
+    private readonly IServiceScope _scope;
+    private int _refCount = 1;
+    private bool _disposed;
+    private readonly object _lock = new();
+
+    public NavigationScopeHandle(IServiceScope scope)
+    {
+        _scope = scope ?? throw new ArgumentNullException(nameof(scope));
+    }
+
+    public IServiceProvider ServiceProvider => _scope.ServiceProvider;
+
+    public void AddRef()
+    {
+        lock (_lock)
+        {
+            if (_disposed) throw new ObjectDisposedException(nameof(NavigationScopeHandle));
+            _refCount++;
+        }
+    }
+
+    public void Release()
+    {
+        bool shouldDispose = false;
+        lock (_lock)
+        {
+            if (_disposed) return;
+            _refCount--;
+            if (_refCount <= 0)
+            {
+                _disposed = true;
+                shouldDispose = true;
+            }
+        }
+
+        if (shouldDispose)
+        {
+            _scope.Dispose();
+        }
+    }
+
+    public void Dispose()
+    {
+        Release();
     }
 }

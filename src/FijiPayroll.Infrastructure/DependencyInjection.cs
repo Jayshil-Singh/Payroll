@@ -1,4 +1,5 @@
 using FijiPayroll.Application.Common.Interfaces;
+using FijiPayroll.Domain.Interfaces;
 using FijiPayroll.Infrastructure.Services;
 using FijiPayroll.Infrastructure.Services.BankGenerators;
 using FijiPayroll.SDK.Interfaces;
@@ -57,6 +58,17 @@ public static class DependencyInjection
         var pluginLoader = new PluginLoader();
         pluginLoader.DiscoverAndRegisterPlugins(services, configuration);
         services.AddSingleton(pluginLoader);
+
+        // Register Compliance Evidence Pack Generator services
+        services.AddScoped<FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotRegistry>();
+        services.AddScoped<FijiPayroll.Infrastructure.Services.ComplianceEvidence.SSRSReportSnapshotService>();
+        services.AddScoped<FijiPayroll.Infrastructure.Services.ComplianceEvidence.SimplePdfGenerator>();
+        services.AddScoped<FijiPayroll.Infrastructure.Services.ComplianceEvidence.FileArchiveManager>();
+        services.AddScoped<FijiPayroll.Infrastructure.Services.ComplianceEvidence.ComplianceMetadataAssembler>();
+        services.AddScoped<IBuildVersionProvider, FijiPayroll.Infrastructure.Services.ComplianceEvidence.BuildVersionProvider>();
+        services.AddScoped<IEvidencePackSignatureService, FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackSignatureService>();
+        services.AddScoped<ISignatureVerifierService, FijiPayroll.Infrastructure.Services.ComplianceEvidence.SignatureVerifierService>();
+        services.AddScoped<IEvidencePackGeneratorService, FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackGeneratorService>();
 
         return services;
     }
