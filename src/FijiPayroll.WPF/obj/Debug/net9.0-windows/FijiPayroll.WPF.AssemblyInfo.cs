@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FijiPayroll.WPF")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8f7a40c1b4172a77dc5f5d0145a945e0665a5d81")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+80b32229255b7d13bdf0936099a53407b4a45033")]
 [assembly: System.Reflection.AssemblyProductAttribute("FijiPayroll.WPF")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FijiPayroll.WPF")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

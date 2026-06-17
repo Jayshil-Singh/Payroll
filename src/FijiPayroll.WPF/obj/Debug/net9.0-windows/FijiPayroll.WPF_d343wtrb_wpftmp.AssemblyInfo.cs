@@ -10,12 +10,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("FijiPayroll.Integration.Tests")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("FijiPayroll.WPF")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+80b32229255b7d13bdf0936099a53407b4a45033")]
-[assembly: System.Reflection.AssemblyProductAttribute("FijiPayroll.Integration.Tests")]
-[assembly: System.Reflection.AssemblyTitleAttribute("FijiPayroll.Integration.Tests")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+98074b7f89c4669dcb77e6cd0509f7291346c277")]
+[assembly: System.Reflection.AssemblyProductAttribute("FijiPayroll.WPF")]
+[assembly: System.Reflection.AssemblyTitleAttribute("FijiPayroll.WPF")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
