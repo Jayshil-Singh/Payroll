@@ -110,7 +110,6 @@ public sealed class EvidencePackTests : IDisposable
         var pack2 = await _generatorService.GenerateEvidencePackAsync(1, 100, "test-admin");
         var zipBytes2 = await _generatorService.GenerateEvidenceZipArchiveAsync(pack2);
         string hash2 = DeterministicHashGenerator.ComputeSha256Hash(zipBytes2);
-
         // Assert: Hashes must be identical
         hash1.Should().Be(hash2);
         zipBytes1.Should().Equal(zipBytes2);

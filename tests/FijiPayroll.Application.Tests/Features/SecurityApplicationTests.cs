@@ -140,13 +140,13 @@ public sealed class SecurityApplicationTests
 
         var behavior = new AuthorizationBehaviour<ITestSecuredCommand, Result<int>>(currentUser, logger);
         var request = Substitute.For<ITestSecuredCommand>();
-        request.RequiredPermission.Returns("Test.Permission");
+        request.Permission.Returns("Test.Permission");
 
         RequestHandlerDelegate<Result<int>> next = () => Task.FromResult(Result<int>.Success(100));
 
         // Act & Assert
         await behavior.Awaiting(b => b.Handle(request, next, CancellationToken.None))
-            .Should().ThrowAsync<ForbiddenAccessException>();
+            .Should().ThrowAsync<ForbiddenException>();
     }
 
     [Fact]
@@ -159,7 +159,7 @@ public sealed class SecurityApplicationTests
 
         var behavior = new AuthorizationBehaviour<ITestSecuredCommand, Result<int>>(currentUser, logger);
         var request = Substitute.For<ITestSecuredCommand>();
-        request.RequiredPermission.Returns("Test.Permission");
+        request.Permission.Returns("Test.Permission");
 
         bool nextCalled = false;
         RequestHandlerDelegate<Result<int>> next = () =>
