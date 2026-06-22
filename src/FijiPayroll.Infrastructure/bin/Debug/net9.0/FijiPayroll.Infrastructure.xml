@@ -178,7 +178,7 @@
             Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ComplianceMetadataAssembler"/> class.
             </summary>
         </member>
-        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ComplianceMetadataAssembler.AssembleValidationResults(System.Int32,System.Collections.Generic.IEnumerable{FijiPayroll.Domain.Entities.Payroll.PayrollLedger})">
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ComplianceMetadataAssembler.AssembleValidationResults(System.Int32,System.Collections.Generic.IEnumerable{FijiPayroll.Domain.Entities.Payroll.PayrollLedgerEmployee})">
             <summary>
             Evaluates the ledger records against statutory FRCS/FNPF compliance rules.
             </summary>
@@ -331,6 +331,18 @@
             <summary>
             Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotResult"/> class.
             </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.EvidencePack.DigitalSignatureService">
+            <summary>
+            Infrastructure implementation of IDigitalSignatureService.
+            Integrates with KeyStorage to sign and verify compliance payloads.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.EvidencePack.DigitalSignatureService.SignData(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.EvidencePack.DigitalSignatureService.VerifySignature(System.String,System.String)">
+            <inheritdoc />
         </member>
         <member name="T:FijiPayroll.Infrastructure.Services.FileStorageProvider">
             <summary>

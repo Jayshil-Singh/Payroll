@@ -53,7 +53,7 @@ public sealed class MainViewModel : ViewModelBase
         // Command registrations
         NavigateDashboardCommand = new RelayCommand(() => _navigationService.NavigateTo<DashboardViewModel>());
         NavigateEmployeeCommand = new RelayCommand(() => _navigationService.NavigateTo<EmployeeViewModel>());
-        NavigatePayrollCommand = new RelayCommand(() => _navigationService.NavigateTo<PayrollViewModel>());
+        NavigatePayrollCommand = new RelayCommand(() => _navigationService.NavigateTo<PayrollConsoleViewModel>());
         NavigateSetupCommand = new RelayCommand(() => _navigationService.NavigateTo<SetupViewModel>());
         NavigateCompanySetupWizardCommand = new RelayCommand(() => _navigationService.NavigateTo<CompanySetupDashboardViewModel>());
         NavigateReportsCommand = new RelayCommand(() => _navigationService.NavigateTo<ReportsViewModel>());

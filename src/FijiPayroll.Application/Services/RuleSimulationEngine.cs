@@ -1,39 +1,34 @@
+using FijiPayroll.Domain.Entities.Payroll;
+using FijiPayroll.Domain.Enumerations;
+using FijiPayroll.Domain.Interfaces;
+using FijiPayroll.Domain.Rules.PayrollRules;
+using FijiPayroll.Shared.Constants;
+using FijiPayroll.Shared.Extensions;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FijiPayroll.Domain.Entities.Payroll;
-using FijiPayroll.Domain.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace FijiPayroll.Application.Services;
 
 /// <summary>
-/// Execution engine for running dry-run simulations of statutory rule changes over finalized payroll ledgers.
+/// Compliance simulation engine. Uses the same PAYE/FNPF domain engines as live payroll calculation.
 /// </summary>
 public sealed class RuleSimulationEngine
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<RuleSimulationEngine> _logger;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RuleSimulationEngine"/> class.
-    /// </summary>
     public RuleSimulationEngine(IUnitOfWork unitOfWork, ILogger<RuleSimulationEngine> logger)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    /// <summary>
-    /// Represents a rule override parameter.
-    /// </summary>
     public sealed record RuleOverride(string RuleCode, string NewValue);
 
-    /// <summary>
-    /// Represents a summary variance report for the entire simulation run.
-    /// </summary>
     public sealed class RuleSimulationResult
     {
         public decimal OriginalTotalFnpf { get; set; }
@@ -46,9 +41,6 @@ public sealed class RuleSimulationEngine
         public decimal PayeVariance => SimulatedTotalPaye - OriginalTotalPaye;
     }
 
-    /// <summary>
-    /// Represents variance details for an individual employee.
-    /// </summary>
     public sealed class EmployeeVariance
     {
         public int EmployeeId { get; set; }
@@ -62,9 +54,6 @@ public sealed class RuleSimulationEngine
         public decimal PayeDifference => SimulatedPaye - OriginalPaye;
     }
 
-    /// <summary>
-    /// Runs a compliance calculation simulation over the payroll ledger items for a pay run, applying rule overrides in-memory.
-    /// </summary>
     public async Task<RuleSimulationResult> SimulateRuleChangeAsync(
         int companyId,
         int payrollRunId,
@@ -74,54 +63,75 @@ public sealed class RuleSimulationEngine
         _logger.LogInformation("Starting rule simulation for Run {RunId} under Company {CompanyId}", payrollRunId, companyId);
 
         var result = new RuleSimulationResult();
-
-        // 1. Fetch ledgers
         var ledgers = await _unitOfWork.Compliance.GetLedgerByRunIdAsync(payrollRunId, cancellationToken);
+
         if (!ledgers.Any())
         {
             _logger.LogWarning("No finalized ledger records found for run {RunId} to run simulation.", payrollRunId);
             return result;
         }
 
-        // 2. Load baseline statutory rules
-        var effectiveDate = DateTime.UtcNow;
-        var ruleOverridesDict = overrides.ToDictionary(x => x.RuleCode, x => x.NewValue, StringComparer.OrdinalIgnoreCase);
+        var run = await _unitOfWork.PayrollRuns.GetByIdWithDetailsAsync(payrollRunId, cancellationToken);
+        if (run == null || run.CompanyId != companyId)
+        {
+            throw new InvalidOperationException($"Payroll run {payrollRunId} not found for company {companyId}.");
+        }
 
-        // Resolve rates
-        decimal fnpfEmployeeRate = await GetRuleDecimalAsync("FNPF", "FNPF_EE_RATE", 0.08m, ruleOverridesDict, effectiveDate, cancellationToken);
-        decimal fnpfEmployerRate = await GetRuleDecimalAsync("FNPF", "FNPF_ER_RATE", 0.10m, ruleOverridesDict, effectiveDate, cancellationToken);
-        decimal taxFreeThreshold = await GetRuleDecimalAsync("FRCS", "PAYE_TAX_FREE_THRESHOLD", 30000m, ruleOverridesDict, effectiveDate, cancellationToken);
-        decimal payeRate1 = await GetRuleDecimalAsync("FRCS", "PAYE_BRACKET_1_RATE", 0.18m, ruleOverridesDict, effectiveDate, cancellationToken);
-        decimal payeRate2 = await GetRuleDecimalAsync("FRCS", "PAYE_BRACKET_2_RATE", 0.20m, ruleOverridesDict, effectiveDate, cancellationToken);
+        var residencyByEmployee = run.Employees
+            .Where(e => !e.IsSuperseded)
+            .GroupBy(e => e.EmployeeId)
+            .ToDictionary(g => g.Key, g => g.First().ResidencyStatus);
+
+        var taxBrackets = await _unitOfWork.TaxBrackets.GetBracketsByVersionAndFrequencyAsync(
+            FijiTaxConstants.CurrentTaxVersion,
+            run.Frequency,
+            cancellationToken);
+
+        var ruleOverridesDict = overrides.ToDictionary(x => x.RuleCode, x => x.NewValue, StringComparer.OrdinalIgnoreCase);
+        var effectiveDate = DateTime.UtcNow;
+
+        decimal fnpfEmployeeRate = await ResolveRateAsync(
+            "FNPF_EE_RATE", FijiTaxConstants.DefaultFnpfEmployeeRate, ruleOverridesDict, effectiveDate, cancellationToken);
+        decimal fnpfEmployerRate = await ResolveRateAsync(
+            "FNPF_ER_RATE", FijiTaxConstants.DefaultFnpfEmployerRate, ruleOverridesDict, effectiveDate, cancellationToken);
+
+        var fnpfConfig = await _unitOfWork.Setup.GetActiveFnpfConfigurationAsync(companyId, cancellationToken);
+        if (fnpfConfig != null && !ruleOverridesDict.ContainsKey("FNPF_EE_RATE"))
+        {
+            fnpfEmployeeRate = fnpfConfig.EmployeeRate;
+        }
+
+        if (fnpfConfig != null && !ruleOverridesDict.ContainsKey("FNPF_ER_RATE"))
+        {
+            fnpfEmployerRate = fnpfConfig.EmployerRate;
+        }
 
         foreach (var ledger in ledgers)
         {
-            // Calculate simulated FNPF
-            decimal simFnpfEmployee = Math.Round(ledger.Gross * fnpfEmployeeRate, 2);
-            decimal simFnpfEmployer = Math.Round(ledger.Gross * fnpfEmployerRate, 2);
-            decimal simTotalFnpf = simFnpfEmployee + simFnpfEmployer;
-            decimal origTotalFnpf = ledger.FNPFEmployee + ledger.FNPFEmployer;
+            decimal origTotalFnpf = (ledger.FNPFEmployee + ledger.FNPFEmployer).ToFijiRound();
 
-            // Calculate simulated PAYE (simplified brackets matching seeds)
-            decimal annualGross = ledger.Gross * 12; // annualized gross
-            decimal taxableIncome = Math.Max(0, annualGross - taxFreeThreshold);
-            decimal annualPaye = 0;
-            if (taxableIncome > 0)
-            {
-                if (taxableIncome <= 20000)
-                {
-                    annualPaye = taxableIncome * payeRate1;
-                }
-                else
-                {
-                    annualPaye = (20000 * payeRate1) + ((taxableIncome - 20000) * payeRate2);
-                }
-            }
-            decimal simPaye = Math.Round(annualPaye / 12, 2);
+            decimal simFnpfEmployee = PayrollDeductionEngine.CalculateEmployeeFnpf(
+                ledger.Gross, false, fnpfEmployeeRate).ToFijiRound();
+            decimal simFnpfEmployer = PayrollDeductionEngine.CalculateEmployerFnpf(
+                ledger.Gross, false, fnpfEmployerRate).ToFijiRound();
+            decimal simTotalFnpf = (simFnpfEmployee + simFnpfEmployer).ToFijiRound();
+
+            decimal taxableGross = ledger.Gross;
+            string residency = residencyByEmployee.TryGetValue(ledger.EmployeeId, out var rs)
+                ? rs
+                : "Resident";
+
+            decimal simPaye = PayrollTaxEngine.CalculatePaye(
+                taxableGross,
+                simFnpfEmployee,
+                run.Frequency,
+                residency,
+                FijiTaxConstants.CurrentTaxVersion,
+                taxBrackets).ToFijiRound();
 
             result.OriginalTotalFnpf += origTotalFnpf;
             result.SimulatedTotalFnpf += simTotalFnpf;
-            result.OriginalTotalPaye += ledger.PAYE;
+            result.OriginalTotalPaye += ledger.PAYE.ToFijiRound();
             result.SimulatedTotalPaye += simPaye;
 
             result.EmployeeVariances.Add(new EmployeeVariance
@@ -130,19 +140,22 @@ public sealed class RuleSimulationEngine
                 EmployeeName = ledger.EmployeeName,
                 OriginalFnpf = origTotalFnpf,
                 SimulatedFnpf = simTotalFnpf,
-                OriginalPaye = ledger.PAYE,
+                OriginalPaye = ledger.PAYE.ToFijiRound(),
                 SimulatedPaye = simPaye
             });
         }
 
-        _logger.LogInformation("Rule simulation complete. FNPF Variance: {FnpfVar:N2}, PAYE Variance: {PayeVar:N2}", result.FnpfVariance, result.PayeVariance);
+        _logger.LogInformation(
+            "Rule simulation complete. FNPF Variance: {FnpfVar:N2}, PAYE Variance: {PayeVar:N2}",
+            result.FnpfVariance,
+            result.PayeVariance);
+
         return result;
     }
 
-    private async Task<decimal> GetRuleDecimalAsync(
-        string authority,
+    private async Task<decimal> ResolveRateAsync(
         string ruleCode,
-        decimal defaultFallback,
+        decimal defaultRate,
         Dictionary<string, string> overrides,
         DateTime date,
         CancellationToken cancellationToken)
@@ -152,12 +165,14 @@ public sealed class RuleSimulationEngine
             return ovDec;
         }
 
-        var rule = await _unitOfWork.Compliance.GetStatutoryRuleAsync(authority, ruleCode, date, cancellationToken);
+        var rule = await _unitOfWork.Compliance.GetStatutoryRuleAsync("FNPF", ruleCode, date, cancellationToken)
+            ?? await _unitOfWork.Compliance.GetStatutoryRuleAsync("FRCS", ruleCode, date, cancellationToken);
+
         if (rule != null && decimal.TryParse(rule.RuleValue, out decimal ruleDec))
         {
             return ruleDec;
         }
 
-        return defaultFallback;
+        return defaultRate;
     }
 }

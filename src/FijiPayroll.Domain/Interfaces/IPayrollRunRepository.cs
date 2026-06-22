@@ -42,4 +42,13 @@ public interface IPayrollRunRepository
         int pageNumber,
         int pageSize,
         CancellationToken cancellationToken = default);
+    /// <summary>
+    /// Fetches all payroll runs associated with a specific period.
+    /// </summary>
+    Task<IReadOnlyList<PayrollRun>> GetByPeriodIdAsync(int periodId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Updates an existing payroll run.
+    /// </summary>
+    void Update(PayrollRun run);
 }

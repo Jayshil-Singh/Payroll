@@ -1,0 +1,755 @@
+├── FijiPayroll.sln
+├── build_output.txt
+├── build_output2.txt
+├── build_output3.txt
+├── build_output4.txt
+├── docs
+│   ├── Architecture.md
+│   ├── BankFiles.md
+│   ├── Banking.md
+│   ├── CodingStandards.md
+│   ├── Compliance.md
+│   ├── Database.md
+│   ├── Deployment.md
+│   ├── DeveloperGuide.md
+│   ├── FNPF.md
+│   ├── FRCS.md
+│   ├── GoldenRules.md
+│   ├── ImplementationRules.md
+│   ├── PayrollRules.md
+│   ├── Phase10-Domain.md
+│   ├── Phase10-Enums.md
+│   ├── Phase10-WizardDocumentation.md
+│   ├── PluginGuide.md
+│   ├── Recovery.md
+│   ├── ReleaseNotes.md
+│   ├── RuleEngine.md
+│   ├── SDK.md
+│   ├── UIStandards.md
+│   ├── UserGuide.md
+│   ├── Vision.md
+│   └── specs
+│       ├── Phase03-Installer.md
+│       ├── Phase04-AuthLicensing.md
+│       ├── Phase05-Configuration.md
+│       ├── Phase06-EmployeeManagement.md
+│       ├── Phase07-PayrollEngine.md
+│       ├── Phase08-ImportExport.md
+│       ├── Phase09-Reporting.md
+│       └── Phase10-Compliance.md
+├── src
+│   ├── FijiPayroll.Application
+│   │   ├── Common
+│   │   │   ├── Behaviours
+│   │   │   │   ├── LoggingBehaviour.cs
+│   │   │   │   └── ValidationBehaviour.cs
+│   │   │   ├── Exceptions
+│   │   │   │   ├── EvidencePackTamperedException.cs
+│   │   │   │   ├── ForbiddenAccessException.cs
+│   │   │   │   └── NotFoundException.cs
+│   │   │   ├── Interfaces
+│   │   │   │   ├── IApprovalEngine.cs
+│   │   │   │   ├── ICorrelationContext.cs
+│   │   │   │   ├── ICurrentUserService.cs
+│   │   │   │   ├── IDateTimeService.cs
+│   │   │   │   ├── IDigitalSignatureService.cs
+│   │   │   │   ├── IEventBus.cs
+│   │   │   │   ├── IFileStorageProvider.cs
+│   │   │   │   ├── IImportEngine.cs
+│   │   │   │   ├── IJsonSeedLoader.cs
+│   │   │   │   ├── ILicenseFingerprintProvider.cs
+│   │   │   │   ├── IModulePlugin.cs
+│   │   │   │   ├── IReferenceDataCache.cs
+│   │   │   │   ├── ISearchService.cs
+│   │   │   │   ├── IStatutoryProvider.cs
+│   │   │   │   ├── ITenantProvider.cs
+│   │   │   │   └── MediatRNotificationWrapper.cs
+│   │   │   ├── Models
+│   │   │   │   ├── LicenseFingerprint.cs
+│   │   │   │   ├── PagedResult.cs
+│   │   │   │   ├── PaginatedList.cs
+│   │   │   │   └── Result.cs
+│   │   │   └── Services
+│   │   ├── DependencyInjection.cs
+│   │   ├── Features
+│   │   │   ├── CompanySetup
+│   │   │   │   ├── Commands
+│   │   │   │   │   └── CreateCompanyWizard
+│   │   │   │   │       ├── CreateCompanyWizardCommand.cs
+│   │   │   │   │       └── CreateCompanyWizardCommandValidator.cs
+│   │   │   │   ├── EventHandlers
+│   │   │   │   │   └── CompanySetupCompletedEventHandler.cs
+│   │   │   │   └── Queries
+│   │   │   │       └── ValidateCompanyWizard
+│   │   │   │           ├── ValidateCompanyWizardQuery.cs
+│   │   │   │           └── ValidateCompanyWizardQueryValidator.cs
+│   │   │   ├── Compliance
+│   │   │   │   ├── Commands
+│   │   │   │   │   ├── GenerateEvidencePackCommand.cs
+│   │   │   │   │   ├── LockPeriodCommand.cs
+│   │   │   │   │   ├── RunSimulationCommand.cs
+│   │   │   │   │   ├── StartComplianceJobCommand.cs
+│   │   │   │   │   └── SubmitOverrideCommand.cs
+│   │   │   │   └── Queries
+│   │   │   │       ├── GetComplianceDashboardQuery.cs
+│   │   │   │       ├── GetDiagnosticsInfoQuery.cs
+│   │   │   │       ├── GetReconciliationVarianceQuery.cs
+│   │   │   │       └── VerifyEvidencePackQuery.cs
+│   │   │   ├── Employees
+│   │   │   │   ├── Commands
+│   │   │   │   │   ├── CreateEmployee
+│   │   │   │   │   │   ├── CreateEmployeeCommand.cs
+│   │   │   │   │   │   ├── CreateEmployeeCommandHandler.cs
+│   │   │   │   │   │   └── CreateEmployeeCommandValidator.cs
+│   │   │   │   │   └── UpdateEmployee
+│   │   │   │   │       ├── UpdateEmployeeCommand.cs
+│   │   │   │   │       ├── UpdateEmployeeCommandHandler.cs
+│   │   │   │   │       └── UpdateEmployeeCommandValidator.cs
+│   │   │   │   └── EventHandlers
+│   │   │   │       └── EmployeeSearchIndexHandler.cs
+│   │   │   ├── Lookups
+│   │   │   │   ├── Commands
+│   │   │   │   │   ├── ArchiveLookup
+│   │   │   │   │   │   ├── ArchiveLookupCommand.cs
+│   │   │   │   │   │   ├── ArchiveLookupCommandHandler.cs
+│   │   │   │   │   │   └── ArchiveLookupCommandValidator.cs
+│   │   │   │   │   ├── CreateLookup
+│   │   │   │   │   │   ├── CreateLookupCommand.cs
+│   │   │   │   │   │   ├── CreateLookupCommandHandler.cs
+│   │   │   │   │   │   └── CreateLookupCommandValidator.cs
+│   │   │   │   │   └── UpdateLookup
+│   │   │   │   │       ├── UpdateLookupCommand.cs
+│   │   │   │   │       ├── UpdateLookupCommandHandler.cs
+│   │   │   │   │       └── UpdateLookupCommandValidator.cs
+│   │   │   │   └── Queries
+│   │   │   │       └── GetLookups
+│   │   │   │           └── GetLookupsQuery.cs
+│   │   │   ├── PayrollAdjustments
+│   │   │   │   └── Commands
+│   │   │   │       └── StagePayrollAdjustment
+│   │   │   │           └── StagePayrollAdjustmentCommand.cs
+│   │   │   ├── PayrollComponents
+│   │   │   │   ├── Commands
+│   │   │   │   │   ├── CloneComponents
+│   │   │   │   │   │   └── CloneComponentsCommand.cs
+│   │   │   │   │   ├── CreatePayrollComponent
+│   │   │   │   │   │   ├── CreatePayrollComponentCommand.cs
+│   │   │   │   │   │   ├── CreatePayrollComponentCommandHandler.cs
+│   │   │   │   │   │   └── CreatePayrollComponentCommandValidator.cs
+│   │   │   │   │   ├── DeletePayrollComponent
+│   │   │   │   │   │   ├── DeletePayrollComponentCommand.cs
+│   │   │   │   │   │   └── DeletePayrollComponentCommandHandler.cs
+│   │   │   │   │   ├── DuplicatePayrollComponent
+│   │   │   │   │   │   ├── DuplicatePayrollComponentCommand.cs
+│   │   │   │   │   │   └── DuplicatePayrollComponentCommandHandler.cs
+│   │   │   │   │   ├── TogglePayrollComponentActive
+│   │   │   │   │   │   ├── TogglePayrollComponentActiveCommand.cs
+│   │   │   │   │   │   └── TogglePayrollComponentActiveCommandHandler.cs
+│   │   │   │   │   └── UpdatePayrollComponent
+│   │   │   │   │       ├── UpdatePayrollComponentCommand.cs
+│   │   │   │   │       ├── UpdatePayrollComponentCommandHandler.cs
+│   │   │   │   │       └── UpdatePayrollComponentCommandValidator.cs
+│   │   │   │   └── Queries
+│   │   │   │       ├── GetPayrollComponentById
+│   │   │   │       │   ├── GetPayrollComponentByIdQuery.cs
+│   │   │   │       │   ├── GetPayrollComponentByIdQueryHandler.cs
+│   │   │   │       │   └── PayrollComponentDetailDto.cs
+│   │   │   │       └── GetPayrollComponentList
+│   │   │   │           ├── GetPayrollComponentListQuery.cs
+│   │   │   │           ├── GetPayrollComponentListQueryHandler.cs
+│   │   │   │           └── PayrollComponentSummaryDto.cs
+│   │   │   ├── PayrollGroups
+│   │   │   │   ├── Commands
+│   │   │   │   │   └── CreatePayrollGroup
+│   │   │   │   │       └── CreatePayrollGroupCommand.cs
+│   │   │   │   └── Queries
+│   │   │   │       └── GetPayrollGroups
+│   │   │   │           └── GetPayrollGroupsQuery.cs
+│   │   │   ├── PayrollPeriods
+│   │   │   │   ├── Commands
+│   │   │   │   │   ├── ClosePayrollPeriod
+│   │   │   │   │   │   └── ClosePayrollPeriodCommand.cs
+│   │   │   │   │   ├── CreatePayrollPeriod
+│   │   │   │   │   │   └── CreatePayrollPeriodCommand.cs
+│   │   │   │   │   └── LockPayrollPeriod
+│   │   │   │   │       └── LockPayrollPeriodCommand.cs
+│   │   │   │   └── Queries
+│   │   │   │       └── GetPayrollPeriods
+│   │   │   │           └── GetPayrollPeriodsQuery.cs
+│   │   │   ├── PayrollRuns
+│   │   │   │   ├── Commands
+│   │   │   │   │   ├── AdminOverrideLock
+│   │   │   │   │   │   └── AdminOverrideLockCommand.cs
+│   │   │   │   │   ├── ApprovePayrollRun
+│   │   │   │   │   │   └── ApprovePayrollRunCommand.cs
+│   │   │   │   │   ├── ApprovePayrollRunWithSignature
+│   │   │   │   │   │   └── ApprovePayrollRunWithSignatureCommand.cs
+│   │   │   │   │   ├── CalculatePayrollRun
+│   │   │   │   │   │   └── CalculatePayrollRunCommand.cs
+│   │   │   │   │   ├── CreatePayrollRun
+│   │   │   │   │   │   └── CreatePayrollRunCommand.cs
+│   │   │   │   │   ├── FreezeLedger
+│   │   │   │   │   │   └── FreezeLedgerCommand.cs
+│   │   │   │   │   ├── PostPayrollRun
+│   │   │   │   │   │   └── PostPayrollRunCommand.cs
+│   │   │   │   │   ├── ProcessBatchPayroll
+│   │   │   │   │   │   └── ProcessBatchPayrollCommand.cs
+│   │   │   │   │   ├── ResetPayrollRun
+│   │   │   │   │   │   └── ResetPayrollRunCommand.cs
+│   │   │   │   │   └── RollbackPayrollRun
+│   │   │   │   │       └── RollbackPayrollRunCommand.cs
+│   │   │   │   └── Queries
+│   │   │   │       ├── ComparePayrollRuns
+│   │   │   │       │   └── ComparePayrollRunsQuery.cs
+│   │   │   │       ├── GetExceptions
+│   │   │   │       │   └── GetExceptionsQuery.cs
+│   │   │   │       ├── GetLedger
+│   │   │   │       │   └── GetLedgerQuery.cs
+│   │   │   │       ├── GetPayrollHistory
+│   │   │   │       │   └── GetPayrollHistoryQuery.cs
+│   │   │   │       ├── GetPayrollRunById
+│   │   │   │       │   ├── GetPayrollRunByIdQuery.cs
+│   │   │   │       │   ├── PayrollRunDetailDto.cs
+│   │   │   │       │   └── PayrollRunEmployeeDto.cs
+│   │   │   │       └── GetPayrollRunList
+│   │   │   │           ├── GetPayrollRunListQuery.cs
+│   │   │   │           └── PayrollRunSummaryDto.cs
+│   │   │   ├── Search
+│   │   │   │   └── Queries
+│   │   │   │       └── SearchQuery.cs
+│   │   │   └── Workflows
+│   │   │       └── Queries
+│   │   │           └── GetPendingWorkflows
+│   │   │               └── GetPendingWorkflowsQuery.cs
+│   │   ├── FijiPayroll.Application.csproj
+│   │   └── Services
+│   │       ├── BackgroundJobManager.cs
+│   │       ├── BatchProcessingCoordinator.cs
+│   │       ├── BusinessCalendarService.cs
+│   │       ├── CalculationResultSnapshot.cs
+│   │       ├── ComplianceValidationService.cs
+│   │       ├── EvidencePack
+│   │       │   ├── DeterministicHashGenerator.cs
+│   │       │   ├── EvidencePackBuilder.cs
+│   │       │   └── LedgerIntegrityVerifier.cs
+│   │       ├── FiscalCalendarGenerator.cs
+│   │       ├── IFiscalCalendarGenerator.cs
+│   │       ├── IPayScheduleGenerator.cs
+│   │       ├── IPayrollComponentService.cs
+│   │       ├── IPayrollRunService.cs
+│   │       ├── ISetupWorkflowService.cs
+│   │       ├── PayScheduleGenerator.cs
+│   │       ├── PayrollCalculationEngine.cs
+│   │       ├── PayrollComponentService.cs
+│   │       ├── PayrollDifferenceAnalyzer.cs
+│   │       ├── PayrollExecutionContext.cs
+│   │       ├── PayrollExecutionContractValidator.cs
+│   │       ├── PayrollReplayEngine.cs
+│   │       ├── PayrollRunService.cs
+│   │       ├── PayrollSnapshotHasher.cs
+│   │       ├── PayrollValidationPipeline.cs
+│   │       ├── PayrollValidationService.cs
+│   │       ├── ResetOperationContext.cs
+│   │       ├── RollbackEngine.cs
+│   │       ├── RulePackageManager.cs
+│   │       ├── RuleSimulationEngine.cs
+│   │       ├── SetupWorkflowService.cs
+│   │       └── SimulationEngine.cs
+│   ├── FijiPayroll.Domain
+│   │   ├── Entities
+│   │   │   ├── Audit
+│   │   │   │   ├── ApprovalWorkflow.cs
+│   │   │   │   ├── AuditLog.cs
+│   │   │   │   ├── CompanySetupAudit.cs
+│   │   │   │   ├── EntityEvent.cs
+│   │   │   │   ├── ExportHistory.cs
+│   │   │   │   ├── ImportJob.cs
+│   │   │   │   ├── ImportSession.cs
+│   │   │   │   ├── ImportSessionRow.cs
+│   │   │   │   ├── RuleExecutionMetric.cs
+│   │   │   │   ├── SearchIndex.cs
+│   │   │   │   └── WorkflowStepLog.cs
+│   │   │   ├── Common
+│   │   │   │   ├── ArchivableEntity.cs
+│   │   │   │   ├── AuditableEntity.cs
+│   │   │   │   ├── BaseEntity.cs
+│   │   │   │   └── SoftDeleteEntity.cs
+│   │   │   ├── Company
+│   │   │   │   ├── ApprovalConfig.cs
+│   │   │   │   ├── BankBranch.cs
+│   │   │   │   ├── BankMaster.cs
+│   │   │   │   ├── Company.cs
+│   │   │   │   ├── CompanyBankAccount.cs
+│   │   │   │   ├── CompanySeedVersion.cs
+│   │   │   │   ├── CompanySetupState.cs
+│   │   │   │   ├── CompanySetupTask.cs
+│   │   │   │   ├── Employee.cs
+│   │   │   │   ├── EmployeePaymentMethod.cs
+│   │   │   │   ├── FiscalCalendar.cs
+│   │   │   │   ├── FiscalPeriod.cs
+│   │   │   │   ├── FnpfConfiguration.cs
+│   │   │   │   ├── MasterLookup.cs
+│   │   │   │   ├── PayPeriodSchedule.cs
+│   │   │   │   ├── PayrollComponent.cs
+│   │   │   │   ├── PayrollComponentDependency.cs
+│   │   │   │   ├── PayrollComponentRule.cs
+│   │   │   │   ├── PayrollComponentVersion.cs
+│   │   │   │   ├── PayrollFrequencyDefinition.cs
+│   │   │   │   ├── RuleModule.cs
+│   │   │   │   ├── RuleSet.cs
+│   │   │   │   ├── SetupCheckpoint.cs
+│   │   │   │   ├── SetupExecutionRecord.cs
+│   │   │   │   └── TaxBracket.cs
+│   │   │   ├── Leave
+│   │   │   │   ├── LeaveAccrualPolicy.cs
+│   │   │   │   ├── LeaveBalance.cs
+│   │   │   │   ├── LeaveRequest.cs
+│   │   │   │   ├── LeaveTransaction.cs
+│   │   │   │   └── LeaveType.cs
+│   │   │   └── Payroll
+│   │   │       ├── ApprovalMatrix.cs
+│   │   │       ├── BackgroundJob.cs
+│   │   │       ├── BankFile.cs
+│   │   │       ├── ComplianceAmendment.cs
+│   │   │       ├── ComplianceBatch.cs
+│   │   │       ├── ComplianceEvent.cs
+│   │   │       ├── ComplianceJob.cs
+│   │   │       ├── CompliancePeriod.cs
+│   │   │       ├── ComplianceSnapshot.cs
+│   │   │       ├── EvidencePack.cs
+│   │   │       ├── FNPFSubmission.cs
+│   │   │       ├── FRCSSubmission.cs
+│   │   │       ├── FileLayoutDefinition.cs
+│   │   │       ├── Notification.cs
+│   │   │       ├── PayrollAdjustment.cs
+│   │   │       ├── PayrollExceptionQueue.cs
+│   │   │       ├── PayrollGroup.cs
+│   │   │       ├── PayrollLedger.cs
+│   │   │       ├── PayrollLedgerComponent.cs
+│   │   │       ├── PayrollLedgerEmployee.cs
+│   │   │       ├── PayrollLedgerReversal.cs
+│   │   │       ├── PayrollLedgerTransaction.cs
+│   │   │       ├── PayrollPeriod.cs
+│   │   │       ├── PayrollRun.cs
+│   │   │       ├── PayrollRunEmployee.cs
+│   │   │       ├── PayrollRunEmployeeTrace.cs
+│   │   │       ├── PayrollRunHistory.cs
+│   │   │       ├── PayrollRunLineItem.cs
+│   │   │       ├── PayrollRunStateHistory.cs
+│   │   │       ├── PayrollSnapshot.cs
+│   │   │       ├── StatutoryRule.cs
+│   │   │       └── evidence_pack_schema.json
+│   │   ├── Enumerations
+│   │   │   ├── ApprovalRole.cs
+│   │   │   ├── BankAccountType.cs
+│   │   │   ├── CalculationMethod.cs
+│   │   │   ├── CalendarType.cs
+│   │   │   ├── ComplianceBatchStatus.cs
+│   │   │   ├── ComplianceJobStatus.cs
+│   │   │   ├── CompliancePeriodStatus.cs
+│   │   │   ├── ComplianceReconciliationStatus.cs
+│   │   │   ├── ComplianceSubmissionStatus.cs
+│   │   │   ├── ComplianceValidatorSeverity.cs
+│   │   │   ├── ComponentStatus.cs
+│   │   │   ├── ComponentType.cs
+│   │   │   ├── EmploymentType.cs
+│   │   │   ├── ExecutionStatus.cs
+│   │   │   ├── FrequencyCode.cs
+│   │   │   ├── LeaveCategory.cs
+│   │   │   ├── LeaveStatus.cs
+│   │   │   ├── NotificationChannel.cs
+│   │   │   ├── PaymentMethodType.cs
+│   │   │   ├── PayrollAdjustmentType.cs
+│   │   │   ├── PayrollFrequency.cs
+│   │   │   ├── PayrollPeriodStatus.cs
+│   │   │   ├── PayrollRunStatus.cs
+│   │   │   ├── PayrollValidationSeverity.cs
+│   │   │   ├── SchedulerInterval.cs
+│   │   │   ├── SeedCategory.cs
+│   │   │   ├── SetupAuditStatus.cs
+│   │   │   ├── VoluntaryDeductionPolicy.cs
+│   │   │   ├── WizardStep.cs
+│   │   │   └── WorkflowState.cs
+│   │   ├── Events
+│   │   │   ├── CompanySetupCompletedEvent.cs
+│   │   │   ├── EmployeeCreatedEvent.cs
+│   │   │   ├── EmployeeTerminatedEvent.cs
+│   │   │   ├── EmployeeUpdatedEvent.cs
+│   │   │   ├── IDomainEvent.cs
+│   │   │   ├── PayrollAuditEvent.cs
+│   │   │   └── WorkflowStateChangedEvent.cs
+│   │   ├── Exceptions
+│   │   │   ├── DomainException.cs
+│   │   │   └── PayrollException.cs
+│   │   ├── FijiPayroll.Domain.csproj
+│   │   ├── Interfaces
+│   │   │   ├── IApprovalWorkflowRepository.cs
+│   │   │   ├── IBuildVersionProvider.cs
+│   │   │   ├── IComplianceRepository.cs
+│   │   │   ├── IEmployeeRepository.cs
+│   │   │   ├── IEvidencePackGeneratorService.cs
+│   │   │   ├── IEvidencePackSignatureService.cs
+│   │   │   ├── IImportJobRepository.cs
+│   │   │   ├── IMasterLookupRepository.cs
+│   │   │   ├── IPayrollComponentRepository.cs
+│   │   │   ├── IPayrollEnterpriseRepositories.cs
+│   │   │   ├── IPayrollRunRepository.cs
+│   │   │   ├── ISearchIndexRepository.cs
+│   │   │   ├── ISetupRepository.cs
+│   │   │   ├── ISignatureVerifierService.cs
+│   │   │   ├── ITaxBracketRepository.cs
+│   │   │   └── IUnitOfWork.cs
+│   │   └── Rules
+│   │       └── PayrollRules
+│   │           ├── PayrollAllowanceEngine.cs
+│   │           ├── PayrollDeductionEngine.cs
+│   │           └── PayrollTaxEngine.cs
+│   ├── FijiPayroll.Infrastructure
+│   │   ├── DependencyInjection.cs
+│   │   ├── FijiPayroll.Infrastructure.csproj
+│   │   └── Services
+│   │       ├── BankGenerators
+│   │       │   ├── BankGenerators.cs
+│   │       │   └── BaseBankGenerator.cs
+│   │       ├── ComplianceFileService.cs
+│   │       ├── ComplianceJobProcessor.cs
+│   │       ├── CorrelationContext.cs
+│   │       ├── EventBus.cs
+│   │       ├── EvidencePack
+│   │       │   ├── BuildVersionProvider.cs
+│   │       │   ├── ComplianceMetadataAssembler.cs
+│   │       │   ├── DigitalSignatureService.cs
+│   │       │   ├── EvidencePackGeneratorService.cs
+│   │       │   ├── EvidencePackSignatureService.cs
+│   │       │   ├── FileArchiveManager.cs
+│   │       │   ├── ReportSnapshotRegistry.cs
+│   │       │   ├── SSRSReportSnapshotService.cs
+│   │       │   ├── SignatureVerifierService.cs
+│   │       │   └── SimplePdfGenerator.cs
+│   │       ├── FileStorageProvider.cs
+│   │       ├── ImportEngine.cs
+│   │       ├── LicenseFingerprintProvider.cs
+│   │       ├── MemoryFormulaCache.cs
+│   │       ├── NotificationService.cs
+│   │       ├── PluginLoader.cs
+│   │       ├── ReferenceDataCache.cs
+│   │       └── SearchService.cs
+│   ├── FijiPayroll.Persistence
+│   │   ├── Configurations
+│   │   │   ├── Audit
+│   │   │   │   ├── ApprovalWorkflowConfiguration.cs
+│   │   │   │   ├── AuditLogConfiguration.cs
+│   │   │   │   ├── CompanySetupAuditConfiguration.cs
+│   │   │   │   ├── EntityEventConfiguration.cs
+│   │   │   │   ├── ExportHistoryConfiguration.cs
+│   │   │   │   ├── ImportJobConfiguration.cs
+│   │   │   │   ├── ImportSessionConfiguration.cs
+│   │   │   │   ├── ImportSessionRowConfiguration.cs
+│   │   │   │   ├── RuleExecutionMetricConfiguration.cs
+│   │   │   │   ├── SearchIndexConfiguration.cs
+│   │   │   │   └── WorkflowStepLogConfiguration.cs
+│   │   │   ├── Company
+│   │   │   │   ├── ApprovalConfigConfiguration.cs
+│   │   │   │   ├── BankBranchConfiguration.cs
+│   │   │   │   ├── BankMasterConfiguration.cs
+│   │   │   │   ├── CompanyBankAccountConfiguration.cs
+│   │   │   │   ├── CompanyConfiguration.cs
+│   │   │   │   ├── CompanySeedVersionConfiguration.cs
+│   │   │   │   ├── CompanySetupStateConfiguration.cs
+│   │   │   │   ├── CompanySetupTaskConfiguration.cs
+│   │   │   │   ├── EmployeeConfiguration.cs
+│   │   │   │   ├── FiscalCalendarConfiguration.cs
+│   │   │   │   ├── FiscalPeriodConfiguration.cs
+│   │   │   │   ├── FnpfConfigurationConfiguration.cs
+│   │   │   │   ├── MasterLookupConfiguration.cs
+│   │   │   │   ├── PayPeriodScheduleConfiguration.cs
+│   │   │   │   ├── PayrollComponentConfiguration.cs
+│   │   │   │   ├── PayrollComponentDependencyConfiguration.cs
+│   │   │   │   ├── PayrollComponentRuleConfiguration.cs
+│   │   │   │   ├── PayrollComponentVersionConfiguration.cs
+│   │   │   │   ├── PayrollFrequencyDefinitionConfiguration.cs
+│   │   │   │   ├── RuleModuleConfiguration.cs
+│   │   │   │   ├── RuleSetConfiguration.cs
+│   │   │   │   ├── SetupCheckpointConfiguration.cs
+│   │   │   │   ├── SetupExecutionRecordConfiguration.cs
+│   │   │   │   └── TaxBracketConfiguration.cs
+│   │   │   ├── ConfigurationExtensions.cs
+│   │   │   └── Payroll
+│   │   │       ├── ComplianceConfigurations.cs
+│   │   │       ├── PayrollRunConfiguration.cs
+│   │   │       ├── PayrollRunEmployeeConfiguration.cs
+│   │   │       ├── PayrollRunEmployeeTraceConfiguration.cs
+│   │   │       ├── PayrollRunLineItemConfiguration.cs
+│   │   │       ├── PayrollRunStateHistoryConfiguration.cs
+│   │   │       └── Phase15Configurations.cs
+│   │   ├── Context
+│   │   │   └── ApplicationDbContext.cs
+│   │   ├── Converters
+│   │   │   └── TenantEncryptionValueConverter.cs
+│   │   ├── DependencyInjection.cs
+│   │   ├── FijiPayroll.Persistence.csproj
+│   │   ├── Interceptors
+│   │   │   ├── AuditLogInterceptor.cs
+│   │   │   └── AuditableEntityInterceptor.cs
+│   │   ├── Repositories
+│   │   │   ├── ApprovalWorkflowRepository.cs
+│   │   │   ├── ComplianceRepository.cs
+│   │   │   ├── EmployeeRepository.cs
+│   │   │   ├── ImportJobRepository.cs
+│   │   │   ├── MasterLookupRepository.cs
+│   │   │   ├── PayrollComponentRepository.cs
+│   │   │   ├── PayrollEnterpriseRepositories.cs
+│   │   │   ├── PayrollRunRepository.cs
+│   │   │   ├── SearchIndexRepository.cs
+│   │   │   ├── SetupRepository.cs
+│   │   │   ├── TaxBracketRepository.cs
+│   │   │   └── UnitOfWork.cs
+│   │   ├── Seeders
+│   │   │   ├── ComplianceSeeder.cs
+│   │   │   ├── EmployeeSeeder.cs
+│   │   │   ├── JsonSeedLoader.cs
+│   │   │   ├── PayrollComponentSeeder.cs
+│   │   │   ├── RuleModuleSeeder.cs
+│   │   │   └── TaxBracketSeeder.cs
+│   │   ├── Seeds
+│   │   │   └── Banks.json
+│   │   └── Services
+│   │       ├── ApprovalEngine.cs
+│   │       └── ReferenceDataCache.cs
+│   ├── FijiPayroll.Platform
+│   │   ├── Configuration
+│   │   │   └── ConfigurationManager.cs
+│   │   ├── FijiPayroll.Platform.csproj
+│   │   ├── Notifications
+│   │   │   └── NotificationEngine.cs
+│   │   ├── Packages
+│   │   │   └── PackageManager.cs
+│   │   ├── Plugins
+│   │   │   └── PluginLoader.cs
+│   │   ├── Recovery
+│   │   │   └── RecoveryManager.cs
+│   │   ├── Scheduler
+│   │   │   └── BackgroundScheduler.cs
+│   │   ├── State
+│   │   │   └── StateManager.cs
+│   │   └── Versions
+│   │       └── VersionManager.cs
+│   ├── FijiPayroll.SDK
+│   │   ├── Contracts
+│   │   │   ├── PaymentDetail.cs
+│   │   │   ├── PluginManifest.cs
+│   │   │   ├── ValidationIssue.cs
+│   │   │   └── VersionContract.cs
+│   │   ├── FijiPayroll.SDK.csproj
+│   │   └── Interfaces
+│   │       ├── IBankFileGenerator.cs
+│   │       ├── IComplianceFileService.cs
+│   │       ├── IComplianceValidator.cs
+│   │       ├── IExportProvider.cs
+│   │       ├── IImportProvider.cs
+│   │       ├── ILicenseProvider.cs
+│   │       ├── INotificationService.cs
+│   │       ├── IReportProvider.cs
+│   │       └── IRuleProvider.cs
+│   ├── FijiPayroll.Shared
+│   │   ├── Constants
+│   │   │   ├── AppConstants.cs
+│   │   │   ├── FijiTaxConstants.cs
+│   │   │   └── PermissionConstants.cs
+│   │   ├── Extensions
+│   │   │   └── DecimalExtensions.cs
+│   │   ├── FijiPayroll.Shared.csproj
+│   │   ├── Formula
+│   │   │   ├── AstGenerator.cs
+│   │   │   ├── CompiledRule.cs
+│   │   │   ├── FormulaAst.cs
+│   │   │   ├── FormulaOptimizer.cs
+│   │   │   ├── FormulaParser.cs
+│   │   │   ├── FormulaToken.cs
+│   │   │   ├── FormulaTokenizer.cs
+│   │   │   ├── IFormulaCache.cs
+│   │   │   ├── RuleDependencyGraph.cs
+│   │   │   ├── RuleExecutionContext.cs
+│   │   │   ├── RuleExecutionPipeline.cs
+│   │   │   ├── RuleExecutionResult.cs
+│   │   │   └── RuleSemanticValidator.cs
+│   │   ├── Guards
+│   │   │   └── Guard.cs
+│   │   ├── Helpers
+│   │   └── Utilities
+│   │       └── LevenshteinDistance.cs
+│   └── FijiPayroll.WPF
+│       ├── App.xaml
+│       ├── App.xaml.cs
+│       ├── Commands
+│       │   ├── BaseAsyncCommand.cs
+│       │   └── BaseCommand.cs
+│       ├── Converters
+│       │   └── InverseBoolConverter.cs
+│       ├── DependencyInjection.cs
+│       ├── FijiPayroll.WPF.csproj
+│       ├── Helpers
+│       │   └── Security.cs
+│       ├── Infrastructure
+│       │   ├── EventSubscriptionTracker.cs
+│       │   ├── NavigationTransactionScope.cs
+│       │   ├── PriorityDispatcherQueue.cs
+│       │   ├── SafeDispatcher.cs
+│       │   ├── SnapshotCoordinator.cs
+│       │   ├── UIUpdateQueue.cs
+│       │   └── ViewModelLeakDetector.cs
+│       ├── Services
+│       │   ├── ApplicationStateStore.cs
+│       │   ├── DialogService.cs
+│       │   ├── IApplicationStateStore.cs
+│       │   ├── IDialogService.cs
+│       │   ├── ILoadingService.cs
+│       │   ├── ILogBuffer.cs
+│       │   ├── INavigationService.cs
+│       │   ├── INotificationService.cs
+│       │   ├── InMemoryLogger.cs
+│       │   ├── LoadingService.cs
+│       │   ├── LogBuffer.cs
+│       │   ├── MemorySmoothingScheduler.cs
+│       │   ├── NavigationService.cs
+│       │   ├── NotificationService.cs
+│       │   ├── SystemHealthMonitor.cs
+│       │   ├── SystemIntegrityValidator.cs
+│       │   ├── WpfCurrentUserService.cs
+│       │   └── WpfTenantProvider.cs
+│       ├── Styles
+│       │   ├── FluentStyles.xaml
+│       │   ├── Theme.Dark.xaml
+│       │   └── Theme.Light.xaml
+│       ├── ViewModels
+│       │   ├── AdminViewModel.cs
+│       │   ├── ApprovalViewModels.cs
+│       │   ├── Base
+│       │   │   └── ViewModelBase.cs
+│       │   ├── CloneWizardViewModel.cs
+│       │   ├── CompanySetupDashboardViewModel.cs
+│       │   ├── ComplianceCenterViewModel.cs
+│       │   ├── ComponentSimulationViewModel.cs
+│       │   ├── DashboardViewModel.cs
+│       │   ├── DiagnosticsDashboardViewModel.cs
+│       │   ├── EmployeeViewModel.cs
+│       │   ├── LogViewerViewModel.cs
+│       │   ├── MainViewModel.cs
+│       │   ├── MasterLookupManagerViewModel.cs
+│       │   ├── PackageManagerViewModel.cs
+│       │   ├── PayrollComponentFormViewModel.cs
+│       │   ├── PayrollComponentViewModel.cs
+│       │   ├── PayrollConsoleViewModel.cs
+│       │   ├── PayrollRunViewModel.cs
+│       │   ├── PayrollViewModel.cs
+│       │   ├── ReportsViewModel.cs
+│       │   ├── Settings
+│       │   ├── SetupViewModel.cs
+│       │   └── StagedImportViewModel.cs
+│       └── Views
+│           ├── AdminView.xaml
+│           ├── AdminView.xaml.cs
+│           ├── ApprovalDashboardView.xaml
+│           ├── ApprovalDashboardView.xaml.cs
+│           ├── CloneWizardWindow.xaml
+│           ├── CloneWizardWindow.xaml.cs
+│           ├── CompanySetupDashboardView.xaml
+│           ├── CompanySetupDashboardView.xaml.cs
+│           ├── ComplianceCenterView.xaml
+│           ├── ComplianceCenterView.xaml.cs
+│           ├── ComponentSimulationWindow.xaml
+│           ├── ComponentSimulationWindow.xaml.cs
+│           ├── DashboardView.xaml
+│           ├── DashboardView.xaml.cs
+│           ├── DiagnosticsDashboardView.xaml
+│           ├── DiagnosticsDashboardView.xaml.cs
+│           ├── EmployeeView.xaml
+│           ├── EmployeeView.xaml.cs
+│           ├── ErrorRecoveryWindow.xaml
+│           ├── ErrorRecoveryWindow.xaml.cs
+│           ├── LogViewerView.xaml
+│           ├── LogViewerView.xaml.cs
+│           ├── MainWindow.xaml
+│           ├── MainWindow.xaml.cs
+│           ├── MasterLookupManagerView.xaml
+│           ├── MasterLookupManagerView.xaml.cs
+│           ├── PackageManagerWindow.xaml
+│           ├── PackageManagerWindow.xaml.cs
+│           ├── PayrollComponentEditorWindow.xaml
+│           ├── PayrollComponentEditorWindow.xaml.cs
+│           ├── PayrollComponentView.xaml
+│           ├── PayrollComponentView.xaml.cs
+│           ├── PayrollConsoleView.xaml
+│           ├── PayrollConsoleView.xaml.cs
+│           ├── PayrollRunView.xaml
+│           ├── PayrollRunView.xaml.cs
+│           ├── PayrollView.xaml
+│           ├── PayrollView.xaml.cs
+│           ├── PendingApprovalsView.xaml
+│           ├── PendingApprovalsView.xaml.cs
+│           ├── ReportsView.xaml
+│           ├── ReportsView.xaml.cs
+│           ├── Settings
+│           ├── SetupView.xaml
+│           ├── SetupView.xaml.cs
+│           ├── SplashWindow.xaml
+│           ├── SplashWindow.xaml.cs
+│           ├── StagedImportWindow.xaml
+│           └── StagedImportWindow.xaml.cs
+└── tests
+    ├── FijiPayroll.Application.Tests
+    │   ├── Features
+    │   │   ├── CompanySetup
+    │   │   │   └── CompanySetupTests.cs
+    │   │   ├── ComplianceApplicationTests.cs
+    │   │   └── PayrollComponents
+    │   │       ├── Commands
+    │   │       │   ├── CreatePayrollComponent
+    │   │       │   │   └── CreatePayrollComponentCommandHandlerTests.cs
+    │   │       │   ├── DeletePayrollComponent
+    │   │       │   │   └── DeletePayrollComponentCommandHandlerTests.cs
+    │   │       │   ├── DuplicatePayrollComponent
+    │   │       │   │   └── DuplicatePayrollComponentCommandHandlerTests.cs
+    │   │       │   ├── TogglePayrollComponentActive
+    │   │       │   │   └── TogglePayrollComponentActiveCommandHandlerTests.cs
+    │   │       │   └── UpdatePayrollComponent
+    │   │       │       └── UpdatePayrollComponentCommandHandlerTests.cs
+    │   │       └── Queries
+    │   │           ├── GetPayrollComponentById
+    │   │           │   └── GetPayrollComponentByIdQueryHandlerTests.cs
+    │   │           └── GetPayrollComponentList
+    │   │               └── GetPayrollComponentListQueryHandlerTests.cs
+    │   └── FijiPayroll.Application.Tests.csproj
+    ├── FijiPayroll.Domain.Tests
+    │   ├── Entities
+    │   │   ├── Company
+    │   │   │   └── PayrollComponentTests.cs
+    │   │   ├── ComplianceDomainTests.cs
+    │   │   └── SetupDomainTests.cs
+    │   ├── Enumerations
+    │   │   └── EnumTests.cs
+    │   ├── FijiPayroll.Domain.Tests.csproj
+    │   └── Formula
+    │       ├── FormulaParserTests.cs
+    │       └── RuleDependencyGraphTests.cs
+    └── FijiPayroll.Integration.Tests
+        ├── ApprovalWorkflowIntegrationTests.cs
+        ├── AuditIntegrationTests.cs
+        ├── CompanySetupIntegrationTests.cs
+        ├── Compliance
+        │   ├── EvidencePackTests.cs
+        │   └── SignatureVerificationTests.cs
+        ├── EmployeeIntegrationTests.cs
+        ├── FijiPayroll.Integration.Tests.csproj
+        ├── Formula
+        │   ├── MemoryFormulaCacheTests.cs
+        │   └── RulePackageManagerTests.cs
+        ├── ImportExportIntegrationTests.cs
+        ├── MasterLookupIntegrationTests.cs
+        ├── PayrollComponentIntegrationTests.cs
+        ├── PayrollRunIntegrationTests.cs
+        ├── Performance
+        │   └── FuzzySearchStressTests.cs
+        ├── Phase15IntegrationTests.cs
+        ├── SearchIntegrationTests.cs
+        └── WpfShellHardeningTests.cs

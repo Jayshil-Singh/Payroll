@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Reflection;
 using FijiPayroll.Application.Common.Interfaces;
+using FijiPayroll.Application.Common.Exceptions;
 using FijiPayroll.Domain.Entities.Audit;
 using FijiPayroll.Domain.Entities.Payroll;
 using FijiPayroll.Persistence.Converters;
@@ -22,7 +23,10 @@ public class ApplicationDbContext : DbContext
     private IDbContextTransaction? _currentTransaction;
 
     /// <summary>Gets the current resolved company tenant ID.</summary>
-    public int CurrentCompanyId => _tenantProvider?.GetCurrentCompanyId() ?? 1;
+    public int CurrentCompanyId =>
+        _tenantProvider?.GetCurrentCompanyId()
+        ?? throw new TenantContextException(
+            "Tenant provider is required. Data access without an established company context is not permitted.");
 
     /// <summary>
     /// Initialises a new instance of the <see cref="ApplicationDbContext"/> class.
@@ -160,6 +164,17 @@ public class ApplicationDbContext : DbContext
     public DbSet<CompliancePeriod> CompliancePeriods => Set<CompliancePeriod>();
     public DbSet<ComplianceBatch> ComplianceBatches => Set<ComplianceBatch>();
     public DbSet<PayrollLedger> PayrollLedgers => Set<PayrollLedger>();
+    public DbSet<PayrollLedgerEmployee> PayrollLedgerEmployees => Set<PayrollLedgerEmployee>();
+    public DbSet<PayrollLedgerComponent> PayrollLedgerComponents => Set<PayrollLedgerComponent>();
+    public DbSet<PayrollLedgerTransaction> PayrollLedgerTransactions => Set<PayrollLedgerTransaction>();
+    public DbSet<PayrollLedgerReversal> PayrollLedgerReversals => Set<PayrollLedgerReversal>();
+    public DbSet<PayrollPeriod> PayrollPeriods => Set<PayrollPeriod>();
+    public DbSet<PayrollGroup> PayrollGroups => Set<PayrollGroup>();
+    public DbSet<PayrollAdjustment> PayrollAdjustments => Set<PayrollAdjustment>();
+    public DbSet<PayrollSnapshot> PayrollSnapshots => Set<PayrollSnapshot>();
+    public DbSet<PayrollExceptionQueue> PayrollExceptionQueues => Set<PayrollExceptionQueue>();
+    public DbSet<PayrollRunHistory> PayrollRunHistories => Set<PayrollRunHistory>();
+    public DbSet<BackgroundJob> BackgroundJobs => Set<BackgroundJob>();
     public DbSet<ComplianceEvent> ComplianceEvents => Set<ComplianceEvent>();
     public DbSet<ApprovalMatrix> ApprovalMatrices => Set<ApprovalMatrix>();
     public DbSet<ComplianceSnapshot> ComplianceSnapshots => Set<ComplianceSnapshot>();
@@ -171,6 +186,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<FRCSSubmission> FRCSSubmissions => Set<FRCSSubmission>();
     public DbSet<FNPFSubmission> FNPFSubmissions => Set<FNPFSubmission>();
     public DbSet<BankFile> BankFiles => Set<BankFile>();
+
 
     /// <summary>
     /// Begins a database transaction asynchronously.
@@ -377,8 +393,39 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<PayrollLedger>()
             .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
 
+        modelBuilder.Entity<PayrollLedgerEmployee>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollLedgerTransaction>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollLedgerReversal>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollPeriod>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollGroup>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollAdjustment>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollSnapshot>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollExceptionQueue>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollRunHistory>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<BackgroundJob>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
         modelBuilder.Entity<ComplianceEvent>()
             .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
 
         modelBuilder.Entity<ApprovalMatrix>()
             .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
@@ -397,5 +444,24 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<BankFile>()
             .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollRunEmployee>()
+            .HasQueryFilter(e => e.PayrollRun != null && e.PayrollRun.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollRunLineItem>()
+            .HasQueryFilter(li => li.PayrollRunEmployee != null
+                && li.PayrollRunEmployee.PayrollRun != null
+                && li.PayrollRunEmployee.PayrollRun.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollRunStateHistory>()
+            .HasQueryFilter(h => h.PayrollRun != null && h.PayrollRun.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollRunEmployeeTrace>()
+            .HasQueryFilter(t => t.PayrollRunEmployee != null
+                && t.PayrollRunEmployee.PayrollRun != null
+                && t.PayrollRunEmployee.PayrollRun.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<PayrollLedgerComponent>()
+            .HasQueryFilter(c => c.PayrollLedgerEmployee != null && c.PayrollLedgerEmployee.CompanyId == CurrentCompanyId);
     }
 }

@@ -697,6 +697,9 @@
             Domain entity representing an employee and their master salary/statutory settings.
             </summary>
         </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.Employee.CostCentre">
+            <summary>Gets the cost centre.</summary>
+        </member>
         <member name="P:FijiPayroll.Domain.Entities.Company.Employee.CompanyId">
             <summary>
             Foreign key to Company.
@@ -779,12 +782,12 @@
         <member name="M:FijiPayroll.Domain.Entities.Company.Employee.RecalculateDataQualityScore">
             <summary>Recalculates the data quality score for the employee record.</summary>
         </member>
-        <member name="M:FijiPayroll.Domain.Entities.Company.Employee.Create(System.Int32,System.String,System.String,System.String,System.String,System.String,System.Decimal,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.Boolean,System.Boolean,System.Boolean,FijiPayroll.Domain.Enumerations.EmploymentType,System.String,System.String,System.String)">
+        <member name="M:FijiPayroll.Domain.Entities.Company.Employee.Create(System.Int32,System.String,System.String,System.String,System.String,System.String,System.Decimal,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.Boolean,System.Boolean,System.Boolean,FijiPayroll.Domain.Enumerations.EmploymentType,System.String,System.String,System.String,System.String)">
             <summary>
             Factory method to create an Employee with optional new fields.
             </summary>
         </member>
-        <member name="M:FijiPayroll.Domain.Entities.Company.Employee.Update(System.String,System.String,System.String,System.String,System.String,System.Decimal,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.Boolean,System.Boolean,System.Boolean,FijiPayroll.Domain.Enumerations.EmploymentType,System.String,System.String,System.String)">
+        <member name="M:FijiPayroll.Domain.Entities.Company.Employee.Update(System.String,System.String,System.String,System.String,System.String,System.Decimal,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.Boolean,System.Boolean,System.Boolean,FijiPayroll.Domain.Enumerations.EmploymentType,System.String,System.String,System.String,System.String)">
             <summary>Updates employee properties.</summary>
         </member>
         <member name="T:FijiPayroll.Domain.Entities.Company.EmployeePaymentMethod">
@@ -1420,6 +1423,11 @@
         <member name="M:FijiPayroll.Domain.Entities.Payroll.ApprovalMatrix.Activate">
             <summary>Activates the approval matrix config.</summary>
         </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.BackgroundJob">
+            <summary>
+            Domain model for scheduling, monitoring, and executing background tasks.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Entities.Payroll.BankFile">
             <summary>
             Domain model representing a generated Bank Credit clearing file.
@@ -1691,6 +1699,24 @@
         </member>
         <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.GeneratedBy">
             <summary>Gets the user who initiated the evidence pack generation.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.EvidencePackSignature">
+            <summary>Gets the cryptographic signature of the evidence pack.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.SignatureTimestamp">
+            <summary>Gets the timestamp when the signature was generated.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.SystemBuildVersionHash">
+            <summary>Gets the system build version hash at generation time.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.ApplicationVersion">
+            <summary>Gets the application version snapshot.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.GitCommitHash">
+            <summary>Gets the Git commit hash of the build.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.AssemblyVersionSnapshot">
+            <summary>Gets the assembly version snapshot details.</summary>
         </member>
         <member name="P:FijiPayroll.Domain.Entities.Payroll.EvidencePack.ExecutiveSummary">
             <summary>Gets the Executive Summary details.</summary>
@@ -1976,60 +2002,87 @@
         <member name="M:FijiPayroll.Domain.Entities.Payroll.Notification.ResetForRetry">
             <summary>Resets status to pending to schedule another retry.</summary>
         </member>
-        <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollLedger">
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollAdjustment">
             <summary>
-            Domain model representing an immutable summary ledger entry for an employee payroll run.
-            Once written, values cannot be modified; verification is guarded by a hash.
+            Domain model for staging payroll adjustments before a payroll run.
             </summary>
         </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.CompanyId">
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollExceptionQueue">
+            <summary>
+            Domain model for storing employee-specific processing failures without stopping the entire payroll.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollGroup">
+            <summary>
+            Domain entity representing a Payroll Group for targeted processing and default parameters.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollLedger">
+            <summary>
+            Domain model representing the immutable Ledger Header for a payroll run.
+            Once finalized, it remains unmodifiable. Reversals write compensation entries.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollLedgerComponent">
+            <summary>
+            Breakdown details of earnings, deductions, tax, allowances, or FNPF per employee in the ledger.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollLedgerEmployee">
+            <summary>
+            Detail line mapping an individual employee's calculations inside the immutable ledger.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollLedgerReversal">
+            <summary>
+            Tracing link showing the relationship between an original ledger entry and its correction reversal ledger entry.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollLedgerTransaction">
+            <summary>
+            Double-entry ledger transaction debit/credit line associated with a payroll posting.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollPeriod">
+            <summary>
+            Represents a Payroll Period for managing lifecycle states of processing cycles.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollPeriod.CompanyId">
             <summary>Gets the multi-tenant company identifier.</summary>
         </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.PayrollRunId">
-            <summary>Gets the associated finalized payroll run identifier.</summary>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollPeriod.PeriodCode">
+            <summary>Gets the unique code for this period (e.g. "2026-M06").</summary>
         </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.EmployeeId">
-            <summary>Gets the employee identifier.</summary>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollPeriod.PayrollFrequency">
+            <summary>Gets the frequency of this period.</summary>
         </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.EmployeeName">
-            <summary>Gets the employee name at time of payment.</summary>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollPeriod.FiscalYear">
+            <summary>Gets the fiscal year of the period.</summary>
         </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.EmployeeTin">
-            <summary>Gets the employee tax identification number (TIN).</summary>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollPeriod.FiscalMonth">
+            <summary>Gets the fiscal month of the period.</summary>
         </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.EmployeeFnpfNumber">
-            <summary>Gets the employee FNPF registration number.</summary>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollPeriod.StartDate">
+            <summary>Gets the start date of the period.</summary>
         </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.Gross">
-            <summary>Gets the employee's gross pay.</summary>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollPeriod.EndDate">
+            <summary>Gets the end date of the period.</summary>
         </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.PAYE">
-            <summary>Gets the PAYE tax deducted.</summary>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollPeriod.PaymentDate">
+            <summary>Gets the payment or disbursement date of the period.</summary>
         </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.FNPFEmployee">
-            <summary>Gets the FNPF employee deduction amount.</summary>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollPeriod.Status">
+            <summary>Gets the current status of the payroll period.</summary>
         </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.FNPFEmployer">
-            <summary>Gets the FNPF employer contribution amount.</summary>
-        </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.NetPay">
-            <summary>Gets the final net pay.</summary>
-        </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.Currency">
-            <summary>Gets the currency code (e.g. FJD).</summary>
-        </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.Hash">
-            <summary>Gets the SHA256 integrity hash validating ledger record values.</summary>
-        </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.CreatedUtc">
-            <summary>Gets the timestamp when the ledger record was created.</summary>
-        </member>
-        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.CreatedBy">
-            <summary>Gets the user who finalized the run and created the ledger.</summary>
-        </member>
-        <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollLedger.Create(System.Int32,System.Int32,System.Int32,System.String,System.String,System.String,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.String,System.String)">
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollPeriod.Create(System.Int32,System.String,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.Int32,System.Int32,System.DateTime,System.DateTime,System.DateTime,System.String)">
             <summary>
-            Factory method to construct a new immutable PayrollLedger.
+            Factory method to construct a new open Payroll Period.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollPeriod.UpdateStatus(FijiPayroll.Domain.Enumerations.PayrollPeriodStatus,System.String)">
+            <summary>
+            Transitions the period to a new status while enforcing validation constraints.
             </summary>
         </member>
         <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollRun">
@@ -2103,6 +2156,16 @@
             Deterministic hash of the input snapshot calculated by PayrollSnapshotHasher.
             </summary>
         </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollRun.PayrollPeriodId">
+            <summary>
+            Foreign key to PayrollPeriod.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollRun.PayrollGroupId">
+            <summary>
+            Foreign key to PayrollGroup.
+            </summary>
+        </member>
         <member name="P:FijiPayroll.Domain.Entities.Payroll.PayrollRun.Employees">
             <summary>
             Set of employees computed in this run.
@@ -2116,6 +2179,11 @@
         <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.AddEmployee(FijiPayroll.Domain.Entities.Payroll.PayrollRunEmployee)">
             <summary>
             Adds a run employee.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.TransitionToValidating(System.String)">
+            <summary>
+            Transition run to Validating status.
             </summary>
         </member>
         <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.AcquireLock(System.Guid,System.String)">
@@ -2139,9 +2207,19 @@
             Non-chaining: Does not trigger calculation automatically.
             </summary>
         </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.RevertToDraft(System.String,System.String)">
+            <summary>
+            Reverts the payroll run back to Draft status (rollback).
+            </summary>
+        </member>
         <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.Approve(System.String)">
             <summary>
             Approves the calculated payroll run.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.Approve(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Approves the calculated payroll run with digital signatures.
             </summary>
         </member>
         <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.Post(System.String)">
@@ -2149,9 +2227,34 @@
             Posts the approved payroll run.
             </summary>
         </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.TransitionToBankExported(System.String)">
+            <summary>
+            Transition to BankExported.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.TransitionToFrcsExported(System.String)">
+            <summary>
+            Transition to FrcsExported.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.TransitionToFnpfExported(System.String)">
+            <summary>
+            Transition to FnpfExported.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.TransitionToEvidenceGenerated(System.String)">
+            <summary>
+            Transition to EvidencePackGenerated.
+            </summary>
+        </member>
         <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.LockRun(System.String)">
             <summary>
             Locks the posted payroll run.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.Archive(System.String)">
+            <summary>
+            Archives the locked run.
             </summary>
         </member>
         <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.ReverseRun(System.String,System.String)">
@@ -2160,6 +2263,11 @@
             </summary>
         </member>
         <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.Create(System.Int32,System.String,System.String,System.DateTime,System.DateTime,System.DateTime,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.String)">
+            <summary>
+            Factory method to build a new PayrollRun.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRun.Create(System.Int32,System.String,System.String,System.DateTime,System.DateTime,System.DateTime,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             Factory method to build a new PayrollRun.
             </summary>
@@ -2294,6 +2402,11 @@
             Factory method to create a trace record.
             </summary>
         </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollRunHistory">
+            <summary>
+            Detailed-level audit history log capturing payroll run modifications.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollRunLineItem">
             <summary>
             Detailed snapshot line item representing a component calculation (earnings, deductions, allowances)
@@ -2393,6 +2506,12 @@
         <member name="M:FijiPayroll.Domain.Entities.Payroll.PayrollRunStateHistory.Create(System.Int32,FijiPayroll.Domain.Enumerations.PayrollRunStatus,FijiPayroll.Domain.Enumerations.PayrollRunStatus,System.String,System.String)">
             <summary>
             Factory method to create a status transition log.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollSnapshot">
+            <summary>
+            Immutable snapshot storing the calculation input/output of a payroll run.
+            Guaranteed to never be updated once written.
             </summary>
         </member>
         <member name="T:FijiPayroll.Domain.Entities.Payroll.StatutoryRule">
@@ -2812,6 +2931,11 @@
         <member name="F:FijiPayroll.Domain.Enumerations.PaymentMethodType.MobileTransfer">
             <summary>Mobile transfer (M-PAiSA, MyCash).</summary>
         </member>
+        <member name="T:FijiPayroll.Domain.Enumerations.PayrollAdjustmentType">
+            <summary>
+            Defines categories for staging payroll adjustments.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Enumerations.PayrollFrequencyType">
             <summary>
             Defines the payroll frequency — how often employees in a pay group are paid.
@@ -2834,6 +2958,32 @@
         <member name="F:FijiPayroll.Domain.Enumerations.PayrollFrequencyType.Monthly">
             <summary>Paid once per calendar month. 12 periods per year.</summary>
         </member>
+        <member name="T:FijiPayroll.Domain.Enumerations.PayrollPeriodStatus">
+            <summary>
+            Defines the lifecycle status of a payroll period.
+            </summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.PayrollPeriodStatus.Open">
+            <summary>Period is open for data entry and staging adjustments.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.PayrollPeriodStatus.CalculationInProgress">
+            <summary>Payroll calculations are currently running for this period.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.PayrollPeriodStatus.Calculated">
+            <summary>Payroll calculations have completed but not yet posted.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.PayrollPeriodStatus.Posted">
+            <summary>Payroll calculations have been finalized and posted to ledger.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.PayrollPeriodStatus.Closed">
+            <summary>Period has been closed, preventing further changes.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.PayrollPeriodStatus.Locked">
+            <summary>Period is locked for compliance/audit, immutable.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.PayrollPeriodStatus.Archived">
+            <summary>Period is archived, read-only and backed up.</summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Enumerations.PayrollRunStatus">
             <summary>
             Defines the lifecycle status of a payroll run.
@@ -2841,6 +2991,9 @@
         </member>
         <member name="F:FijiPayroll.Domain.Enumerations.PayrollRunStatus.Draft">
             <summary>Run created, not yet calculated.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.PayrollRunStatus.Validating">
+            <summary>Validation is in progress before calculation.</summary>
         </member>
         <member name="F:FijiPayroll.Domain.Enumerations.PayrollRunStatus.Calculating">
             <summary>Calculation is actively in progress. Acts as a lock.</summary>
@@ -2854,11 +3007,31 @@
         <member name="F:FijiPayroll.Domain.Enumerations.PayrollRunStatus.Posted">
             <summary>Posted to general ledger. Financial corrections are active.</summary>
         </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.PayrollRunStatus.BankExported">
+            <summary>Bank file has been exported.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.PayrollRunStatus.FrcsExported">
+            <summary>FRCS file has been exported.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.PayrollRunStatus.FnpfExported">
+            <summary>FNPF file has been exported.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.PayrollRunStatus.EvidencePackGenerated">
+            <summary>Evidence pack has been generated and cryptographically signed.</summary>
+        </member>
         <member name="F:FijiPayroll.Domain.Enumerations.PayrollRunStatus.Locked">
             <summary>Run is closed and locked for auditing purposes.</summary>
         </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.PayrollRunStatus.Archived">
+            <summary>Run is archived and read-only.</summary>
+        </member>
         <member name="F:FijiPayroll.Domain.Enumerations.PayrollRunStatus.Reversed">
             <summary>Financial correction state applied post-posting.</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Enumerations.PayrollValidationSeverity">
+            <summary>
+            Severity level of a payroll validation message or exception.
+            </summary>
         </member>
         <member name="T:FijiPayroll.Domain.Enumerations.SchedulerInterval">
             <summary>
@@ -2928,6 +3101,27 @@
         </member>
         <member name="F:FijiPayroll.Domain.Enumerations.SetupAuditStatus.Failed">
             <summary>The step audited failed to pass validation checks.</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Enumerations.VoluntaryDeductionPolicy">
+            <summary>
+            Policy options for handling voluntary deductions when an employee's net pay is insufficient.
+            </summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.VoluntaryDeductionPolicy.BlockPayroll">
+            <summary>
+            Policy A: Block payroll run calculation if net pay is negative after voluntary deductions.
+            Throws a PayrollException.
+            </summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.VoluntaryDeductionPolicy.CarryForwardRemainder">
+            <summary>
+            Policy B: Apply voluntary deductions partially and carry forward the remainder.
+            </summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.VoluntaryDeductionPolicy.PartialDeductionWithAuditFlag">
+            <summary>
+            Policy C: Apply voluntary deductions partially and raise an audit flag/warning.
+            </summary>
         </member>
         <member name="T:FijiPayroll.Domain.Enumerations.WizardStep">
             <summary>
@@ -3084,6 +3278,40 @@
         <member name="P:FijiPayroll.Domain.Events.IDomainEvent.OccurredOn">
             <summary>Gets the UTC timestamp when the event occurred.</summary>
         </member>
+        <member name="T:FijiPayroll.Domain.Events.PayrollAuditEvent">
+            <summary>
+            Domain event raised during calculation when an audit warning, carry-forward,
+            or partial deduction flag occurs.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Events.PayrollAuditEvent.EventCode">
+            <summary>
+            Gets the unique audit event code (e.g. INSUFFICIENT_NET_PAY_FOR_VOLUNTARY_DEDUCTIONS).
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Events.PayrollAuditEvent.Severity">
+            <summary>
+            Gets the severity level of the event (e.g. "Warning", "Error", "Audit").
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Events.PayrollAuditEvent.Message">
+            <summary>
+            Gets the detailed message describing the event context.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Events.PayrollAuditEvent.AffectedEmployee">
+            <summary>
+            Gets the name of the affected employee.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Events.PayrollAuditEvent.OccurredOn">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Domain.Events.PayrollAuditEvent.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Domain.Events.PayrollAuditEvent"/> class.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Events.WorkflowStateChangedEvent">
             <summary>
             Domain event raised when a workflow request's state is changed.
@@ -3130,6 +3358,27 @@
         <member name="M:FijiPayroll.Domain.Exceptions.DomainException.#ctor(System.String,System.Exception)">
             <inheritdoc/>
         </member>
+        <member name="T:FijiPayroll.Domain.Exceptions.PayrollException">
+            <summary>
+            Exception thrown when a critical payroll rule is violated during calculation,
+            such as insufficient net pay when using a blocking policy.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Exceptions.PayrollException.EventCode">
+            <summary>
+            Gets the unique audit event code representing this exception type.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Exceptions.PayrollException.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Domain.Exceptions.PayrollException"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Exceptions.PayrollException.#ctor(System.String,System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Domain.Exceptions.PayrollException"/> class with an inner exception.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Interfaces.IApprovalWorkflowRepository">
             <summary>
             Repository abstraction for ApprovalWorkflow aggregate.
@@ -3146,6 +3395,23 @@
         </member>
         <member name="M:FijiPayroll.Domain.Interfaces.IApprovalWorkflowRepository.GetPendingWorkflowsAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>Gets all pending workflows (Submitted/Pending states) for a company.</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.IBuildVersionProvider">
+            <summary>
+            Provides system build version, git commit, and assembly details for non-repudiation binding.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IBuildVersionProvider.GetApplicationVersion">
+            <summary>Gets the main application version.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IBuildVersionProvider.GetGitCommitHash">
+            <summary>Gets the Git commit hash or build hash fallback.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IBuildVersionProvider.GetAssemblyVersionSnapshot">
+            <summary>Gets the DLL assembly version snapshot details.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IBuildVersionProvider.GetSystemBuildVersionHash">
+            <summary>Gets the combined SHA-256 system build version hash.</summary>
         </member>
         <member name="T:FijiPayroll.Domain.Interfaces.IComplianceRepository">
             <summary>
@@ -3212,6 +3478,21 @@
             <param name="evidencePack">The generated evidence pack domain model.</param>
             <param name="cancellationToken">Cancellation token.</param>
             <returns>The byte array representing the ZIP archive.</returns>
+        </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.IEvidencePackSignatureService">
+            <summary>
+            Cryptographically signs completed compliance evidence packs.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IEvidencePackSignatureService.SignEvidenceZipAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Computes the ZIP hash, signs it via RSA, creates signature.manifest.json, and appends it to rebuild the final signed ZIP bytes.
+            </summary>
+            <param name="unsignedZipBytes">The compiled ZIP bytes containing all reports and manifests except the signature manifest.</param>
+            <param name="companyId">The company ID context.</param>
+            <param name="payrollRunId">The payroll run ID context.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Deterministic, signed ZIP bytes.</returns>
         </member>
         <member name="T:FijiPayroll.Domain.Interfaces.IImportJobRepository">
             <summary>
@@ -3318,6 +3599,111 @@
             Retrieves a server-side filtered and paginated list of payroll components.
             </summary>
         </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.IPayrollPeriodRepository">
+            <summary>Repository for Payroll Period lifecycle control.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollPeriodRepository.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets a period by ID.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollPeriodRepository.GetByCompanyAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets all periods for a company.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollPeriodRepository.GetOpenPeriodAsync(System.Int32,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.Threading.CancellationToken)">
+            <summary>Gets the open period for a company and frequency.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollPeriodRepository.AddAsync(FijiPayroll.Domain.Entities.Payroll.PayrollPeriod,System.Threading.CancellationToken)">
+            <summary>Adds a new period.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollPeriodRepository.Update(FijiPayroll.Domain.Entities.Payroll.PayrollPeriod)">
+            <summary>Updates a period.</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.IPayrollGroupRepository">
+            <summary>Repository for Payroll Groups.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollGroupRepository.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets a group by ID.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollGroupRepository.GetByCompanyAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets all groups for a company.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollGroupRepository.AddAsync(FijiPayroll.Domain.Entities.Payroll.PayrollGroup,System.Threading.CancellationToken)">
+            <summary>Adds a new group.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollGroupRepository.Update(FijiPayroll.Domain.Entities.Payroll.PayrollGroup)">
+            <summary>Updates a group.</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.IPayrollAdjustmentRepository">
+            <summary>Repository for manual adjustments.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollAdjustmentRepository.GetUnappliedByEmployeeAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets unapplied adjustments for an employee.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollAdjustmentRepository.AddAsync(FijiPayroll.Domain.Entities.Payroll.PayrollAdjustment,System.Threading.CancellationToken)">
+            <summary>Adds a new adjustment.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollAdjustmentRepository.Update(FijiPayroll.Domain.Entities.Payroll.PayrollAdjustment)">
+            <summary>Updates an adjustment.</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.IPayrollSnapshotRepository">
+            <summary>Repository for compressed calculation snapshots.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollSnapshotRepository.GetLatestByRunIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets the latest snapshot for a run.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollSnapshotRepository.GetByRunIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets all snapshots for a run.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollSnapshotRepository.AddAsync(FijiPayroll.Domain.Entities.Payroll.PayrollSnapshot,System.Threading.CancellationToken)">
+            <summary>Adds a new snapshot.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollSnapshotRepository.Remove(FijiPayroll.Domain.Entities.Payroll.PayrollSnapshot)">
+            <summary>Removes a snapshot.</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.IPayrollExceptionQueueRepository">
+            <summary>Repository for exception queues.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollExceptionQueueRepository.GetByRunIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets all exceptions for a run.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollExceptionQueueRepository.AddAsync(FijiPayroll.Domain.Entities.Payroll.PayrollExceptionQueue,System.Threading.CancellationToken)">
+            <summary>Adds a new exception.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollExceptionQueueRepository.Remove(FijiPayroll.Domain.Entities.Payroll.PayrollExceptionQueue)">
+            <summary>Removes an exception.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollExceptionQueueRepository.Update(FijiPayroll.Domain.Entities.Payroll.PayrollExceptionQueue)">
+            <summary>Updates an exception.</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.IPayrollRunHistoryRepository">
+            <summary>Repository for immutable run history audits.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollRunHistoryRepository.AddAsync(FijiPayroll.Domain.Entities.Payroll.PayrollRunHistory,System.Threading.CancellationToken)">
+            <summary>Adds a history entry.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollRunHistoryRepository.GetByRunIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets all history for a run.</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.IBackgroundJobRepository">
+            <summary>Repository for scheduled background execution jobs.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IBackgroundJobRepository.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>Gets a job by ID.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IBackgroundJobRepository.AddAsync(FijiPayroll.Domain.Entities.Payroll.BackgroundJob,System.Threading.CancellationToken)">
+            <summary>Adds a new job.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IBackgroundJobRepository.Update(FijiPayroll.Domain.Entities.Payroll.BackgroundJob)">
+            <summary>Updates a job.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IBackgroundJobRepository.GetPendingJobsAsync(System.Threading.CancellationToken)">
+            <summary>Gets pending jobs.</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.IPayrollLedgerReversalRepository">
+            <summary>Repository for double-entry reversals.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollLedgerReversalRepository.AddAsync(FijiPayroll.Domain.Entities.Payroll.PayrollLedgerReversal,System.Threading.CancellationToken)">
+            <summary>Adds a ledger reversal.</summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Interfaces.IPayrollRunRepository">
             <summary>
             Repository interface for PayrollRun aggregate.
@@ -3347,6 +3733,16 @@
         <member name="M:FijiPayroll.Domain.Interfaces.IPayrollRunRepository.GetPagedAsync(System.Int32,System.Nullable{FijiPayroll.Domain.Enumerations.PayrollFrequencyType},System.Nullable{FijiPayroll.Domain.Enumerations.PayrollRunStatus},System.Int32,System.Int32,System.Threading.CancellationToken)">
             <summary>
             Returns paged run summaries.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollRunRepository.GetByPeriodIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Fetches all payroll runs associated with a specific period.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IPayrollRunRepository.Update(FijiPayroll.Domain.Entities.Payroll.PayrollRun)">
+            <summary>
+            Updates an existing payroll run.
             </summary>
         </member>
         <member name="T:FijiPayroll.Domain.Interfaces.ISearchIndexRepository">
@@ -3426,6 +3822,20 @@
         <member name="M:FijiPayroll.Domain.Interfaces.ISetupRepository.RemoveSetupStateAsync(System.Int32,System.Threading.CancellationToken)">
             <summary>Removes the setup state and all associated tasks for a company.</summary>
         </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.ISignatureVerifierService">
+            <summary>
+            Verifies the cryptographic signature and manifest integrity of compliance evidence packs.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.ISignatureVerifierService.VerifyEvidencePackSignatureAsync(System.Byte[],System.Threading.CancellationToken)">
+            <summary>
+            Extracts the signature manifest, reconstructs the unsigned zip bytes, computes the SHA-256 hash,
+            verifies the RSA signature, and enforces tenant isolation checks.
+            </summary>
+            <param name="signedZipBytes">The fully compiled signed ZIP bytes containing the signature manifest.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <exception cref="!:FijiPayroll.Application.Common.Exceptions.EvidencePackTamperedException">Thrown if signature, hash verification, or tenant validation fails.</exception>
+        </member>
         <member name="T:FijiPayroll.Domain.Interfaces.ITaxBracketRepository">
             <summary>
             Repository interface for configuration-driven tax brackets.
@@ -3482,6 +3892,30 @@
         </member>
         <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.Compliance">
             <summary>Repository for Compliance aggregate operations.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.PayrollPeriods">
+            <summary>Repository for payroll periods.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.PayrollGroups">
+            <summary>Repository for payroll groups.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.PayrollAdjustments">
+            <summary>Repository for payroll adjustments.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.PayrollSnapshots">
+            <summary>Repository for payroll snapshots.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.PayrollExceptionQueues">
+            <summary>Repository for payroll exception queues.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.PayrollRunHistories">
+            <summary>Repository for payroll run histories.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.BackgroundJobs">
+            <summary>Repository for background jobs.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.PayrollLedgerReversals">
+            <summary>Repository for payroll ledger reversals.</summary>
         </member>
         <member name="M:FijiPayroll.Domain.Interfaces.IUnitOfWork.SaveChangesAsync(System.Threading.CancellationToken)">
             <summary>

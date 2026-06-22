@@ -165,4 +165,18 @@ public sealed class PayrollRunRepository : IPayrollRunRepository
 
         return (items.AsReadOnly(), totalCount);
     }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<PayrollRun>> GetByPeriodIdAsync(int periodId, CancellationToken cancellationToken = default)
+    {
+        return await _context.PayrollRuns
+            .Where(r => r.PayrollPeriodId == periodId)
+            .ToListAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public void Update(PayrollRun run)
+    {
+        _context.PayrollRuns.Update(run);
+    }
 }

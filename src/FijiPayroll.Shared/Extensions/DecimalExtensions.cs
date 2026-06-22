@@ -16,6 +16,12 @@ public static class DecimalExtensions
         => Math.Round(value, 2, MidpointRounding.AwayFromZero);
 
     /// <summary>
+    /// Standardised rounding matching live payroll calculations (MidpointRounding.AwayFromZero).
+    /// </summary>
+    public static decimal ToFijiRound(this decimal value)
+        => Math.Round(value, 2, MidpointRounding.AwayFromZero);
+
+    /// <summary>
     /// Rounds a monetary value to 4 decimal places for internal storage,
     /// used for gross pay and intermediate calculations.
     /// </summary>

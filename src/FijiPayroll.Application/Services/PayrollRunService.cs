@@ -1,6 +1,6 @@
 using FijiPayroll.Application.Common.Models;
 using FijiPayroll.Application.Features.PayrollRuns.Commands.ApprovePayrollRun;
-using FijiPayroll.Application.Features.PayrollRuns.Commands.CalculatePayrollRun;
+using FijiPayroll.Application.Features.PayrollRuns.Commands.ProcessBatchPayroll;
 using FijiPayroll.Application.Features.PayrollRuns.Commands.CreatePayrollRun;
 using FijiPayroll.Application.Features.PayrollRuns.Commands.PostPayrollRun;
 using FijiPayroll.Application.Features.PayrollRuns.Commands.ResetPayrollRun;
@@ -92,7 +92,7 @@ public sealed class PayrollRunService : IPayrollRunService
         await _unitOfWork.BeginTransactionAsync(cancellationToken);
         try
         {
-            var command = new CalculatePayrollRunCommand(id, calculationRequestId);
+            var command = new ProcessBatchPayrollCommand(id, calculationRequestId);
             var result = await _mediator.Send(command, cancellationToken);
 
             if (result.IsSuccess)

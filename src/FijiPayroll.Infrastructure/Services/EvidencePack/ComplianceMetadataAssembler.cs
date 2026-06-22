@@ -25,18 +25,18 @@ public sealed class ComplianceMetadataAssembler
     /// <summary>
     /// Evaluates the ledger records against statutory FRCS/FNPF compliance rules.
     /// </summary>
-    public ComplianceValidationOutput AssembleValidationResults(int companyId, IEnumerable<PayrollLedger> ledgers)
+    public ComplianceValidationOutput AssembleValidationResults(int companyId, IEnumerable<PayrollLedgerEmployee> ledgers)
     {
         if (ledgers == null) throw new ArgumentNullException(nameof(ledgers));
 
-        // Map PayrollLedgers to SDK PaymentDetail objects
+        // Map PayrollLedgerEmployees to SDK PaymentDetail objects
         var paymentDetails = ledgers.Select(l => new PaymentDetail(
             EmployeeId: l.EmployeeId,
             EmployeeName: l.EmployeeName,
             Bsb: string.Empty,
             AccountNumber: string.Empty,
             Amount: l.NetPay,
-            Reference: $"Run-{l.PayrollRunId}",
+            Reference: $"Ledger-{l.PayrollLedgerId}",
             Tin: l.EmployeeTin,
             Gross: l.Gross,
             Paye: l.PAYE,

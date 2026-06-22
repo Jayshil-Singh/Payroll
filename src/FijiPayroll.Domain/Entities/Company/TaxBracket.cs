@@ -18,7 +18,7 @@ public sealed class TaxBracket : AuditableEntity
     private decimal _taxRate;
     private decimal _fixedTaxAmount;
 
-    private TaxBracket() { }
+    public TaxBracket() { }
 
     /// <summary>
     /// Version identifier of the tax ruleset (e.g., "2025-2026").
@@ -26,7 +26,7 @@ public sealed class TaxBracket : AuditableEntity
     public string TaxVersion
     {
         get => _taxVersion;
-        private set => _taxVersion = Guard.AgainstNullOrWhiteSpace(value);
+        init => _taxVersion = Guard.AgainstNullOrWhiteSpace(value);
     }
 
     /// <summary>
@@ -35,13 +35,13 @@ public sealed class TaxBracket : AuditableEntity
     public string ResidencyStatus
     {
         get => _residencyStatus;
-        private set => _residencyStatus = Guard.AgainstNullOrWhiteSpace(value);
+        init => _residencyStatus = Guard.AgainstNullOrWhiteSpace(value);
     }
 
     /// <summary>
     /// Pay frequency of the pay group.
     /// </summary>
-    public PayrollFrequencyType Frequency { get; private set; }
+    public PayrollFrequencyType Frequency { get; init; }
 
     /// <summary>
     /// Lower boundary of taxable income for this bracket.
@@ -49,7 +49,7 @@ public sealed class TaxBracket : AuditableEntity
     public decimal LowerLimit
     {
         get => _lowerLimit;
-        private set => _lowerLimit = Guard.AgainstNegative(value);
+        init => _lowerLimit = Guard.AgainstNegative(value);
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ public sealed class TaxBracket : AuditableEntity
     public decimal UpperLimit
     {
         get => _upperLimit;
-        private set => _upperLimit = Guard.AgainstNegative(value);
+        init => _upperLimit = Guard.AgainstNegative(value);
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ public sealed class TaxBracket : AuditableEntity
     public decimal TaxRate
     {
         get => _taxRate;
-        private set => _taxRate = Guard.AgainstNegative(value);
+        init => _taxRate = Guard.AgainstNegative(value);
     }
 
     /// <summary>
@@ -76,18 +76,18 @@ public sealed class TaxBracket : AuditableEntity
     public decimal FixedTaxAmount
     {
         get => _fixedTaxAmount;
-        private set => _fixedTaxAmount = Guard.AgainstNegative(value);
+        init => _fixedTaxAmount = Guard.AgainstNegative(value);
     }
 
     /// <summary>
     /// Active flag.
     /// </summary>
-    public bool IsActive { get; private set; }
+    public bool IsActive { get; init; }
 
     /// <summary>
     /// Start date of this tax rule version validity.
     /// </summary>
-    public DateTime EffectiveDate { get; private set; }
+    public DateTime EffectiveDate { get; init; }
 
     /// <summary>
     /// Factory method to build a new TaxBracket.

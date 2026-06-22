@@ -20,6 +20,9 @@ public sealed class PayrollRunStateHistory : BaseEntity
     /// </summary>
     public int PayrollRunId { get; private set; }
 
+    /// <summary>Navigation to parent payroll run for tenant-scoped queries.</summary>
+    public PayrollRun PayrollRun { get; private set; } = null!;
+
     /// <summary>
     /// Source status before the transition.
     /// </summary>

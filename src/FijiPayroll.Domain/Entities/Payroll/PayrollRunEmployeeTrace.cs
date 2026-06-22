@@ -18,6 +18,9 @@ public sealed class PayrollRunEmployeeTrace : BaseEntity
     /// </summary>
     public int PayrollRunEmployeeId { get; private set; }
 
+    /// <summary>Navigation to parent run employee for tenant-scoped queries.</summary>
+    public PayrollRunEmployee PayrollRunEmployee { get; private set; } = null!;
+
     /// <summary>
     /// Trace payload listing progressive calculation details, tax rules hit, FNPF etc.
     /// </summary>

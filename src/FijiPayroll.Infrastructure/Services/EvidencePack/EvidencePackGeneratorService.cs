@@ -44,7 +44,7 @@ public sealed class EvidencePackGeneratorService : IEvidencePackGeneratorService
     }
 
     /// <inheritdoc/>
-    public async Task<EvidencePack> GenerateEvidencePackAsync(
+    public async Task<FijiPayroll.Domain.Entities.Payroll.EvidencePack> GenerateEvidencePackAsync(
         int companyId,
         int payrollRunId,
         string requestedBy,
@@ -56,6 +56,8 @@ public sealed class EvidencePackGeneratorService : IEvidencePackGeneratorService
         {
             throw new InvalidOperationException("No finalized ledger records found for this payroll run.");
         }
+
+        var ledgerHeader = await _unitOfWork.Compliance.GetLedgerHeaderByRunIdAsync(payrollRunId, cancellationToken);
 
         // 2. Fetch the payroll run details
         var run = await _unitOfWork.PayrollRuns.GetByIdWithDetailsAsync(payrollRunId, cancellationToken);
@@ -98,11 +100,10 @@ public sealed class EvidencePackGeneratorService : IEvidencePackGeneratorService
         );
 
         // 6. Build Ledger Integrity Manifest details
-        var firstLedger = ledgers.First();
         var ledgerIntegrity = new LedgerIntegrityManifest(
             PayrollLedgerHash: ledgerHash,
             RecordCount: recordCount,
-            VerificationTimestamp: firstLedger.CreatedUtc,
+            VerificationTimestamp: ledgerHeader?.CreatedUtc ?? DateTime.UtcNow,
             IntegrityStatus: integrityStatus
         );
 
@@ -165,7 +166,7 @@ public sealed class EvidencePackGeneratorService : IEvidencePackGeneratorService
         // 11. Compile final pack using builder
         var builder = new EvidencePackBuilder()
             .WithCorrelationId(correlationId)
-            .WithGeneratedUtc(firstLedger.CreatedUtc)
+            .WithGeneratedUtc(ledgerHeader?.CreatedUtc ?? DateTime.UtcNow)
             .WithGeneratedBy(requestedBy)
             .WithBuildVersion(
                 _buildVersionProvider.GetSystemBuildVersionHash(),
@@ -185,7 +186,7 @@ public sealed class EvidencePackGeneratorService : IEvidencePackGeneratorService
 
     /// <inheritdoc/>
     public async Task<byte[]> GenerateEvidenceZipArchiveAsync(
-        EvidencePack evidencePack,
+        FijiPayroll.Domain.Entities.Payroll.EvidencePack evidencePack,
         CancellationToken cancellationToken = default)
     {
         if (evidencePack == null) throw new ArgumentNullException(nameof(evidencePack));

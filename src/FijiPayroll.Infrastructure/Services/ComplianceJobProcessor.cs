@@ -176,11 +176,18 @@ public sealed class ComplianceJobProcessor : IDisposable
         var period = await unitOfWork.Compliance.GetActivePeriodAsync(job.CompanyId, cancellationToken);
         if (period == null) throw new InvalidOperationException("No active compliance period found to generate FRCS returns.");
 
-        // 2. Fetch finalized payroll ledgers
-        var closedRunsResult = await unitOfWork.PayrollRuns.GetPagedAsync(job.CompanyId, null, PayrollRunStatus.Locked, 1, 1000, cancellationToken);
-        var runs = closedRunsResult.Items;
+        // 2. Fetch company profile
+        var company = await unitOfWork.Setup.GetCompanyByIdAsync(job.CompanyId, cancellationToken);
+        if (company == null) throw new InvalidOperationException($"Company with ID {job.CompanyId} not found.");
+        if (string.IsNullOrWhiteSpace(company.TIN)) throw new InvalidOperationException($"TIN not configured for company with ID {job.CompanyId}.");
 
-        var ledgersList = new List<PayrollLedger>();
+        // 3. Fetch finalized payroll ledgers
+        var closedRunsResult = await unitOfWork.PayrollRuns.GetPagedAsync(job.CompanyId, null, PayrollRunStatus.Locked, 1, 1000, cancellationToken);
+        var runs = closedRunsResult.Items
+            .Where(r => r.PaymentDate.Month == period.Month && r.PaymentDate.Year == period.Year)
+            .ToList();
+
+        var ledgersList = new List<PayrollLedgerEmployee>();
         foreach (var run in runs)
         {
             var l = await unitOfWork.Compliance.GetLedgerByRunIdAsync(run.Id, cancellationToken);
@@ -202,8 +209,8 @@ public sealed class ComplianceJobProcessor : IDisposable
             Amount: 0
         )).ToList();
 
-        // 3. Generate CSV
-        string csvContent = _complianceFileService.GenerateFrcsCsv("123456789", paymentDetails, period.Month, period.Year);
+        // 4. Generate CSV
+        string csvContent = _complianceFileService.GenerateFrcsCsv(company.TIN, paymentDetails, period.Month, period.Year);
         string fileHash = ComputeSHA256Hash(csvContent);
         string filename = $"FRCS_MER_{job.CompanyId}_{period.Year}_{period.Month:D2}.csv";
         string outputDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Exports", "Compliance");
@@ -211,7 +218,7 @@ public sealed class ComplianceJobProcessor : IDisposable
         string filePath = Path.Combine(outputDir, filename);
         await File.WriteAllTextAsync(filePath, csvContent, Encoding.UTF8, cancellationToken);
 
-        // 4. Save Submission
+        // 5. Save Submission
         var submission = FRCSSubmission.Create(
             job.CompanyId,
             period.Id,
@@ -225,7 +232,7 @@ public sealed class ComplianceJobProcessor : IDisposable
         );
         await unitOfWork.Compliance.AddFRCSSubmissionAsync(submission, cancellationToken);
 
-        // 5. Write manifest file
+        // 6. Write manifest file
         await WriteManifestFileAsync(outputDir, filename, fileHash, paymentDetails.Count, paymentDetails.Sum(x => x.Gross), paymentDetails.Sum(x => x.Paye));
     }
 
@@ -234,10 +241,16 @@ public sealed class ComplianceJobProcessor : IDisposable
         var period = await unitOfWork.Compliance.GetActivePeriodAsync(job.CompanyId, cancellationToken);
         if (period == null) throw new InvalidOperationException("No active compliance period found to generate FNPF contribution.");
 
-        var closedRunsResult = await unitOfWork.PayrollRuns.GetPagedAsync(job.CompanyId, null, PayrollRunStatus.Locked, 1, 1000, cancellationToken);
-        var runs = closedRunsResult.Items;
+        var company = await unitOfWork.Setup.GetCompanyByIdAsync(job.CompanyId, cancellationToken);
+        if (company == null) throw new InvalidOperationException($"Company with ID {job.CompanyId} not found.");
+        if (string.IsNullOrWhiteSpace(company.FnpfEmployerNumber)) throw new InvalidOperationException($"FNPF Employer Number not configured for company with ID {job.CompanyId}.");
 
-        var ledgersList = new List<PayrollLedger>();
+        var closedRunsResult = await unitOfWork.PayrollRuns.GetPagedAsync(job.CompanyId, null, PayrollRunStatus.Locked, 1, 1000, cancellationToken);
+        var runs = closedRunsResult.Items
+            .Where(r => r.PaymentDate.Month == period.Month && r.PaymentDate.Year == period.Year)
+            .ToList();
+
+        var ledgersList = new List<PayrollLedgerEmployee>();
         foreach (var run in runs)
         {
             var l = await unitOfWork.Compliance.GetLedgerByRunIdAsync(run.Id, cancellationToken);
@@ -259,7 +272,8 @@ public sealed class ComplianceJobProcessor : IDisposable
             Amount: 0
         )).ToList();
 
-        string csvContent = _complianceFileService.GenerateFnpfCsv("FNPF9999", "Fiji Enterprise Co", period.Month, period.Year, paymentDetails);
+        string tradingName = string.IsNullOrWhiteSpace(company.TradingName) ? company.LegalName : company.TradingName;
+        string csvContent = _complianceFileService.GenerateFnpfCsv(company.FnpfEmployerNumber, tradingName, period.Month, period.Year, paymentDetails);
         string fileHash = ComputeSHA256Hash(csvContent);
         string filename = $"FNPF_Remit_{job.CompanyId}_{period.Year}_{period.Month:D2}.csv";
         string outputDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Exports", "Compliance");
@@ -330,10 +344,28 @@ public sealed class ComplianceJobProcessor : IDisposable
             Amount: x.NetPay
         )).ToList();
 
+        // Retrieve company bank account details dynamically
+        var company = await unitOfWork.Setup.GetCompanyByIdAsync(job.CompanyId, cancellationToken);
+        if (company == null) throw new InvalidOperationException($"Company with ID {job.CompanyId} not found.");
+
+        var bankAccounts = await unitOfWork.Setup.GetCompanyBankAccountsAsync(job.CompanyId, cancellationToken);
+        var companyAccountEntity = bankAccounts.FirstOrDefault(x => x.IsActive && !x.IsDeleted);
+        if (companyAccountEntity == null) throw new InvalidOperationException($"No active bank account configured for company with ID {job.CompanyId}.");
+
+        var branch = await unitOfWork.Setup.GetBankBranchByIdAsync(companyAccountEntity.BankBranchId, cancellationToken);
+        if (branch == null) throw new InvalidOperationException($"Bank branch with ID {companyAccountEntity.BankBranchId} not found.");
+
+        string tradingName = string.IsNullOrWhiteSpace(company.TradingName) ? company.LegalName : company.TradingName;
+        string companyAccount = companyAccountEntity.EncryptedAccountNumber;
+        string bsb = branch.BsbCode;
+
+        if (string.IsNullOrWhiteSpace(companyAccount)) throw new InvalidOperationException($"Bank account number not configured for company with ID {job.CompanyId}.");
+        if (string.IsNullOrWhiteSpace(bsb)) throw new InvalidOperationException($"BSB code not configured for bank branch with ID {companyAccountEntity.BankBranchId}.");
+
         string fileContent = generator.Generate(
-            companyName: "Fiji Enterprise Co",
-            companyAccount: "987654321",
-            bsb: "062-900",
+            companyName: tradingName,
+            companyAccount: companyAccount,
+            bsb: bsb,
             paymentDate: run.PaymentDate,
             reference: $"PAYRUN_{runId}",
             payments: paymentDetails,

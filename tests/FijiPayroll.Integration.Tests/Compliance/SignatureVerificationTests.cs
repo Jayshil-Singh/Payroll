@@ -315,21 +315,42 @@ public sealed class SignatureVerificationTests : IDisposable
         decimal paye,
         decimal net)
     {
-        return PayrollLedger.Create(
+        var fnpfEE = gross * 0.08m;
+        var fnpfER = gross * 0.10m;
+
+        string empHash = FijiPayroll.Application.Services.EvidencePack.LedgerIntegrityVerifier.FormatLedgerRecord(
+            PayrollLedgerEmployee.Create(companyId, employeeId, $"Employee-{employeeId}", "123456789", "12345", gross, paye, fnpfEE, fnpfER, net, "temp")
+        );
+        string calculatedHash = FijiPayroll.Application.Services.EvidencePack.DeterministicHashGenerator.ComputeSha256Hash(empHash);
+
+        var ledger = PayrollLedger.Create(
             companyId: companyId,
             payrollRunId: runId,
+            totalGross: gross,
+            totalPaye: paye,
+            totalFnpfEmployee: fnpfEE,
+            totalFnpfEmployer: fnpfER,
+            totalNetPay: net,
+            createdBy: "system",
+            hash: calculatedHash
+        );
+
+        var emp = PayrollLedgerEmployee.Create(
+            companyId: companyId,
             employeeId: employeeId,
             employeeName: $"Employee-{employeeId}",
             employeeTin: "123456789",
             employeeFnpfNumber: "12345",
             gross: gross,
             paye: paye,
-            fnpfEmployee: gross * 0.08m,
-            fnpfEmployer: gross * 0.10m,
+            fnpfEmployee: fnpfEE,
+            fnpfEmployer: fnpfER,
             netPay: net,
-            createdBy: "system",
-            hash: "mockhash"
+            hash: calculatedHash
         );
+
+        ledger.AddEmployee(emp);
+        return ledger;
     }
 
     public void Dispose()

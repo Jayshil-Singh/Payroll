@@ -87,6 +87,11 @@
         <member name="M:FijiPayroll.Application.Common.Exceptions.NotFoundException.#ctor(System.String,System.Object)">
             <inheritdoc/>
         </member>
+        <member name="T:FijiPayroll.Application.Common.Exceptions.TenantContextException">
+            <summary>
+            Thrown when a tenant (company) context is required but not established.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Application.Common.Interfaces.WorkflowResult">
             <summary>
             Encapsulates workflow outcomes.
@@ -110,6 +115,11 @@
         </member>
         <member name="M:FijiPayroll.Application.Common.Interfaces.IApprovalEngine.RejectAsync(System.Guid,System.String,System.String)">
             <summary>Rejects a pending change request.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Common.Interfaces.IAuthSessionStore">
+            <summary>
+            Holds the active authenticated session for the desktop shell.
+            </summary>
         </member>
         <member name="T:FijiPayroll.Application.Common.Interfaces.ICorrelationContext">
             <summary>
@@ -173,6 +183,21 @@
         </member>
         <member name="P:FijiPayroll.Application.Common.Interfaces.IDateTimeService.Today">
             <summary>Current date in UTC (time portion stripped).</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Common.Interfaces.IDigitalSignatureService">
+            <summary>
+            Interface for cryptographic signing and verification of compliance payloads.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Common.Interfaces.IDigitalSignatureService.SignData(System.String)">
+            <summary>
+            Signs the given string data using the machine's RSA key.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Common.Interfaces.IDigitalSignatureService.VerifySignature(System.String,System.String)">
+            <summary>
+            Verifies the given digital signature against the string data.
+            </summary>
         </member>
         <member name="T:FijiPayroll.Application.Common.Interfaces.IEventBus">
             <summary>
@@ -356,6 +381,11 @@
         </member>
         <member name="M:FijiPayroll.Application.Common.Interfaces.MediatRNotificationWrapper`1.#ctor(`0)">
             <summary>Initializes the wrapper.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Common.Models.AuthenticatedSession">
+            <summary>
+            Immutable authenticated user session bound to company scope and permissions.
+            </summary>
         </member>
         <member name="T:FijiPayroll.Application.Common.Models.LicenseFingerprint">
             <summary>
@@ -1541,6 +1571,26 @@
         <member name="P:FijiPayroll.Application.Features.PayrollComponents.Queries.GetPayrollComponentList.PayrollComponentSummaryDto.IsActive">
             <summary>Whether this component is currently active.</summary>
         </member>
+        <member name="T:FijiPayroll.Application.Features.PayrollRuns.Commands.CalculatePayrollRun.CalculatePayrollRunCommand">
+            <summary>
+            Legacy command name retained for API compatibility. Delegates to the canonical payroll pipeline.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.PayrollRuns.Commands.CalculatePayrollRun.CalculatePayrollRunCommand.#ctor(System.Int32,System.Guid)">
+            <summary>
+            Legacy command name retained for API compatibility. Delegates to the canonical payroll pipeline.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.PayrollRuns.Commands.ProcessBatchPayroll.ProcessBatchPayrollCommand">
+            <summary>
+            Batch payroll command. Delegates to the canonical payroll pipeline (same path as CalculatePayrollRun).
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.PayrollRuns.Commands.ProcessBatchPayroll.ProcessBatchPayrollCommand.#ctor(System.Int32,System.Guid)">
+            <summary>
+            Batch payroll command. Delegates to the canonical payroll pipeline (same path as CalculatePayrollRun).
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Application.Features.PayrollRuns.Queries.GetPayrollRunById.PayrollRunDetailDto">
             <summary>
             Detailed DTO for a payroll run, containing its computed employees snapshots and status rules.
@@ -1601,6 +1651,71 @@
         </member>
         <member name="M:FijiPayroll.Application.Features.Workflows.Queries.GetPendingWorkflows.GetPendingWorkflowsQueryHandler.Handle(FijiPayroll.Application.Features.Workflows.Queries.GetPendingWorkflows.GetPendingWorkflowsQuery,System.Threading.CancellationToken)">
             <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Services.BackgroundJobManager">
+            <summary>
+            Thread-safe manager to coordinate, execute, and monitor background tasks in a bounded concurrency execution pattern.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BackgroundJobManager.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Services.BackgroundJobManager})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Services.BackgroundJobManager"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BackgroundJobManager.QueueJobAsync(System.Int32,System.String,System.String,System.String,System.DateTime)">
+            <summary>
+            Enqueues a new background job.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BackgroundJobManager.ExecuteJobAsync(System.Int32)">
+            <summary>
+            Executes a job by loading it from the database and running its worker logic.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BackgroundJobManager.CancelJob(System.Int32)">
+            <summary>
+            Cancels a running background job.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.BatchProcessingCoordinator">
+            <summary>
+            Thread-safe coordinator managing the runtime state of active parallel batch processing calculations.
+            Supports pausing, resuming, querying progress, and cancellation check signals.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BatchProcessingCoordinator.GetOrCreateState(System.Int32)">
+            <summary>
+            Gets or creates the batch processing state for a given run ID.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BatchProcessingCoordinator.RemoveState(System.Int32)">
+            <summary>
+            Removes the tracking state for a completed or aborted run ID.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.BatchProcessingState">
+            <summary>
+            Running state of a single payroll batch run process.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.BatchProcessingState.PayrollRunId">
+            <summary>Gets the unique payroll run ID.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.BatchProcessingState.Progress">
+            <summary>Gets or sets the current execution progress percentage (0 to 100).</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.BatchProcessingState.IsPaused">
+            <summary>Gets or sets a value indicating whether the execution is paused.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BatchProcessingState.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Services.BatchProcessingState"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.BatchProcessingState.WaitIfPausedAsync(System.Threading.CancellationToken)">
+            <summary>
+            Pauses worker threads if the state is configured as paused.
+            </summary>
         </member>
         <member name="T:FijiPayroll.Application.Services.BusinessCalendarService">
             <summary>
@@ -1737,14 +1852,14 @@
             Verifies the integrity of the immutable PayrollLedger records by re-computing and validating their SHA-256 hashes.
             </summary>
         </member>
-        <member name="M:FijiPayroll.Application.Services.EvidencePack.LedgerIntegrityVerifier.VerifyLedgerIntegrity(System.Collections.Generic.IEnumerable{FijiPayroll.Domain.Entities.Payroll.PayrollLedger})">
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.LedgerIntegrityVerifier.VerifyLedgerIntegrity(System.Collections.Generic.IEnumerable{FijiPayroll.Domain.Entities.Payroll.PayrollLedgerEmployee})">
             <summary>
             Computes the master hash for a dataset of ledgers and validates that all individual record hashes match.
             </summary>
             <param name="ledgers">The ledger records to verify.</param>
             <returns>A tuple containing the master hash, the record count, and the overall verification status (PASS or FAIL).</returns>
         </member>
-        <member name="M:FijiPayroll.Application.Services.EvidencePack.LedgerIntegrityVerifier.FormatLedgerRecord(FijiPayroll.Domain.Entities.Payroll.PayrollLedger)">
+        <member name="M:FijiPayroll.Application.Services.EvidencePack.LedgerIntegrityVerifier.FormatLedgerRecord(FijiPayroll.Domain.Entities.Payroll.PayrollLedgerEmployee)">
             <summary>
             Formats a single ledger record deterministically for hashing.
             </summary>
@@ -2063,11 +2178,107 @@
         <member name="M:FijiPayroll.Application.Services.PayrollComponentService.DeleteAsync(System.Int32,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="T:FijiPayroll.Application.Services.PayrollContextBuilder">
+            <summary>
+            Canonical builder for immutable <see cref="T:FijiPayroll.Application.Services.PayrollExecutionContext"/> snapshots.
+            Single source of truth for payroll input assembly.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.PayrollContextBuilder.Build(FijiPayroll.Domain.Entities.Payroll.PayrollRun,System.Guid,System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Services.EmployeeSnapshot},System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Services.PayrollComponentSnapshot},System.Collections.Generic.IReadOnlyList{FijiPayroll.Domain.Entities.Company.TaxBracket},System.Decimal,System.Decimal,FijiPayroll.Domain.Enumerations.VoluntaryDeductionPolicy)">
+            <summary>
+            Builds a full execution context from pre-fetched component snapshots, tax brackets, and FNPF rates.
+            This method is thread-safe and database-free.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.PayrollContextBuilder.BuildAsync(FijiPayroll.Domain.Entities.Payroll.PayrollRun,System.Guid,System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Services.EmployeeSnapshot},FijiPayroll.Domain.Enumerations.VoluntaryDeductionPolicy,System.Threading.CancellationToken)">
+            <summary>
+            Builds a full execution context for a payroll run including statutory rates and component snapshots.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.PayrollContextBuilder.BuildEmployeeSnapshotsAsync(System.Int32,System.Collections.Generic.IReadOnlyList{FijiPayroll.Domain.Entities.Company.Employee},System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Services.PayrollComponentSnapshot},System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            Builds employee snapshots from domain employees, optionally loading staged adjustments.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.ComponentDifference">
+            <summary>
+            Detail representing difference in a specific monetary component.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.ComponentDifference.#ctor(System.String,System.String,System.String,System.Decimal)">
+            <summary>
+            Detail representing difference in a specific monetary component.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.EmployeeDifference">
+            <summary>
+            Detailed differences for a single employee.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.EmployeeDifference.#ctor(System.Int32,System.String,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Services.ComponentDifference})">
+            <summary>
+            Detailed differences for a single employee.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.MetadataDifference">
+            <summary>
+            Metadata or rule/formula changes between runs.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.MetadataDifference.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Metadata or rule/formula changes between runs.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.PayrollDifferenceReport">
+            <summary>
+            Report detailing differences between two payroll runs or snapshots.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.PayrollDifferenceReport.TotalGrossDifference">
+            <summary>Total difference in Gross Pay.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.PayrollDifferenceReport.TotalNetDifference">
+            <summary>Total difference in Net Pay.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.PayrollDifferenceReport.TotalTaxDifference">
+            <summary>Total difference in PAYE Tax.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.PayrollDifferenceReport.TotalFnpfDifference">
+            <summary>Total difference in FNPF contributions.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.PayrollDifferenceReport.EmployeeDifferences">
+            <summary>Employee specific differences.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.PayrollDifferenceReport.MetadataDifferences">
+            <summary>Rule, formula or tax table differences.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.PayrollDifferenceAnalyzer">
+            <summary>
+            Difference analyzer service to compare runs/snapshots and report monetary/rule deltas.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.PayrollDifferenceAnalyzer.CompareRuns(FijiPayroll.Domain.Entities.Payroll.PayrollRun,FijiPayroll.Domain.Entities.Payroll.PayrollRun)">
+            <summary>
+            Compares two payroll runs side-by-side.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.PayrollDifferenceAnalyzer.CompareSnapshots(FijiPayroll.Domain.Entities.Payroll.PayrollSnapshot,FijiPayroll.Domain.Entities.Payroll.PayrollSnapshot)">
+            <summary>
+            Compares two snapshots side-by-side by parsing their context payloads.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Application.Services.PayrollExecutionContext">
             <summary>
             Immutable, thread-safe in-memory context representing the exact execution state for a payroll run.
             Enforces immutability via init-only properties and read-only lists.
             </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.PayrollExecutionContext.FnpfEmployeeRate">
+            <summary>FNPF employee contribution rate as a fraction (e.g. 0.08).</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Services.PayrollExecutionContext.FnpfEmployerRate">
+            <summary>FNPF employer contribution rate as a fraction (e.g. 0.10).</summary>
         </member>
         <member name="P:FijiPayroll.Application.Services.PayrollExecutionContext.Employees">
             <summary>
@@ -2114,6 +2325,31 @@
             Validates the structure and values of the context to ensure mathematical and audit determinism.
             </summary>
         </member>
+        <member name="T:FijiPayroll.Application.Services.PayrollPipelineService">
+            <summary>
+            Canonical payroll execution pipeline. All calculation entry points MUST delegate here.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.PayrollPipelineService.ExecuteAsync(System.Int32,System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Executes the full payroll pipeline: validate → lock → calculate → persist → snapshot → audit.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.PayrollReplayEngine">
+            <summary>
+            Execution engine for loading a frozen payroll snapshot, running computation, and asserting hash equivalence.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.PayrollReplayEngine.#ctor(FijiPayroll.Application.Services.PayrollCalculationEngine)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Services.PayrollReplayEngine"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.PayrollReplayEngine.Replay(FijiPayroll.Domain.Entities.Payroll.PayrollSnapshot,System.String@,System.Decimal@,System.Decimal@,System.Decimal@)">
+            <summary>
+            Replays a frozen snapshot and verifies that the recalculated hash matches the stored snapshot hash.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Application.Services.PayrollRunService">
             <summary>
             Service coordinating transactions and forwarding presentations calls to CQRS.
@@ -2154,6 +2390,26 @@
             Computes a deterministic hash of the payroll execution input configurations.
             </summary>
         </member>
+        <member name="T:FijiPayroll.Application.Services.PayrollValidationIssue">
+            <summary>
+            Result detail of a payroll validation check.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.PayrollValidationIssue.#ctor(System.Nullable{System.Int32},System.String,System.String,System.String,FijiPayroll.Domain.Enumerations.PayrollValidationSeverity,System.String)">
+            <summary>
+            Result detail of a payroll validation check.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.PayrollValidationPipeline">
+            <summary>
+            Pipeline performing statutory completeness, duplicate identification, and banking checks.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.PayrollValidationPipeline.Validate(System.Int32,System.Collections.Generic.IEnumerable{FijiPayroll.Domain.Entities.Company.Employee},System.String,System.String)">
+            <summary>
+            Runs validation checks over the list of employees and configurations.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Application.Services.PayrollValidationService">
             <summary>
             Service validating the input execution context before triggering the payroll run calculation.
@@ -2182,6 +2438,21 @@
         <member name="P:FijiPayroll.Application.Services.ResetOperationContext.IsResetting">
             <summary>
             Gets or sets a value indicating whether the current execution thread is resetting a payroll run.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.RollbackEngine">
+            <summary>
+            Service to perform transaction rollbacks on payroll runs, reversing ledger postings and restoring state parameters.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.RollbackEngine.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Services.RollbackEngine"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Services.RollbackEngine.RollbackAsync(System.Int32,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Rolls back an approved/posted payroll run, writing reversing ledger entries and resetting run state.
             </summary>
         </member>
         <member name="T:FijiPayroll.Application.Services.RulePackageManager">
@@ -2221,37 +2492,7 @@
         </member>
         <member name="T:FijiPayroll.Application.Services.RuleSimulationEngine">
             <summary>
-            Execution engine for running dry-run simulations of statutory rule changes over finalized payroll ledgers.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.Application.Services.RuleSimulationEngine.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Services.RuleSimulationEngine})">
-            <summary>
-            Initializes a new instance of the <see cref="T:FijiPayroll.Application.Services.RuleSimulationEngine"/> class.
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.Application.Services.RuleSimulationEngine.RuleOverride">
-            <summary>
-            Represents a rule override parameter.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.Application.Services.RuleSimulationEngine.RuleOverride.#ctor(System.String,System.String)">
-            <summary>
-            Represents a rule override parameter.
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.Application.Services.RuleSimulationEngine.RuleSimulationResult">
-            <summary>
-            Represents a summary variance report for the entire simulation run.
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.Application.Services.RuleSimulationEngine.EmployeeVariance">
-            <summary>
-            Represents variance details for an individual employee.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.Application.Services.RuleSimulationEngine.SimulateRuleChangeAsync(System.Int32,System.Int32,System.Collections.Generic.List{FijiPayroll.Application.Services.RuleSimulationEngine.RuleOverride},System.Threading.CancellationToken)">
-            <summary>
-            Runs a compliance calculation simulation over the payroll ledger items for a pay run, applying rule overrides in-memory.
+            Compliance simulation engine. Uses the same PAYE/FNPF domain engines as live payroll calculation.
             </summary>
         </member>
         <member name="T:FijiPayroll.Application.Services.SetupWorkflowService">

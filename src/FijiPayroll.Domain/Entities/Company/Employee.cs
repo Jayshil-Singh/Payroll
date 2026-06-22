@@ -17,9 +17,17 @@ public sealed class Employee : SoftDeleteEntity
     private string _branch = string.Empty;
     private string _position = string.Empty;
     private string _email = string.Empty;
+    private string _costCentre = string.Empty;
     private readonly List<EmployeePaymentMethod> _paymentMethods = new();
 
     private Employee() { }
+
+    /// <summary>Gets the cost centre.</summary>
+    public string CostCentre
+    {
+        get => _costCentre;
+        private set => _costCentre = value ?? string.Empty;
+    }
 
     /// <summary>
     /// Foreign key to Company.
@@ -172,7 +180,8 @@ public sealed class Employee : SoftDeleteEntity
         EmploymentType employmentType = EmploymentType.Permanent,
         string branch = "",
         string position = "",
-        string email = "")
+        string email = "",
+        string costCentre = "")
     {
         var employee = new Employee
         {
@@ -190,7 +199,8 @@ public sealed class Employee : SoftDeleteEntity
             EmploymentType = Guard.AgainstInvalidEnum(employmentType),
             Branch = branch,
             Position = position,
-            Email = email
+            Email = email,
+            CostCentre = costCentre
         };
         employee.RecalculateDataQualityScore();
         return employee;
@@ -211,7 +221,8 @@ public sealed class Employee : SoftDeleteEntity
         EmploymentType employmentType,
         string branch,
         string position,
-        string email)
+        string email,
+        string costCentre = "")
     {
         FullName = fullName;
         Tin = tin;
@@ -227,6 +238,7 @@ public sealed class Employee : SoftDeleteEntity
         Branch = branch;
         Position = position;
         Email = email;
+        CostCentre = costCentre;
 
         RecalculateDataQualityScore();
     }

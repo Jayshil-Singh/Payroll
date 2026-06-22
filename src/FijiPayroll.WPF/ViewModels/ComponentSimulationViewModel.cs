@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FijiPayroll.Application.Common.Interfaces;
 using FijiPayroll.Application.Services;
 using FijiPayroll.Domain.Interfaces;
 using FijiPayroll.Shared.Formula;
@@ -19,6 +20,7 @@ public sealed partial class ComponentSimulationViewModel : ObservableObject
 {
     private readonly SimulationEngine _simulationEngine;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ITenantProvider _tenantProvider;
 
     [ObservableProperty]
     private string _expressionText = string.Empty;
@@ -52,10 +54,14 @@ public sealed partial class ComponentSimulationViewModel : ObservableObject
     /// <summary>
     /// Initialises a new instance of the <see cref="ComponentSimulationViewModel"/> class.
     /// </summary>
-    public ComponentSimulationViewModel(SimulationEngine simulationEngine, IUnitOfWork unitOfWork)
+    public ComponentSimulationViewModel(
+        SimulationEngine simulationEngine,
+        IUnitOfWork unitOfWork,
+        ITenantProvider tenantProvider)
     {
         _simulationEngine = simulationEngine;
         _unitOfWork = unitOfWork;
+        _tenantProvider = tenantProvider;
 
         RunSimulationCommand = new AsyncRelayCommand(RunSimulationAsync);
         LoadEmployeesCommand = new AsyncRelayCommand(LoadEmployeesAsync);
@@ -71,7 +77,9 @@ public sealed partial class ComponentSimulationViewModel : ObservableObject
     {
         try
         {
-            var empList = await _unitOfWork.Employees.GetPagedAsync(companyId: 1, searchTerm: null, departmentFilter: null, pageNumber: 1, pageSize: 100);
+            int companyId = _tenantProvider.GetCurrentCompanyId();
+            var empList = await _unitOfWork.Employees.GetPagedAsync(
+                companyId, searchTerm: null, departmentFilter: null, pageNumber: 1, pageSize: 100);
             Employees.Clear();
             foreach (var emp in empList.Items)
             {

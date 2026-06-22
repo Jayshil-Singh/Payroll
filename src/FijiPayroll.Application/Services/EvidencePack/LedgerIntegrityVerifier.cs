@@ -18,7 +18,7 @@ public sealed class LedgerIntegrityVerifier
     /// <param name="ledgers">The ledger records to verify.</param>
     /// <returns>A tuple containing the master hash, the record count, and the overall verification status (PASS or FAIL).</returns>
     public (string MasterHash, int RecordCount, string IntegrityStatus) VerifyLedgerIntegrity(
-        IEnumerable<PayrollLedger> ledgers)
+        IEnumerable<PayrollLedgerEmployee> ledgers)
     {
         if (ledgers == null)
         {
@@ -63,12 +63,12 @@ public sealed class LedgerIntegrityVerifier
     /// <summary>
     /// Formats a single ledger record deterministically for hashing.
     /// </summary>
-    public static string FormatLedgerRecord(PayrollLedger r)
+    public static string FormatLedgerRecord(PayrollLedgerEmployee r)
     {
         return string.Format(CultureInfo.InvariantCulture,
             "ledger:{0}:{1}:{2}:{3}:{4}:{5}:{6}",
             r.EmployeeId,
-            r.PayrollRunId,
+            r.PayrollLedgerId,
             NormalizeDecimal(r.Gross),
             NormalizeDecimal(r.PAYE),
             NormalizeDecimal(r.FNPFEmployee),

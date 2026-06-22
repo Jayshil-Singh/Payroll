@@ -1,5 +1,6 @@
 using FijiPayroll.Application.Common.Interfaces;
 using FijiPayroll.Application.Services;
+using FijiPayroll.Persistence.Interceptors;
 using FijiPayroll.WPF.Infrastructure;
 using FijiPayroll.WPF.Services;
 using FijiPayroll.WPF.ViewModels;
@@ -27,6 +28,10 @@ public static class DependencyInjection
         services.AddSingleton<ILoadingService, LoadingService>();
         services.AddSingleton<IApplicationStateStore, ApplicationStateStore>();
         services.AddSingleton<ITenantProvider, WpfTenantProvider>();
+        services.AddSingleton<IAuthSessionStore, AuthSessionStore>();
+        services.AddSingleton<WpfSessionIdentityService>();
+        services.AddSingleton<ICurrentUserService>(sp => sp.GetRequiredService<WpfSessionIdentityService>());
+        services.AddSingleton<ICurrentUserAccessor>(sp => sp.GetRequiredService<WpfSessionIdentityService>());
 
         // ILogBuffer is registered in App.xaml.cs before BuildServiceProvider (needs shared instance)
         // so we do not re-register it here.
@@ -52,6 +57,7 @@ public static class DependencyInjection
         services.AddTransient<LogViewerViewModel>();
         services.AddTransient<ComplianceCenterViewModel>();
         services.AddTransient<DiagnosticsDashboardViewModel>();
+        services.AddTransient<PayrollConsoleViewModel>();
 
         // Existing feature ViewModels
         services.AddTransient<PayrollComponentViewModel>();
@@ -59,7 +65,7 @@ public static class DependencyInjection
         services.AddTransient<PayrollComponentFormViewModel>(sp =>
             new PayrollComponentFormViewModel(
                 sp.GetRequiredService<IPayrollComponentService>(),
-                companyId: 1)); // Default company; replace with ITenantProvider if multi-company needed
+                sp.GetRequiredService<ITenantProvider>().GetCurrentCompanyId()));
         services.AddTransient<PayrollRunViewModel>();
         services.AddTransient<MasterLookupManagerViewModel>();
         services.AddTransient<ApprovalDashboardViewModel>();
@@ -85,6 +91,7 @@ public static class DependencyInjection
         services.AddTransient<CompanySetupDashboardView>();
         services.AddTransient<ComplianceCenterView>();
         services.AddTransient<DiagnosticsDashboardView>();
+        services.AddTransient<PayrollConsoleView>();
 
         return services;
     }

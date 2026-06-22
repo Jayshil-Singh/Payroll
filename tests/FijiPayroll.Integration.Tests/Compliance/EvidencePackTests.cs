@@ -123,30 +123,29 @@ public sealed class EvidencePackTests : IDisposable
         var verifier = new LedgerIntegrityVerifier();
 
         var ledger = CreateMockLedger(companyId: 1, runId: 100, employeeId: 10, gross: 2000m, paye: 200m, net: 1640m);
-        var ledgers = new List<PayrollLedger> { ledger };
+        var ledgers = ledger.Employees;
 
         // Act 1: Verify valid record
         var result1 = verifier.VerifyLedgerIntegrity(ledgers);
         result1.IntegrityStatus.Should().Be("PASS");
 
         // Act 2: Tamper with record (mutate Gross but keep old Hash)
-        var tamperedLedger = PayrollLedger.Create(
-            companyId: ledger.CompanyId,
-            payrollRunId: ledger.PayrollRunId,
-            employeeId: ledger.EmployeeId,
-            employeeName: ledger.EmployeeName,
-            employeeTin: ledger.EmployeeTin,
-            employeeFnpfNumber: ledger.EmployeeFnpfNumber,
+        var originalEmp = ledger.Employees.First();
+        var tamperedEmp = PayrollLedgerEmployee.Create(
+            companyId: originalEmp.CompanyId,
+            employeeId: originalEmp.EmployeeId,
+            employeeName: originalEmp.EmployeeName,
+            employeeTin: originalEmp.EmployeeTin,
+            employeeFnpfNumber: originalEmp.EmployeeFnpfNumber,
             gross: 2500m, // Tampered!
-            paye: ledger.PAYE,
-            fnpfEmployee: ledger.FNPFEmployee,
-            fnpfEmployer: ledger.FNPFEmployer,
-            netPay: ledger.NetPay,
-            createdBy: ledger.CreatedBy,
-            hash: ledger.Hash // Original Hash
+            paye: originalEmp.PAYE,
+            fnpfEmployee: originalEmp.FNPFEmployee,
+            fnpfEmployer: originalEmp.FNPFEmployer,
+            netPay: originalEmp.NetPay,
+            hash: originalEmp.Hash // Original Hash
         );
 
-        var result2 = verifier.VerifyLedgerIntegrity(new[] { tamperedLedger });
+        var result2 = verifier.VerifyLedgerIntegrity(new[] { tamperedEmp });
 
         // Assert
         result2.IntegrityStatus.Should().Be("FAIL");
@@ -273,33 +272,42 @@ public sealed class EvidencePackTests : IDisposable
         decimal paye,
         decimal net)
     {
-        string recordString = string.Format(System.Globalization.CultureInfo.InvariantCulture,
-            "ledger:{0}:{1}:{2}:{3}:{4}:{5}:{6}",
-            employeeId,
-            runId,
-            gross.ToString("G29", System.Globalization.CultureInfo.InvariantCulture),
-            paye.ToString("G29", System.Globalization.CultureInfo.InvariantCulture),
-            (gross * 0.08m).ToString("G29", System.Globalization.CultureInfo.InvariantCulture),
-            (gross * 0.10m).ToString("G29", System.Globalization.CultureInfo.InvariantCulture),
-            net.ToString("G29", System.Globalization.CultureInfo.InvariantCulture));
+        var fnpfEE = gross * 0.08m;
+        var fnpfER = gross * 0.10m;
 
-        string calculatedHash = DeterministicHashGenerator.ComputeSha256Hash(recordString);
+        string empHash = FijiPayroll.Application.Services.EvidencePack.LedgerIntegrityVerifier.FormatLedgerRecord(
+            PayrollLedgerEmployee.Create(companyId, employeeId, $"Employee-{employeeId}", "123456789", "12345", gross, paye, fnpfEE, fnpfER, net, "temp")
+        );
+        string calculatedHash = FijiPayroll.Application.Services.EvidencePack.DeterministicHashGenerator.ComputeSha256Hash(empHash);
 
-        return PayrollLedger.Create(
+        var ledger = PayrollLedger.Create(
             companyId: companyId,
             payrollRunId: runId,
+            totalGross: gross,
+            totalPaye: paye,
+            totalFnpfEmployee: fnpfEE,
+            totalFnpfEmployer: fnpfER,
+            totalNetPay: net,
+            createdBy: "system",
+            hash: calculatedHash
+        );
+
+        var emp = PayrollLedgerEmployee.Create(
+            companyId: companyId,
             employeeId: employeeId,
             employeeName: $"Employee-{employeeId}",
             employeeTin: "123456789",
             employeeFnpfNumber: "12345",
             gross: gross,
             paye: paye,
-            fnpfEmployee: gross * 0.08m,
-            fnpfEmployer: gross * 0.10m,
+            fnpfEmployee: fnpfEE,
+            fnpfEmployer: fnpfER,
             netPay: net,
-            createdBy: "system",
             hash: calculatedHash
         );
+
+        ledger.AddEmployee(emp);
+        return ledger;
     }
 
     public void Dispose()

@@ -69,6 +69,7 @@ public static class DependencyInjection
         services.AddScoped<IEvidencePackSignatureService, FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackSignatureService>();
         services.AddScoped<ISignatureVerifierService, FijiPayroll.Infrastructure.Services.ComplianceEvidence.SignatureVerifierService>();
         services.AddScoped<IEvidencePackGeneratorService, FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackGeneratorService>();
+        services.AddScoped<IDigitalSignatureService, FijiPayroll.Infrastructure.Services.EvidencePack.DigitalSignatureService>();
 
         return services;
     }

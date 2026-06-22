@@ -101,10 +101,6 @@ public partial class App : System.Windows.Application
                 var configuration = new ConfigurationBuilder().Build();
                 services.AddInfrastructure(configuration);
 
-                // Security
-                services.AddSingleton<WpfCurrentUserService>();
-                services.AddSingleton<ICurrentUserService>(sp => sp.GetRequiredService<WpfCurrentUserService>());
-                services.AddSingleton<ICurrentUserAccessor>(sp => sp.GetRequiredService<WpfCurrentUserService>());
 
                 // WPF presentation layer (ViewModels, Views, Shell services)
                 services.AddPresentation();
@@ -119,7 +115,7 @@ public partial class App : System.Windows.Application
 
                 using var scope = _serviceProvider.CreateScope();
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                await context.Database.EnsureCreatedAsync();
+                await context.Database.MigrateAsync();
                 
                 // Initialize database tables for dynamic plugins
                 var pluginLoader = _serviceProvider.GetRequiredService<PluginLoader>();
@@ -154,6 +150,10 @@ public partial class App : System.Windows.Application
                 var stateStore = _serviceProvider.GetRequiredService<IApplicationStateStore>();
                 await stateStore.LoadPersistedStateAsync();
                 _logger.LogInformation("Application state restored.");
+
+                var authSessionStore = _serviceProvider.GetRequiredService<IAuthSessionStore>();
+                AuthSessionBootstrap.Initialize(authSessionStore, stateStore);
+                _logger.LogInformation("Authenticated session established for company {CompanyId}.", stateStore.CurrentCompanyId);
 
                 // ── Stage 5: Start Monitors ──────────────────────────────────────────
                 splash.UpdateProgress(90, "Starting Services", "Launching watchdog monitors...");

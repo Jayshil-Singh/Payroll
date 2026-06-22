@@ -79,4 +79,15 @@ public static class FijiTaxConstants
 
     /// <summary>System component code for basic salary/wage.</summary>
     public const string BasicSalaryComponentCode = "BASIC";
+
+    // ─── Active Tax Table Version ───────────────────────────────────────────────
+
+    /// <summary>Active FRCS tax bracket version applied during payroll calculation.</summary>
+    public const string CurrentTaxVersion = "2025-2026";
+
+    /// <summary>Default FNPF employee rate as a fraction (8%).</summary>
+    public const decimal DefaultFnpfEmployeeRate = FnpfEmployeeRatePercent / 100m;
+
+    /// <summary>Default FNPF employer rate as a fraction (10%).</summary>
+    public const decimal DefaultFnpfEmployerRate = FnpfEmployerRatePercent / 100m;
 }

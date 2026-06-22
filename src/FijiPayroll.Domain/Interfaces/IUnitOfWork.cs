@@ -37,6 +37,30 @@ public interface IUnitOfWork : IDisposable
     /// <summary>Repository for Compliance aggregate operations.</summary>
     IComplianceRepository Compliance { get; }
 
+    /// <summary>Repository for payroll periods.</summary>
+    IPayrollPeriodRepository PayrollPeriods { get; }
+
+    /// <summary>Repository for payroll groups.</summary>
+    IPayrollGroupRepository PayrollGroups { get; }
+
+    /// <summary>Repository for payroll adjustments.</summary>
+    IPayrollAdjustmentRepository PayrollAdjustments { get; }
+
+    /// <summary>Repository for payroll snapshots.</summary>
+    IPayrollSnapshotRepository PayrollSnapshots { get; }
+
+    /// <summary>Repository for payroll exception queues.</summary>
+    IPayrollExceptionQueueRepository PayrollExceptionQueues { get; }
+
+    /// <summary>Repository for payroll run histories.</summary>
+    IPayrollRunHistoryRepository PayrollRunHistories { get; }
+
+    /// <summary>Repository for background jobs.</summary>
+    IBackgroundJobRepository BackgroundJobs { get; }
+
+    /// <summary>Repository for payroll ledger reversals.</summary>
+    IPayrollLedgerReversalRepository PayrollLedgerReversals { get; }
+
     /// <summary>
     /// Persists all pending changes tracked by EF Core to the database in a single
     /// atomic operation.

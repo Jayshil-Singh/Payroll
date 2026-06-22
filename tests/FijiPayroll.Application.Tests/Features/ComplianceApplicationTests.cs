@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FijiPayroll.Application.Services;
+using FijiPayroll.Domain.Entities.Company;
 using FijiPayroll.Domain.Entities.Payroll;
 using FijiPayroll.Domain.Interfaces;
 using FijiPayroll.SDK.Contracts;
@@ -32,9 +33,8 @@ public sealed class ComplianceApplicationTests
     public async Task SimulateRuleChangeAsync_ShouldCalculateVariances_Correctly()
     {
         // Arrange
-        var ledger1 = PayrollLedger.Create(
+        var ledger1 = PayrollLedgerEmployee.Create(
             companyId: 1,
-            payrollRunId: 100,
             employeeId: 10,
             employeeName: "John Doe",
             employeeTin: "999888777",
@@ -44,13 +44,36 @@ public sealed class ComplianceApplicationTests
             fnpfEmployee: 80m,  // 8% of 1000
             fnpfEmployer: 100m, // 10% of 1000
             netPay: 820m,
-            createdBy: "admin",
             hash: "mock-ledger-hash"
         );
 
-        var ledgersList = new List<PayrollLedger> { ledger1 };
+        var ledgersList = new List<PayrollLedgerEmployee> { ledger1 };
         _unitOfWork.Compliance.GetLedgerByRunIdAsync(100, Arg.Any<CancellationToken>())
             .Returns(ledgersList);
+
+        var mockRun = PayrollRun.Create(
+            companyId: 1,
+            runCode: "RUN-100",
+            periodName: "June 2026",
+            startDate: DateTime.UtcNow.AddDays(-30),
+            endDate: DateTime.UtcNow,
+            paymentDate: DateTime.UtcNow,
+            frequency: FijiPayroll.Domain.Enumerations.PayrollFrequencyType.Monthly,
+            description: "Mock run for simulation tests"
+        );
+        _unitOfWork.PayrollRuns.GetByIdWithDetailsAsync(100, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<PayrollRun?>(mockRun));
+
+        var taxBrackets = new List<TaxBracket>
+        {
+            TaxBracket.Create("2025-2026", "Resident", FijiPayroll.Domain.Enumerations.PayrollFrequencyType.Monthly, 0m, 30000m, 0.00m, 0m, true, DateTime.UtcNow),
+            TaxBracket.Create("2025-2026", "Resident", FijiPayroll.Domain.Enumerations.PayrollFrequencyType.Monthly, 30000m, 50000m, 0.18m, 0m, true, DateTime.UtcNow),
+            TaxBracket.Create("2025-2026", "Resident", FijiPayroll.Domain.Enumerations.PayrollFrequencyType.Monthly, 50000m, 270000m, 0.20m, 3600m, true, DateTime.UtcNow),
+            TaxBracket.Create("2025-2026", "Resident", FijiPayroll.Domain.Enumerations.PayrollFrequencyType.Monthly, 270000m, 300000m, 0.20m, 47600m, true, DateTime.UtcNow),
+            TaxBracket.Create("2025-2026", "Resident", FijiPayroll.Domain.Enumerations.PayrollFrequencyType.Monthly, 300000m, 999999999m, 0.20m, 53600m, true, DateTime.UtcNow)
+        };
+        _unitOfWork.TaxBrackets.GetBracketsByVersionAndFrequencyAsync("2025-2026", FijiPayroll.Domain.Enumerations.PayrollFrequencyType.Monthly, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<TaxBracket>>(taxBrackets));
 
         // Define rule overrides (change FNPF employee rate to 10% and employer rate to 12% in simulation)
         var overrides = new List<RuleSimulationEngine.RuleOverride>

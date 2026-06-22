@@ -7,34 +7,37 @@ namespace FijiPayroll.Domain.Rules.PayrollRules;
 /// </summary>
 public static class PayrollDeductionEngine
 {
-    private const decimal FnpfEmployeeRate = 0.08m;
-    private const decimal FnpfEmployerRate = 0.10m;
-
     /// <summary>
-    /// Calculates the FNPF employee portion (8% of applicable gross) rounded half up.
+    /// Calculates the FNPF employee portion rounded half up.
     /// </summary>
-    public static decimal CalculateEmployeeFnpf(decimal fnpfApplicableGross, bool isExempt)
+    public static decimal CalculateEmployeeFnpf(
+        decimal fnpfApplicableGross,
+        bool isExempt,
+        decimal employeeRate)
     {
-        if (isExempt || fnpfApplicableGross <= 0)
+        if (isExempt || fnpfApplicableGross <= 0 || employeeRate <= 0)
         {
             return 0m;
         }
 
-        decimal contribution = fnpfApplicableGross * FnpfEmployeeRate;
+        decimal contribution = fnpfApplicableGross * employeeRate;
         return Math.Round(contribution, 2, MidpointRounding.AwayFromZero);
     }
 
     /// <summary>
-    /// Calculates the FNPF employer portion (10% of applicable gross) rounded half up.
+    /// Calculates the FNPF employer portion rounded half up.
     /// </summary>
-    public static decimal CalculateEmployerFnpf(decimal fnpfApplicableGross, bool isExempt)
+    public static decimal CalculateEmployerFnpf(
+        decimal fnpfApplicableGross,
+        bool isExempt,
+        decimal employerRate)
     {
-        if (isExempt || fnpfApplicableGross <= 0)
+        if (isExempt || fnpfApplicableGross <= 0 || employerRate <= 0)
         {
             return 0m;
         }
 
-        decimal contribution = fnpfApplicableGross * FnpfEmployerRate;
+        decimal contribution = fnpfApplicableGross * employerRate;
         return Math.Round(contribution, 2, MidpointRounding.AwayFromZero);
     }
 }

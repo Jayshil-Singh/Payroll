@@ -63,4 +63,13 @@ public interface ISetupRepository
 
     /// <summary>Removes the setup state and all associated tasks for a company.</summary>
     Task RemoveSetupStateAsync(int companyId, CancellationToken cancellationToken);
+
+    /// <summary>Gets the active FNPF configuration for a company, if configured.</summary>
+    Task<FnpfConfiguration?> GetActiveFnpfConfigurationAsync(int companyId, CancellationToken cancellationToken = default);
+
+    /// <summary>Retrieves a bank master by its ID.</summary>
+    Task<BankMaster?> GetBankMasterByIdAsync(int id, CancellationToken cancellationToken = default);
+
+    /// <summary>Retrieves a bank branch by its ID.</summary>
+    Task<BankBranch?> GetBankBranchByIdAsync(int id, CancellationToken cancellationToken = default);
 }

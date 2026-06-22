@@ -1,4 +1,5 @@
 using FijiPayroll.Domain.Entities.Company;
+using FijiPayroll.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -28,12 +29,14 @@ internal sealed class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
                .IsRequired();
 
         builder.Property(x => x.Tin)
-               .HasColumnType("nvarchar(20)")
-               .IsRequired();
+               .HasColumnType("nvarchar(1000)")
+               .IsRequired()
+               .HasConversion<TenantEncryptionValueConverter>();
 
         builder.Property(x => x.FnpfNumber)
-               .HasColumnType("nvarchar(20)")
-               .IsRequired();
+               .HasColumnType("nvarchar(1000)")
+               .IsRequired()
+               .HasConversion<TenantEncryptionValueConverter>();
 
         builder.Property(x => x.ResidencyStatus)
                .HasColumnType("nvarchar(50)")
@@ -107,12 +110,14 @@ internal sealed class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
               .IsRequired(false);
 
             pm.Property(p => p.BankAccountNumber)
-              .HasColumnType("nvarchar(50)")
-              .IsRequired(false);
+              .HasColumnType("nvarchar(1000)")
+              .IsRequired(false)
+              .HasConversion<TenantEncryptionValueConverter>();
 
             pm.Property(p => p.BankSortCode)
-              .HasColumnType("nvarchar(20)")
-              .IsRequired(false);
+              .HasColumnType("nvarchar(1000)")
+              .IsRequired(false)
+              .HasConversion<TenantEncryptionValueConverter>();
 
             pm.Property(p => p.MobileNumber)
               .HasColumnType("nvarchar(20)")

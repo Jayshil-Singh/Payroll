@@ -22,7 +22,8 @@ public interface IComplianceRepository
     Task AddBatchAsync(ComplianceBatch batch, CancellationToken cancellationToken = default);
 
     // PayrollLedger
-    Task<IReadOnlyList<PayrollLedger>> GetLedgerByRunIdAsync(int payrollRunId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<PayrollLedgerEmployee>> GetLedgerByRunIdAsync(int payrollRunId, CancellationToken cancellationToken = default);
+    Task<PayrollLedger?> GetLedgerHeaderByRunIdAsync(int payrollRunId, CancellationToken cancellationToken = default);
     Task AddLedgerAsync(PayrollLedger ledger, CancellationToken cancellationToken = default);
 
     // ComplianceEvent

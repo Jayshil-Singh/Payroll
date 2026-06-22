@@ -20,6 +20,11 @@ internal sealed class PayrollRunEmployeeConfiguration : IEntityTypeConfiguration
         builder.Property(x => x.PayrollRunId)
                .IsRequired();
 
+        builder.HasOne(x => x.PayrollRun)
+               .WithMany()
+               .HasForeignKey(x => x.PayrollRunId)
+               .OnDelete(DeleteBehavior.Cascade);
+
         builder.Property(x => x.EmployeeId)
                .IsRequired();
 
@@ -88,13 +93,13 @@ internal sealed class PayrollRunEmployeeConfiguration : IEntityTypeConfiguration
 
         // 1-to-1 trace navigation mapping
         builder.HasOne(x => x.Trace)
-               .WithOne()
+               .WithOne(x => x.PayrollRunEmployee)
                .HasForeignKey<PayrollRunEmployeeTrace>(x => x.PayrollRunEmployeeId)
                .OnDelete(DeleteBehavior.Restrict);
 
         // One-to-many relationship lines mapping with Cascade Delete
         builder.HasMany(x => x.LineItems)
-               .WithOne()
+               .WithOne(x => x.PayrollRunEmployee)
                .HasForeignKey(x => x.PayrollRunEmployeeId)
                .OnDelete(DeleteBehavior.Cascade);
 

@@ -52,8 +52,8 @@ public sealed class EvidencePackSignatureService : IEvidencePackSignatureService
         var appVer = _buildVersionProvider.GetApplicationVersion();
 
         // Query the deterministic ledger timestamp from the database to guarantee byte-level determinism
-        var ledgers = await _unitOfWork.Compliance.GetLedgerByRunIdAsync(payrollRunId, cancellationToken);
-        var timestamp = ledgers.FirstOrDefault()?.CreatedUtc ?? DateTime.UtcNow;
+        var ledgerHeader = await _unitOfWork.Compliance.GetLedgerHeaderByRunIdAsync(payrollRunId, cancellationToken);
+        var timestamp = ledgerHeader?.CreatedUtc ?? DateTime.UtcNow;
 
         var manifestObj = new
         {

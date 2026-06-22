@@ -157,4 +157,28 @@ public sealed class SetupRepository : ISetupRepository
             _context.CompanySetupStates.Remove(state);
         }
     }
+
+    /// <inheritdoc />
+    public async Task<FnpfConfiguration?> GetActiveFnpfConfigurationAsync(int companyId, CancellationToken cancellationToken = default)
+    {
+        return await _context.FnpfConfigurations
+            .Where(x => x.CompanyId == companyId && x.IsActive && !x.IsDeleted)
+            .OrderByDescending(x => x.EffectiveDate)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<BankMaster?> GetBankMasterByIdAsync(int id, CancellationToken cancellationToken = default)
+    {
+        return await _context.BankMasters
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<BankBranch?> GetBankBranchByIdAsync(int id, CancellationToken cancellationToken = default)
+    {
+        return await _context.BankBranches
+            .Include(x => x.BankMaster)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
 }

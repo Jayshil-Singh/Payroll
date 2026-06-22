@@ -20,6 +20,9 @@ public sealed class PayrollRunLineItem : BaseEntity
     /// </summary>
     public int PayrollRunEmployeeId { get; private set; }
 
+    /// <summary>Navigation to parent run employee for tenant-scoped queries.</summary>
+    public PayrollRunEmployee PayrollRunEmployee { get; private set; } = null!;
+
     /// <summary>
     /// The specific database component ID referenced at calculation time.
     /// </summary>

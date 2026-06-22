@@ -48,6 +48,8 @@ public static class DependencyInjection
         services.AddScoped<IPayrollRunService, PayrollRunService>();
         services.AddScoped<PayrollCalculationEngine>();
         services.AddScoped<PayrollValidationService>();
+        services.AddScoped<PayrollContextBuilder>();
+        services.AddScoped<PayrollPipelineService>();
         services.AddScoped<IFiscalCalendarGenerator, FiscalCalendarGenerator>();
         services.AddScoped<IPayScheduleGenerator, PayScheduleGenerator>();
         services.AddScoped<ISetupWorkflowService, SetupWorkflowService>();
@@ -59,6 +61,14 @@ public static class DependencyInjection
         services.AddScoped<RuleSimulationEngine>();
         services.AddScoped<ComplianceValidationService>();
         services.AddScoped<FijiPayroll.Shared.Formula.RuleExecutionPipeline>();
+
+        // ── Phase 15 Enterprise Platform Services ───────────────
+        services.AddSingleton<BatchProcessingCoordinator>();
+        services.AddScoped<PayrollValidationPipeline>();
+        services.AddScoped<PayrollReplayEngine>();
+        services.AddScoped<PayrollDifferenceAnalyzer>();
+        services.AddSingleton<BackgroundJobManager>();
+        services.AddScoped<RollbackEngine>();
 
         return services;
     }

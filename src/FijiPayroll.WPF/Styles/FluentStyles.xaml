@@ -40,6 +40,9 @@
     <DataTemplate DataType="{x:Type vm:DiagnosticsDashboardViewModel}">
         <v:DiagnosticsDashboardView />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:PayrollConsoleViewModel}">
+        <v:PayrollConsoleView />
+    </DataTemplate>
 
     <!-- Fonts -->
     <FontFamily x:Key="FontMain">Segoe UI, Segoe UI Semibold, Arial</FontFamily>

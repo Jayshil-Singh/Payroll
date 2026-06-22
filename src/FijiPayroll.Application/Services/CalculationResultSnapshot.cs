@@ -1,4 +1,5 @@
 using FijiPayroll.Domain.Enumerations;
+using FijiPayroll.Domain.Events;
 using System;
 using System.Collections.Generic;
 
@@ -13,6 +14,7 @@ public sealed class CalculationResultSnapshot
     public string SnapshotHash { get; init; } = string.Empty;
     public Guid CalculationRequestId { get; init; }
     public IReadOnlyList<CalculatedEmployeeResult> Employees { get; init; } = Array.Empty<CalculatedEmployeeResult>();
+    public IReadOnlyList<PayrollAuditEvent> AuditEvents { get; init; } = Array.Empty<PayrollAuditEvent>();
 }
 
 /// <summary>
@@ -37,6 +39,10 @@ public sealed class CalculatedEmployeeResult
     public string TaxVersionUsed { get; init; } = string.Empty;
     public string TraceText { get; init; } = string.Empty;
     public IReadOnlyList<CalculatedLineItemResult> LineItems { get; init; } = Array.Empty<CalculatedLineItemResult>();
+    public IReadOnlyList<PayrollAuditEvent> AuditEvents { get; init; } = Array.Empty<PayrollAuditEvent>();
+    public bool IsSuccess { get; init; } = true;
+    public string? ErrorMessage { get; init; }
+    public string? ErrorStackTrace { get; init; }
 }
 
 /// <summary>

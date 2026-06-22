@@ -19,6 +19,13 @@ public sealed class PayrollExecutionContext
     public PayrollFrequencyType Frequency { get; init; }
     public string TaxVersion { get; init; } = string.Empty;
     public Guid CalculationRequestId { get; init; }
+    public VoluntaryDeductionPolicy VoluntaryDeductionPolicy { get; init; } = VoluntaryDeductionPolicy.CarryForwardRemainder;
+
+    /// <summary>FNPF employee contribution rate as a fraction (e.g. 0.08).</summary>
+    public decimal FnpfEmployeeRate { get; init; }
+
+    /// <summary>FNPF employer contribution rate as a fraction (e.g. 0.10).</summary>
+    public decimal FnpfEmployerRate { get; init; }
 
     /// <summary>
     /// Snapshots of employees to compute, ordered by EmployeeId at database level.

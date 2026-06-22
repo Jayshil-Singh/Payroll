@@ -84,6 +84,14 @@ public sealed class UnitOfWork : IUnitOfWork
         Workflows = workflows ?? new ApprovalWorkflowRepository(context);
         Setup = setup ?? new SetupRepository(context);
         Compliance = compliance ?? new ComplianceRepository(context);
+        PayrollPeriods = new PayrollPeriodRepository(context);
+        PayrollGroups = new PayrollGroupRepository(context);
+        PayrollAdjustments = new PayrollAdjustmentRepository(context);
+        PayrollSnapshots = new PayrollSnapshotRepository(context);
+        PayrollExceptionQueues = new PayrollExceptionQueueRepository(context);
+        PayrollRunHistories = new PayrollRunHistoryRepository(context);
+        BackgroundJobs = new BackgroundJobRepository(context);
+        PayrollLedgerReversals = new PayrollLedgerReversalRepository(context);
     }
 
     /// <inheritdoc/>
@@ -115,6 +123,30 @@ public sealed class UnitOfWork : IUnitOfWork
 
     /// <inheritdoc/>
     public IComplianceRepository Compliance { get; }
+
+    /// <inheritdoc/>
+    public IPayrollPeriodRepository PayrollPeriods { get; }
+
+    /// <inheritdoc/>
+    public IPayrollGroupRepository PayrollGroups { get; }
+
+    /// <inheritdoc/>
+    public IPayrollAdjustmentRepository PayrollAdjustments { get; }
+
+    /// <inheritdoc/>
+    public IPayrollSnapshotRepository PayrollSnapshots { get; }
+
+    /// <inheritdoc/>
+    public IPayrollExceptionQueueRepository PayrollExceptionQueues { get; }
+
+    /// <inheritdoc/>
+    public IPayrollRunHistoryRepository PayrollRunHistories { get; }
+
+    /// <inheritdoc/>
+    public IBackgroundJobRepository BackgroundJobs { get; }
+
+    /// <inheritdoc/>
+    public IPayrollLedgerReversalRepository PayrollLedgerReversals { get; }
 
     /// <inheritdoc/>
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

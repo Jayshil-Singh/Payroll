@@ -27,6 +27,9 @@ public sealed class PayrollRunEmployee : BaseEntity
     /// </summary>
     public int PayrollRunId { get; private set; }
 
+    /// <summary>Navigation to parent payroll run for tenant-scoped queries.</summary>
+    public PayrollRun PayrollRun { get; private set; } = null!;
+
     /// <summary>
     /// Reference identifier for the employee.
     /// </summary>

@@ -41,5 +41,10 @@ internal sealed class PayrollRunStateHistoryConfiguration : IEntityTypeConfigura
         builder.Property(x => x.Notes)
                .HasColumnType("nvarchar(500)")
                .IsRequired(false);
+
+        builder.HasOne(x => x.PayrollRun)
+               .WithMany()
+               .HasForeignKey(x => x.PayrollRunId)
+               .OnDelete(DeleteBehavior.Cascade);
     }
 }

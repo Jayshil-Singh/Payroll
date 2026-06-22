@@ -4,6 +4,11 @@
         <name>FijiPayroll.Persistence</name>
     </assembly>
     <members>
+        <member name="T:FijiPayroll.Persistence.ApplicationDbContextFactory">
+            <summary>
+            Design-time factory for EF Core migrations tooling.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Persistence.Configurations.Audit.ApprovalWorkflowConfiguration">
             <summary>
             EF Core configuration mapping for the ApprovalWorkflow entity.
@@ -420,6 +425,18 @@
         <member name="M:FijiPayroll.Persistence.Interceptors.AuditLogInterceptor.SavedChangesAsync(Microsoft.EntityFrameworkCore.Diagnostics.SaveChangesCompletedEventData,System.Int32,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="T:FijiPayroll.Persistence.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:FijiPayroll.Persistence.Repositories.ApprovalWorkflowRepository">
             <summary>
             EF Core repository implementation for the <see cref="T:FijiPayroll.Domain.Entities.Audit.ApprovalWorkflow"/> entity.
@@ -568,6 +585,12 @@
         <member name="M:FijiPayroll.Persistence.Repositories.PayrollRunRepository.GetPagedAsync(System.Int32,System.Nullable{FijiPayroll.Domain.Enumerations.PayrollFrequencyType},System.Nullable{FijiPayroll.Domain.Enumerations.PayrollRunStatus},System.Int32,System.Int32,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollRunRepository.GetByPeriodIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollRunRepository.Update(FijiPayroll.Domain.Entities.Payroll.PayrollRun)">
+            <inheritdoc />
+        </member>
         <member name="T:FijiPayroll.Persistence.Repositories.SearchIndexRepository">
             <summary>
             EF Core repository implementation for the <see cref="T:FijiPayroll.Domain.Entities.Audit.SearchIndex"/> entity.
@@ -649,6 +672,15 @@
         <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.RemoveSetupStateAsync(System.Int32,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetActiveFnpfConfigurationAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetBankMasterByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetBankBranchByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
         <member name="T:FijiPayroll.Persistence.Repositories.TaxBracketRepository">
             <summary>
             Entity Framework Core implementation of the ITaxBracketRepository.
@@ -717,6 +749,30 @@
             <inheritdoc/>
         </member>
         <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.Compliance">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollPeriods">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollGroups">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollAdjustments">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollSnapshots">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollExceptionQueues">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollRunHistories">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.BackgroundJobs">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollLedgerReversals">
             <inheritdoc/>
         </member>
         <member name="M:FijiPayroll.Persistence.Repositories.UnitOfWork.SaveChangesAsync(System.Threading.CancellationToken)">

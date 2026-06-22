@@ -11,6 +11,8 @@ using FijiPayroll.Application.Services;
 using FijiPayroll.Domain.Entities.Company;
 using FijiPayroll.Domain.Entities.Payroll;
 using FijiPayroll.Domain.Enumerations;
+using FijiPayroll.Domain.Events;
+using FijiPayroll.Domain.Exceptions;
 using FijiPayroll.Domain.Interfaces;
 using FijiPayroll.Persistence.Context;
 using FijiPayroll.Persistence.Interceptors;
@@ -42,6 +44,10 @@ public sealed class PayrollRunIntegrationTests : IDisposable
 
     private readonly PayrollCalculationEngine _calculationEngine;
     private readonly PayrollValidationService _validationService;
+    private readonly PayrollContextBuilder _contextBuilder;
+    private readonly PayrollValidationPipeline _validationPipeline;
+    private readonly BatchProcessingCoordinator _coordinator;
+    private readonly PayrollPipelineService _pipeline;
 
     public PayrollRunIntegrationTests()
     {
@@ -73,6 +79,17 @@ public sealed class PayrollRunIntegrationTests : IDisposable
 
         _calculationEngine = new PayrollCalculationEngine();
         _validationService = new PayrollValidationService();
+        _contextBuilder = new PayrollContextBuilder(_unitOfWork);
+        _validationPipeline = new PayrollValidationPipeline();
+        _coordinator = new BatchProcessingCoordinator();
+        _pipeline = new PayrollPipelineService(
+            _unitOfWork,
+            _currentUserService,
+            _contextBuilder,
+            _calculationEngine,
+            _validationService,
+            _validationPipeline,
+            _coordinator);
     }
 
     private async Task SeedDataAsync()
@@ -139,12 +156,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         await _unitOfWork.PayrollRuns.AddAsync(run);
         await _unitOfWork.SaveChangesAsync();
 
-        var handler = new CalculatePayrollRunCommandHandler(
-            _unitOfWork,
-            _currentUserService,
-            _calculationEngine,
-            _validationService
-        );
+        var handler = new CalculatePayrollRunCommandHandler(_pipeline);
 
         var reqId1 = Guid.NewGuid();
         var command = new CalculatePayrollRunCommand(run.Id, reqId1);
@@ -202,12 +214,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         await _unitOfWork.PayrollRuns.AddAsync(run);
         await _unitOfWork.SaveChangesAsync();
 
-        var handler = new CalculatePayrollRunCommandHandler(
-            _unitOfWork,
-            _currentUserService,
-            _calculationEngine,
-            _validationService
-        );
+        var handler = new CalculatePayrollRunCommandHandler(_pipeline);
 
         // Act - Start first calculation (acquires lock)
         var command1 = new CalculatePayrollRunCommand(run.Id, Guid.NewGuid());
@@ -245,12 +252,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         await _unitOfWork.PayrollRuns.AddAsync(run);
         await _unitOfWork.SaveChangesAsync();
 
-        var calcHandler = new CalculatePayrollRunCommandHandler(
-            _unitOfWork,
-            _currentUserService,
-            _calculationEngine,
-            _validationService
-        );
+        var calcHandler = new CalculatePayrollRunCommandHandler(_pipeline);
         await calcHandler.Handle(new CalculatePayrollRunCommand(run.Id, Guid.NewGuid()), CancellationToken.None);
 
         var resetHandler = new ResetPayrollRunCommandHandler(_unitOfWork, _currentUserService);
@@ -333,12 +335,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         await _unitOfWork.PayrollRuns.AddAsync(run);
         await _unitOfWork.SaveChangesAsync();
 
-        var handler = new CalculatePayrollRunCommandHandler(
-            _unitOfWork,
-            _currentUserService,
-            _calculationEngine,
-            _validationService
-        );
+        var handler = new CalculatePayrollRunCommandHandler(_pipeline);
 
         // Act
         Func<Task> act = () => handler.Handle(new CalculatePayrollRunCommand(run.Id, Guid.NewGuid()), CancellationToken.None);
@@ -398,12 +395,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         await _unitOfWork.PayrollRuns.AddAsync(run);
         await _unitOfWork.SaveChangesAsync();
 
-        var handler = new CalculatePayrollRunCommandHandler(
-            _unitOfWork,
-            _currentUserService,
-            _calculationEngine,
-            _validationService
-        );
+        var handler = new CalculatePayrollRunCommandHandler(_pipeline);
 
         // Act & Assert
         // We time the execution to confirm sequential scalability and memory stability
@@ -434,12 +426,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         await _unitOfWork.PayrollRuns.AddAsync(run);
         await _unitOfWork.SaveChangesAsync();
 
-        var handler = new CalculatePayrollRunCommandHandler(
-            _unitOfWork,
-            _currentUserService,
-            _calculationEngine,
-            _validationService
-        );
+        var handler = new CalculatePayrollRunCommandHandler(_pipeline);
 
         var requestId = Guid.NewGuid();
 
@@ -477,12 +464,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         await _unitOfWork.PayrollRuns.AddAsync(run);
         await _unitOfWork.SaveChangesAsync();
 
-        var handler = new CalculatePayrollRunCommandHandler(
-            _unitOfWork,
-            _currentUserService,
-            _calculationEngine,
-            _validationService
-        );
+        var handler = new CalculatePayrollRunCommandHandler(_pipeline);
 
         await handler.Handle(new CalculatePayrollRunCommand(run.Id, Guid.NewGuid()), CancellationToken.None);
 
@@ -519,12 +501,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         await _unitOfWork.PayrollRuns.AddAsync(run);
         await _unitOfWork.SaveChangesAsync();
 
-        var handler = new CalculatePayrollRunCommandHandler(
-            _unitOfWork,
-            _currentUserService,
-            _calculationEngine,
-            _validationService
-        );
+        var handler = new CalculatePayrollRunCommandHandler(_pipeline);
 
         await handler.Handle(new CalculatePayrollRunCommand(run.Id, Guid.NewGuid()), CancellationToken.None);
 
@@ -612,12 +589,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         await _unitOfWork.PayrollRuns.AddAsync(run);
         await _unitOfWork.SaveChangesAsync();
 
-        var handler = new CalculatePayrollRunCommandHandler(
-            _unitOfWork,
-            _currentUserService,
-            _calculationEngine,
-            _validationService
-        );
+        var handler = new CalculatePayrollRunCommandHandler(_pipeline);
 
         // Act & Assert: Trigger 100 parallel calculate calls
         var tasks = Enumerable.Range(0, 100)
@@ -653,12 +625,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         await _unitOfWork.SaveChangesAsync();
 
         // Calculate it first
-        var calcHandler = new CalculatePayrollRunCommandHandler(
-            _unitOfWork,
-            _currentUserService,
-            _calculationEngine,
-            _validationService
-        );
+        var calcHandler = new CalculatePayrollRunCommandHandler(_pipeline);
         await calcHandler.Handle(new CalculatePayrollRunCommand(run.Id, Guid.NewGuid()), CancellationToken.None);
 
         // Reset it
@@ -692,12 +659,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         await _unitOfWork.PayrollRuns.AddAsync(run);
         await _unitOfWork.SaveChangesAsync();
 
-        var handler = new CalculatePayrollRunCommandHandler(
-            _unitOfWork,
-            _currentUserService,
-            _calculationEngine,
-            _validationService
-        );
+        var handler = new CalculatePayrollRunCommandHandler(_pipeline);
         await handler.Handle(new CalculatePayrollRunCommand(run.Id, Guid.NewGuid()), CancellationToken.None);
 
         var trace = await _context.PayrollRunEmployeeTraces.FirstAsync();
@@ -754,12 +716,7 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         await _unitOfWork.PayrollRuns.AddAsync(run);
         await _unitOfWork.SaveChangesAsync();
 
-        var handler = new CalculatePayrollRunCommandHandler(
-            _unitOfWork,
-            _currentUserService,
-            _calculationEngine,
-            _validationService
-        );
+        var handler = new CalculatePayrollRunCommandHandler(_pipeline);
 
         await handler.Handle(new CalculatePayrollRunCommand(run.Id, Guid.NewGuid()), CancellationToken.None);
 
@@ -839,6 +796,410 @@ public sealed class PayrollRunIntegrationTests : IDisposable
         empResult.NetPay.Should().Be(0.00m); // Net pay floor rule forced to 0
         empResult.TotalDeductions.Should().Be(100.00m); // Voluntary deduction reduced from $150 to $100
         empResult.LineItems.Single(l => l.ComponentCode == "VOL_DED").Amount.Should().Be(-100.00m);
+    }
+
+    [Fact]
+    public void Calculate_ShouldEnforceStrictRounding_OnAllMonetaryValues()
+    {
+        // Arrange
+        var context = new PayrollExecutionContext
+        {
+            PayrollRunId = 1,
+            CompanyId = 1,
+            RunCode = "PR-ROUND",
+            PeriodName = "Test Period",
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddDays(7),
+            Frequency = PayrollFrequencyType.Weekly,
+            TaxVersion = "2025-2026",
+            CalculationRequestId = Guid.NewGuid(),
+            VoluntaryDeductionPolicy = VoluntaryDeductionPolicy.CarryForwardRemainder,
+            Employees = new List<EmployeeSnapshot>
+            {
+                new EmployeeSnapshot
+                {
+                    EmployeeId = 1,
+                    FullName = "Rounding Emp",
+                    Tin = "123456789",
+                    FnpfNumber = "12345",
+                    ResidencyStatus = "Resident",
+                    Department = "HR",
+                    BaseSalary = 100.005m, // should round to 100.01m
+                    IsFnpfExempt = true,
+                    IsTaxExempt = true,
+                    HoursWorked = 40m,
+                    OvertimeHours = 0m,
+                    ComponentOverrides = Array.Empty<EmployeeComponentOverrideSnapshot>()
+                }
+            }.AsReadOnly(),
+            TaxRules = new List<TaxBracket>(),
+            Components = new List<PayrollComponentSnapshot>
+            {
+                new PayrollComponentSnapshot
+                {
+                    Id = 1,
+                    ComponentCode = "BASIC",
+                    ComponentName = "Basic Salary",
+                    ComponentType = ComponentType.Earning,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 100.005m,
+                    IsTaxable = false,
+                    IsFnpfApplicable = false
+                },
+                new PayrollComponentSnapshot
+                {
+                    Id = 2,
+                    ComponentCode = "ALLOW",
+                    ComponentName = "Allowance",
+                    ComponentType = ComponentType.Allowance,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 10.125m, // should round to 10.13m
+                    IsTaxable = false,
+                    IsFnpfApplicable = false
+                },
+                new PayrollComponentSnapshot
+                {
+                    Id = 3,
+                    ComponentCode = "VOL_DED",
+                    ComponentName = "Voluntary Deduction",
+                    ComponentType = ComponentType.Deduction,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 5.555m, // should round to 5.56m
+                    IsTaxable = false,
+                    IsFnpfApplicable = false
+                }
+            }.AsReadOnly()
+        };
+
+        // Act
+        var result = _calculationEngine.Calculate(context);
+
+        // Assert
+        var empResult = result.Employees.Single();
+        empResult.BaseSalary.Should().Be(100.01m);
+        empResult.TotalAllowances.Should().Be(10.13m);
+        empResult.TotalDeductions.Should().Be(5.56m);
+        empResult.NetPay.Should().Be(104.58m); // 100.01 + 10.13 - 5.56 = 104.58
+    }
+
+    [Fact]
+    public void Calculate_ShouldTriggerStatutorySafetyRule_WhenStatutoryDeductionsExceedEarnings()
+    {
+        // Arrange
+        var context = new PayrollExecutionContext
+        {
+            PayrollRunId = 1,
+            CompanyId = 1,
+            RunCode = "PR-STAT-OVER",
+            PeriodName = "Test Period",
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddDays(7),
+            Frequency = PayrollFrequencyType.Weekly,
+            TaxVersion = "2025-2026",
+            CalculationRequestId = Guid.NewGuid(),
+            VoluntaryDeductionPolicy = VoluntaryDeductionPolicy.CarryForwardRemainder,
+            Employees = new List<EmployeeSnapshot>
+            {
+                new EmployeeSnapshot
+                {
+                    EmployeeId = 1,
+                    FullName = "Stat Overrun Employee",
+                    Tin = "123456789",
+                    FnpfNumber = "12345",
+                    ResidencyStatus = "Resident",
+                    Department = "HR",
+                    BaseSalary = 100.00m,
+                    IsFnpfExempt = true,
+                    IsTaxExempt = false,
+                    HoursWorked = 40m,
+                    OvertimeHours = 0m,
+                    ComponentOverrides = Array.Empty<EmployeeComponentOverrideSnapshot>()
+                }
+            }.AsReadOnly(),
+            TaxRules = new List<TaxBracket>
+            {
+                TaxBracket.Create(
+                    taxVersion: "2025-2026",
+                    residencyStatus: "Resident",
+                    frequency: PayrollFrequencyType.Weekly,
+                    lowerLimit: 0m,
+                    upperLimit: 1000000m,
+                    taxRate: 1.50m, // 150% tax rate to guarantee statutory deductions exceed gross!
+                    fixedTaxAmount: 0m,
+                    isActive: true,
+                    effectiveDate: DateTime.UtcNow
+                )
+            }.AsReadOnly(),
+            Components = new List<PayrollComponentSnapshot>
+            {
+                new PayrollComponentSnapshot
+                {
+                    Id = 1,
+                    ComponentCode = "BASIC",
+                    ComponentName = "Basic Salary",
+                    ComponentType = ComponentType.Earning,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 100.00m,
+                    IsTaxable = true,
+                    IsFnpfApplicable = false
+                },
+                new PayrollComponentSnapshot
+                {
+                    Id = 2,
+                    ComponentCode = "PAYE",
+                    ComponentName = "PAYE",
+                    ComponentType = ComponentType.Deduction,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 0m,
+                    IsTaxable = false,
+                    IsFnpfApplicable = false
+                },
+                new PayrollComponentSnapshot
+                {
+                    Id = 3,
+                    ComponentCode = "VOL_DED",
+                    ComponentName = "Voluntary Deduction",
+                    ComponentType = ComponentType.Deduction,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 50.00m,
+                    IsTaxable = false,
+                    IsFnpfApplicable = false
+                }
+            }.AsReadOnly()
+        };
+
+        // Act
+        var result = _calculationEngine.Calculate(context);
+
+        // Assert
+        result.Should().NotBeNull();
+        var empResult = result.Employees.Single();
+        empResult.NetPay.Should().Be(0.00m); // forced to 0.00
+        empResult.PayeTax.Should().Be(150.00m); // 1.50 * 100
+        empResult.TotalDeductions.Should().Be(150.00m); // statutory deductions only (voluntary deduction is zeroed)
+        empResult.LineItems.Single(l => l.ComponentCode == "VOL_DED").Amount.Should().Be(0.00m); // zeroed out
+        
+        empResult.AuditEvents.Should().ContainSingle(e => e.EventCode == "STATUTORY_DEDUCTIONS_EXCEED_GROSS" && e.Severity == "Warning");
+    }
+
+    [Fact]
+    public void Calculate_ShouldThrowPayrollException_UnderPolicyA_WhenNetPayIsNegative()
+    {
+        // Arrange
+        var context = new PayrollExecutionContext
+        {
+            PayrollRunId = 1,
+            CompanyId = 1,
+            RunCode = "PR-POLICY-A",
+            PeriodName = "Test Period",
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddDays(7),
+            Frequency = PayrollFrequencyType.Weekly,
+            TaxVersion = "2025-2026",
+            CalculationRequestId = Guid.NewGuid(),
+            VoluntaryDeductionPolicy = VoluntaryDeductionPolicy.BlockPayroll,
+            Employees = new List<EmployeeSnapshot>
+            {
+                new EmployeeSnapshot
+                {
+                    EmployeeId = 1,
+                    FullName = "John Policy A",
+                    Tin = "123456789",
+                    FnpfNumber = "12345",
+                    ResidencyStatus = "Resident",
+                    Department = "HR",
+                    BaseSalary = 100.00m,
+                    IsFnpfExempt = true,
+                    IsTaxExempt = true,
+                    HoursWorked = 40m,
+                    OvertimeHours = 0m,
+                    ComponentOverrides = Array.Empty<EmployeeComponentOverrideSnapshot>()
+                }
+            }.AsReadOnly(),
+            TaxRules = new List<TaxBracket>(),
+            Components = new List<PayrollComponentSnapshot>
+            {
+                new PayrollComponentSnapshot
+                {
+                    Id = 1,
+                    ComponentCode = "BASIC",
+                    ComponentName = "Basic Salary",
+                    ComponentType = ComponentType.Earning,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 100.00m,
+                    IsTaxable = false,
+                    IsFnpfApplicable = false
+                },
+                new PayrollComponentSnapshot
+                {
+                    Id = 2,
+                    ComponentCode = "VOL_DED",
+                    ComponentName = "Voluntary Deduction",
+                    ComponentType = ComponentType.Deduction,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 150.00m, // exceeds gross pay!
+                    IsTaxable = false,
+                    IsFnpfApplicable = false
+                }
+            }.AsReadOnly()
+        };
+
+        // Act & Assert
+        Action act = () => _calculationEngine.Calculate(context);
+        var ex = act.Should().Throw<PayrollException>().Which;
+        ex.EventCode.Should().Be("INSUFFICIENT_NET_PAY_FOR_VOLUNTARY_DEDUCTIONS");
+    }
+
+    [Fact]
+    public void Calculate_ShouldScaleAndGenerateCarryForward_UnderPolicyB_WhenNetPayIsNegative()
+    {
+        // Arrange
+        var context = new PayrollExecutionContext
+        {
+            PayrollRunId = 1,
+            CompanyId = 1,
+            RunCode = "PR-POLICY-B",
+            PeriodName = "Test Period",
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddDays(7),
+            Frequency = PayrollFrequencyType.Weekly,
+            TaxVersion = "2025-2026",
+            CalculationRequestId = Guid.NewGuid(),
+            VoluntaryDeductionPolicy = VoluntaryDeductionPolicy.CarryForwardRemainder,
+            Employees = new List<EmployeeSnapshot>
+            {
+                new EmployeeSnapshot
+                {
+                    EmployeeId = 1,
+                    FullName = "John Policy B",
+                    Tin = "123456789",
+                    FnpfNumber = "12345",
+                    ResidencyStatus = "Resident",
+                    Department = "HR",
+                    BaseSalary = 100.00m,
+                    IsFnpfExempt = true,
+                    IsTaxExempt = true,
+                    HoursWorked = 40m,
+                    OvertimeHours = 0m,
+                    ComponentOverrides = Array.Empty<EmployeeComponentOverrideSnapshot>()
+                }
+            }.AsReadOnly(),
+            TaxRules = new List<TaxBracket>(),
+            Components = new List<PayrollComponentSnapshot>
+            {
+                new PayrollComponentSnapshot
+                {
+                    Id = 1,
+                    ComponentCode = "BASIC",
+                    ComponentName = "Basic Salary",
+                    ComponentType = ComponentType.Earning,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 100.00m,
+                    IsTaxable = false,
+                    IsFnpfApplicable = false
+                },
+                new PayrollComponentSnapshot
+                {
+                    Id = 2,
+                    ComponentCode = "VOL_DED",
+                    ComponentName = "Voluntary Deduction",
+                    ComponentType = ComponentType.Deduction,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 150.00m, // exceeds gross pay by 50.00
+                    IsTaxable = false,
+                    IsFnpfApplicable = false
+                }
+            }.AsReadOnly()
+        };
+
+        // Act
+        var result = _calculationEngine.Calculate(context);
+
+        // Assert
+        result.Should().NotBeNull();
+        var empResult = result.Employees.Single();
+        empResult.NetPay.Should().Be(0.00m);
+        empResult.TotalDeductions.Should().Be(100.00m);
+        empResult.LineItems.Single(l => l.ComponentCode == "VOL_DED").Amount.Should().Be(-100.00m);
+        
+        empResult.AuditEvents.Should().Contain(e => e.EventCode == "INSUFFICIENT_NET_PAY_FOR_VOLUNTARY_DEDUCTIONS");
+        empResult.AuditEvents.Should().Contain(e => e.EventCode == "VOLUNTARY_DEDUCTION_CARRIED_FORWARD" && e.Message.Contains("Remainder of $50.00 carried forward."));
+    }
+
+    [Fact]
+    public void Calculate_ShouldScaleAndGenerateAuditFlag_UnderPolicyC_WhenNetPayIsNegative()
+    {
+        // Arrange
+        var context = new PayrollExecutionContext
+        {
+            PayrollRunId = 1,
+            CompanyId = 1,
+            RunCode = "PR-POLICY-C",
+            PeriodName = "Test Period",
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddDays(7),
+            Frequency = PayrollFrequencyType.Weekly,
+            TaxVersion = "2025-2026",
+            CalculationRequestId = Guid.NewGuid(),
+            VoluntaryDeductionPolicy = VoluntaryDeductionPolicy.PartialDeductionWithAuditFlag,
+            Employees = new List<EmployeeSnapshot>
+            {
+                new EmployeeSnapshot
+                {
+                    EmployeeId = 1,
+                    FullName = "John Policy C",
+                    Tin = "123456789",
+                    FnpfNumber = "12345",
+                    ResidencyStatus = "Resident",
+                    Department = "HR",
+                    BaseSalary = 100.00m,
+                    IsFnpfExempt = true,
+                    IsTaxExempt = true,
+                    HoursWorked = 40m,
+                    OvertimeHours = 0m,
+                    ComponentOverrides = Array.Empty<EmployeeComponentOverrideSnapshot>()
+                }
+            }.AsReadOnly(),
+            TaxRules = new List<TaxBracket>(),
+            Components = new List<PayrollComponentSnapshot>
+            {
+                new PayrollComponentSnapshot
+                {
+                    Id = 1,
+                    ComponentCode = "BASIC",
+                    ComponentName = "Basic Salary",
+                    ComponentType = ComponentType.Earning,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 100.00m,
+                    IsTaxable = false,
+                    IsFnpfApplicable = false
+                },
+                new PayrollComponentSnapshot
+                {
+                    Id = 2,
+                    ComponentCode = "VOL_DED",
+                    ComponentName = "Voluntary Deduction",
+                    ComponentType = ComponentType.Deduction,
+                    CalculationMethod = CalculationMethod.Fixed,
+                    CalculationValue = 150.00m,
+                    IsTaxable = false,
+                    IsFnpfApplicable = false
+                }
+            }.AsReadOnly()
+        };
+
+        // Act
+        var result = _calculationEngine.Calculate(context);
+
+        // Assert
+        result.Should().NotBeNull();
+        var empResult = result.Employees.Single();
+        empResult.NetPay.Should().Be(0.00m);
+        empResult.TotalDeductions.Should().Be(100.00m);
+        empResult.LineItems.Single(l => l.ComponentCode == "VOL_DED").Amount.Should().Be(-100.00m);
+
+        empResult.AuditEvents.Should().Contain(e => e.EventCode == "INSUFFICIENT_NET_PAY_FOR_VOLUNTARY_DEDUCTIONS");
+        empResult.AuditEvents.Should().Contain(e => e.EventCode == "VOLUNTARY_DEDUCTION_PARTIAL" && e.Message.Contains("partially applied"));
     }
 
     public void Dispose()

@@ -56,12 +56,21 @@ public sealed class ComplianceRepository : IComplianceRepository
     }
 
     // ── PayrollLedger ─────────────────────────────────────────────────────
-    public async Task<IReadOnlyList<PayrollLedger>> GetLedgerByRunIdAsync(int payrollRunId, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<PayrollLedgerEmployee>> GetLedgerByRunIdAsync(int payrollRunId, CancellationToken cancellationToken = default)
     {
-        var items = await _context.PayrollLedgers
-            .Where(x => x.PayrollRunId == payrollRunId)
+        var items = await _context.PayrollLedgerEmployees
+            .Where(x => _context.PayrollLedgers.Any(l => l.Id == x.PayrollLedgerId && l.PayrollRunId == payrollRunId))
             .ToListAsync(cancellationToken);
         return items;
+    }
+
+    public async Task<PayrollLedger?> GetLedgerHeaderByRunIdAsync(int payrollRunId, CancellationToken cancellationToken = default)
+    {
+        return await _context.PayrollLedgers
+            .Include(x => x.Employees)
+                .ThenInclude(e => e.Components)
+            .Include(x => x.Transactions)
+            .FirstOrDefaultAsync(x => x.PayrollRunId == payrollRunId, cancellationToken);
     }
 
     public async Task AddLedgerAsync(PayrollLedger ledger, CancellationToken cancellationToken = default)

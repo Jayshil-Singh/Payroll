@@ -58,22 +58,29 @@ internal sealed class PayrollLedgerConfiguration : IEntityTypeConfiguration<Payr
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
         builder.Property(x => x.CompanyId).IsRequired();
         builder.Property(x => x.PayrollRunId).IsRequired();
-        builder.Property(x => x.EmployeeId).IsRequired();
-        builder.Property(x => x.EmployeeName).HasColumnType("nvarchar(200)").IsRequired();
-        builder.Property(x => x.EmployeeTin).HasColumnType("nvarchar(50)").IsRequired();
-        builder.Property(x => x.EmployeeFnpfNumber).HasColumnType("nvarchar(50)").IsRequired();
-        builder.Property(x => x.Gross).HasPrecision(18, 4).IsRequired();
-        builder.Property(x => x.PAYE).HasPrecision(18, 4).IsRequired();
-        builder.Property(x => x.FNPFEmployee).HasPrecision(18, 4).IsRequired();
-        builder.Property(x => x.FNPFEmployer).HasPrecision(18, 4).IsRequired();
-        builder.Property(x => x.NetPay).HasPrecision(18, 4).IsRequired();
-        builder.Property(x => x.Currency).HasColumnType("nvarchar(10)").IsRequired();
+        builder.Property(x => x.TotalGross).HasPrecision(18, 4).IsRequired();
+        builder.Property(x => x.TotalPAYE).HasPrecision(18, 4).IsRequired();
+        builder.Property(x => x.TotalFNPFEmployee).HasPrecision(18, 4).IsRequired();
+        builder.Property(x => x.TotalFNPFEmployer).HasPrecision(18, 4).IsRequired();
+        builder.Property(x => x.TotalNetPay).HasPrecision(18, 4).IsRequired();
         builder.Property(x => x.Hash).HasColumnType("nvarchar(100)").IsRequired();
         builder.Property(x => x.CreatedUtc).HasColumnType("datetime2").IsRequired();
         builder.Property(x => x.CreatedBy).HasColumnType("nvarchar(100)").IsRequired();
+        builder.Property(x => x.IsReversed).IsRequired();
+        builder.Property(x => x.ReversalDate).HasColumnType("datetime2").IsRequired(false);
+        builder.Property(x => x.ReversalReason).HasColumnType("nvarchar(500)").IsRequired(false);
+
+        builder.HasMany(x => x.Employees)
+            .WithOne()
+            .HasForeignKey(x => x.PayrollLedgerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(x => x.Transactions)
+            .WithOne()
+            .HasForeignKey(x => x.PayrollLedgerId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(x => x.PayrollRunId);
-        builder.HasIndex(x => x.EmployeeId);
     }
 }
 

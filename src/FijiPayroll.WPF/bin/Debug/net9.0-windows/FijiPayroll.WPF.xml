@@ -431,6 +431,16 @@
         <member name="T:FijiPayroll.WPF.Services.ApplicationStateData">
             <summary>Serializable state data bag — value type semantics via explicit Clone().</summary>
         </member>
+        <member name="T:FijiPayroll.WPF.Services.AuthSessionBootstrap">
+            <summary>
+            Establishes a minimal authenticated session for the desktop shell at startup.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Services.AuthSessionStore">
+            <summary>
+            Thread-safe store for the active authenticated session.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.WPF.Services.DialogService">
             <summary>
             Implementation of IDialogService that leverages TaskCompletionSource to allow async await dialog flows.
@@ -871,38 +881,16 @@
         <member name="M:FijiPayroll.WPF.Services.SystemIntegrityValidator.Start">
             <summary>Starts the hourly audit background loop.</summary>
         </member>
-        <member name="T:FijiPayroll.WPF.Services.WpfCurrentUserService">
+        <member name="T:FijiPayroll.WPF.Services.WpfSessionIdentityService">
             <summary>
-            Implementation of ICurrentUserService and ICurrentUserAccessor for WPF application.
-            Provides current user details and permissions to satisfy command orchestration and audit layers.
+            Session-bound identity service. No permission bypass is permitted.
             </summary>
-        </member>
-        <member name="P:FijiPayroll.WPF.Services.WpfCurrentUserService.UserId">
-            <inheritdoc />
-        </member>
-        <member name="P:FijiPayroll.WPF.Services.WpfCurrentUserService.Username">
-            <inheritdoc />
-        </member>
-        <member name="P:FijiPayroll.WPF.Services.WpfCurrentUserService.CompanyIds">
-            <inheritdoc />
-        </member>
-        <member name="P:FijiPayroll.WPF.Services.WpfCurrentUserService.Permissions">
-            <inheritdoc />
-        </member>
-        <member name="M:FijiPayroll.WPF.Services.WpfCurrentUserService.HasPermission(System.String)">
-            <inheritdoc />
-        </member>
-        <member name="M:FijiPayroll.WPF.Services.WpfCurrentUserService.HasCompanyAccess(System.Int32)">
-            <inheritdoc />
         </member>
         <member name="T:FijiPayroll.WPF.Services.WpfTenantProvider">
             <summary>
             WPF implementation of ITenantProvider. Resolves active tenant context
             dynamically from the shared in-memory ApplicationStateStore session parameters.
             </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Services.WpfTenantProvider.#ctor(FijiPayroll.WPF.Services.IApplicationStateStore)">
-            <summary>Initializes the tenant provider with the session state store.</summary>
         </member>
         <member name="M:FijiPayroll.WPF.Services.WpfTenantProvider.GetCurrentCompanyId">
             <inheritdoc />
@@ -1249,7 +1237,7 @@
             Gets the list of available employees for selection.
             </summary>
         </member>
-        <member name="M:FijiPayroll.WPF.ViewModels.ComponentSimulationViewModel.#ctor(FijiPayroll.Application.Services.SimulationEngine,FijiPayroll.Domain.Interfaces.IUnitOfWork)">
+        <member name="M:FijiPayroll.WPF.ViewModels.ComponentSimulationViewModel.#ctor(FijiPayroll.Application.Services.SimulationEngine,FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ITenantProvider)">
             <summary>
             Initialises a new instance of the <see cref="T:FijiPayroll.WPF.ViewModels.ComponentSimulationViewModel"/> class.
             </summary>
@@ -2179,6 +2167,24 @@
             <param name="viewModel">The view model instance.</param>
         </member>
         <member name="M:FijiPayroll.WPF.Views.PayrollComponentView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.PayrollConsoleView">
+            <summary>
+            Interaction logic for PayrollConsoleView.xaml
+            </summary>
+            <summary>
+            PayrollConsoleView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PayrollConsoleView.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.WPF.Views.PayrollConsoleView"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PayrollConsoleView.InitializeComponent">
             <summary>
             InitializeComponent
             </summary>

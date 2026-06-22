@@ -126,11 +126,17 @@ public sealed class SearchIntegrationTests : IDisposable
         await handler.Handle(wrapper, CancellationToken.None);
 
         // Allow background queue to process
-        await Task.Delay(150);
+        IReadOnlyList<SearchResult> results = null;
+        for (int i = 0; i < 50; i++)
+        {
+            results = await _searchService.SearchAsync("Albert", 10, CancellationToken.None);
+            if (results.Any())
+                break;
+            await Task.Delay(100);
+        }
 
         // Assert
-        var results = await _searchService.SearchAsync("Albert", 10, CancellationToken.None);
-
+        results.Should().NotBeNull();
         results.Should().NotBeEmpty();
         results.First().Title.Should().Be("Albert Prasad");
         results.First().EntityType.Should().Be("Employee");
@@ -149,18 +155,30 @@ public sealed class SearchIntegrationTests : IDisposable
         _tenantProvider.GetCurrentCompanyId().Returns(2);
         await _searchService.IndexEntityAsync("Employee", "102", "{\"Title\":\"Company Two Worker\",\"EmployeeName\":\"Two Worker\"}");
 
-        await Task.Delay(150);
-
         // Act & Assert
         // Search as Company 1
-        _tenantProvider.GetCurrentCompanyId().Returns(1);
-        var results1 = await _searchService.SearchAsync("Worker", 10, CancellationToken.None);
+        IReadOnlyList<SearchResult> results1 = null;
+        for (int i = 0; i < 50; i++)
+        {
+            _tenantProvider.GetCurrentCompanyId().Returns(1);
+            results1 = await _searchService.SearchAsync("Worker", 10, CancellationToken.None);
+            if (results1.Count == 1)
+                break;
+            await Task.Delay(100);
+        }
         results1.Should().HaveCount(1);
         results1.First().Title.Should().Be("Company One Worker");
 
         // Search as Company 2
-        _tenantProvider.GetCurrentCompanyId().Returns(2);
-        var results2 = await _searchService.SearchAsync("Worker", 10, CancellationToken.None);
+        IReadOnlyList<SearchResult> results2 = null;
+        for (int i = 0; i < 50; i++)
+        {
+            _tenantProvider.GetCurrentCompanyId().Returns(2);
+            results2 = await _searchService.SearchAsync("Worker", 10, CancellationToken.None);
+            if (results2.Count == 1)
+                break;
+            await Task.Delay(100);
+        }
         results2.Should().HaveCount(1);
         results2.First().Title.Should().Be("Company Two Worker");
     }
@@ -180,10 +198,15 @@ public sealed class SearchIntegrationTests : IDisposable
         // Entry D: Matches other (Weight 1)
         await _searchService.IndexEntityAsync("Employee", "D", "{\"Title\":\"Last Employee\",\"EmployeeName\":\"Other Name\",\"Other\":\"Target Match\"}");
 
-        await Task.Delay(150);
-
         // Act
-        var results = await _searchService.SearchAsync("Target Match", 10, CancellationToken.None);
+        IReadOnlyList<SearchResult> results = null;
+        for (int i = 0; i < 50; i++)
+        {
+            results = await _searchService.SearchAsync("Target Match", 10, CancellationToken.None);
+            if (results.Count == 4)
+                break;
+            await Task.Delay(100);
+        }
 
         // Assert
         results.Should().HaveCount(4);
@@ -242,17 +265,24 @@ public sealed class SearchIntegrationTests : IDisposable
         // Arrange
         _tenantProvider.GetCurrentCompanyId().Returns(1);
         await _searchService.IndexEntityAsync("Employee", "99", "{\"Title\":\"Query User\",\"EmployeeName\":\"Query User\"}");
-        await Task.Delay(150);
+        // Act
+        IReadOnlyList<SearchResult> results = null;
+        for (int i = 0; i < 50; i++)
+        {
+            results = await _searchService.SearchAsync("Query User", 10, CancellationToken.None);
+            if (results.Count == 1)
+                break;
+            await Task.Delay(100);
+        }
 
         var query = new SearchQuery("Query User", 10);
         var handler = new SearchQueryHandler(_searchService);
 
-        // Act
-        var results = await handler.Handle(query, CancellationToken.None);
+        var queryResults = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        results.Should().NotBeEmpty();
-        results.First().Title.Should().Be("Query User");
+        queryResults.Should().NotBeEmpty();
+        queryResults.First().Title.Should().Be("Query User");
     }
 
     public void Dispose()
