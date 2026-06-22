@@ -181,3 +181,4 @@ C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Integration.Tests\obj\D
 C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Integration.Tests\obj\Debug\net9.0-windows\FijiPayroll.Integration.Tests.pdb
 C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Integration.Tests\obj\Debug\net9.0-windows\FijiPayroll.Integration.Tests.genruntimeconfig.cache
 C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Integration.Tests\obj\Debug\net9.0-windows\ref\FijiPayroll.Integration.Tests.dll
+C:\Users\jayshil.singh\Desktop\Payroll\tests\FijiPayroll.Integration.Tests\bin\Debug\net9.0-windows\BCrypt.Net-Next.dll

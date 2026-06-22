@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using FijiPayroll.WPF.Infrastructure;
 using FijiPayroll.WPF.Services;
 using FijiPayroll.WPF.Views;
+using FijiPayroll.WPF.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -109,6 +110,70 @@ public partial class App : System.Windows.Application
                 _logger = _serviceProvider.GetRequiredService<ILogger<App>>();
                 _logger.LogInformation("DI Container successfully initialized.");
 
+                // ── Stage 1.5: Licensing ─────────────────────────────────────────────
+                splash.UpdateProgress(30, "Checking License", "Validating application license...");
+                var licenseValidator = _serviceProvider.GetRequiredService<FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator>();
+                await licenseValidator.InitializeAsync();
+
+                if (!licenseValidator.IsLicensed)
+                {
+                    _logger.LogWarning("License validation failed: {Error}", licenseValidator.ErrorMessage);
+                    
+                    bool licenseLoaded = false;
+                    Dispatcher.Invoke(() =>
+                    {
+                        splash.Hide();
+                        
+                        var openFileDialog = new Microsoft.Win32.OpenFileDialog
+                        {
+                            Filter = "License Files (*.fplic)|*.fplic",
+                            Title = $"Select Fiji Payroll License File"
+                        };
+
+                        if (openFileDialog.ShowDialog() == true)
+                        {
+                            try
+                            {
+                                string licenseContent = File.ReadAllText(openFileDialog.FileName);
+                                var task = licenseValidator.ValidateLicenseFileAsync(licenseContent);
+                                task.Wait();
+                                if (task.Result)
+                                {
+                                    // Save the license file to the app directory as license.fplic
+                                    string targetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "license.fplic");
+                                    File.WriteAllText(targetPath, licenseContent);
+                                    licenseLoaded = true;
+                                    MessageBox.Show("License validated and registered successfully.", "License Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                                }
+                                else
+                                {
+                                    MessageBox.Show($"Selected license is invalid: {licenseValidator.ErrorMessage}", "License Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"Failed to load selected license: {ex.Message}", "License Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        }
+                        
+                        if (licenseLoaded)
+                        {
+                            splash.Show();
+                        }
+                    });
+
+                    if (!licenseLoaded)
+                    {
+                        _logger.LogWarning("No valid license provided. Exiting.");
+                        Dispatcher.Invoke(() =>
+                        {
+                            splash.Close();
+                            Shutdown(-1);
+                        });
+                        return;
+                    }
+                }
+
                 // ── Stage 2: Database ────────────────────────────────────────────────
                 splash.UpdateProgress(40, "Connecting Database", "Opening local SQL Server database...");
                 await Task.Delay(300);
@@ -121,7 +186,11 @@ public partial class App : System.Windows.Application
                 var pluginLoader = _serviceProvider.GetRequiredService<PluginLoader>();
                 await pluginLoader.InitializePluginsDatabaseAsync(scope.ServiceProvider);
 
-                _logger.LogInformation("Database connected, schema validated, and plugin schemas registered.");
+                // Run PII plaintext to AES-256 migration
+                splash.UpdateProgress(50, "Securing PII Data", "Migrating plaintext records to AES-256...");
+                await context.MigratePlaintextToAesAsync();
+
+                _logger.LogInformation("Database connected, schema validated, plugin schemas registered, and dynamic PII encrypted.");
 
                 // ── Stage 3: Seeders ─────────────────────────────────────────────────
                 splash.UpdateProgress(60, "Running Seeders", "Loading Fiji tax tables & company components...");
@@ -141,7 +210,11 @@ public partial class App : System.Windows.Application
 
                 var complianceSeeder = scope.ServiceProvider.GetRequiredService<ComplianceSeeder>();
                 await complianceSeeder.SeedAsync();
-                _logger.LogInformation("FRCS tax tables, employee structures, and compliance rules/layouts seeded successfully.");
+
+                var userSeeder = scope.ServiceProvider.GetRequiredService<UserAccountSeeder>();
+                await userSeeder.SeedAsync();
+
+                _logger.LogInformation("FRCS tax tables, employee structures, compliance rules/layouts, and admin credentials seeded successfully.");
 
                 // ── Stage 4: State Recovery ──────────────────────────────────────────
                 splash.UpdateProgress(75, "Recovering State", "Restoring last session...");
@@ -151,8 +224,29 @@ public partial class App : System.Windows.Application
                 await stateStore.LoadPersistedStateAsync();
                 _logger.LogInformation("Application state restored.");
 
-                var authSessionStore = _serviceProvider.GetRequiredService<IAuthSessionStore>();
-                AuthSessionBootstrap.Initialize(authSessionStore, stateStore);
+                bool loginSuccess = false;
+                Dispatcher.Invoke(() =>
+                {
+                    splash.Hide();
+                    var loginView = _serviceProvider.GetRequiredService<LoginView>();
+                    loginSuccess = loginView.ShowDialog() == true;
+                    if (loginSuccess)
+                    {
+                        splash.Show();
+                    }
+                });
+
+                if (!loginSuccess)
+                {
+                    _logger.LogWarning("Authentication cancelled. Shutting down.");
+                    Dispatcher.Invoke(() =>
+                    {
+                        splash.Close();
+                        Shutdown();
+                    });
+                    return;
+                }
+
                 _logger.LogInformation("Authenticated session established for company {CompanyId}.", stateStore.CurrentCompanyId);
 
                 // ── Stage 5: Start Monitors ──────────────────────────────────────────
@@ -181,7 +275,7 @@ public partial class App : System.Windows.Application
                     LoadThemeSettings();
 
                     var navigationService = _serviceProvider.GetRequiredService<INavigationService>();
-                    navigationService.RestoreLastState();
+                    navigationService.NavigateTo<DashboardViewModel>();
 
                     var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
                     mainWindow.Show();

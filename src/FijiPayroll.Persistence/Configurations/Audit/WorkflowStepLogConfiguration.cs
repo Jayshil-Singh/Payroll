@@ -16,6 +16,9 @@ internal sealed class WorkflowStepLogConfiguration : IEntityTypeConfiguration<Wo
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
+        builder.Property(x => x.CompanyId)
+               .IsRequired();
+
         builder.Property(x => x.LogId)
                .IsRequired();
 

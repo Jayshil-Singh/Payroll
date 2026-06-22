@@ -10,6 +10,7 @@ public sealed class ImportSessionRow : BaseEntity
     private ImportSessionRow() { }
 
     public ImportSessionRow(
+        int companyId,
         int importSessionId,
         int rowNumber,
         string payload,
@@ -17,6 +18,7 @@ public sealed class ImportSessionRow : BaseEntity
         string? errors = null,
         string? warnings = null)
     {
+        CompanyId = companyId;
         ImportSessionId = importSessionId;
         RowNumber = rowNumber;
         Payload = payload;
@@ -25,6 +27,7 @@ public sealed class ImportSessionRow : BaseEntity
         Warnings = warnings;
     }
 
+    public int CompanyId { get; private set; }
     public int ImportSessionId { get; private set; }
     public int RowNumber { get; private set; }
     public string Payload { get; private set; } = string.Empty;

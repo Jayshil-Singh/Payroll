@@ -41,4 +41,23 @@ public enum ComponentType
     /// System components cannot be deleted or deactivated.
     /// </summary>
     Statutory = 5,
+
+    /// <summary>
+    /// Overtime pay component, calculated based on overtime hours and multiplier rates.
+    /// Adds to gross earnings and is typically taxable and FNPF-applicable.
+    /// </summary>
+    Overtime = 6,
+
+    /// <summary>
+    /// A deduction for staff loan repayments, auto-calculated from active loan schedules.
+    /// Reduces take-home pay; not taxable.
+    /// </summary>
+    LoanRepayment = 7,
+
+    /// <summary>
+    /// A deduction representing the monetary value of leave days taken (e.g., leave without pay).
+    /// Reduces gross pay when leave is unpaid or exceeds entitlements.
+    /// </summary>
+    LeaveDeduction = 8,
 }
+

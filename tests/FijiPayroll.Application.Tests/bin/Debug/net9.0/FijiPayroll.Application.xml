@@ -4,6 +4,42 @@
         <name>FijiPayroll.Application</name>
     </assembly>
     <members>
+        <member name="T:FijiPayroll.Application.Common.Behaviours.AuditBehaviour`2">
+            <summary>
+            Pipeline behavior that automatically logs successful command executions
+            into the database AuditLogs table.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Common.Behaviours.AuthorizationBehaviour`2">
+            <summary>
+            Pipeline behaviour that enforces role-based security via permission validation.
+            If a request implements <see cref="T:FijiPayroll.Application.Common.Behaviours.IRequirePermission"/>, it validates the permissions of the current user.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Common.Behaviours.IAuditableCommand">
+            <summary>
+            Interface indicating that a command request should generate an explicit command-level audit log.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Common.Behaviours.IAuditableCommand.AuditAction">
+            <summary>Gets the description of the action being audited (e.g., "Approve Payroll Run").</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Common.Behaviours.IAuditableCommand.AuditEntity">
+            <summary>Gets the logical entity name being affected (e.g., "PayrollRun").</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Common.Behaviours.IRequirePermission">
+            <summary>
+            Marker interface indicating that a command request requires a permission check.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Common.Behaviours.IRequirePermission.RequiredPermission">
+            <summary>Gets the permission code required to execute this request.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Common.Behaviours.ITransactional">
+            <summary>
+            Marker interface indicating that a command request must execute inside a database transaction.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Application.Common.Behaviours.LoggingBehaviour`2">
              <summary>
              MediatR pipeline behaviour that logs the start, completion, and elapsed time
@@ -23,6 +59,12 @@
         </member>
         <member name="M:FijiPayroll.Application.Common.Behaviours.LoggingBehaviour`2.Handle(`0,MediatR.RequestHandlerDelegate{`1},System.Threading.CancellationToken)">
             <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Application.Common.Behaviours.TransactionBehaviour`2">
+            <summary>
+            Pipeline behaviour that wraps the request execution in a database transaction boundary.
+            Applies to any request implementing <see cref="T:FijiPayroll.Application.Common.Behaviours.ITransactional"/>.
+            </summary>
         </member>
         <member name="T:FijiPayroll.Application.Common.Behaviours.ValidationBehaviour`2">
              <summary>
@@ -298,6 +340,21 @@
         <member name="M:FijiPayroll.Application.Common.Interfaces.IModulePlugin.InitializeDatabaseAsync(System.IServiceProvider)">
             <summary>Executes initial data migrations or database seedings using the resolved scope.</summary>
         </member>
+        <member name="T:FijiPayroll.Application.Common.Interfaces.IPasswordHasher">
+            <summary>
+            Service abstraction to hash and verify passwords.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Common.Interfaces.IPasswordHasher.Hash(System.String)">
+            <summary>
+            Generates a secure hash of the plaintext password.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Common.Interfaces.IPasswordHasher.Verify(System.String,System.String)">
+            <summary>
+            Verifies if a plaintext password matches a secure hash.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Application.Common.Interfaces.IReferenceDataCache">
             <summary>
             Interface for a thread-safe, memory-cached lookup reference data service.
@@ -549,6 +606,51 @@
             </summary>
             <param name="services">The service collection to register into.</param>
             <returns>The same <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for chaining.</returns>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Auth.Commands.Login.LoginCommand">
+            <summary>
+            CQRS Command request to authenticate a user context.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Auth.Commands.Login.LoginCommand.#ctor(System.String,System.String,System.Int32)">
+            <summary>
+            CQRS Command request to authenticate a user context.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Auth.Commands.Login.LoginCommandHandler">
+            <summary>
+            Handler for executing user authentication and establishing active sessions.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Auth.Commands.Login.LoginCommandValidator">
+            <summary>
+            Validator for the LoginCommand request.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Auth.Queries.GetCompaniesForUser.CompanyLookupDto">
+            <summary>
+            DTO representing a simplified company lookup for the login workflow.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Auth.Queries.GetCompaniesForUser.CompanyLookupDto.#ctor(System.Int32,System.String,System.String)">
+            <summary>
+            DTO representing a simplified company lookup for the login workflow.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Auth.Queries.GetCompaniesForUser.GetCompaniesForUserQuery">
+            <summary>
+            CQRS Query to retrieve all authorized companies for a given username.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Auth.Queries.GetCompaniesForUser.GetCompaniesForUserQuery.#ctor(System.String)">
+            <summary>
+            CQRS Query to retrieve all authorized companies for a given username.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Auth.Queries.GetCompaniesForUser.GetCompaniesForUserQueryHandler">
+            <summary>
+            Query handler for resolving companies associated with a username.
+            </summary>
         </member>
         <member name="T:FijiPayroll.Application.Features.CompanySetup.Commands.CreateCompanyWizard.CreateCompanyWizardCommand">
             <summary>
@@ -904,6 +1006,27 @@
         <member name="M:FijiPayroll.Application.Features.Employees.Commands.CreateEmployee.CreateEmployeeCommandValidator.#ctor">
             <summary>Initializes validation rules.</summary>
         </member>
+        <member name="T:FijiPayroll.Application.Features.Employees.Commands.TerminateEmployee.TerminateEmployeeCommand">
+            <summary>
+            Command to terminate (deactivate) an employee, deactivate payment methods, and raise domain events.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Employees.Commands.TerminateEmployee.TerminateEmployeeCommand.#ctor(System.Int32)">
+            <summary>
+            Command to terminate (deactivate) an employee, deactivate payment methods, and raise domain events.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Employees.Commands.TerminateEmployee.TerminateEmployeeCommandHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Employees.Commands.TerminateEmployee.TerminateEmployeeCommand"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Employees.Commands.TerminateEmployee.TerminateEmployeeCommandHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService,FijiPayroll.Application.Common.Interfaces.IDateTimeService,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Features.Employees.Commands.TerminateEmployee.TerminateEmployeeCommandHandler})">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Employees.Commands.TerminateEmployee.TerminateEmployeeCommandHandler.Handle(FijiPayroll.Application.Features.Employees.Commands.TerminateEmployee.TerminateEmployeeCommand,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
         <member name="T:FijiPayroll.Application.Features.Employees.Commands.UpdateEmployee.UpdateEmployeeCommand">
             <summary>
             CQRS Command to update an existing Employee record.
@@ -951,6 +1074,499 @@
             <inheritdoc />
         </member>
         <member name="M:FijiPayroll.Application.Features.Employees.EventHandlers.EmployeeSearchIndexHandler.Handle(FijiPayroll.Application.Common.Interfaces.MediatRNotificationWrapper{FijiPayroll.Domain.Events.EmployeeTerminatedEvent},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.GetEmployeeDetailQuery">
+            <summary>
+            Query to retrieve detailed profile details for a specific employee.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.GetEmployeeDetailQuery.#ctor(System.Int32)">
+            <summary>
+            Query to retrieve detailed profile details for a specific employee.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto">
+            <summary>
+            Detailed employee profile including payment configurations.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.Id">
+            <summary>The employee's unique identifier.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.EmployeeCode">
+            <summary>Formatted employee code.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.FullName">
+            <summary>The employee's full name.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.Tin">
+            <summary>Tax Identification Number (TIN).</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.FnpfNumber">
+            <summary>FNPF number.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.ResidencyStatus">
+            <summary>Residency status ("Resident" or "NonResident").</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.Department">
+            <summary>Employee's department.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.BaseSalary">
+            <summary>Base salary or rate value.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.Frequency">
+            <summary>Target pay frequency type.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.IsFnpfExempt">
+            <summary>Is exempt from FNPF contributions.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.IsTaxExempt">
+            <summary>Is exempt from PAYE taxes.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.IsActive">
+            <summary>Active status flag.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.EmploymentType">
+            <summary>Employment type enum string.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.Branch">
+            <summary>Employee's branch location.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.Position">
+            <summary>Employee's position title.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.Email">
+            <summary>Employee's email address.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.CostCentre">
+            <summary>Employee's cost centre assignment.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.DataQualityScore">
+            <summary>Data quality score (0-100).</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeeDetailDto.PaymentMethods">
+            <summary>Assigned payment configurations.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeePaymentMethodDto">
+            <summary>
+            Detail DTO representing a payment method allocation.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeePaymentMethodDto.MethodType">
+            <summary>The payment method type string.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeePaymentMethodDto.BankName">
+            <summary>The bank name.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeePaymentMethodDto.BankAccountNumber">
+            <summary>The bank account number.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeePaymentMethodDto.BankSortCode">
+            <summary>The bank sort/routing code.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeePaymentMethodDto.MobileNumber">
+            <summary>Mobile wallet phone number.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeePaymentMethodDto.Percentage">
+            <summary>Allocation percentage.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.EmployeePaymentMethodDto.IsPrimary">
+            <summary>Primary payment method selector.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.GetEmployeeDetailQueryHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.GetEmployeeDetailQuery"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.GetEmployeeDetailQueryHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService)">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.GetEmployeeDetailQueryHandler.Handle(FijiPayroll.Application.Features.Employees.Queries.GetEmployeeDetail.GetEmployeeDetailQuery,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.GetEmployeesListQuery">
+            <summary>
+            Query to retrieve a server-side filtered and paginated list of employees.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.GetEmployeesListQuery.#ctor(System.Int32,System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Query to retrieve a server-side filtered and paginated list of employees.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.EmployeeSummaryDto">
+            <summary>
+            Summary details for an employee registry record.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.EmployeeSummaryDto.Id">
+            <summary>The employee's unique identifier.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.EmployeeSummaryDto.EmployeeCode">
+            <summary>Displays formatted Employee Code matching standard payroll convention.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.EmployeeSummaryDto.FullName">
+            <summary>The employee's full name.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.EmployeeSummaryDto.Department">
+            <summary>The employee's assigned department.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.EmployeeSummaryDto.ResidencyStatus">
+            <summary>Residency status ("Resident" or "NonResident").</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.EmployeeSummaryDto.BaseSalary">
+            <summary>Periodic base salary or rate.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.EmployeeSummaryDto.IsActive">
+            <summary>Deactivation status indicator.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.GetEmployeesListQueryHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.GetEmployeesListQuery"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.GetEmployeesListQueryHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService)">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.GetEmployeesListQueryHandler.Handle(FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.GetEmployeesListQuery,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Commands.ApproveLeaveRequest.ApproveLeaveRequestCommand">
+            <summary>
+            Command to approve a pending leave request and reserve the balance.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Commands.ApproveLeaveRequest.ApproveLeaveRequestCommand.#ctor(System.Int32)">
+            <summary>
+            Command to approve a pending leave request and reserve the balance.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Commands.ApproveLeaveRequest.ApproveLeaveRequestCommandHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Leave.Commands.ApproveLeaveRequest.ApproveLeaveRequestCommand"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Commands.ApproveLeaveRequest.ApproveLeaveRequestCommandHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService,FijiPayroll.Application.Common.Interfaces.IDateTimeService,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Features.Leave.Commands.ApproveLeaveRequest.ApproveLeaveRequestCommandHandler})">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Commands.ApproveLeaveRequest.ApproveLeaveRequestCommandHandler.Handle(FijiPayroll.Application.Features.Leave.Commands.ApproveLeaveRequest.ApproveLeaveRequestCommand,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Commands.RejectLeaveRequest.RejectLeaveRequestCommand">
+            <summary>
+            Command to reject a pending leave request with a mandatory reason.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Commands.RejectLeaveRequest.RejectLeaveRequestCommand.#ctor(System.Int32,System.String)">
+            <summary>
+            Command to reject a pending leave request with a mandatory reason.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Commands.RejectLeaveRequest.RejectLeaveRequestCommandHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Leave.Commands.RejectLeaveRequest.RejectLeaveRequestCommand"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Commands.RejectLeaveRequest.RejectLeaveRequestCommandHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService,FijiPayroll.Application.Common.Interfaces.IDateTimeService,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Features.Leave.Commands.RejectLeaveRequest.RejectLeaveRequestCommandHandler})">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Commands.RejectLeaveRequest.RejectLeaveRequestCommandHandler.Handle(FijiPayroll.Application.Features.Leave.Commands.RejectLeaveRequest.RejectLeaveRequestCommand,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Commands.SubmitLeaveRequest.SubmitLeaveRequestCommand">
+            <summary>
+            Command to submit a new employee leave request.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Commands.SubmitLeaveRequest.SubmitLeaveRequestCommand.#ctor(System.Int32,System.Int32,System.Int32,System.DateTime,System.DateTime,System.Decimal,System.String)">
+            <summary>
+            Command to submit a new employee leave request.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Commands.SubmitLeaveRequest.SubmitLeaveRequestCommandHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Leave.Commands.SubmitLeaveRequest.SubmitLeaveRequestCommand"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Commands.SubmitLeaveRequest.SubmitLeaveRequestCommandHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService,FijiPayroll.Application.Common.Interfaces.IDateTimeService,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Features.Leave.Commands.SubmitLeaveRequest.SubmitLeaveRequestCommandHandler})">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Commands.SubmitLeaveRequest.SubmitLeaveRequestCommandHandler.Handle(FijiPayroll.Application.Features.Leave.Commands.SubmitLeaveRequest.SubmitLeaveRequestCommand,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.GetLeaveBalancesQuery">
+            <summary>
+            Query to retrieve leave balances for a specific employee in a given fiscal year.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.GetLeaveBalancesQuery.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Query to retrieve leave balances for a specific employee in a given fiscal year.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.LeaveBalanceDto">
+            <summary>
+            DTO representing an employee's leave balance details.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.LeaveBalanceDto.Id">
+            <summary>Balance record identifier.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.LeaveBalanceDto.EmployeeId">
+            <summary>Associated employee identifier.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.LeaveBalanceDto.LeaveTypeId">
+            <summary>Leave type identifier.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.LeaveBalanceDto.LeaveTypeName">
+            <summary>Leave type display name.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.LeaveBalanceDto.FiscalYear">
+            <summary>Fiscal year of this balance tracker.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.LeaveBalanceDto.Entitlement">
+            <summary>Annual entitlement days.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.LeaveBalanceDto.Accrued">
+            <summary>Accrued days to date.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.LeaveBalanceDto.CarriedForward">
+            <summary>Days brought forward from previous year.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.LeaveBalanceDto.Taken">
+            <summary>Days taken and processed in payroll.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.LeaveBalanceDto.Pending">
+            <summary>Days reserved in pending approved requests.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.LeaveBalanceDto.Available">
+            <summary>Calculated available days balance.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.GetLeaveBalancesQueryHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.GetLeaveBalancesQuery"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.GetLeaveBalancesQueryHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService)">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.GetLeaveBalancesQueryHandler.Handle(FijiPayroll.Application.Features.Leave.Queries.GetLeaveBalances.GetLeaveBalancesQuery,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.GetLeaveRequestsQuery">
+            <summary>
+            Query to retrieve leave requests for a company, optionally filtered by a specific employee.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.GetLeaveRequestsQuery.#ctor(System.Int32,System.Nullable{System.Int32})">
+            <summary>
+            Query to retrieve leave requests for a company, optionally filtered by a specific employee.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto">
+            <summary>
+            DTO representing a leave request record.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.Id">
+            <summary>Unique request identifier.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.EmployeeId">
+            <summary>Associated employee identifier.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.EmployeeName">
+            <summary>Employee's full name.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.LeaveTypeId">
+            <summary>Leave type identifier.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.LeaveTypeName">
+            <summary>Display name of the leave type.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.StartDate">
+            <summary>Start date of leave period.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.EndDate">
+            <summary>End date of leave period.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.TotalDays">
+            <summary>Total requested working days.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.Status">
+            <summary>Current approval status (Pending/Approved/Rejected/Cancelled).</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.Notes">
+            <summary>Employee notes.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.ApprovedRejectedBy">
+            <summary>Manager who approved or rejected the request.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.ApprovedRejectedAt">
+            <summary>Timestamp of approval or rejection decision.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.RejectionReason">
+            <summary>Reason for rejection.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.CancellationReason">
+            <summary>Reason for cancellation.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.MedicalCertificateRequired">
+            <summary>True if a medical certificate is required.</summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.LeaveRequestDto.MedicalCertificateProvided">
+            <summary>True if a medical certificate was provided.</summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.GetLeaveRequestsQueryHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.GetLeaveRequestsQuery"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.GetLeaveRequestsQueryHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService)">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.GetLeaveRequestsQueryHandler.Handle(FijiPayroll.Application.Features.Leave.Queries.GetLeaveRequests.GetLeaveRequestsQuery,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Queries.GetLeaveTypes.GetLeaveTypesQuery">
+            <summary>
+            Query to retrieve all active leave types for a company.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Queries.GetLeaveTypes.GetLeaveTypesQuery.#ctor(System.Int32)">
+            <summary>
+            Query to retrieve all active leave types for a company.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Queries.GetLeaveTypes.LeaveTypeDto">
+            <summary>
+            DTO representing a leave type.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Leave.Queries.GetLeaveTypes.GetLeaveTypesQueryHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Leave.Queries.GetLeaveTypes.GetLeaveTypesQuery"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Queries.GetLeaveTypes.GetLeaveTypesQueryHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService)">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Leave.Queries.GetLeaveTypes.GetLeaveTypesQueryHandler.Handle(FijiPayroll.Application.Features.Leave.Queries.GetLeaveTypes.GetLeaveTypesQuery,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Loans.Commands.CreateLoan.CreateLoanCommand">
+            <summary>
+            Command to register/create a new employee staff loan.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Commands.CreateLoan.CreateLoanCommand.#ctor(System.Int32,System.Int32,System.String,System.Decimal,System.Decimal,System.Decimal,System.DateTime)">
+            <summary>
+            Command to register/create a new employee staff loan.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Loans.Commands.CreateLoan.CreateLoanCommandHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Loans.Commands.CreateLoan.CreateLoanCommand"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Commands.CreateLoan.CreateLoanCommandHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService,FijiPayroll.Application.Common.Interfaces.IDateTimeService,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Features.Loans.Commands.CreateLoan.CreateLoanCommandHandler})">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Commands.CreateLoan.CreateLoanCommandHandler.Handle(FijiPayroll.Application.Features.Loans.Commands.CreateLoan.CreateLoanCommand,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Loans.Commands.ResumeLoan.ResumeLoanCommand">
+            <summary>
+            Command to resume repayments on a suspended employee loan.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Commands.ResumeLoan.ResumeLoanCommand.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Command to resume repayments on a suspended employee loan.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Loans.Commands.ResumeLoan.ResumeLoanCommandHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Loans.Commands.ResumeLoan.ResumeLoanCommand"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Commands.ResumeLoan.ResumeLoanCommandHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService,FijiPayroll.Application.Common.Interfaces.IDateTimeService,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Features.Loans.Commands.ResumeLoan.ResumeLoanCommandHandler})">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Commands.ResumeLoan.ResumeLoanCommandHandler.Handle(FijiPayroll.Application.Features.Loans.Commands.ResumeLoan.ResumeLoanCommand,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Loans.Commands.SuspendLoan.SuspendLoanCommand">
+            <summary>
+            Command to suspend active repayments on an employee loan.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Commands.SuspendLoan.SuspendLoanCommand.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Command to suspend active repayments on an employee loan.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Loans.Commands.SuspendLoan.SuspendLoanCommandHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Loans.Commands.SuspendLoan.SuspendLoanCommand"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Commands.SuspendLoan.SuspendLoanCommandHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService,FijiPayroll.Application.Common.Interfaces.IDateTimeService,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Features.Loans.Commands.SuspendLoan.SuspendLoanCommandHandler})">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Commands.SuspendLoan.SuspendLoanCommandHandler.Handle(FijiPayroll.Application.Features.Loans.Commands.SuspendLoan.SuspendLoanCommand,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Loans.Commands.WriteOffLoan.WriteOffLoanCommand">
+            <summary>
+            Command to write off the remaining unpaid balance on an employee loan.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Commands.WriteOffLoan.WriteOffLoanCommand.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Command to write off the remaining unpaid balance on an employee loan.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Loans.Commands.WriteOffLoan.WriteOffLoanCommandHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Loans.Commands.WriteOffLoan.WriteOffLoanCommand"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Commands.WriteOffLoan.WriteOffLoanCommandHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService,FijiPayroll.Application.Common.Interfaces.IDateTimeService,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Application.Features.Loans.Commands.WriteOffLoan.WriteOffLoanCommandHandler})">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Commands.WriteOffLoan.WriteOffLoanCommandHandler.Handle(FijiPayroll.Application.Features.Loans.Commands.WriteOffLoan.WriteOffLoanCommand,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Loans.Queries.GetEmployeeLoans.GetEmployeeLoansQuery">
+            <summary>
+            Query to retrieve active and historical loans for an employee.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Queries.GetEmployeeLoans.GetEmployeeLoansQuery.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Query to retrieve active and historical loans for an employee.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Loans.Queries.GetEmployeeLoans.LoanDto">
+            <summary>
+            DTO representing an individual employee loan.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Loans.Queries.GetEmployeeLoans.LoanRepaymentDto">
+            <summary>
+            DTO representing a single loan repayment transaction.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Loans.Queries.GetEmployeeLoans.GetEmployeeLoansQueryHandler">
+            <summary>
+            Handler for <see cref="T:FijiPayroll.Application.Features.Loans.Queries.GetEmployeeLoans.GetEmployeeLoansQuery"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Queries.GetEmployeeLoans.GetEmployeeLoansQueryHandler.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ICurrentUserService)">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Loans.Queries.GetEmployeeLoans.GetEmployeeLoansQueryHandler.Handle(FijiPayroll.Application.Features.Loans.Queries.GetEmployeeLoans.GetEmployeeLoansQuery,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
         <member name="T:FijiPayroll.Application.Features.Lookups.Commands.ArchiveLookup.ArchiveLookupCommand">
@@ -2184,7 +2800,7 @@
             Single source of truth for payroll input assembly.
             </summary>
         </member>
-        <member name="M:FijiPayroll.Application.Services.PayrollContextBuilder.Build(FijiPayroll.Domain.Entities.Payroll.PayrollRun,System.Guid,System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Services.EmployeeSnapshot},System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Services.PayrollComponentSnapshot},System.Collections.Generic.IReadOnlyList{FijiPayroll.Domain.Entities.Company.TaxBracket},System.Decimal,System.Decimal,FijiPayroll.Domain.Enumerations.VoluntaryDeductionPolicy)">
+        <member name="M:FijiPayroll.Application.Services.PayrollContextBuilder.Build(FijiPayroll.Domain.Entities.Payroll.PayrollRun,System.Guid,System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Services.EmployeeSnapshot},System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Services.PayrollComponentSnapshot},System.Collections.Generic.IReadOnlyList{FijiPayroll.Domain.Entities.Company.TaxBracket},System.Decimal,System.Decimal,FijiPayroll.Domain.Enumerations.VoluntaryDeductionPolicy,FijiPayroll.Domain.Entities.Company.NegativeNetPayPolicy)">
             <summary>
             Builds a full execution context from pre-fetched component snapshots, tax brackets, and FNPF rates.
             This method is thread-safe and database-free.
@@ -2195,7 +2811,7 @@
             Builds a full execution context for a payroll run including statutory rates and component snapshots.
             </summary>
         </member>
-        <member name="M:FijiPayroll.Application.Services.PayrollContextBuilder.BuildEmployeeSnapshotsAsync(System.Int32,System.Collections.Generic.IReadOnlyList{FijiPayroll.Domain.Entities.Company.Employee},System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Services.PayrollComponentSnapshot},System.Boolean,System.Threading.CancellationToken)">
+        <member name="M:FijiPayroll.Application.Services.PayrollContextBuilder.BuildEmployeeSnapshotsAsync(System.Int32,System.Collections.Generic.IReadOnlyList{FijiPayroll.Domain.Entities.Company.Employee},System.Collections.Generic.IReadOnlyList{FijiPayroll.Application.Services.PayrollComponentSnapshot},System.Boolean,System.DateTime,System.DateTime,System.Threading.CancellationToken)">
             <summary>
             Builds employee snapshots from domain employees, optionally loading staged adjustments.
             </summary>
@@ -2300,9 +2916,19 @@
             Immutable snapshot of employee details.
             </summary>
         </member>
+        <member name="P:FijiPayroll.Application.Services.EmployeeSnapshot.ActiveLoans">
+            <summary>
+            Active loans for this employee that require periodic deductions.
+            </summary>
+        </member>
         <member name="P:FijiPayroll.Application.Services.EmployeeSnapshot.ComponentOverrides">
             <summary>
             Component overrides (manual entries) specifically for this pay period.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Services.EmployeeLoanSnapshot">
+            <summary>
+            Immutable snapshot of an employee loan.
             </summary>
         </member>
         <member name="T:FijiPayroll.Application.Services.EmployeeComponentOverrideSnapshot">

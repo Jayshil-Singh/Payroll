@@ -85,6 +85,445 @@
         <member name="M:FijiPayroll.WPF.Converters.InverseBoolConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
             <inheritdoc/>
         </member>
+        <member name="T:FijiPayroll.WPF.Views.InverseBooleanToVisibilityConverter">
+            <summary>
+            Converts a boolean or null/empty state to Visibility.
+            Returns Visible if false or null/empty, Collapsed otherwise.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.StatusToColorBrushConverter">
+            <summary>
+            Converts active status (boolean) to styled colors or string descriptors for WPF.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.StatusStringToColorBrushConverter">
+            <summary>
+            Converts leave request status string to styled colors for WPF.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.StringEqualsToVisibilityConverter">
+            <summary>
+            Returns Visibility.Visible if string value equals parameter, else Collapsed.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.AdminView">
+            <summary>
+            Interaction logic for AdminView.xaml.
+            </summary>
+            <summary>
+            AdminView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.AdminView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.ApprovalDashboardView">
+            <summary>
+            Interaction logic for ApprovalDashboardView.xaml
+            </summary>
+            <summary>
+            ApprovalDashboardView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.ApprovalDashboardView.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.WPF.Views.ApprovalDashboardView"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.ApprovalDashboardView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.CloneWizardWindow">
+            <summary>
+            Interaction logic for CloneWizardWindow.xaml.
+            </summary>
+            <summary>
+            CloneWizardWindow
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.CloneWizardWindow.#ctor(FijiPayroll.WPF.ViewModels.CloneWizardViewModel)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.CloneWizardWindow"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.CloneWizardWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.CompanySetupDashboardView">
+            <summary>
+            Interaction logic for CompanySetupDashboardView.xaml
+            </summary>
+            <summary>
+            CompanySetupDashboardView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.CompanySetupDashboardView.#ctor">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.CompanySetupDashboardView"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.CompanySetupDashboardView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.ComplianceCenterView">
+            <summary>
+            Interaction logic for ComplianceCenterView.xaml.
+            </summary>
+            <summary>
+            ComplianceCenterView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.ComplianceCenterView.#ctor(FijiPayroll.WPF.ViewModels.ComplianceCenterViewModel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.WPF.Views.ComplianceCenterView"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.ComplianceCenterView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.ComponentSimulationWindow">
+            <summary>
+            Interaction logic for ComponentSimulationWindow.xaml.
+            </summary>
+            <summary>
+            ComponentSimulationWindow
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.ComponentSimulationWindow.#ctor(FijiPayroll.WPF.ViewModels.ComponentSimulationViewModel)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.ComponentSimulationWindow"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.ComponentSimulationWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.DashboardView">
+            <summary>
+            Interaction logic for DashboardView.xaml.
+            </summary>
+            <summary>
+            DashboardView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.DashboardView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.DiagnosticsDashboardView">
+            <summary>
+            Interaction logic for DiagnosticsDashboardView.xaml.
+            </summary>
+            <summary>
+            DiagnosticsDashboardView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.DiagnosticsDashboardView.#ctor(FijiPayroll.WPF.ViewModels.DiagnosticsDashboardViewModel)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.WPF.Views.DiagnosticsDashboardView"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.DiagnosticsDashboardView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.EmployeeView">
+            <summary>
+            Interaction logic for EmployeeView.xaml.
+            </summary>
+            <summary>
+            EmployeeView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.EmployeeView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.ErrorRecoveryWindow">
+            <summary>
+            Interaction logic for ErrorRecoveryWindow.xaml
+            </summary>
+            <summary>
+            ErrorRecoveryWindow
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.ErrorRecoveryWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.LoginView">
+            <summary>
+            Interaction logic for LoginView.xaml
+            </summary>
+            <summary>
+            LoginView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.LoginView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.LogViewerView">
+            <summary>
+            Interaction logic for LogViewerView.xaml
+            </summary>
+            <summary>
+            LogViewerView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.LogViewerView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.MainWindow">
+            <summary>
+            Interaction logic for MainWindow.xaml
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.Views.MainWindow.ActiveToasts">
+            <summary>
+            Gets the list of active floating toast notifications.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.ToastNotificationItem">
+            <summary>
+            Container holding visual state and data for individual active toast cards.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.MasterLookupManagerView">
+            <summary>
+            Interaction logic for MasterLookupManagerView.xaml.
+            </summary>
+            <summary>
+            MasterLookupManagerView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.MasterLookupManagerView.#ctor">
+            <summary>Initializes components.</summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.MasterLookupManagerView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.PackageManagerWindow">
+            <summary>
+            Interaction logic for PackageManagerWindow.xaml.
+            </summary>
+            <summary>
+            PackageManagerWindow
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PackageManagerWindow.#ctor(FijiPayroll.WPF.ViewModels.PackageManagerViewModel)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.PackageManagerWindow"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PackageManagerWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.PayrollComponentEditorWindow">
+            <summary>
+            Interaction logic for PayrollComponentEditorWindow.xaml.
+            Hosts the <see cref="T:FijiPayroll.WPF.ViewModels.PayrollComponentFormViewModel"/> for both create and edit modes.
+            Closes automatically when the ViewModel raises <see cref="E:FijiPayroll.WPF.ViewModels.PayrollComponentFormViewModel.CloseRequested"/>.
+            </summary>
+            <summary>
+            PayrollComponentEditorWindow
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PayrollComponentEditorWindow.#ctor(FijiPayroll.WPF.ViewModels.PayrollComponentFormViewModel)">
+            <summary>
+            Initialises a new instance of <see cref="T:FijiPayroll.WPF.Views.PayrollComponentEditorWindow"/> in <b>create mode</b>.
+            </summary>
+            <param name="viewModel">The form ViewModel pre-configured for the desired mode.</param>
+        </member>
+        <member name="P:FijiPayroll.WPF.Views.PayrollComponentEditorWindow.SavedSuccessfully">
+            <summary>
+            Gets a value indicating whether the dialog was closed after a successful save.
+            Intended to be checked by the caller via <see cref="M:System.Windows.Window.ShowDialog"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PayrollComponentEditorWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.PayrollComponentView">
+            <summary>
+            Interaction logic for PayrollComponentView.xaml.
+            </summary>
+            <summary>
+            PayrollComponentView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PayrollComponentView.#ctor">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.PayrollComponentView"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PayrollComponentView.#ctor(FijiPayroll.WPF.ViewModels.PayrollComponentViewModel)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.PayrollComponentView"/> class with VM.
+            </summary>
+            <param name="viewModel">The view model instance.</param>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PayrollComponentView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.PayrollConsoleView">
+            <summary>
+            Interaction logic for PayrollConsoleView.xaml
+            </summary>
+            <summary>
+            PayrollConsoleView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PayrollConsoleView.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.WPF.Views.PayrollConsoleView"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PayrollConsoleView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.PayrollRunView">
+            <summary>
+            Interaction logic for PayrollRunView.xaml
+            </summary>
+            <summary>
+            PayrollRunView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PayrollRunView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.PayrollView">
+            <summary>
+            Interaction logic for PayrollView.xaml.
+            </summary>
+            <summary>
+            PayrollView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PayrollView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.PendingApprovalsView">
+            <summary>
+            Interaction logic for PendingApprovalsView.xaml
+            </summary>
+            <summary>
+            PendingApprovalsView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PendingApprovalsView.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.WPF.Views.PendingApprovalsView"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.PendingApprovalsView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.ReportsView">
+            <summary>
+            Interaction logic for ReportsView.xaml.
+            </summary>
+            <summary>
+            ReportsView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.ReportsView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.SetupView">
+            <summary>
+            Interaction logic for SetupView.xaml.
+            </summary>
+            <summary>
+            SetupView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.SetupView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.SplashWindow">
+            <summary>
+            Interaction logic for SplashWindow.xaml
+            </summary>
+            <summary>
+            SplashWindow
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.SplashWindow.UpdateProgress(System.Double,System.String,System.String)">
+            <summary>
+            Thread-safely updates the progress value and stage label texts.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.SplashWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.StagedImportWindow">
+            <summary>
+            Interaction logic for StagedImportWindow.xaml.
+            </summary>
+            <summary>
+            StagedImportWindow
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.StagedImportWindow.#ctor(FijiPayroll.WPF.ViewModels.StagedImportViewModel)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.StagedImportWindow"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.StagedImportWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
         <member name="T:FijiPayroll.WPF.DependencyInjection">
             <summary>
             Dependency Injection registration for the WPF presentation layer.
@@ -1313,13 +1752,136 @@
         </member>
         <member name="T:FijiPayroll.WPF.ViewModels.EmployeeViewModel">
             <summary>
-            ViewModel for the employee registry management panel.
+            ViewModel governing employee listing, profile details, payment methods, and leave request operations.
+            </summary>
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.WPF.ViewModels.EmployeeViewModel.#ctor(MediatR.IMediator,FijiPayroll.Application.Common.Interfaces.ITenantProvider,FijiPayroll.WPF.Services.INotificationService,FijiPayroll.WPF.Services.IDialogService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.WPF.ViewModels.EmployeeViewModel"/> class.
             </summary>
         </member>
         <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.Title">
             <summary>
-            Gets the panel title.
+            Title display value.
             </summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.SearchTerm">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._searchTerm"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.SelectedDepartment">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._selectedDepartment"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.SelectedEmployee">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._selectedEmployee"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.SelectedEmployeeDetail">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._selectedEmployeeDetail"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.IsLoadingDetails">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._isLoadingDetails"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.SelectedLeaveType">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._selectedLeaveType"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.LeaveStartDate">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._leaveStartDate"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.LeaveEndDate">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._leaveEndDate"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.LeaveTotalDays">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._leaveTotalDays"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.LeaveNotes">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._leaveNotes"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.RejectionReason">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._rejectionReason"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.LoanDescription">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._loanDescription"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.LoanPrincipalAmount">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._loanPrincipalAmount"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.LoanInterestRate">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._loanInterestRate"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.LoanDeductionAmountPerPeriod">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._loanDeductionAmountPerPeriod"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.LoanStartDate">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.EmployeeViewModel._loanStartDate"/>
+        </member>
+        <member name="M:FijiPayroll.WPF.ViewModels.EmployeeViewModel.OnSearchTermChanged(System.String)">
+            <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.SearchTerm"/> just changed.</summary>
+            <param name="value">The new property value that was set.</param>
+            <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.SearchTerm"/> is changed.</remarks>
+        </member>
+        <member name="M:FijiPayroll.WPF.ViewModels.EmployeeViewModel.OnSelectedDepartmentChanged(System.String)">
+            <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.SelectedDepartment"/> just changed.</summary>
+            <param name="value">The new property value that was set.</param>
+            <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.SelectedDepartment"/> is changed.</remarks>
+        </member>
+        <member name="M:FijiPayroll.WPF.ViewModels.EmployeeViewModel.OnSelectedEmployeeChanged(FijiPayroll.Application.Features.Employees.Queries.GetEmployeesList.EmployeeSummaryDto)">
+            <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.SelectedEmployee"/> just changed.</summary>
+            <param name="value">The new property value that was set.</param>
+            <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.SelectedEmployee"/> is changed.</remarks>
+        </member>
+        <member name="T:FijiPayroll.WPF.ViewModels.LoginViewModel">
+            <summary>
+            View model backing the login view.
+            Coordinates authentication, company selection, and session establishment.
+            </summary>
+            <inheritdoc/>
+        </member>
+        <member name="E:FijiPayroll.WPF.ViewModels.LoginViewModel.RequestClose">
+            <summary>
+            Event triggered when the login is successful and the window should close.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Username">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._username"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Password">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._password"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Companies">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._companies"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.SelectedCompany">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._selectedCompany"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.ErrorMessage">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._errorMessage"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.ShowCompanySelection">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._showCompanySelection"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.IsLoadingCompanies">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._isLoadingCompanies"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.IsAuthenticating">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._isAuthenticating"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.IsLoginSuccess">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._isLoginSuccess"/>
+        </member>
+        <member name="M:FijiPayroll.WPF.ViewModels.LoginViewModel.OnUsernameChanged(System.String)">
+            <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Username"/> just changed.</summary>
+            <param name="value">The new property value that was set.</param>
+            <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Username"/> is changed.</remarks>
+        </member>
+        <member name="M:FijiPayroll.WPF.ViewModels.LoginViewModel.OnPasswordChanged(System.String)">
+            <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Password"/> just changed.</summary>
+            <param name="value">The new property value that was set.</param>
+            <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Password"/> is changed.</remarks>
+        </member>
+        <member name="M:FijiPayroll.WPF.ViewModels.LoginViewModel.OnSelectedCompanyChanged(FijiPayroll.Application.Features.Auth.Queries.GetCompaniesForUser.CompanyLookupDto)">
+            <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.LoginViewModel.SelectedCompany"/> just changed.</summary>
+            <param name="value">The new property value that was set.</param>
+            <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.LoginViewModel.SelectedCompany"/> is changed.</remarks>
         </member>
         <member name="T:FijiPayroll.WPF.ViewModels.LogViewerViewModel">
             <summary>
@@ -1890,409 +2452,34 @@
         <member name="P:FijiPayroll.WPF.ViewModels.StagedImportViewModel.IsValid">
             <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.StagedImportViewModel._isValid"/>
         </member>
-        <member name="T:FijiPayroll.WPF.Views.AdminView">
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
             <summary>
-            Interaction logic for AdminView.xaml.
+            GeneratedInternalTypeHelper
             </summary>
-            <summary>
-            AdminView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.AdminView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.ApprovalDashboardView">
-            <summary>
-            Interaction logic for ApprovalDashboardView.xaml
-            </summary>
-            <summary>
-            ApprovalDashboardView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.ApprovalDashboardView.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FijiPayroll.WPF.Views.ApprovalDashboardView"/> class.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.ApprovalDashboardView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.CloneWizardWindow">
-            <summary>
-            Interaction logic for CloneWizardWindow.xaml.
-            </summary>
-            <summary>
-            CloneWizardWindow
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.CloneWizardWindow.#ctor(FijiPayroll.WPF.ViewModels.CloneWizardViewModel)">
-            <summary>
-            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.CloneWizardWindow"/> class.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.CloneWizardWindow.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.CompanySetupDashboardView">
-            <summary>
-            Interaction logic for CompanySetupDashboardView.xaml
-            </summary>
-            <summary>
-            CompanySetupDashboardView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.CompanySetupDashboardView.#ctor">
-            <summary>
-            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.CompanySetupDashboardView"/> class.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.CompanySetupDashboardView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.ComplianceCenterView">
-            <summary>
-            Interaction logic for ComplianceCenterView.xaml.
-            </summary>
-            <summary>
-            ComplianceCenterView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.ComplianceCenterView.#ctor(FijiPayroll.WPF.ViewModels.ComplianceCenterViewModel)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FijiPayroll.WPF.Views.ComplianceCenterView"/> class.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.ComplianceCenterView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.ComponentSimulationWindow">
-            <summary>
-            Interaction logic for ComponentSimulationWindow.xaml.
-            </summary>
-            <summary>
-            ComponentSimulationWindow
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.ComponentSimulationWindow.#ctor(FijiPayroll.WPF.ViewModels.ComponentSimulationViewModel)">
-            <summary>
-            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.ComponentSimulationWindow"/> class.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.ComponentSimulationWindow.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.DashboardView">
-            <summary>
-            Interaction logic for DashboardView.xaml.
-            </summary>
-            <summary>
-            DashboardView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.DashboardView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.DiagnosticsDashboardView">
-            <summary>
-            Interaction logic for DiagnosticsDashboardView.xaml.
-            </summary>
-            <summary>
-            DiagnosticsDashboardView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.DiagnosticsDashboardView.#ctor(FijiPayroll.WPF.ViewModels.DiagnosticsDashboardViewModel)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FijiPayroll.WPF.Views.DiagnosticsDashboardView"/> class.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.DiagnosticsDashboardView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.EmployeeView">
-            <summary>
-            Interaction logic for EmployeeView.xaml.
-            </summary>
-            <summary>
-            EmployeeView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.EmployeeView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.ErrorRecoveryWindow">
-            <summary>
-            Interaction logic for ErrorRecoveryWindow.xaml
-            </summary>
-            <summary>
-            ErrorRecoveryWindow
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.ErrorRecoveryWindow.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.LogViewerView">
-            <summary>
-            Interaction logic for LogViewerView.xaml
-            </summary>
-            <summary>
-            LogViewerView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.LogViewerView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.MainWindow">
-            <summary>
-            Interaction logic for MainWindow.xaml
-            </summary>
-            <summary>
-            MainWindow
-            </summary>
-        </member>
-        <member name="P:FijiPayroll.WPF.Views.MainWindow.ActiveToasts">
-            <summary>
-            Gets the list of active floating toast notifications.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.MainWindow.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.ToastNotificationItem">
-            <summary>
-            Container holding visual state and data for individual active toast cards.
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.MasterLookupManagerView">
-            <summary>
-            Interaction logic for MasterLookupManagerView.xaml.
-            </summary>
-            <summary>
-            MasterLookupManagerView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.MasterLookupManagerView.#ctor">
-            <summary>Initializes components.</summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.MasterLookupManagerView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.PackageManagerWindow">
-            <summary>
-            Interaction logic for PackageManagerWindow.xaml.
-            </summary>
-            <summary>
-            PackageManagerWindow
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.PackageManagerWindow.#ctor(FijiPayroll.WPF.ViewModels.PackageManagerViewModel)">
-            <summary>
-            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.PackageManagerWindow"/> class.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.PackageManagerWindow.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.PayrollComponentEditorWindow">
-            <summary>
-            Interaction logic for PayrollComponentEditorWindow.xaml.
-            Hosts the <see cref="T:FijiPayroll.WPF.ViewModels.PayrollComponentFormViewModel"/> for both create and edit modes.
-            Closes automatically when the ViewModel raises <see cref="E:FijiPayroll.WPF.ViewModels.PayrollComponentFormViewModel.CloseRequested"/>.
-            </summary>
-            <summary>
-            PayrollComponentEditorWindow
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.PayrollComponentEditorWindow.#ctor(FijiPayroll.WPF.ViewModels.PayrollComponentFormViewModel)">
-            <summary>
-            Initialises a new instance of <see cref="T:FijiPayroll.WPF.Views.PayrollComponentEditorWindow"/> in <b>create mode</b>.
-            </summary>
-            <param name="viewModel">The form ViewModel pre-configured for the desired mode.</param>
-        </member>
-        <member name="P:FijiPayroll.WPF.Views.PayrollComponentEditorWindow.SavedSuccessfully">
-            <summary>
-            Gets a value indicating whether the dialog was closed after a successful save.
-            Intended to be checked by the caller via <see cref="M:System.Windows.Window.ShowDialog"/>.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.PayrollComponentEditorWindow.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.PayrollComponentView">
-            <summary>
-            Interaction logic for PayrollComponentView.xaml.
-            </summary>
-            <summary>
-            PayrollComponentView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.PayrollComponentView.#ctor">
-            <summary>
-            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.PayrollComponentView"/> class.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.PayrollComponentView.#ctor(FijiPayroll.WPF.ViewModels.PayrollComponentViewModel)">
-            <summary>
-            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.PayrollComponentView"/> class with VM.
-            </summary>
-            <param name="viewModel">The view model instance.</param>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.PayrollComponentView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.PayrollConsoleView">
-            <summary>
-            Interaction logic for PayrollConsoleView.xaml
-            </summary>
-            <summary>
-            PayrollConsoleView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.PayrollConsoleView.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FijiPayroll.WPF.Views.PayrollConsoleView"/> class.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.PayrollConsoleView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.PayrollRunView">
-            <summary>
-            Interaction logic for PayrollRunView.xaml
-            </summary>
-            <summary>
-            PayrollRunView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.PayrollRunView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.PayrollView">
-            <summary>
-            Interaction logic for PayrollView.xaml.
-            </summary>
-            <summary>
-            PayrollView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.PayrollView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.PendingApprovalsView">
-            <summary>
-            Interaction logic for PendingApprovalsView.xaml
-            </summary>
-            <summary>
-            PendingApprovalsView
-            </summary>
         </member>
-        <member name="M:FijiPayroll.WPF.Views.PendingApprovalsView.#ctor">
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
             <summary>
-            Initializes a new instance of the <see cref="T:FijiPayroll.WPF.Views.PendingApprovalsView"/> class.
+            CreateInstance
             </summary>
         </member>
-        <member name="M:FijiPayroll.WPF.Views.PendingApprovalsView.InitializeComponent">
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
             <summary>
-            InitializeComponent
+            GetPropertyValue
             </summary>
         </member>
-        <member name="T:FijiPayroll.WPF.Views.ReportsView">
-            <summary>
-            Interaction logic for ReportsView.xaml.
-            </summary>
-            <summary>
-            ReportsView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.ReportsView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.SetupView">
-            <summary>
-            Interaction logic for SetupView.xaml.
-            </summary>
-            <summary>
-            SetupView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.SetupView.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.SplashWindow">
-            <summary>
-            Interaction logic for SplashWindow.xaml
-            </summary>
-            <summary>
-            SplashWindow
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.SplashWindow.UpdateProgress(System.Double,System.String,System.String)">
-            <summary>
-            Thread-safely updates the progress value and stage label texts.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.SplashWindow.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.StagedImportWindow">
-            <summary>
-            Interaction logic for StagedImportWindow.xaml.
-            </summary>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
             <summary>
-            StagedImportWindow
+            SetPropertyValue
             </summary>
         </member>
-        <member name="M:FijiPayroll.WPF.Views.StagedImportWindow.#ctor(FijiPayroll.WPF.ViewModels.StagedImportViewModel)">
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
             <summary>
-            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.Views.StagedImportWindow"/> class.
+            CreateDelegate
             </summary>
         </member>
-        <member name="M:FijiPayroll.WPF.Views.StagedImportWindow.InitializeComponent">
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
             <summary>
-            InitializeComponent
+            AddEventHandler
             </summary>
         </member>
         <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs">
@@ -2373,6 +2560,78 @@
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedEmployee">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedEmployee" generated properties.</summary>
         </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SearchTerm">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SearchTerm" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedDepartment">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedDepartment" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedEmployeeDetail">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedEmployeeDetail" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsLoadingDetails">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsLoadingDetails" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedLeaveType">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedLeaveType" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveStartDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveStartDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveEndDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveEndDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveTotalDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveTotalDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveNotes">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveNotes" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.RejectionReason">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "RejectionReason" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LoanDescription">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LoanDescription" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LoanPrincipalAmount">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LoanPrincipalAmount" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LoanInterestRate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LoanInterestRate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LoanDeductionAmountPerPeriod">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LoanDeductionAmountPerPeriod" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LoanStartDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LoanStartDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Username">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Username" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Password">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Password" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Companies">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Companies" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedCompany">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedCompany" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ErrorMessage">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ErrorMessage" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ShowCompanySelection">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ShowCompanySelection" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsLoadingCompanies">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsLoadingCompanies" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsAuthenticating">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsAuthenticating" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsLoginSuccess">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsLoginSuccess" generated properties.</summary>
+        </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedCategory">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedCategory" generated properties.</summary>
         </member>
@@ -2408,9 +2667,6 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsLoading">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsLoading" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ErrorMessage">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ErrorMessage" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.PackagePath">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "PackagePath" generated properties.</summary>
@@ -2456,9 +2712,6 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SuccessMessage">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SuccessMessage" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SearchTerm">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SearchTerm" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedTypeFilter">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedTypeFilter" generated properties.</summary>
@@ -2583,6 +2836,78 @@
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedEmployee">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedEmployee" generated properties.</summary>
         </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SearchTerm">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SearchTerm" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedDepartment">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedDepartment" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedEmployeeDetail">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedEmployeeDetail" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsLoadingDetails">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsLoadingDetails" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedLeaveType">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedLeaveType" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveStartDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveStartDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveEndDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveEndDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveTotalDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveTotalDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveNotes">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveNotes" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.RejectionReason">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "RejectionReason" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LoanDescription">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LoanDescription" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LoanPrincipalAmount">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LoanPrincipalAmount" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LoanInterestRate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LoanInterestRate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LoanDeductionAmountPerPeriod">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LoanDeductionAmountPerPeriod" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LoanStartDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LoanStartDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Username">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Username" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Password">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Password" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Companies">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Companies" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedCompany">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedCompany" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ErrorMessage">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ErrorMessage" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ShowCompanySelection">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ShowCompanySelection" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsLoadingCompanies">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsLoadingCompanies" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsAuthenticating">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsAuthenticating" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsLoginSuccess">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsLoginSuccess" generated properties.</summary>
+        </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedCategory">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedCategory" generated properties.</summary>
         </member>
@@ -2618,9 +2943,6 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsLoading">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsLoading" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ErrorMessage">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ErrorMessage" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.PackagePath">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "PackagePath" generated properties.</summary>
@@ -2678,9 +3000,6 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SuccessMessage">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SuccessMessage" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SearchTerm">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SearchTerm" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedTypeFilter">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedTypeFilter" generated properties.</summary>

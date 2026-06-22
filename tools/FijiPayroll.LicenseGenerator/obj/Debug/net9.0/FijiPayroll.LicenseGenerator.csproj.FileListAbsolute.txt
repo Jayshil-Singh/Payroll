@@ -1,0 +1,15 @@
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\bin\Debug\net9.0\FijiPayroll.LicenseGenerator.exe
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\bin\Debug\net9.0\FijiPayroll.LicenseGenerator.deps.json
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\bin\Debug\net9.0\FijiPayroll.LicenseGenerator.runtimeconfig.json
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\bin\Debug\net9.0\FijiPayroll.LicenseGenerator.dll
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\bin\Debug\net9.0\FijiPayroll.LicenseGenerator.pdb
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\obj\Debug\net9.0\FijiPayroll.LicenseGenerator.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\obj\Debug\net9.0\FijiPayroll.LicenseGenerator.AssemblyInfoInputs.cache
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\obj\Debug\net9.0\FijiPayroll.LicenseGenerator.AssemblyInfo.cs
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\obj\Debug\net9.0\FijiPayroll.LicenseGenerator.csproj.CoreCompileInputs.cache
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\obj\Debug\net9.0\FijiPayroll.LicenseGenerator.sourcelink.json
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\obj\Debug\net9.0\FijiPayroll.LicenseGenerator.dll
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\obj\Debug\net9.0\refint\FijiPayroll.LicenseGenerator.dll
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\obj\Debug\net9.0\FijiPayroll.LicenseGenerator.pdb
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\obj\Debug\net9.0\FijiPayroll.LicenseGenerator.genruntimeconfig.cache
+C:\Users\jayshil.singh\Desktop\Payroll\tools\FijiPayroll.LicenseGenerator\obj\Debug\net9.0\ref\FijiPayroll.LicenseGenerator.dll

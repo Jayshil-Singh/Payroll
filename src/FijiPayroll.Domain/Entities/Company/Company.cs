@@ -82,6 +82,9 @@ public sealed class Company : ArchivableEntity
     /// <summary>Gets or sets a value indicating whether the company is active.</summary>
     public bool IsActive { get; set; } = true;
 
+    /// <summary>Gets the voluntary deduction floor policy.</summary>
+    public NegativeNetPayPolicy NegativeNetPayPolicy { get; private set; } = NegativeNetPayPolicy.PartialDeduction;
+
     /// <summary>Gets a value indicating whether the first-run onboarding setup wizard is complete.</summary>
     public bool IsSetupComplete { get; private set; }
 
@@ -171,6 +174,12 @@ public sealed class Company : ArchivableEntity
     {
         IsSetupComplete = false;
         SetupCompletedUtc = null;
+    }
+
+    /// <summary>Configures the voluntary deduction policy.</summary>
+    public void SetNegativeNetPayPolicy(NegativeNetPayPolicy policy)
+    {
+        NegativeNetPayPolicy = policy;
     }
 }
 

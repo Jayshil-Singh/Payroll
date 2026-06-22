@@ -47,6 +47,7 @@ public static class DependencyInjection
 
         // ── ViewModels (Main & Module Shells) ────────────────────────────────
         services.AddSingleton<MainViewModel>();
+        services.AddTransient<LoginViewModel>();
         services.AddTransient<DashboardViewModel>();
         services.AddTransient<EmployeeViewModel>();
         services.AddTransient<PayrollViewModel>();
@@ -77,6 +78,7 @@ public static class DependencyInjection
 
         // ── Views ────────────────────────────────────────────────────────────
         services.AddTransient<MainWindow>();
+        services.AddTransient<LoginView>();
         services.AddTransient<PayrollComponentView>();
         services.AddTransient<PayrollComponentEditorWindow>();
         services.AddTransient<PayrollRunView>();

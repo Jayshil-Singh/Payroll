@@ -36,7 +36,8 @@ public sealed class PayrollContextBuilder
         IReadOnlyList<TaxBracket> taxBrackets,
         decimal fnpfEmployeeRate,
         decimal fnpfEmployerRate,
-        VoluntaryDeductionPolicy voluntaryDeductionPolicy)
+        VoluntaryDeductionPolicy voluntaryDeductionPolicy,
+        FijiPayroll.Domain.Entities.Company.NegativeNetPayPolicy negativeNetPayPolicy)
     {
         return new PayrollExecutionContext
         {
@@ -53,6 +54,7 @@ public sealed class PayrollContextBuilder
             TaxRules = taxBrackets,
             Components = componentSnapshots,
             VoluntaryDeductionPolicy = voluntaryDeductionPolicy,
+            NegativeNetPayPolicy = negativeNetPayPolicy,
             FnpfEmployeeRate = fnpfEmployeeRate,
             FnpfEmployerRate = fnpfEmployerRate
         };
@@ -75,6 +77,8 @@ public sealed class PayrollContextBuilder
             cancellationToken);
 
         var (employeeRate, employerRate) = await ResolveFnpfRatesAsync(run.CompanyId, cancellationToken);
+        var company = await _unitOfWork.Setup.GetCompanyByIdAsync(run.CompanyId, cancellationToken);
+        var netPayPolicy = company?.NegativeNetPayPolicy ?? FijiPayroll.Domain.Entities.Company.NegativeNetPayPolicy.PartialDeduction;
 
         return new PayrollExecutionContext
         {
@@ -91,6 +95,7 @@ public sealed class PayrollContextBuilder
             TaxRules = taxBrackets,
             Components = MapComponents(components),
             VoluntaryDeductionPolicy = voluntaryDeductionPolicy,
+            NegativeNetPayPolicy = netPayPolicy,
             FnpfEmployeeRate = employeeRate,
             FnpfEmployerRate = employerRate
         };
@@ -104,9 +109,25 @@ public sealed class PayrollContextBuilder
         IReadOnlyList<Employee> employees,
         IReadOnlyList<PayrollComponentSnapshot> components,
         bool includeAdjustments,
+        DateTime periodStart,
+        DateTime periodEnd,
         CancellationToken cancellationToken = default)
     {
         var snapshots = new List<EmployeeSnapshot>();
+
+        // Load all approved leave requests for the company that overlap with the period
+        var leaveRequests = await _unitOfWork.Leave.GetRequestsByCompanyAsync(companyId, cancellationToken);
+        var activeRequests = leaveRequests
+            .Where(r => r.Status == FijiPayroll.Domain.Enumerations.LeaveStatus.Approved
+                && r.StartDate <= periodEnd && r.EndDate >= periodStart)
+            .ToList();
+
+        // Load all active loans for the company
+        var loans = await _unitOfWork.Loans.GetLoansByCompanyAsync(companyId, cancellationToken);
+        var activeLoansMap = loans
+            .Where(l => l.Status == FijiPayroll.Domain.Enumerations.LoanStatus.Active && l.RemainingBalance > 0)
+            .GroupBy(l => l.EmployeeId)
+            .ToDictionary(g => g.Key, g => g.ToList());
 
         foreach (var emp in employees)
         {
@@ -145,6 +166,54 @@ public sealed class PayrollContextBuilder
                 }).ToList().AsReadOnly();
             }
 
+            // Calculate leave days in period
+            var empRequests = activeRequests.Where(r => r.EmployeeId == emp.Id).ToList();
+            
+            decimal paidDays = 0;
+            decimal unpaidDays = 0;
+            decimal loadingDays = 0;
+
+            foreach (var req in empRequests)
+            {
+                var overlapStart = req.StartDate > periodStart ? req.StartDate : periodStart;
+                var overlapEnd = req.EndDate < periodEnd ? req.EndDate : periodEnd;
+                
+                decimal overlapWorkingDays = 0;
+                for (var date = overlapStart.Date; date <= overlapEnd.Date; date = date.AddDays(1))
+                {
+                    if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+                    {
+                        overlapWorkingDays++;
+                    }
+                }
+                
+                decimal requestDaysInPeriod = Math.Min(overlapWorkingDays, req.TotalDays);
+
+                if (req.LeaveType?.IsPaid == true)
+                {
+                    paidDays += requestDaysInPeriod;
+                    if (req.LeaveType.ApplyLeaveLoading)
+                    {
+                        loadingDays += requestDaysInPeriod;
+                    }
+                }
+                else
+                {
+                    unpaidDays += requestDaysInPeriod;
+                }
+            }
+
+            // Active loans for employee
+            IReadOnlyList<EmployeeLoanSnapshot> empLoans = activeLoansMap.TryGetValue(emp.Id, out var empLoanList)
+                ? empLoanList.Select(l => new EmployeeLoanSnapshot
+                {
+                    LoanId = l.Id,
+                    LoanDescription = l.LoanDescription,
+                    RemainingBalance = l.RemainingBalance,
+                    DeductionAmountPerPeriod = l.DeductionAmountPerPeriod
+                }).ToList()
+                : Array.Empty<EmployeeLoanSnapshot>();
+
             snapshots.Add(new EmployeeSnapshot
             {
                 EmployeeId = emp.Id,
@@ -158,7 +227,11 @@ public sealed class PayrollContextBuilder
                 IsTaxExempt = emp.IsTaxExempt,
                 HoursWorked = 40m,
                 OvertimeHours = 0m,
-                ComponentOverrides = overrides
+                ComponentOverrides = overrides,
+                PaidLeaveDays = paidDays,
+                UnpaidLeaveDays = unpaidDays,
+                LeaveLoadingDays = loadingDays,
+                ActiveLoans = empLoans
             });
         }
 

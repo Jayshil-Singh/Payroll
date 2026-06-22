@@ -20,6 +20,7 @@ public sealed class PayrollExecutionContext
     public string TaxVersion { get; init; } = string.Empty;
     public Guid CalculationRequestId { get; init; }
     public VoluntaryDeductionPolicy VoluntaryDeductionPolicy { get; init; } = VoluntaryDeductionPolicy.CarryForwardRemainder;
+    public FijiPayroll.Domain.Entities.Company.NegativeNetPayPolicy NegativeNetPayPolicy { get; init; } = FijiPayroll.Domain.Entities.Company.NegativeNetPayPolicy.PartialDeduction;
 
     /// <summary>FNPF employee contribution rate as a fraction (e.g. 0.08).</summary>
     public decimal FnpfEmployeeRate { get; init; }
@@ -59,11 +60,30 @@ public sealed class EmployeeSnapshot
     public bool IsTaxExempt { get; init; }
     public decimal HoursWorked { get; init; }
     public decimal OvertimeHours { get; init; }
+    public decimal PaidLeaveDays { get; init; }
+    public decimal UnpaidLeaveDays { get; init; }
+    public decimal LeaveLoadingDays { get; init; }
+
+    /// <summary>
+    /// Active loans for this employee that require periodic deductions.
+    /// </summary>
+    public IReadOnlyList<EmployeeLoanSnapshot> ActiveLoans { get; init; } = Array.Empty<EmployeeLoanSnapshot>();
 
     /// <summary>
     /// Component overrides (manual entries) specifically for this pay period.
     /// </summary>
     public IReadOnlyList<EmployeeComponentOverrideSnapshot> ComponentOverrides { get; init; } = Array.Empty<EmployeeComponentOverrideSnapshot>();
+}
+
+/// <summary>
+/// Immutable snapshot of an employee loan.
+/// </summary>
+public sealed class EmployeeLoanSnapshot
+{
+    public int LoanId { get; init; }
+    public string LoanDescription { get; init; } = string.Empty;
+    public decimal RemainingBalance { get; init; }
+    public decimal DeductionAmountPerPeriod { get; init; }
 }
 
 /// <summary>

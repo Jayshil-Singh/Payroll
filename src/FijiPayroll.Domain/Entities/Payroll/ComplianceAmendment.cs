@@ -8,6 +8,9 @@ namespace FijiPayroll.Domain.Entities.Payroll;
 /// </summary>
 public sealed class ComplianceAmendment : BaseEntity
 {
+    /// <summary>Gets the owner company ID context (multi-tenant boundary).</summary>
+    public int CompanyId { get; private set; }
+
     /// <summary>Gets the original baseline submission ID in the chain.</summary>
     public int OriginalSubmissionId { get; private set; }
 
@@ -32,12 +35,14 @@ public sealed class ComplianceAmendment : BaseEntity
     /// Factory method to construct a new ComplianceAmendment.
     /// </summary>
     public static ComplianceAmendment Create(
+        int companyId,
         int originalSubmissionId,
         int previousSubmissionId,
         int currentSubmissionId,
         string reason,
         string createdBy)
     {
+        if (companyId <= 0) throw new ArgumentOutOfRangeException(nameof(companyId));
         if (originalSubmissionId <= 0) throw new ArgumentOutOfRangeException(nameof(originalSubmissionId));
         if (previousSubmissionId <= 0) throw new ArgumentOutOfRangeException(nameof(previousSubmissionId));
         if (currentSubmissionId <= 0) throw new ArgumentOutOfRangeException(nameof(currentSubmissionId));
@@ -45,6 +50,7 @@ public sealed class ComplianceAmendment : BaseEntity
 
         return new ComplianceAmendment
         {
+            CompanyId = companyId,
             OriginalSubmissionId = originalSubmissionId,
             PreviousSubmissionId = previousSubmissionId,
             CurrentSubmissionId = currentSubmissionId,

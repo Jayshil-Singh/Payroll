@@ -58,8 +58,19 @@ public interface IUnitOfWork : IDisposable
     /// <summary>Repository for background jobs.</summary>
     IBackgroundJobRepository BackgroundJobs { get; }
 
+    /// <summary>Repository for Leave management operations.</summary>
+    ILeaveRepository Leave { get; }
+
+    /// <summary>Repository for staff Loan and LoanRepayment operations.</summary>
+    ILoanRepository Loans { get; }
+
     /// <summary>Repository for payroll ledger reversals.</summary>
     IPayrollLedgerReversalRepository PayrollLedgerReversals { get; }
+
+    /// <summary>
+    /// Adds an audit log entry to the database context.
+    /// </summary>
+    Task AddAuditLogAsync(FijiPayroll.Domain.Entities.Audit.AuditLog auditLog, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Persists all pending changes tracked by EF Core to the database in a single

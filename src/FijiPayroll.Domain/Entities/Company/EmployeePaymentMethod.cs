@@ -53,6 +53,13 @@ public sealed class EmployeePaymentMethod
     /// <summary>Gets a value indicating whether this is the primary payment method.</summary>
     public bool IsPrimary { get; private set; }
 
+    /// <summary>Deactivates the payment method by clearing primary flag and resetting percentage.</summary>
+    public void Deactivate()
+    {
+        IsPrimary = false;
+        Percentage = 0;
+    }
+
     /// <summary>Factory method to create an EmployeePaymentMethod.</summary>
     public static EmployeePaymentMethod Create(
         PaymentMethodType methodType,

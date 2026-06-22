@@ -1,0 +1,183 @@
+<Window x:Class="FijiPayroll.WPF.Views.LoginView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:FijiPayroll.WPF.ViewModels"
+        mc:Ignorable="d"
+        Title="FEPS Secure Sign In" 
+        Height="450" Width="400"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        BorderThickness="0"
+        d:DataContext="{d:DesignInstance Type=vm:LoginViewModel}">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Window.Resources>
+
+    <Border Background="{DynamicResource BrushBgDeep}" 
+            BorderBrush="{DynamicResource BrushBorder}" 
+            BorderThickness="1" 
+            CornerRadius="12"
+            Padding="24">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" /> <!-- Header -->
+                <RowDefinition Height="*" />    <!-- Content Area -->
+                <RowDefinition Height="Auto" /> <!-- Actions & Footer -->
+            </Grid.RowDefinitions>
+
+            <!-- Top Draggable Bar & Close Button -->
+            <Grid Grid.Row="0" Margin="0,0,0,16" MouseDown="Header_MouseDown" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="FEPS Portal" 
+                               FontFamily="{StaticResource FontMain}" 
+                               FontSize="12" 
+                               FontWeight="Bold" 
+                               Foreground="{DynamicResource BrushAccent}" />
+                </StackPanel>
+
+                <Button Grid.Column="1" 
+                        Content="✕" 
+                        Background="Transparent" 
+                        Foreground="{DynamicResource BrushTextSecondary}" 
+                        BorderThickness="0"
+                        FontSize="14"
+                        Cursor="Hand"
+                        Click="CloseButton_Click"
+                        Width="24" Height="24"
+                        Style="{StaticResource SecondaryButton}"/>
+            </Grid>
+
+            <!-- Main Content Area -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Center">
+                <!-- Branding -->
+                <TextBlock Text="FEPS Sign In" 
+                           Style="{StaticResource Header1}" 
+                           HorizontalAlignment="Center" 
+                           Margin="0,0,0,4" />
+                <TextBlock Text="Fiji Enterprise Payroll System" 
+                           Style="{StaticResource BodyText}" 
+                           HorizontalAlignment="Center" 
+                           Margin="0,0,0,24" />
+
+                <!-- Error Alert -->
+                <Border Background="#2B1A24" 
+                        BorderBrush="{DynamicResource BrushAlertRed}" 
+                        BorderThickness="1" 
+                        CornerRadius="6" 
+                        Padding="12,8"
+                        Margin="0,0,0,16"
+                        Visibility="{Binding ErrorMessage, Converter={StaticResource BoolToVis}, FallbackValue=Collapsed}">
+                    <TextBlock Text="{Binding ErrorMessage}" 
+                               Foreground="{DynamicResource BrushAlertRed}" 
+                               FontFamily="{StaticResource FontMain}" 
+                               FontSize="13" 
+                               TextWrapping="Wrap" />
+                </Border>
+
+                <!-- Input Fields -->
+                <StackPanel Margin="0,0,0,16">
+                    <TextBlock Text="Username" 
+                               Style="{StaticResource BodyText}" 
+                               Margin="0,0,0,6" 
+                               FontWeight="SemiBold"/>
+                    <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" 
+                             Background="{DynamicResource BrushBgPanel}" 
+                             Foreground="{DynamicResource BrushTextPrimary}" 
+                             BorderBrush="{DynamicResource BrushBorder}" 
+                             BorderThickness="1" 
+                             Padding="12,8" 
+                             FontFamily="{StaticResource FontMain}" 
+                             FontSize="14"
+                             IsEnabled="{Binding IsAuthenticating, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"/>
+                </StackPanel>
+
+                <!-- Password (only if company not resolved or showing selection) -->
+                <StackPanel Margin="0,0,0,16" Visibility="{Binding ShowCompanySelection, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="Password" 
+                               Style="{StaticResource BodyText}" 
+                               Margin="0,0,0,6" 
+                               FontWeight="SemiBold"/>
+                    <PasswordBox x:Name="PasswordInput"
+                                 Background="{DynamicResource BrushBgPanel}" 
+                                 Foreground="{DynamicResource BrushTextPrimary}" 
+                                 BorderBrush="{DynamicResource BrushBorder}" 
+                                 BorderThickness="1" 
+                                 Padding="12,8" 
+                                 FontFamily="{StaticResource FontMain}" 
+                                 FontSize="14"
+                                 PasswordChanged="PasswordBox_PasswordChanged"
+                                 IsEnabled="{Binding IsAuthenticating, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"/>
+                </StackPanel>
+
+                <!-- Company Selector (only visible after username verified) -->
+                <StackPanel Margin="0,0,0,16" Visibility="{Binding ShowCompanySelection, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="Select Company" 
+                               Style="{StaticResource BodyText}" 
+                               Margin="0,0,0,6" 
+                               FontWeight="SemiBold"/>
+                    <ComboBox ItemsSource="{Binding Companies}" 
+                              SelectedItem="{Binding SelectedCompany}" 
+                              DisplayMemberPath="TradingName"
+                              Background="{DynamicResource BrushBgPanel}" 
+                              Foreground="{DynamicResource BrushTextPrimary}" 
+                              BorderBrush="{DynamicResource BrushBorder}" 
+                              BorderThickness="1" 
+                              Padding="12,8" 
+                              FontFamily="{StaticResource FontMain}" 
+                              FontSize="14"
+                              IsEnabled="{Binding IsAuthenticating, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Actions area -->
+            <StackPanel Grid.Row="2" Margin="0,16,0,0">
+                <!-- Submit Button for username verification -->
+                <Button Content="Next" 
+                        Command="{Binding VerifyUsernameCommand}" 
+                        Style="{StaticResource ModernButton}" 
+                        Height="40"
+                        Visibility="{Binding ShowCompanySelection, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"
+                        IsEnabled="{Binding IsLoadingCompanies, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"/>
+
+                <!-- Submit Button for login -->
+                <Button Content="Sign In" 
+                        Command="{Binding LoginCommand}" 
+                        Style="{StaticResource ModernButton}" 
+                        Height="40"
+                        Visibility="{Binding ShowCompanySelection, Converter={StaticResource BoolToVis}}"
+                        IsEnabled="{Binding SelectedCompany, Converter={StaticResource BoolToVis}}"/>
+
+                <!-- Loading Rings / Spinners -->
+                <ProgressBar IsIndeterminate="True" 
+                             Height="4" 
+                             Margin="0,8,0,0" 
+                             Background="Transparent" 
+                             Foreground="{DynamicResource BrushAccent}"
+                             Visibility="{Binding IsLoadingCompanies, Converter={StaticResource BoolToVis}}" />
+                             
+                <ProgressBar IsIndeterminate="True" 
+                             Height="4" 
+                             Margin="0,8,0,0" 
+                             Background="Transparent" 
+                             Foreground="{DynamicResource BrushAccent}"
+                             Visibility="{Binding IsAuthenticating, Converter={StaticResource BoolToVis}}" />
+
+                <TextBlock Text="Secured with Fiji FRCS &amp; FNPF Compliance Engine." 
+                           Style="{StaticResource BodyText}" 
+                           FontSize="10" 
+                           HorizontalAlignment="Center" 
+                           Margin="0,16,0,0"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

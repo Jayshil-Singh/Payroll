@@ -52,6 +52,11 @@ public static class PermissionConstants
     public const string LeaveCreate  = "Leave.Create";
     public const string LeaveApprove = "Leave.Approve";
 
+    // ─── Loans ──────────────────────────────────────────────────────────────────
+    public const string LoansView    = "Loans.View";
+    public const string LoansCreate  = "Loans.Create";
+    public const string LoansManage  = "Loans.Manage";
+
     // ─── Compliance ─────────────────────────────────────────────────────────────
     public const string FrcsView     = "FRCS.View";
     public const string FrcsGenerate = "FRCS.Generate";

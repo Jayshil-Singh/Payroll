@@ -29,7 +29,7 @@ public sealed class PostPayrollRunCommandHandler : IRequestHandler<PostPayrollRu
             return Result.Failure("Forbidden: You do not have permission to post payroll runs.");
         }
 
-        var run = await _unitOfWork.PayrollRuns.GetByIdAsync(request.PayrollRunId, cancellationToken);
+        var run = await _unitOfWork.PayrollRuns.GetByIdWithDetailsAsync(request.PayrollRunId, cancellationToken);
         if (run == null)
         {
             return Result.Failure($"Payroll run with ID {request.PayrollRunId} was not found.");
@@ -43,10 +43,32 @@ public sealed class PostPayrollRunCommandHandler : IRequestHandler<PostPayrollRu
         try
         {
             run.Post(_currentUser.Username);
+
+            // Process loan repayments
+            foreach (var emp in run.Employees.Where(e => !e.IsSuperseded))
+            {
+                foreach (var line in emp.LineItems)
+                {
+                    if (line.ComponentCode.StartsWith("LOAN_", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var loanId = line.ReferenceComponentId;
+                        var repaymentAmount = Math.Abs(line.Amount);
+                        if (repaymentAmount > 0)
+                        {
+                            var loan = await _unitOfWork.Loans.GetByIdAsync(loanId, cancellationToken);
+                            if (loan != null)
+                            {
+                                loan.RecordRepayment(run.Id, repaymentAmount, _currentUser.Username);
+                            }
+                        }
+                    }
+                }
+            }
+
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
-        catch (InvalidOperationException ex)
+        catch (Exception ex)
         {
             return Result.Failure(ex.Message);
         }

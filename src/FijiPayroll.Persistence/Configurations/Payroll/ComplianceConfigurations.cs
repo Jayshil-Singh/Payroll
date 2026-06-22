@@ -133,6 +133,7 @@ internal sealed class ComplianceSnapshotConfiguration : IEntityTypeConfiguration
         builder.ToTable("ComplianceSnapshots", "payroll");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Property(x => x.CompanyId).IsRequired();
         builder.Property(x => x.ComplianceBatchId).IsRequired(false);
         builder.Property(x => x.PayrollRunId).IsRequired();
         builder.Property(x => x.SnapshotVersion).HasColumnType("nvarchar(50)").IsRequired();
@@ -152,6 +153,7 @@ internal sealed class ComplianceAmendmentConfiguration : IEntityTypeConfiguratio
         builder.ToTable("ComplianceAmendments", "payroll");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Property(x => x.CompanyId).IsRequired();
         builder.Property(x => x.OriginalSubmissionId).IsRequired();
         builder.Property(x => x.PreviousSubmissionId).IsRequired();
         builder.Property(x => x.CurrentSubmissionId).IsRequired();

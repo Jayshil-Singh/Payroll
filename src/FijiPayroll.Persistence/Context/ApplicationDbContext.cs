@@ -1,4 +1,5 @@
 using FijiPayroll.Domain.Entities.Company;
+using FijiPayroll.Domain.Entities.Leave;
 using FijiPayroll.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -8,6 +9,9 @@ using FijiPayroll.Application.Common.Exceptions;
 using FijiPayroll.Domain.Entities.Audit;
 using FijiPayroll.Domain.Entities.Payroll;
 using FijiPayroll.Persistence.Converters;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace FijiPayroll.Persistence.Context;
 
@@ -88,6 +92,15 @@ public class ApplicationDbContext : DbContext
 
     /// <summary>Gets or sets the companies DbSet.</summary>
     public DbSet<Company> Companies => Set<Company>();
+
+    /// <summary>Gets or sets the user accounts DbSet.</summary>
+    public DbSet<UserAccount> UserAccounts => Set<UserAccount>();
+
+    /// <summary>Gets or sets the user roles DbSet.</summary>
+    public DbSet<UserRole> UserRoles => Set<UserRole>();
+
+    /// <summary>Gets or sets the user permissions DbSet.</summary>
+    public DbSet<UserPermission> UserPermissions => Set<UserPermission>();
 
     /// <summary>Gets or sets the master lookups DbSet.</summary>
     public DbSet<MasterLookup> MasterLookups => Set<MasterLookup>();
@@ -186,6 +199,17 @@ public class ApplicationDbContext : DbContext
     public DbSet<FRCSSubmission> FRCSSubmissions => Set<FRCSSubmission>();
     public DbSet<FNPFSubmission> FNPFSubmissions => Set<FNPFSubmission>();
     public DbSet<BankFile> BankFiles => Set<BankFile>();
+
+    // ── Leave Module DbSets ─────────────────────────────────────────────────
+    public DbSet<LeaveType> LeaveTypes => Set<LeaveType>();
+    public DbSet<LeaveBalance> LeaveBalances => Set<LeaveBalance>();
+    public DbSet<LeaveRequest> LeaveRequests => Set<LeaveRequest>();
+    public DbSet<LeaveTransaction> LeaveTransactions => Set<LeaveTransaction>();
+    public DbSet<LeaveAccrualPolicy> LeaveAccrualPolicies => Set<LeaveAccrualPolicy>();
+
+    // ── Loan Module DbSets ──────────────────────────────────────────────────
+    public DbSet<Loan> StaffLoans => Set<Loan>();
+    public DbSet<LoanRepayment> StaffLoanRepayments => Set<LoanRepayment>();
 
 
     /// <summary>
@@ -329,6 +353,24 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<ImportJob>()
             .HasQueryFilter(ij => ij.CompanyId == CurrentCompanyId);
 
+        modelBuilder.Entity<UserAccount>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<ImportSession>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<ImportSessionRow>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<WorkflowStepLog>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<ComplianceSnapshot>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<ComplianceAmendment>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
         modelBuilder.Entity<SearchIndex>()
             .HasQueryFilter(si => si.CompanyId == CurrentCompanyId);
 
@@ -445,6 +487,26 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<BankFile>()
             .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
 
+        // Leave Module RLS Query Filters
+        modelBuilder.Entity<LeaveType>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<LeaveBalance>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<LeaveRequest>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<LeaveTransaction>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<LeaveAccrualPolicy>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        // Loan Module RLS Query Filters
+        modelBuilder.Entity<Loan>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
         modelBuilder.Entity<PayrollRunEmployee>()
             .HasQueryFilter(e => e.PayrollRun != null && e.PayrollRun.CompanyId == CurrentCompanyId);
 
@@ -463,5 +525,134 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<PayrollLedgerComponent>()
             .HasQueryFilter(c => c.PayrollLedgerEmployee != null && c.PayrollLedgerEmployee.CompanyId == CurrentCompanyId);
+    }
+
+    /// <summary>
+    /// Migrates all PLAINTEXT-prefixed encrypted column values to AES-256 using per-tenant security keys.
+    /// This method bypasses EF query filters to scan ALL companies and their associated PII records.
+    /// Safe to call multiple times — records already encrypted with AES256 are skipped.
+    /// </summary>
+    public async Task MigratePlaintextToAesAsync()
+    {
+        // Step 1: Load all companies (bypass tenant filter)
+        var companies = await Companies
+            .IgnoreQueryFilters()
+            .AsNoTracking()
+            .ToListAsync();
+
+        if (companies.Count == 0) return;
+
+        foreach (var company in companies)
+        {
+            string tenantKey = $"KEY_COMP_{company.Id}";
+            int migrated = 0;
+
+            // ── Migrate Employee PII (Tin, FnpfNumber) ─────────────────────
+            var employees = await Database.SqlQueryRaw<EncryptedEmployeeRow>(
+                "SELECT [Id], [Tin], [FnpfNumber] FROM [company].[Employees] WHERE [CompanyId] = {0} AND [IsDeleted] = 0", company.Id)
+                .ToListAsync();
+
+            foreach (var emp in employees)
+            {
+                bool tinNeedsMigration = IsPlaintextEncrypted(emp.Tin);
+                bool fnpfNeedsMigration = IsPlaintextEncrypted(emp.FnpfNumber);
+
+                if (!tinNeedsMigration && !fnpfNeedsMigration) continue;
+
+                string newTin = tinNeedsMigration ? ReEncryptValue(emp.Tin, tenantKey) : emp.Tin;
+                string newFnpf = fnpfNeedsMigration ? ReEncryptValue(emp.FnpfNumber, tenantKey) : emp.FnpfNumber;
+
+                await Database.ExecuteSqlRawAsync(
+                    "UPDATE [company].[Employees] SET [Tin] = {0}, [FnpfNumber] = {1} WHERE [Id] = {2}",
+                    newTin, newFnpf, emp.Id);
+                migrated++;
+            }
+
+            // ── Migrate EmployeePaymentMethods (BankAccountNumber, BankSortCode) ──
+            var paymentMethods = await Database.SqlQueryRaw<EncryptedPaymentMethodRow>(
+                "SELECT [Id], [BankAccountNumber], [BankSortCode] FROM [company].[EmployeePaymentMethods] " +
+                "WHERE [EmployeeId] IN (SELECT [Id] FROM [company].[Employees] WHERE [CompanyId] = {0} AND [IsDeleted] = 0)", company.Id)
+                .ToListAsync();
+
+            foreach (var pm in paymentMethods)
+            {
+                bool bankAcctNeedsMigration = IsPlaintextEncrypted(pm.BankAccountNumber);
+                bool sortCodeNeedsMigration = IsPlaintextEncrypted(pm.BankSortCode);
+
+                if (!bankAcctNeedsMigration && !sortCodeNeedsMigration) continue;
+
+                string? newBankAcct = bankAcctNeedsMigration ? ReEncryptValue(pm.BankAccountNumber!, tenantKey) : pm.BankAccountNumber;
+                string? newSortCode = sortCodeNeedsMigration ? ReEncryptValue(pm.BankSortCode!, tenantKey) : pm.BankSortCode;
+
+                await Database.ExecuteSqlRawAsync(
+                    "UPDATE [company].[EmployeePaymentMethods] SET [BankAccountNumber] = {0}, [BankSortCode] = {1} WHERE [Id] = {2}",
+                    (object?)newBankAcct ?? DBNull.Value, (object?)newSortCode ?? DBNull.Value, pm.Id);
+                migrated++;
+            }
+
+            // ── Migrate CompanyBankAccounts (EncryptedAccountNumber) ─────────
+            var bankAccounts = await Database.SqlQueryRaw<EncryptedBankAccountRow>(
+                "SELECT [Id], [EncryptedAccountNumber] FROM [company].[CompanyBankAccounts] WHERE [CompanyId] = {0} AND [IsDeleted] = 0", company.Id)
+                .ToListAsync();
+
+            foreach (var ba in bankAccounts)
+            {
+                if (!IsPlaintextEncrypted(ba.EncryptedAccountNumber)) continue;
+
+                string newAcctNum = ReEncryptValue(ba.EncryptedAccountNumber, tenantKey);
+
+                await Database.ExecuteSqlRawAsync(
+                    "UPDATE [company].[CompanyBankAccounts] SET [EncryptedAccountNumber] = {0} WHERE [Id] = {1}",
+                    newAcctNum, ba.Id);
+                migrated++;
+            }
+        }
+
+        // Reset the key context to avoid leaking the last company's key
+        TenantEncryptionValueConverter.CurrentKey = null;
+    }
+
+    /// <summary>
+    /// Checks if a stored value uses the PLAINTEXT fallback encoding from TenantEncryptionValueConverter.
+    /// </summary>
+    private static bool IsPlaintextEncrypted(string? value)
+    {
+        if (string.IsNullOrEmpty(value)) return false;
+        return value.StartsWith("PLAINTEXT:", StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Decrypts a PLAINTEXT-encoded value and re-encrypts it with AES-256 using the specified tenant key.
+    /// </summary>
+    private static string ReEncryptValue(string cipherText, string tenantKey)
+    {
+        // Decrypt the plaintext-encoded value (no key needed for PLAINTEXT format)
+        string plainText = TenantEncryptionValueConverter.Decrypt(cipherText);
+
+        // Set the tenant key and re-encrypt with AES-256
+        TenantEncryptionValueConverter.CurrentKey = tenantKey;
+        return TenantEncryptionValueConverter.Encrypt(plainText);
+    }
+
+    // ── Projection DTOs for raw SQL queries ─────────────────────────────────
+
+    private sealed class EncryptedEmployeeRow
+    {
+        public int Id { get; set; }
+        public string Tin { get; set; } = string.Empty;
+        public string FnpfNumber { get; set; } = string.Empty;
+    }
+
+    private sealed class EncryptedPaymentMethodRow
+    {
+        public int Id { get; set; }
+        public string? BankAccountNumber { get; set; }
+        public string? BankSortCode { get; set; }
+    }
+
+    private sealed class EncryptedBankAccountRow
+    {
+        public int Id { get; set; }
+        public string EncryptedAccountNumber { get; set; } = string.Empty;
     }
 }

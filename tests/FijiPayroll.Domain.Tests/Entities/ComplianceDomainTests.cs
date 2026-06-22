@@ -15,6 +15,7 @@ public sealed class ComplianceDomainTests
     {
         // Act
         var snapshot = ComplianceSnapshot.Create(
+            companyId: 1,
             complianceBatchId: 10,
             payrollRunId: 5,
             snapshotVersion: "v1.0.0",
@@ -24,6 +25,7 @@ public sealed class ComplianceDomainTests
         );
 
         // Assert
+        snapshot.CompanyId.Should().Be(1);
         snapshot.ComplianceBatchId.Should().Be(10);
         snapshot.PayrollRunId.Should().Be(5);
         snapshot.SnapshotVersion.Should().Be("v1.0.0");
@@ -37,10 +39,11 @@ public sealed class ComplianceDomainTests
     public void ComplianceSnapshot_Create_ThrowsExceptions_OnInvalidParameters()
     {
         // Assert & Act
-        Assert.Throws<ArgumentOutOfRangeException>(() => ComplianceSnapshot.Create(1, 0, "v1", "{}", "hash", "user"));
-        Assert.Throws<ArgumentException>(() => ComplianceSnapshot.Create(1, 1, "", "{}", "hash", "user"));
-        Assert.Throws<ArgumentException>(() => ComplianceSnapshot.Create(1, 1, "v1", "", "hash", "user"));
-        Assert.Throws<ArgumentException>(() => ComplianceSnapshot.Create(1, 1, "v1", "{}", "", "user"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ComplianceSnapshot.Create(0, 1, 1, "v1", "{}", "hash", "user"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ComplianceSnapshot.Create(1, 1, 0, "v1", "{}", "hash", "user"));
+        Assert.Throws<ArgumentException>(() => ComplianceSnapshot.Create(1, 1, 1, "", "{}", "hash", "user"));
+        Assert.Throws<ArgumentException>(() => ComplianceSnapshot.Create(1, 1, 1, "v1", "", "hash", "user"));
+        Assert.Throws<ArgumentException>(() => ComplianceSnapshot.Create(1, 1, 1, "v1", "{}", "", "user"));
     }
 
     [Fact]
@@ -48,6 +51,7 @@ public sealed class ComplianceDomainTests
     {
         // Act
         var amendment = ComplianceAmendment.Create(
+            companyId: 1,
             originalSubmissionId: 1,
             previousSubmissionId: 2,
             currentSubmissionId: 3,
@@ -56,6 +60,7 @@ public sealed class ComplianceDomainTests
         );
 
         // Assert
+        amendment.CompanyId.Should().Be(1);
         amendment.OriginalSubmissionId.Should().Be(1);
         amendment.PreviousSubmissionId.Should().Be(2);
         amendment.CurrentSubmissionId.Should().Be(3);
@@ -68,10 +73,11 @@ public sealed class ComplianceDomainTests
     public void ComplianceAmendment_Create_ThrowsExceptions_OnInvalidParameters()
     {
         // Assert & Act
-        Assert.Throws<ArgumentOutOfRangeException>(() => ComplianceAmendment.Create(0, 2, 3, "reason", "user"));
-        Assert.Throws<ArgumentOutOfRangeException>(() => ComplianceAmendment.Create(1, 0, 3, "reason", "user"));
-        Assert.Throws<ArgumentOutOfRangeException>(() => ComplianceAmendment.Create(1, 2, 0, "reason", "user"));
-        Assert.Throws<ArgumentException>(() => ComplianceAmendment.Create(1, 2, 3, "", "user"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ComplianceAmendment.Create(0, 1, 2, 3, "reason", "user"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ComplianceAmendment.Create(1, 0, 2, 3, "reason", "user"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ComplianceAmendment.Create(1, 1, 0, 3, "reason", "user"));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ComplianceAmendment.Create(1, 1, 2, 0, "reason", "user"));
+        Assert.Throws<ArgumentException>(() => ComplianceAmendment.Create(1, 1, 2, 3, "", "user"));
     }
 
     [Fact]

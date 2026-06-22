@@ -5,22 +5,75 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FijiPayroll.WPF.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800"
+             d:DesignHeight="600" d:DesignWidth="900"
              Background="Transparent">
     <Grid Margin="24">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,24">
-            <TextBlock Text="{Binding Title}" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Segoe UI Semibold" />
-            <TextBlock Text="Generate statutory audit reports, Westpac/BSP bank file exports, and FRCS/FNPF compliance documents." FontSize="14" Foreground="#A0AEC0" Margin="0,4,0,0" />
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="{Binding Title}" FontSize="26" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Segoe UI Semibold" />
+            <TextBlock Text="Select a finalized payroll run, pick your output format, and export statutory audit files or payslip batches." FontSize="13" Foreground="#A0AEC0" Margin="0,4,0,0" />
         </StackPanel>
 
-        <!-- Main Body -->
-        <Grid Grid.Row="1">
+        <!-- Configuration Bar -->
+        <Border Grid.Row="1" CornerRadius="6" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="15" Margin="0,0,0,20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Select Run -->
+                <StackPanel Grid.Column="0" Margin="0,0,15,0">
+                    <TextBlock Text="Target Payroll Run" Foreground="#A0AEC0" FontSize="11" FontWeight="Bold" Margin="0,0,0,6" />
+                    <ComboBox ItemsSource="{Binding PayrollRuns}" 
+                              SelectedItem="{Binding SelectedRun}"
+                              DisplayMemberPath="RunCode"
+                              Height="32" Background="#0F111A" Foreground="#FFFFFF" BorderBrush="#2E3656" Padding="6,4">
+                        <ComboBox.Resources>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#0F111A" />
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#0D99FF" />
+                        </ComboBox.Resources>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- Select Format -->
+                <StackPanel Grid.Column="1" Margin="0,0,15,0">
+                    <TextBlock Text="Export Format" Foreground="#A0AEC0" FontSize="11" FontWeight="Bold" Margin="0,0,0,6" />
+                    <ComboBox ItemsSource="{Binding Formats}" 
+                              SelectedItem="{Binding SelectedFormat}"
+                              Height="32" Background="#0F111A" Foreground="#FFFFFF" BorderBrush="#2E3656" Padding="6,4">
+                        <ComboBox.Resources>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#0F111A" />
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#0D99FF" />
+                        </ComboBox.Resources>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- Select Comparative Run (For Variance) -->
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Comparative Run (For Variance Only)" Foreground="#A0AEC0" FontSize="11" FontWeight="Bold" Margin="0,0,0,6" />
+                    <ComboBox ItemsSource="{Binding PayrollRuns}" 
+                              SelectedItem="{Binding SelectedCompareRun}"
+                              DisplayMemberPath="RunCode"
+                              Height="32" Background="#0F111A" Foreground="#FFFFFF" BorderBrush="#2E3656" Padding="6,4">
+                        <ComboBox.Resources>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#0F111A" />
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#0D99FF" />
+                        </ComboBox.Resources>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Report Exporters Grid -->
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -30,69 +83,64 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <!-- Card 1: Bank Export file -->
-            <Border Grid.Row="0" Grid.Column="0" Margin="0,0,12,12" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="Bank Disbursement Files" FontSize="16" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,8" />
-                    <TextBlock Text="Export net pay electronic transfer files conforming to Fiji clearing house requirements." FontSize="12" Foreground="#A0AEC0" TextWrapping="Wrap" Height="40" />
-                    <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
-                        <Border CornerRadius="4" BorderBrush="#2D3748" BorderThickness="1" Background="#0F111A" Width="160" Height="32" Padding="8,4" VerticalAlignment="Center">
-                            <TextBlock Text="Select Westpac / BSP" Foreground="#FFFFFF" VerticalAlignment="Center" FontSize="12"/>
-                        </Border>
-                        <Button Content="Generate Export" Margin="12,0,0,0" Width="120" Height="32" Background="#0D99FF" Foreground="#FFFFFF" FontWeight="SemiBold" BorderThickness="0">
-                            <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="4"/>
-                                </Style>
-                            </Button.Resources>
-                        </Button>
+            <!-- Card 1: Payroll Summary -->
+            <Border Grid.Row="0" Grid.Column="0" Margin="0,0,10,10" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+                        <TextBlock Text="Payroll Summary Report" FontSize="16" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,8" />
+                        <TextBlock Text="Generates aggregate period totals including Gross Pay, Net Pay, PAYE Withholdings, and FNPF Employee/Employer contributions. Essential for finance sign-off." FontSize="12.5" Foreground="#A0AEC0" TextWrapping="Wrap" />
                     </StackPanel>
-                </StackPanel>
+                    <Button Grid.Row="1" Content="Export Payroll Summary" Command="{Binding ExportSummaryCommand}" Style="{StaticResource ModernButton}" Height="34" Width="200" HorizontalAlignment="Left" Margin="0,15,0,0" />
+                </Grid>
             </Border>
 
-            <!-- Card 2: FNPF Contribution -->
-            <Border Grid.Row="0" Grid.Column="1" Margin="12,0,0,12" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="FNPF Contribution Returns" FontSize="16" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,8" />
-                    <TextBlock Text="Generate FNPF monthly CSV remittance file containing calculated employee (8%) and employer (10%) portions." FontSize="12" Foreground="#A0AEC0" TextWrapping="Wrap" Height="40" />
-                    <Button Content="Download Remittance CSV" Margin="0,16,0,0" Width="180" Height="32" Background="#2E3656" Foreground="#FFFFFF" FontWeight="SemiBold" BorderBrush="#4A5568" BorderThickness="1" HorizontalAlignment="Left">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="4"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                </StackPanel>
+            <!-- Card 2: PAYE Register -->
+            <Border Grid.Row="0" Grid.Column="1" Margin="10,0,0,10" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+                        <TextBlock Text="PAYE Register" FontSize="16" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,8" />
+                        <TextBlock Text="Generates a tabular payroll register listing all calculated employees, their tax identification numbers (TIN), FNPF numbers, and individual pay breakdowns. Matches FRCS audit guidelines." FontSize="12.5" Foreground="#A0AEC0" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Button Grid.Row="1" Content="Export PAYE Register" Command="{Binding ExportRegisterCommand}" Style="{StaticResource ModernButton}" Height="34" Width="200" HorizontalAlignment="Left" Margin="0,15,0,0" />
+                </Grid>
             </Border>
 
-            <!-- Card 3: FRCS Tax Return -->
-            <Border Grid.Row="1" Grid.Column="0" Margin="0,12,12,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="FRCS PAYE Returns" FontSize="16" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,8" />
-                    <TextBlock Text="Generate monthly EMS (Employer Monthly Summary) data sheets reporting PAYE tax deductions to Fiji Revenue Services." FontSize="12" Foreground="#A0AEC0" TextWrapping="Wrap" Height="40" />
-                    <Button Content="Generate EMS Return" Margin="0,16,0,0" Width="160" Height="32" Background="#2E3656" Foreground="#FFFFFF" FontWeight="SemiBold" BorderBrush="#4A5568" BorderThickness="1" HorizontalAlignment="Left">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="4"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                </StackPanel>
+            <!-- Card 3: Batch Payslips -->
+            <Border Grid.Row="1" Grid.Column="0" Margin="0,10,10,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+                        <TextBlock Text="Employee Payslip Batch" FontSize="16" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,8" />
+                        <TextBlock Text="Generates individual payslips for all calculated employees in the selected run. Renders each payslip on a new page, detailing base rate, specific allowances, deductions, tax and FNPF." FontSize="12.5" Foreground="#A0AEC0" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Button Grid.Row="1" Content="Export Payslips" Command="{Binding ExportPayslipsCommand}" Style="{StaticResource ModernButton}" Height="34" Width="200" HorizontalAlignment="Left" Margin="0,15,0,0" />
+                </Grid>
             </Border>
 
-            <!-- Card 4: Historical Payslips -->
-            <Border Grid.Row="1" Grid.Column="1" Margin="12,12,0,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="Employee Payslip Portal" FontSize="16" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,8" />
-                    <TextBlock Text="Review, sign, print, or batch email PDF payslips to employees for any past calculated payroll runs." FontSize="12" Foreground="#A0AEC0" TextWrapping="Wrap" Height="40" />
-                    <Button Content="Batch Email Payslips" Margin="0,16,0,0" Width="160" Height="32" Background="#38B2AC" Foreground="#FFFFFF" FontWeight="SemiBold" BorderThickness="0" HorizontalAlignment="Left">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="4"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                </StackPanel>
+            <!-- Card 4: Variance Report -->
+            <Border Grid.Row="1" Grid.Column="1" Margin="10,10,0,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+                        <TextBlock Text="Payroll Variance Report" FontSize="16" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,8" />
+                        <TextBlock Text="Compares the selected run against the chosen comparative run (defaults to the immediate previous run). Renders total gross/net differences alongside detailed employee-level delta tables." FontSize="12.5" Foreground="#A0AEC0" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <Button Grid.Row="1" Content="Export Variance Analysis" Command="{Binding ExportVarianceCommand}" Style="{StaticResource ModernButton}" Height="34" Width="200" HorizontalAlignment="Left" Margin="0,15,0,0" />
+                </Grid>
             </Border>
         </Grid>
     </Grid>

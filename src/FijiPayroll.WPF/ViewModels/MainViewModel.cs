@@ -15,6 +15,7 @@ public sealed class MainViewModel : ViewModelBase
     private readonly ILoadingService _loadingService;
     private readonly INotificationService _notificationService;
     private readonly IDialogService _dialogService;
+    private readonly FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator _licenseValidator;
 
     /// <summary>
     /// Initialises a new instance of the <see cref="MainViewModel"/> class.
@@ -23,12 +24,14 @@ public sealed class MainViewModel : ViewModelBase
         INavigationService navigationService,
         ILoadingService loadingService,
         INotificationService notificationService,
-        IDialogService dialogService)
+        IDialogService dialogService,
+        FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator licenseValidator)
     {
         _navigationService = navigationService;
         _loadingService = loadingService;
         _notificationService = notificationService;
         _dialogService = dialogService;
+        _licenseValidator = licenseValidator;
 
         // Subscribe to navigation changes
         _navigationService.CurrentViewChanged += () =>
@@ -56,11 +59,41 @@ public sealed class MainViewModel : ViewModelBase
         NavigatePayrollCommand = new RelayCommand(() => _navigationService.NavigateTo<PayrollConsoleViewModel>());
         NavigateSetupCommand = new RelayCommand(() => _navigationService.NavigateTo<SetupViewModel>());
         NavigateCompanySetupWizardCommand = new RelayCommand(() => _navigationService.NavigateTo<CompanySetupDashboardViewModel>());
-        NavigateReportsCommand = new RelayCommand(() => _navigationService.NavigateTo<ReportsViewModel>());
+        
+        NavigateReportsCommand = new RelayCommand(() =>
+        {
+            if (!_licenseValidator.IsLicensed)
+            {
+                _notificationService.Error("A valid application license is required to access Reports.", "License Error");
+                return;
+            }
+            if (!_licenseValidator.HasFeature("Reports"))
+            {
+                _notificationService.Error("Your license does not include the Reports module.", "License Restricted");
+                return;
+            }
+            _navigationService.NavigateTo<ReportsViewModel>();
+        });
+
         NavigateApprovalsCommand = new RelayCommand(() => _navigationService.NavigateTo<ApprovalDashboardViewModel>());
         NavigateAdminCommand = new RelayCommand(() => _navigationService.NavigateTo<AdminViewModel>());
         NavigateLogViewerCommand = new RelayCommand(() => _navigationService.NavigateTo<LogViewerViewModel>());
-        NavigateComplianceCommand = new RelayCommand(() => _navigationService.NavigateTo<ComplianceCenterViewModel>());
+
+        NavigateComplianceCommand = new RelayCommand(() =>
+        {
+            if (!_licenseValidator.IsLicensed)
+            {
+                _notificationService.Error("A valid application license is required to access Compliance.", "License Error");
+                return;
+            }
+            if (!_licenseValidator.HasFeature("Compliance"))
+            {
+                _notificationService.Error("Your license does not include the Compliance Center.", "License Restricted");
+                return;
+            }
+            _navigationService.NavigateTo<ComplianceCenterViewModel>();
+        });
+
         NavigateDiagnosticsCommand = new RelayCommand(() => _navigationService.NavigateTo<DiagnosticsDashboardViewModel>());
 
         // Navigation History Commands
@@ -117,8 +150,16 @@ public sealed class MainViewModel : ViewModelBase
     public bool HasEmployeeAccess => true;
     public bool HasPayrollAccess => true;
     public bool HasSetupAccess => true;
-    public bool HasReportsAccess => true;
+    public bool HasReportsAccess => _licenseValidator.IsLicensed && _licenseValidator.HasFeature("Reports");
+    public bool HasComplianceAccess => _licenseValidator.IsLicensed && _licenseValidator.HasFeature("Compliance");
     public bool HasAdminAccess => true;
+
+    // Warning Banner properties
+    public bool ShowLicenseWarning => !_licenseValidator.IsLicensed || _licenseValidator.DaysRemaining < 30;
+
+    public string LicenseWarningMessage => _licenseValidator.IsLicensed
+        ? $"Warning: Your license for '{_licenseValidator.Company}' expires in {_licenseValidator.DaysRemaining} days (Expiry: {_licenseValidator.ExpiryDate:yyyy-MM-dd}). Please renew."
+        : $"Warning: {_licenseValidator.ErrorMessage}";
 
     // Sidebar interaction commands
     public ICommand NavigateDashboardCommand { get; }

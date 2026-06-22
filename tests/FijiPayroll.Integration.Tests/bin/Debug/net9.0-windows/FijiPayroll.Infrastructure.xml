@@ -93,6 +93,17 @@
         <member name="M:FijiPayroll.Infrastructure.Services.BankGenerators.BaseBankGenerator.Generate(System.String,System.String,System.String,System.DateTime,System.String,System.Collections.Generic.IEnumerable{FijiPayroll.SDK.Contracts.PaymentDetail},System.String,System.String,System.String,System.Char)">
             <inheritdoc/>
         </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.BCryptPasswordHasher">
+            <summary>
+            Implementation of IPasswordHasher using BCrypt.Net.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.BCryptPasswordHasher.Hash(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.BCryptPasswordHasher.Verify(System.String,System.String)">
+            <inheritdoc />
+        </member>
         <member name="T:FijiPayroll.Infrastructure.Services.ComplianceFileService">
             <summary>
             Infrastructure service for generating FRCS MER and FNPF Contribution CSV file exports.

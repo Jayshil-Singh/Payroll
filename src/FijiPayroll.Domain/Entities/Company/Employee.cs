@@ -242,4 +242,18 @@ public sealed class Employee : SoftDeleteEntity
 
         RecalculateDataQualityScore();
     }
+
+    /// <summary>
+    /// Terminates the employee by deactivating their record, deactivating all payment methods, and raising a domain event.
+    /// </summary>
+    /// <param name="terminatedBy">Username of who terminated the employee.</param>
+    public void Terminate(string terminatedBy)
+    {
+        IsActive = false;
+        foreach (var pm in _paymentMethods)
+        {
+            pm.Deactivate();
+        }
+        AddDomainEvent(new FijiPayroll.Domain.Events.EmployeeTerminatedEvent(this, terminatedBy));
+    }
 }

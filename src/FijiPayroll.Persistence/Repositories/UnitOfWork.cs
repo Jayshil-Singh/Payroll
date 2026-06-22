@@ -92,7 +92,12 @@ public sealed class UnitOfWork : IUnitOfWork
         PayrollRunHistories = new PayrollRunHistoryRepository(context);
         BackgroundJobs = new BackgroundJobRepository(context);
         PayrollLedgerReversals = new PayrollLedgerReversalRepository(context);
+        Leave = new LeaveRepository(context);
+        Loans = new LoanRepository(context);
     }
+
+    /// <inheritdoc/>
+    public ILoanRepository Loans { get; }
 
     /// <inheritdoc/>
     public IPayrollComponentRepository PayrollComponents { get; }
@@ -147,6 +152,15 @@ public sealed class UnitOfWork : IUnitOfWork
 
     /// <inheritdoc/>
     public IPayrollLedgerReversalRepository PayrollLedgerReversals { get; }
+
+    /// <inheritdoc/>
+    public ILeaveRepository Leave { get; }
+
+    /// <inheritdoc/>
+    public async Task AddAuditLogAsync(FijiPayroll.Domain.Entities.Audit.AuditLog auditLog, CancellationToken cancellationToken = default)
+    {
+        await _context.Set<FijiPayroll.Domain.Entities.Audit.AuditLog>().AddAsync(auditLog, cancellationToken);
+    }
 
     /// <inheritdoc/>
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

@@ -80,6 +80,7 @@ public sealed class ApprovalWorkflow : AuditableEntity
     public void AddStep(string fromState, string toState, string transitionedBy, string comments)
     {
         _steps.Add(WorkflowStepLog.Create(
+            CompanyId,
             Guid.NewGuid(),
             WorkflowId,
             fromState,

@@ -9,6 +9,9 @@ namespace FijiPayroll.Domain.Entities.Payroll;
 /// </summary>
 public sealed class ComplianceSnapshot : BaseEntity
 {
+    /// <summary>Gets the owner company ID context (multi-tenant boundary).</summary>
+    public int CompanyId { get; private set; }
+
     /// <summary>Gets the associated batch identifier if part of a submitted file.</summary>
     public int? ComplianceBatchId { get; private set; }
 
@@ -36,6 +39,7 @@ public sealed class ComplianceSnapshot : BaseEntity
     /// Factory method to construct a new ComplianceSnapshot.
     /// </summary>
     public static ComplianceSnapshot Create(
+        int companyId,
         int? complianceBatchId,
         int payrollRunId,
         string snapshotVersion,
@@ -43,6 +47,7 @@ public sealed class ComplianceSnapshot : BaseEntity
         string sha256Hash,
         string createdBy)
     {
+        if (companyId <= 0) throw new ArgumentOutOfRangeException(nameof(companyId));
         if (payrollRunId <= 0) throw new ArgumentOutOfRangeException(nameof(payrollRunId));
         if (string.IsNullOrWhiteSpace(snapshotVersion)) throw new ArgumentException("Snapshot version cannot be empty.", nameof(snapshotVersion));
         if (string.IsNullOrWhiteSpace(snapshotJson)) throw new ArgumentException("Snapshot JSON cannot be empty.", nameof(snapshotJson));
@@ -50,6 +55,7 @@ public sealed class ComplianceSnapshot : BaseEntity
 
         return new ComplianceSnapshot
         {
+            CompanyId = companyId,
             ComplianceBatchId = complianceBatchId,
             PayrollRunId = payrollRunId,
             SnapshotVersion = snapshotVersion,

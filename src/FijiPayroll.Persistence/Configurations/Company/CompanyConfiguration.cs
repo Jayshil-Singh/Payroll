@@ -41,6 +41,11 @@ internal sealed class CompanyConfiguration : IEntityTypeConfiguration<FijiPayrol
                .HasDefaultValue("FJD")
                .IsRequired();
 
+        builder.Property(x => x.NegativeNetPayPolicy)
+               .HasConversion<int>()
+               .HasDefaultValue(NegativeNetPayPolicy.PartialDeduction)
+               .IsRequired();
+
         // Archiving Properties
         builder.Property(x => x.IsArchived)
                .IsRequired()

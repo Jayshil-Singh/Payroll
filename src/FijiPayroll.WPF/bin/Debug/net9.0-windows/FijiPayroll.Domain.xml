@@ -253,6 +253,9 @@
             Domain entity representing a workflow history audit trace step log.
             </summary>
         </member>
+        <member name="P:FijiPayroll.Domain.Entities.Audit.WorkflowStepLog.CompanyId">
+            <summary>Gets the owner company ID context (multi-tenant boundary).</summary>
+        </member>
         <member name="P:FijiPayroll.Domain.Entities.Audit.WorkflowStepLog.LogId">
             <summary>Gets the unique step log entry Guid.</summary>
         </member>
@@ -274,7 +277,7 @@
         <member name="P:FijiPayroll.Domain.Entities.Audit.WorkflowStepLog.Comments">
             <summary>Gets the optional comments documented for the transition.</summary>
         </member>
-        <member name="M:FijiPayroll.Domain.Entities.Audit.WorkflowStepLog.Create(System.Guid,System.Guid,System.String,System.String,System.String,System.DateTime,System.String)">
+        <member name="M:FijiPayroll.Domain.Entities.Audit.WorkflowStepLog.Create(System.Int32,System.Guid,System.Guid,System.String,System.String,System.String,System.DateTime,System.String)">
             <summary>
             Factory method to create a new step log entry.
             </summary>
@@ -545,6 +548,9 @@
         <member name="P:FijiPayroll.Domain.Entities.Company.Company.IsActive">
             <summary>Gets or sets a value indicating whether the company is active.</summary>
         </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.Company.NegativeNetPayPolicy">
+            <summary>Gets the voluntary deduction floor policy.</summary>
+        </member>
         <member name="P:FijiPayroll.Domain.Entities.Company.Company.IsSetupComplete">
             <summary>Gets a value indicating whether the first-run onboarding setup wizard is complete.</summary>
         </member>
@@ -565,6 +571,9 @@
         </member>
         <member name="M:FijiPayroll.Domain.Entities.Company.Company.ResetSetupState">
             <summary>Resets the first-run onboarding setup wizard completed state.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.Company.SetNegativeNetPayPolicy(FijiPayroll.Domain.Entities.Company.NegativeNetPayPolicy)">
+            <summary>Configures the voluntary deduction policy.</summary>
         </member>
         <member name="T:FijiPayroll.Domain.Entities.Company.CompanyBankAccount">
             <summary>
@@ -790,6 +799,12 @@
         <member name="M:FijiPayroll.Domain.Entities.Company.Employee.Update(System.String,System.String,System.String,System.String,System.String,System.Decimal,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.Boolean,System.Boolean,System.Boolean,FijiPayroll.Domain.Enumerations.EmploymentType,System.String,System.String,System.String,System.String)">
             <summary>Updates employee properties.</summary>
         </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.Employee.Terminate(System.String)">
+            <summary>
+            Terminates the employee by deactivating their record, deactivating all payment methods, and raising a domain event.
+            </summary>
+            <param name="terminatedBy">Username of who terminated the employee.</param>
+        </member>
         <member name="T:FijiPayroll.Domain.Entities.Company.EmployeePaymentMethod">
             <summary>
             Owned entity representing an employee's payment method configuration.
@@ -816,6 +831,9 @@
         </member>
         <member name="P:FijiPayroll.Domain.Entities.Company.EmployeePaymentMethod.IsPrimary">
             <summary>Gets a value indicating whether this is the primary payment method.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.EmployeePaymentMethod.Deactivate">
+            <summary>Deactivates the payment method by clearing primary flag and resetting percentage.</summary>
         </member>
         <member name="M:FijiPayroll.Domain.Entities.Company.EmployeePaymentMethod.Create(FijiPayroll.Domain.Enumerations.PaymentMethodType,System.Decimal,System.Boolean,System.String,System.String,System.String,System.String)">
             <summary>Factory method to create an EmployeePaymentMethod.</summary>
@@ -964,6 +982,37 @@
         </member>
         <member name="M:FijiPayroll.Domain.Entities.Company.MasterLookup.Update(System.String,System.DateTime,System.DateTime,System.Nullable{System.Int32},System.Int32,System.Boolean)">
             <summary>Updates properties of the lookup data entry.</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Company.NegativeNetPayPolicy">
+            <summary>
+            Represents the company-wide policy governing voluntary deductions when net pay is insufficient.
+            </summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Entities.Company.NegativeNetPayPolicy.BlockDeduction">
+            <summary>Block deduction: Roll back calculation or abort run if net pay drops below zero.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Entities.Company.NegativeNetPayPolicy.PartialDeduction">
+            <summary>Partial deduction: Scale down voluntary deduction to make net pay exactly zero, audit-logging warning flags.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Entities.Company.NegativeNetPayPolicy.AllowNegativeNetPay">
+            <summary>Allow negative net pay: Deduct the full amount, allowing net pay to go negative (not standard for pilot, but supported by configuration).</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Company.PasswordPolicy">
+            <summary>
+            Domain boundary policy to validate password strength and blacklist checks.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.PasswordPolicy.Validate(System.String)">
+            <summary>
+            Validates password strength against the pilot complexity criteria:
+            - Minimum 12 characters.
+            - At least one lowercase letter.
+            - At least one uppercase letter.
+            - At least one digit.
+            - Must not be in the common password blacklist.
+            </summary>
+            <param name="password">Plaintext password candidate.</param>
+            <exception cref="T:FijiPayroll.Domain.Exceptions.DomainException">Thrown if validation rules are violated.</exception>
         </member>
         <member name="T:FijiPayroll.Domain.Entities.Company.PayPeriodSchedule">
             <summary>
@@ -1387,6 +1436,141 @@
         <member name="M:FijiPayroll.Domain.Entities.Company.TaxBracket.Create(System.String,System.String,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.Decimal,System.Decimal,System.Decimal,System.Decimal,System.Boolean,System.DateTime)">
             <summary>
             Factory method to build a new TaxBracket.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Company.UserAccount">
+            <summary>
+            Domain aggregate root representing a user account within a company.
+            Handles authentication state, failed login attempts, lockout logic, and password updates.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.CompanyId">
+            <summary>Gets the company ID context (multi-tenant boundary).</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.Username">
+            <summary>Gets the username.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.PasswordHash">
+            <summary>Gets the password hash (BCrypt hashed password).</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.DisplayName">
+            <summary>Gets the user's display name.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.IsActive">
+            <summary>Gets whether the user account is active.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.IsSystemAdmin">
+            <summary>Gets whether the user is a system admin.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.LastLoginAt">
+            <summary>Gets the timestamp of the last successful login.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.FailedLoginCount">
+            <summary>Gets the consecutive failed login attempts counter.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.LockedUntil">
+            <summary>Gets the lockout expiration timestamp (UTC).</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.MustChangePassword">
+            <summary>Gets whether the user is required to change their password on the next login.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.Roles">
+            <summary>Gets the read-only collection of roles mapped to the user.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.Create(System.Int32,System.String,System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Factory method to construct a new UserAccount.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.RecordSuccessfulLogin">
+            <summary>
+            Records a successful authentication session and resets locks.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.RecordFailedLogin">
+            <summary>
+            Records a failed authentication attempt. Lockout triggers after 5 failures for 15 minutes.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.IsLockedOut">
+            <summary>
+            Checks if the account is currently locked out.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.UpdatePassword(System.String)">
+            <summary>
+            Assigns a new password hash and updates force change state.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.ForcePasswordChange">
+            <summary>
+            Flags the user as requiring a password change on their next login.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.Deactivate">
+            <summary>
+            Deactivates the user account, blocking all access.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.Activate">
+            <summary>
+            Reactivates the user account.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.AddRole(FijiPayroll.Domain.Entities.Company.UserRole)">
+            <summary>
+            Maps a role to the user.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.RemoveRole(FijiPayroll.Domain.Entities.Company.UserRole)">
+            <summary>
+            Removes a role from the user.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Company.UserPermission">
+            <summary>
+            Domain entity representing a permission assigned to a role.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserPermission.UserRoleId">
+            <summary>Gets the parent role ID.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserPermission.PermissionCode">
+            <summary>Gets the permission code matching PermissionConstants.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserPermission.Create(System.Int32,System.String)">
+            <summary>
+            Factory method to construct a new UserPermission.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Company.UserRole">
+            <summary>
+            Domain aggregate root/child entity representing a user's role mapping.
+            Links to permissions governing features accessibility.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserRole.UserAccountId">
+            <summary>Gets the parent user account ID.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserRole.RoleName">
+            <summary>Gets the display name of the role.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserRole.Permissions">
+            <summary>Gets the collection of user permissions mapped to this role.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserRole.Create(System.Int32,System.String)">
+            <summary>
+            Factory method to construct a new UserRole.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserRole.AddPermission(FijiPayroll.Domain.Entities.Company.UserPermission)">
+            <summary>
+            Adds a permission to the role.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserRole.RemovePermission(FijiPayroll.Domain.Entities.Company.UserPermission)">
+            <summary>
+            Removes a permission from the role.
             </summary>
         </member>
         <member name="T:FijiPayroll.Domain.Entities.Leave.LeaveAccrualPolicy">
@@ -1923,6 +2107,9 @@
             Domain model linking submission histories together to form a clear chain of amendments.
             </summary>
         </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.ComplianceAmendment.CompanyId">
+            <summary>Gets the owner company ID context (multi-tenant boundary).</summary>
+        </member>
         <member name="P:FijiPayroll.Domain.Entities.Payroll.ComplianceAmendment.OriginalSubmissionId">
             <summary>Gets the original baseline submission ID in the chain.</summary>
         </member>
@@ -1941,7 +2128,7 @@
         <member name="P:FijiPayroll.Domain.Entities.Payroll.ComplianceAmendment.CreatedUtc">
             <summary>Gets the timestamp when the amendment log was filed.</summary>
         </member>
-        <member name="M:FijiPayroll.Domain.Entities.Payroll.ComplianceAmendment.Create(System.Int32,System.Int32,System.Int32,System.String,System.String)">
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.ComplianceAmendment.Create(System.Int32,System.Int32,System.Int32,System.Int32,System.String,System.String)">
             <summary>
             Factory method to construct a new ComplianceAmendment.
             </summary>
@@ -2116,6 +2303,9 @@
             serialized as JSON, used for auditing and amendment comparisons.
             </summary>
         </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.ComplianceSnapshot.CompanyId">
+            <summary>Gets the owner company ID context (multi-tenant boundary).</summary>
+        </member>
         <member name="P:FijiPayroll.Domain.Entities.Payroll.ComplianceSnapshot.ComplianceBatchId">
             <summary>Gets the associated batch identifier if part of a submitted file.</summary>
         </member>
@@ -2137,7 +2327,7 @@
         <member name="P:FijiPayroll.Domain.Entities.Payroll.ComplianceSnapshot.CreatedBy">
             <summary>Gets the user who triggered the snapshot generation.</summary>
         </member>
-        <member name="M:FijiPayroll.Domain.Entities.Payroll.ComplianceSnapshot.Create(System.Nullable{System.Int32},System.Int32,System.String,System.String,System.String,System.String)">
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.ComplianceSnapshot.Create(System.Int32,System.Nullable{System.Int32},System.Int32,System.String,System.String,System.String,System.String)">
             <summary>
             Factory method to construct a new ComplianceSnapshot.
             </summary>
@@ -2408,6 +2598,126 @@
         </member>
         <member name="M:FijiPayroll.Domain.Entities.Payroll.FRCSSubmission.UpdateStatus(FijiPayroll.Domain.Enumerations.ComplianceSubmissionStatus)">
             <summary>Updates the submission status.</summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.Loan">
+            <summary>
+            Domain entity representing a staff loan issued to an employee.
+            Governs principal amount, flat interest rate, period deductions, and repayment history.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Loan.CompanyId">
+            <summary>Gets the company owning this loan (isolation partition).</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Loan.EmployeeId">
+            <summary>Gets the employee recipient of this loan.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Loan.LoanDescription">
+            <summary>Gets the loan classification descriptor (e.g., "Salary Advance").</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Loan.PrincipalAmount">
+            <summary>Gets the original principal loan amount.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Loan.InterestRate">
+            <summary>Gets the flat interest rate percentage (e.g., 0.05 for 5% flat rate).</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Loan.TotalAmountToRepay">
+            <summary>Gets the total liability to repay including computed flat interest.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Loan.RemainingBalance">
+            <summary>Gets the current outstanding unpaid balance of the loan.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Loan.DeductionAmountPerPeriod">
+            <summary>Gets the maximum deduction amount per payroll period run.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Loan.StartDate">
+            <summary>Gets the start date of the loan amortization cycle.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Loan.Status">
+            <summary>Gets the current status state of the loan.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Loan.IsActive">
+            <summary>Gets a value indicating whether the loan is active and deductions should be run.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Loan.Repayments">
+            <summary>Gets the repayment history logs (read-only projection).</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.Loan.Create(System.Int32,System.Int32,System.String,System.Decimal,System.Decimal,System.Decimal,System.DateTime)">
+            <summary>
+            Factory method to register a new employee staff loan.
+            </summary>
+            <param name="companyId">Company identifier.</param>
+            <param name="employeeId">Employee identifier.</param>
+            <param name="description">Staff loan descriptor details.</param>
+            <param name="principal">Principal capital amount.</param>
+            <param name="interestRate">Flat rate interest percentage.</param>
+            <param name="deductionPerPeriod">Cycle deduction cap.</param>
+            <param name="startDate">Start date of loan amortization.</param>
+            <returns>A new initialized <see cref="T:FijiPayroll.Domain.Entities.Payroll.Loan"/>.</returns>
+            <exception cref="T:FijiPayroll.Domain.Exceptions.DomainException">Thrown when rules are violated.</exception>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.Loan.RecordRepayment(System.Int32,System.Decimal,System.String)">
+            <summary>
+            Records a payroll deduction repayment transaction and reduces the remaining balance.
+            </summary>
+            <param name="payrollRunId">Payroll run identifier.</param>
+            <param name="amount">Amount processed.</param>
+            <param name="recordedBy">Operator name.</param>
+            <exception cref="T:FijiPayroll.Domain.Exceptions.DomainException">Thrown if loan is fully paid or amount is invalid.</exception>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.Loan.Suspend">
+            <summary>
+            Suspends active deductions for this loan.
+            </summary>
+            <exception cref="T:FijiPayroll.Domain.Exceptions.DomainException">Thrown if not currently active.</exception>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.Loan.Resume">
+            <summary>
+            Resumes suspended deductions for this loan.
+            </summary>
+            <exception cref="T:FijiPayroll.Domain.Exceptions.DomainException">Thrown if not currently suspended.</exception>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.Loan.WriteOff">
+            <summary>
+            Writes off any outstanding remaining balance on the loan.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.Loan.ReverseRepayment(System.Int32)">
+            <summary>
+            Reverses/removes any repayments recorded for a specific payroll run, restoring the remaining balance.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.LoanRepayment">
+            <summary>
+            Domain entity representing an individual staff loan repayment transaction.
+            Records historical payment transactions linked to a payroll run.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.LoanRepayment.LoanId">
+            <summary>Gets the parent loan identifier.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.LoanRepayment.PayrollRunId">
+            <summary>Gets the payroll run identifier in which this repayment occurred.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.LoanRepayment.Amount">
+            <summary>Gets the amount of the repayment deduction.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.LoanRepayment.RemainingBalanceAfter">
+            <summary>Gets the loan remaining balance immediately after this repayment transaction.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.LoanRepayment.TransactionDate">
+            <summary>Gets the transaction execution date.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.LoanRepayment.Create(System.Int32,System.Int32,System.Decimal,System.Decimal,System.DateTime)">
+            <summary>
+            Factory method to create a new staff loan repayment entry.
+            </summary>
+            <param name="loanId">Loan identifier.</param>
+            <param name="payrollRunId">Payroll run identifier.</param>
+            <param name="amount">Amount deducted.</param>
+            <param name="remainingBalanceAfter">Remaining balance after payment.</param>
+            <param name="transactionDate">Execution timestamp.</param>
+            <returns>A new <see cref="T:FijiPayroll.Domain.Entities.Payroll.LoanRepayment"/>.</returns>
+            <exception cref="T:FijiPayroll.Domain.Exceptions.DomainException">Thrown when validation fails.</exception>
         </member>
         <member name="T:FijiPayroll.Domain.Entities.Payroll.Notification">
             <summary>
@@ -3410,6 +3720,23 @@
         <member name="F:FijiPayroll.Domain.Enumerations.LeaveStatus.Cancelled">
             <summary>Leave request cancelled by the employee or an admin.</summary>
         </member>
+        <member name="T:FijiPayroll.Domain.Enumerations.LoanStatus">
+            <summary>
+            Status of an employee staff loan.
+            </summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.LoanStatus.Active">
+            <summary>Loan is active and deductions are applied.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.LoanStatus.FullyPaid">
+            <summary>Loan has been fully repaid.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.LoanStatus.Suspended">
+            <summary>Loan deductions are suspended temporarily.</summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.LoanStatus.WrittenOff">
+            <summary>Loan has been cancelled or written off.</summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Enumerations.NotificationChannel">
             <summary>
             Active channels supported by the notification delivery dispatch engine.
@@ -4033,6 +4360,41 @@
         <member name="M:FijiPayroll.Domain.Interfaces.IImportJobRepository.GetByJobIdAsync(System.Guid,System.Threading.CancellationToken)">
             <summary>Retrieves an ImportJob by its unique JobId Guid.</summary>
         </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.ILeaveRepository">
+            <summary>
+            Repository interface for Leave module entities.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.ILoanRepository">
+            <summary>
+            Repository interface for staff Loan and LoanRepayment entities.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.ILoanRepository.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Fetches a loan by its unique identifier, including repayments.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.ILoanRepository.GetLoansByEmployeeAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all loans assigned to a specific employee.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.ILoanRepository.GetLoansByCompanyAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves all loans for a given company.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.ILoanRepository.AddAsync(FijiPayroll.Domain.Entities.Payroll.Loan,System.Threading.CancellationToken)">
+            <summary>
+            Persists a new loan registration record.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.ILoanRepository.AddRepaymentAsync(FijiPayroll.Domain.Entities.Payroll.LoanRepayment,System.Threading.CancellationToken)">
+            <summary>
+            Persists a new loan repayment transaction log.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Interfaces.IMasterLookupRepository">
             <summary>
             Repository interface for <see cref="T:FijiPayroll.Domain.Entities.Company.MasterLookup"/> entity operations.
@@ -4451,8 +4813,19 @@
         <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.BackgroundJobs">
             <summary>Repository for background jobs.</summary>
         </member>
+        <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.Leave">
+            <summary>Repository for Leave management operations.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.Loans">
+            <summary>Repository for staff Loan and LoanRepayment operations.</summary>
+        </member>
         <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.PayrollLedgerReversals">
             <summary>Repository for payroll ledger reversals.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IUnitOfWork.AddAuditLogAsync(FijiPayroll.Domain.Entities.Audit.AuditLog,System.Threading.CancellationToken)">
+            <summary>
+            Adds an audit log entry to the database context.
+            </summary>
         </member>
         <member name="M:FijiPayroll.Domain.Interfaces.IUnitOfWork.SaveChangesAsync(System.Threading.CancellationToken)">
             <summary>
@@ -4476,6 +4849,36 @@
         <member name="M:FijiPayroll.Domain.Interfaces.IUnitOfWork.RollbackTransactionAsync(System.Threading.CancellationToken)">
             <summary>
             Rolls back the active explicit transaction.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.IUserRepository">
+            <summary>
+            Domain repository interface for UserAccount management.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IUserRepository.GetByUsernameAsync(System.String,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Fetches a user by their username and target company ID.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IUserRepository.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Fetches a user by their primary key identifier.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IUserRepository.AddAsync(FijiPayroll.Domain.Entities.Company.UserAccount,System.Threading.CancellationToken)">
+            <summary>
+            Adds a user account to the context.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IUserRepository.GetPermissionsForUserAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Resolves all distinct permissions mapped to the user via their active roles.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IUserRepository.GetCompaniesByUsernameAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Resolves all companies associated with an active username.
             </summary>
         </member>
         <member name="T:FijiPayroll.Domain.Rules.PayrollRules.PayrollAllowanceEngine">

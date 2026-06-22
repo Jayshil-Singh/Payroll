@@ -179,6 +179,9 @@ public sealed class PayrollPipelineService
                 return Result.Success();
             }
 
+            var company = await _unitOfWork.Setup.GetCompanyByIdAsync(run.CompanyId, cancellationToken);
+            var netPayPolicy = company?.NegativeNetPayPolicy ?? FijiPayroll.Domain.Entities.Company.NegativeNetPayPolicy.PartialDeduction;
+
             var taxBrackets = await _unitOfWork.TaxBrackets.GetBracketsByVersionAndFrequencyAsync(
                 FijiTaxConstants.CurrentTaxVersion,
                 run.Frequency,
@@ -198,6 +201,8 @@ public sealed class PayrollPipelineService
                 validEmployees,
                 componentSnapshots,
                 includeAdjustments: true,
+                run.StartDate,
+                run.EndDate,
                 cancellationToken);
 
             if (validSnapshots.Count > 0)
@@ -210,7 +215,8 @@ public sealed class PayrollPipelineService
                     taxBrackets,
                     fnpfEmployeeRate,
                     fnpfEmployerRate,
-                    VoluntaryDeductionPolicy.PartialDeductionWithAuditFlag);
+                    VoluntaryDeductionPolicy.PartialDeductionWithAuditFlag,
+                    netPayPolicy);
 
                 _validationService.Validate(preflightContext);
                 PayrollExecutionContractValidator.Validate(preflightContext);
@@ -237,7 +243,8 @@ public sealed class PayrollPipelineService
                             taxBrackets,
                             fnpfEmployeeRate,
                             fnpfEmployerRate,
-                            VoluntaryDeductionPolicy.PartialDeductionWithAuditFlag);
+                            VoluntaryDeductionPolicy.PartialDeductionWithAuditFlag,
+                            netPayPolicy);
 
                         _validationService.Validate(singleContext);
                         PayrollExecutionContractValidator.Validate(singleContext);

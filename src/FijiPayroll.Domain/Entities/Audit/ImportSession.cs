@@ -1,4 +1,6 @@
 using FijiPayroll.Domain.Entities.Common;
+using System;
+using System.Collections.Generic;
 
 namespace FijiPayroll.Domain.Entities.Audit;
 
@@ -10,6 +12,7 @@ public sealed class ImportSession : AuditableEntity
     private ImportSession() { }
 
     public ImportSession(
+        int companyId,
         Guid sessionId,
         string originalFileName,
         long uploadedSize,
@@ -21,6 +24,7 @@ public sealed class ImportSession : AuditableEntity
         string status,
         bool rollbackSupported)
     {
+        CompanyId = companyId;
         SessionId = sessionId;
         OriginalFileName = originalFileName;
         UploadedSize = uploadedSize;
@@ -35,6 +39,7 @@ public sealed class ImportSession : AuditableEntity
         FailureCount = 0;
     }
 
+    public int CompanyId { get; private set; }
     public Guid SessionId { get; private set; }
     public string OriginalFileName { get; private set; } = string.Empty;
     public long UploadedSize { get; private set; }

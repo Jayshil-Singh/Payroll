@@ -12,6 +12,9 @@ internal sealed class ImportSessionConfiguration : IEntityTypeConfiguration<Impo
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
+        builder.Property(x => x.CompanyId)
+               .IsRequired();
+
         builder.Property(x => x.SessionId)
                .IsRequired();
         builder.HasIndex(x => x.SessionId).IsUnique();

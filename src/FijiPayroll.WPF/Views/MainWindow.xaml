@@ -115,7 +115,7 @@
                 </RadioButton>
 
                 <!-- Compliance Center Nav Button -->
-                <RadioButton Style="{StaticResource SidebarNavItem}" Command="{Binding NavigateComplianceCommand}">
+                <RadioButton Style="{StaticResource SidebarNavItem}" Command="{Binding NavigateComplianceCommand}" Visibility="{Binding HasComplianceAccess, Converter={StaticResource BoolToVisConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#xE9F9;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Width="24" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" />
                         <TextBlock Text="Compliance Center" VerticalAlignment="Center" />
@@ -167,6 +167,8 @@
             <Grid.RowDefinitions>
                 <!-- Header Status Topbar -->
                 <RowDefinition Height="Auto" />
+                <!-- License Warning Banner -->
+                <RowDefinition Height="Auto" />
                 <!-- Page Content Region -->
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
@@ -207,8 +209,22 @@
                 </Grid>
             </Border>
 
+            <!-- Warning Banner -->
+            <Border Grid.Row="1" Background="{DynamicResource BrushAlertOrange}" Padding="24,8" Visibility="{Binding ShowLicenseWarning, Converter={StaticResource BoolToVisConverter}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="#FFFFFF" VerticalAlignment="Center" Margin="0,0,10,0" />
+                        <TextBlock Text="{Binding LicenseWarningMessage}" Foreground="#FFFFFF" FontWeight="SemiBold" FontSize="12.5" VerticalAlignment="Center" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
             <!-- Dynamic Workspace Content Region -->
-            <Grid Grid.Row="1" Background="{DynamicResource BrushBgDeep}">
+            <Grid Grid.Row="2" Background="{DynamicResource BrushBgDeep}">
                 <!-- Data Templates defined in App resources automatically render the correct view for the CurrentViewModel -->
                 <ContentControl Content="{Binding CurrentViewModel}" />
             </Grid>

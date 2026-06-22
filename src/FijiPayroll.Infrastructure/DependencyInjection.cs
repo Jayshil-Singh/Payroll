@@ -2,6 +2,7 @@ using FijiPayroll.Application.Common.Interfaces;
 using FijiPayroll.Domain.Interfaces;
 using FijiPayroll.Infrastructure.Services;
 using FijiPayroll.Infrastructure.Services.BankGenerators;
+using FijiPayroll.Infrastructure.Services.Licensing;
 using FijiPayroll.SDK.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,6 +50,11 @@ public static class DependencyInjection
 
         // Register the License Fingerprint Provider
         services.AddSingleton<ILicenseFingerprintProvider, LicenseFingerprintProvider>();
+        services.AddSingleton<LicenseValidator>();
+        services.AddSingleton<ILicenseProvider>(sp => sp.GetRequiredService<LicenseValidator>());
+
+        // Register Password Hasher
+        services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 
         // Register Rule Cache and IMemoryCache
         services.AddMemoryCache();
@@ -70,6 +76,7 @@ public static class DependencyInjection
         services.AddScoped<ISignatureVerifierService, FijiPayroll.Infrastructure.Services.ComplianceEvidence.SignatureVerifierService>();
         services.AddScoped<IEvidencePackGeneratorService, FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackGeneratorService>();
         services.AddScoped<IDigitalSignatureService, FijiPayroll.Infrastructure.Services.EvidencePack.DigitalSignatureService>();
+        services.AddScoped<IReportProvider, FijiPayroll.Infrastructure.Services.Reports.ReportProvider>();
 
         return services;
     }

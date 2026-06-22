@@ -4,133 +4,805 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FijiPayroll.WPF.Views"
+             xmlns:vm="clr-namespace:FijiPayroll.WPF.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800"
+             d:DesignHeight="700" d:DesignWidth="1000"
+             d:DataContext="{d:DesignInstance Type=vm:EmployeeViewModel}"
              Background="Transparent">
-    <Grid Margin="24">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+             
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+        
+        <!-- Inverse Boolean to Visibility Converter -->
+        <local:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisConverter" />
+        
+        <!-- Status Converter for color tags -->
+        <local:StatusToColorBrushConverter x:Key="StatusToColorBrushConverter" />
+        
+        <!-- Status String Converter for leave statuses -->
+        <local:StatusStringToColorBrushConverter x:Key="StatusStringToColorBrushConverter" />
+        
+        <!-- String Equals to Visibility Converter -->
+        <local:StringEqualsToVisibilityConverter x:Key="StringEqualsToVisibilityConverter" />
+    </UserControl.Resources>
 
-        <!-- Header -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,20">
-            <TextBlock Text="{Binding Title}" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Segoe UI Semibold" />
-            <TextBlock Text="Manage enterprise employee profile data, active job categories, and FNPF/residency details." FontSize="14" Foreground="#A0AEC0" Margin="0,4,0,0" />
-        </StackPanel>
+    <Grid Margin="16">
+        <Grid.ColumnDefinitions>
+            <!-- Registry Listing Pane -->
+            <ColumnDefinition Width="340" />
+            <!-- Splitter -->
+            <ColumnDefinition Width="12" />
+            <!-- Detailed Profile Workspace -->
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <!-- Action / Filter Bar -->
-        <Border Grid.Row="1" CornerRadius="6" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="12" Margin="0,0,0,16">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <!-- Search Input Mock -->
-                    <Border CornerRadius="4" BorderBrush="#2D3748" BorderThickness="1" Background="#0F111A" Width="240" Height="32" Padding="8,4">
+        <!-- LEFT PANE: Employee Registry List -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Title Header -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,16">
+                <TextBlock Text="Employee Registry" FontSize="22" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" />
+                <TextBlock Text="Search and manage enterprise profiles" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0" />
+            </StackPanel>
+
+            <!-- Search & Filters -->
+            <Border Grid.Row="1" CornerRadius="6" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="10" Margin="0,0,0,12">
+                <StackPanel>
+                    <TextBlock Text="Search" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4" />
+                    <Border CornerRadius="4" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="#0F111A" Height="32" Padding="6,2">
                         <Grid>
-                            <TextBlock Text="Search employees by name, code or TIN..." Foreground="#4A5568" VerticalAlignment="Center" IsHitTestVisible="False" Visibility="Visible"/>
-                            <TextBox BorderThickness="0" Background="Transparent" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                            <TextBlock Text="Type name or code..." Foreground="#4A5568" VerticalAlignment="Center" IsHitTestVisible="False"
+                                       Visibility="{Binding SearchTerm, Converter={StaticResource InverseBoolToVisConverter}}" />
+                            <TextBox BorderThickness="0" Background="Transparent" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"
+                                     Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </Border>
-                    <!-- Filter Box Mock -->
-                    <Border CornerRadius="4" BorderBrush="#2D3748" BorderThickness="1" Background="#0F111A" Width="140" Height="32" Margin="12,0,0,0" Padding="8,4">
-                        <TextBlock Text="All Departments" Foreground="#A0AEC0" VerticalAlignment="Center"/>
-                    </Border>
-                </StackPanel>
-                <Button Grid.Column="1" Content="+ Add Employee" Width="130" Height="32" Background="#0D99FF" Foreground="#FFFFFF" FontWeight="SemiBold" BorderThickness="0">
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="4"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
-            </Grid>
-        </Border>
 
-        <!-- Grid Shell Placeholder -->
-        <Border Grid.Row="2" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="20">
-            <Grid>
+                    <TextBlock Text="Department" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,8,0,4" />
+                    <ComboBox ItemsSource="{Binding Departments}" SelectedItem="{Binding SelectedDepartment}" Height="32" Background="#0F111A" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushBorder}" />
+                </StackPanel>
+            </Border>
+
+            <!-- Employees List -->
+            <Border Grid.Row="2" CornerRadius="6" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="4">
+                <ListBox ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedEmployee}" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+                            <Setter Property="Padding" Value="10,8" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="#222A45" />
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="#1E243A" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{Binding FullName}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource BrushTextPrimary}" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                        <TextBlock Text="{Binding EmployeeCode}" FontSize="11" Foreground="{DynamicResource BrushAccent}" FontWeight="Bold" />
+                                        <TextBlock Text=" • " FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" />
+                                        <TextBlock Text="{Binding Department}" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <!-- Status Badge -->
+                                <Border Grid.Column="1" Padding="6,2" CornerRadius="4" VerticalAlignment="Center"
+                                        Background="{Binding IsActive, Converter={StaticResource StatusToColorBrushConverter}, ConverterParameter='Bg'}"
+                                        BorderBrush="{Binding IsActive, Converter={StaticResource StatusToColorBrushConverter}, ConverterParameter='Border'}"
+                                        BorderThickness="1">
+                                    <TextBlock Text="{Binding IsActive, Converter={StaticResource StatusToColorBrushConverter}, ConverterParameter='Text'}" 
+                                               FontSize="10" FontWeight="Bold"
+                                               Foreground="{Binding IsActive, Converter={StaticResource StatusToColorBrushConverter}, ConverterParameter='Brush'}" />
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+        </Grid>
+
+        <!-- RIGHT PANE: Workspace Workspace details -->
+        <Grid Grid.Column="2">
+            <!-- No Selection State -->
+            <Border CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="40"
+                    Visibility="{Binding SelectedEmployee, Converter={StaticResource InverseBoolToVisConverter}}">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="64" Foreground="{DynamicResource BrushTextSecondary}" HorizontalAlignment="Center" />
+                    <TextBlock Text="No Employee Selected" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" HorizontalAlignment="Center" Margin="0,16,0,8" />
+                    <TextBlock Text="Select an employee from the registry list to view profile details, payment configurations, and leave history." 
+                               FontSize="13" Foreground="{DynamicResource BrushTextSecondary}" TextAlignment="Center" HorizontalAlignment="Center" MaxWidth="360" />
+                </StackPanel>
+            </Border>
+
+            <!-- Active Workspace detail details -->
+            <Grid Visibility="{Binding SelectedEmployee, Converter={StaticResource BoolToVisConverter}}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <!-- Headers -->
-                <Grid Grid.Row="0" Margin="0,0,0,12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="150" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="Code" Width="80" Foreground="#A0AEC0" FontWeight="SemiBold" />
-                    <TextBlock Grid.Column="1" Text="Full Name" Foreground="#A0AEC0" FontWeight="SemiBold" />
-                    <TextBlock Grid.Column="2" Text="Department" Foreground="#A0AEC0" FontWeight="SemiBold" />
-                    <TextBlock Grid.Column="3" Text="Residency" Foreground="#A0AEC0" FontWeight="SemiBold" />
-                    <TextBlock Grid.Column="4" Text="Base Salary" Foreground="#A0AEC0" FontWeight="SemiBold" />
-                </Grid>
+                <!-- Profile Header Card -->
+                <Border Grid.Row="0" CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="16" Margin="0,0,0,12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <StackPanel Grid.Column="0">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding SelectedEmployeeDetail.FullName}" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" />
+                                <Border Margin="12,0,0,0" Padding="8,2" CornerRadius="4" VerticalAlignment="Center"
+                                        Background="{Binding SelectedEmployeeDetail.IsActive, Converter={StaticResource StatusToColorBrushConverter}, ConverterParameter='Bg'}"
+                                        BorderBrush="{Binding SelectedEmployeeDetail.IsActive, Converter={StaticResource StatusToColorBrushConverter}, ConverterParameter='Border'}"
+                                        BorderThickness="1">
+                                    <TextBlock Text="{Binding SelectedEmployeeDetail.IsActive, Converter={StaticResource StatusToColorBrushConverter}, ConverterParameter='Text'}" 
+                                               FontSize="11" FontWeight="Bold"
+                                               Foreground="{Binding SelectedEmployeeDetail.IsActive, Converter={StaticResource StatusToColorBrushConverter}, ConverterParameter='Brush'}" />
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <TextBlock Text="{Binding SelectedEmployeeDetail.EmployeeCode}" FontSize="12" Foreground="{DynamicResource BrushAccent}" FontWeight="Bold" />
+                                <TextBlock Text="  •  " FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" />
+                                <TextBlock Text="{Binding SelectedEmployeeDetail.Department}" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" />
+                                <TextBlock Text="  •  " FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" />
+                                <TextBlock Text="{Binding SelectedEmployeeDetail.Position}" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" />
+                            </StackPanel>
+                        </StackPanel>
 
-                <!-- Mock Rows List -->
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                    <StackPanel>
-                        <!-- Row 1 -->
-                        <Border BorderBrush="#2E3656" BorderThickness="0,0,0,1" Padding="0,12" Height="48">
+                        <!-- Termination control -->
+                        <Button Grid.Column="1" Content="Terminate Employee" Command="{Binding TerminateEmployeeCommand}" 
+                                Style="{StaticResource SecondaryButton}" Foreground="#FF453A" BorderBrush="#88FF453A" Height="32" Padding="12,4"
+                                Visibility="{Binding SelectedEmployeeDetail.IsActive, Converter={StaticResource BoolToVisConverter}}" />
+                    </Grid>
+                </Border>
+
+                <!-- Tabs Container -->
+                <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0" Padding="0">
+                    <TabControl.Resources>
+                        <Style TargetType="TabItem">
+                            <Setter Property="HeaderTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontSize="13" FontWeight="SemiBold" Padding="12,8" />
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="TabItem">
+                                        <Border x:Name="Border" Background="{TemplateBinding Background}" BorderThickness="0,0,0,2" BorderBrush="Transparent" Margin="0,0,16,4">
+                                            <ContentPresenter x:Name="ContentSite" ContentSource="Header" RecognizesAccessKey="True" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+                                                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BrushAccent}" />
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </TabControl.Resources>
+
+                    <!-- TAB 1: Profile Details -->
+                    <TabItem Header="Profile Settings">
+                        <Border CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel>
+                                    <TextBlock Text="Personal &amp; Statutory Settings" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,12" />
+                                    
+                                    <UniformGrid Columns="2" Rows="5">
+                                        <!-- Row 1 -->
+                                        <StackPanel Margin="0,0,12,12">
+                                            <TextBlock Text="Tax Identification Number (TIN)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" />
+                                            <TextBlock Text="{Binding SelectedEmployeeDetail.Tin}" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" Margin="0,4,0,0" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,0,12">
+                                            <TextBlock Text="FNPF Number" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" />
+                                            <TextBlock Text="{Binding SelectedEmployeeDetail.FnpfNumber}" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" Margin="0,4,0,0" />
+                                        </StackPanel>
+
+                                        <!-- Row 2 -->
+                                        <StackPanel Margin="0,0,12,12">
+                                            <TextBlock Text="Residency Status" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" />
+                                            <TextBlock Text="{Binding SelectedEmployeeDetail.ResidencyStatus}" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" Margin="0,4,0,0" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,0,12">
+                                            <TextBlock Text="Employment Type" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" />
+                                            <TextBlock Text="{Binding SelectedEmployeeDetail.EmploymentType}" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" Margin="0,4,0,0" />
+                                        </StackPanel>
+
+                                        <!-- Row 3 -->
+                                        <StackPanel Margin="0,0,12,12">
+                                            <TextBlock Text="Periodic Base Salary" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" />
+                                            <TextBlock Text="{Binding SelectedEmployeeDetail.BaseSalary, StringFormat={}{0:C}}" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" Margin="0,4,0,0" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,0,12">
+                                            <TextBlock Text="Pay Cycle Frequency" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" />
+                                            <TextBlock Text="{Binding SelectedEmployeeDetail.Frequency}" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" Margin="0,4,0,0" />
+                                        </StackPanel>
+
+                                        <!-- Row 4 -->
+                                        <StackPanel Margin="0,0,12,12">
+                                            <TextBlock Text="Email Address" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" />
+                                            <TextBlock Text="{Binding SelectedEmployeeDetail.Email}" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" Margin="0,4,0,0" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,0,12">
+                                            <TextBlock Text="Cost Centre" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" />
+                                            <TextBlock Text="{Binding SelectedEmployeeDetail.CostCentre}" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" Margin="0,4,0,0" />
+                                        </StackPanel>
+
+                                        <!-- Row 5 -->
+                                        <StackPanel Margin="0,0,12,12">
+                                            <TextBlock Text="Branch Location" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" />
+                                            <TextBlock Text="{Binding SelectedEmployeeDetail.Branch}" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" Margin="0,4,0,0" />
+                                        </StackPanel>
+                                        <StackPanel Margin="0,0,0,12">
+                                            <TextBlock Text="Statutory Exemptions" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" />
+                                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                                <CheckBox Content="FNPF Exempt" IsChecked="{Binding SelectedEmployeeDetail.IsFnpfExempt}" IsEnabled="False" Foreground="{DynamicResource BrushTextPrimary}" />
+                                                <CheckBox Content="PAYE Exempt" IsChecked="{Binding SelectedEmployeeDetail.IsTaxExempt}" IsEnabled="False" Margin="12,0,0,0" Foreground="{DynamicResource BrushTextPrimary}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </UniformGrid>
+
+                                    <!-- Data Quality Score Indicator -->
+                                    <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,1,0,0" Margin="0,12,0,0" Padding="0,12,0,0">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="Profile Integrity Verification" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource BrushTextPrimary}" />
+                                                <TextBlock Text="Computed health based on Tin, FNPF, Email, and payment method settings." FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0" />
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding SelectedEmployeeDetail.DataQualityScore, StringFormat={}{0}%}" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource BrushAccent}" VerticalAlignment="Center" />
+                                                <ProgressBar Value="{Binding SelectedEmployeeDetail.DataQualityScore}" Maximum="100" Width="100" Height="8" Background="#0F111A" Foreground="{DynamicResource BrushAccent}" BorderThickness="0" Margin="10,0,0,0" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                    </TabItem>
+
+                    <!-- TAB 2: Payment Configurations -->
+                    <TabItem Header="Payment Methods">
+                        <Border CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20">
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="150" />
-                                    <ColumnDefinition Width="150" />
-                                    <ColumnDefinition Width="150" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="EMP-001" Width="80" Foreground="#FFFFFF" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="Jayesh Sharma" Foreground="#FFFFFF" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="Engineering" Foreground="#FFFFFF" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="3" Text="Resident" Foreground="#FFFFFF" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="4" Text="$3,450.00" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                
+                                <TextBlock Grid.Row="0" Text="Disbursement Allocations" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,12" />
+
+                                <DataGrid Grid.Row="1" ItemsSource="{Binding SelectedEmployeeDetail.PaymentMethods}" AutoGenerateColumns="False" 
+                                          Background="Transparent" RowBackground="Transparent" AlternatingRowBackground="#121625"
+                                          BorderThickness="0" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource BrushBorder}"
+                                          IsReadOnly="True" HeadersVisibility="Column" Foreground="{DynamicResource BrushTextPrimary}">
+                                    <DataGrid.Resources>
+                                        <Style TargetType="DataGridColumnHeader">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+                                            <Setter Property="FontWeight" Value="SemiBold" />
+                                            <Setter Property="Padding" Value="8,4" />
+                                            <Setter Property="BorderThickness" Value="0" />
+                                        </Style>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="Padding" Value="8,10" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="DataGridCell">
+                                                        <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                                            <ContentPresenter />
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </DataGrid.Resources>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Method Type" Binding="{Binding MethodType}" Width="110" />
+                                        <DataGridTextColumn Header="Bank Name" Binding="{Binding BankName, TargetNullValue='N/A'}" Width="*" />
+                                        <DataGridTextColumn Header="Account Number" Binding="{Binding BankAccountNumber, TargetNullValue='N/A'}" Width="150" />
+                                        <DataGridTextColumn Header="Sort/SortCode" Binding="{Binding BankSortCode, TargetNullValue='N/A'}" Width="90" />
+                                        <DataGridTextColumn Header="Mobile No." Binding="{Binding MobileNumber, TargetNullValue='N/A'}" Width="100" />
+                                        <DataGridTextColumn Header="Percentage" Binding="{Binding Percentage, StringFormat={}{0}%}" Width="80" />
+                                        <DataGridCheckBoxColumn Header="Is Primary" Binding="{Binding IsPrimary}" Width="80" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
                             </Grid>
                         </Border>
-                        <!-- Row 2 -->
-                        <Border BorderBrush="#2E3656" BorderThickness="0,0,0,1" Padding="0,12" Height="48">
-                            <Grid>
+                    </TabItem>
+
+                    <!-- TAB 3: Leave Management Hub -->
+                    <TabItem Header="Leave Hub">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,12">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="150" />
-                                    <ColumnDefinition Width="150" />
-                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="EMP-002" Width="80" Foreground="#FFFFFF" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="Sereana Qila" Foreground="#FFFFFF" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="Human Resources" Foreground="#FFFFFF" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="3" Text="Resident" Foreground="#FFFFFF" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="4" Text="$2,800.00" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Text="Leave Balances (Current Fiscal Year)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center" />
                             </Grid>
-                        </Border>
-                        <!-- Row 3 -->
-                        <Border BorderBrush="#2E3656" BorderThickness="0,0,0,1" Padding="0,12" Height="48">
-                            <Grid>
+
+                            <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="150" />
-                                    <ColumnDefinition Width="150" />
-                                    <ColumnDefinition Width="150" />
+                                    <!-- Balances & Requests List Grid -->
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="12" />
+                                    <!-- Submit Request Form Grid -->
+                                    <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="EMP-003" Width="80" Foreground="#FFFFFF" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="Mark Henderson" Foreground="#FFFFFF" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="Finance" Foreground="#FFFFFF" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="3" Text="Non-Resident" Foreground="#FFFFFF" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="4" Text="$4,200.00" Foreground="#FFFFFF" VerticalAlignment="Center"/>
+
+                                <!-- LEFT LEAVE CONTENT: Balances and Requests Grid -->
+                                <Grid Grid.Column="0">
+                                    <Grid.RowDefinitions>
+                                        <!-- Balances summary grid -->
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="12" />
+                                        <!-- History header -->
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="8" />
+                                        <!-- Requests list -->
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Leave Balances -->
+                                    <Border Grid.Row="0" CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12">
+                                        <ItemsControl ItemsSource="{Binding LeaveBalances}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Padding="0,6">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="120" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Grid.Column="0" Text="{Binding LeaveTypeName}" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" />
+                                                            <UniformGrid Grid.Column="1" Columns="4">
+                                                                <StackPanel HorizontalAlignment="Center">
+                                                                    <TextBlock Text="Entitled" FontSize="9" Foreground="{DynamicResource BrushTextSecondary}" />
+                                                                    <TextBlock Text="{Binding Entitlement}" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" />
+                                                                </StackPanel>
+                                                                <StackPanel HorizontalAlignment="Center">
+                                                                    <TextBlock Text="Accrued" FontSize="9" Foreground="{DynamicResource BrushTextSecondary}" />
+                                                                    <TextBlock Text="{Binding Accrued}" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" />
+                                                                </StackPanel>
+                                                                <StackPanel HorizontalAlignment="Center">
+                                                                    <TextBlock Text="Taken" FontSize="9" Foreground="{DynamicResource BrushTextSecondary}" />
+                                                                    <TextBlock Text="{Binding Taken}" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" />
+                                                                </StackPanel>
+                                                                <StackPanel HorizontalAlignment="Center">
+                                                                    <TextBlock Text="Available" FontSize="9" Foreground="{DynamicResource BrushTextSecondary}" />
+                                                                    <TextBlock Text="{Binding Available}" FontSize="12" Foreground="{DynamicResource BrushAccent}" FontWeight="Bold" />
+                                                                </StackPanel>
+                                                            </UniformGrid>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Border>
+
+                                    <!-- Requests History Title -->
+                                    <TextBlock Grid.Row="2" Text="Leave Request History" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" />
+
+                                    <!-- Requests History Grid -->
+                                    <Border Grid.Row="4" CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12">
+                                        <DataGrid ItemsSource="{Binding LeaveRequests}" AutoGenerateColumns="False" 
+                                                  Background="Transparent" RowBackground="Transparent" AlternatingRowBackground="#121625"
+                                                  BorderThickness="0" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource BrushBorder}"
+                                                  IsReadOnly="True" HeadersVisibility="Column" Foreground="{DynamicResource BrushTextPrimary}">
+                                            <DataGrid.Resources>
+                                                <Style TargetType="DataGridColumnHeader">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+                                                    <Setter Property="FontWeight" Value="SemiBold" />
+                                                    <Setter Property="Padding" Value="6,4" />
+                                                    <Setter Property="BorderThickness" Value="0" />
+                                                </Style>
+                                                <Style TargetType="DataGridCell">
+                                                    <Setter Property="Padding" Value="6,8" />
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="DataGridCell">
+                                                                <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                                                    <ContentPresenter />
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </DataGrid.Resources>
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Type" Binding="{Binding LeaveTypeName}" Width="90" />
+                                                <DataGridTextColumn Header="Start Date" Binding="{Binding StartDate, StringFormat={}{0:dd/MM/yyyy}}" Width="90" />
+                                                <DataGridTextColumn Header="End Date" Binding="{Binding EndDate, StringFormat={}{0:dd/MM/yyyy}}" Width="90" />
+                                                <DataGridTextColumn Header="Days" Binding="{Binding TotalDays}" Width="50" />
+                                                <DataGridTemplateColumn Header="Status" Width="85">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Border Padding="6,2" CornerRadius="4" BorderThickness="1" HorizontalAlignment="Left"
+                                                                    Background="{Binding Status, Converter={StaticResource StatusStringToColorBrushConverter}, ConverterParameter='Bg'}"
+                                                                    BorderBrush="{Binding Status, Converter={StaticResource StatusStringToColorBrushConverter}, ConverterParameter='Border'}">
+                                                                <TextBlock Text="{Binding Status}" FontSize="10" FontWeight="Bold"
+                                                                           Foreground="{Binding Status, Converter={StaticResource StatusStringToColorBrushConverter}, ConverterParameter='Brush'}" />
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Header="Actions" Width="100">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <!-- Show Approve/Reject if status is Pending -->
+                                                            <StackPanel Orientation="Horizontal" Visibility="{Binding Status, Converter={StaticResource StringEqualsToVisibilityConverter}, ConverterParameter='Pending'}">
+                                                                <Button Content="Approve" Command="{Binding DataContext.ApproveLeaveRequestCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" FontSize="9" Padding="4,2" Background="{DynamicResource BrushAlertGreen}" Foreground="White" BorderThickness="0" Margin="0,0,4,0" />
+                                                                <Button Content="Reject" Command="{Binding DataContext.RejectLeaveRequestCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" FontSize="9" Padding="4,2" Background="{DynamicResource BrushAlertRed}" Foreground="White" BorderThickness="0" />
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Border>
+                                </Grid>
+
+                                <!-- RIGHT LEAVE CONTENT: Submit Leave Request Form & Rejection Tool -->
+                                <Grid Grid.Column="2">
+                                    <Grid.RowDefinitions>
+                                        <!-- Submit form -->
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="12" />
+                                        <!-- Rejection panel (only visible if rejected or rejected pending input) -->
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Submit Leave Form -->
+                                    <Border Grid.Row="0" CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="14">
+                                        <StackPanel>
+                                            <TextBlock Text="Submit Leave Request" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,10" />
+
+                                            <TextBlock Text="Leave Type" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4" />
+                                            <ComboBox ItemsSource="{Binding LeaveTypes}" SelectedItem="{Binding SelectedLeaveType}" DisplayMemberPath="TypeName" Height="30" Background="#0F111A" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushBorder}" />
+
+                                            <UniformGrid Columns="2" Margin="0,8,0,0">
+                                                <StackPanel Margin="0,0,6,0">
+                                                    <TextBlock Text="Start Date" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4" />
+                                                    <DatePicker SelectedDate="{Binding LeaveStartDate}" Height="30" BorderBrush="{DynamicResource BrushBorder}" />
+                                                </StackPanel>
+                                                <StackPanel Margin="6,0,0,0">
+                                                    <TextBlock Text="End Date" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4" />
+                                                    <DatePicker SelectedDate="{Binding LeaveEndDate}" Height="30" BorderBrush="{DynamicResource BrushBorder}" />
+                                                </StackPanel>
+                                            </UniformGrid>
+
+                                            <TextBlock Text="Working Days Count" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,8,0,4" />
+                                            <Border CornerRadius="4" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="#0F111A" Height="30" Padding="6,2">
+                                                <TextBox BorderThickness="0" Background="Transparent" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"
+                                                         Text="{Binding LeaveTotalDays, UpdateSourceTrigger=PropertyChanged}" />
+                                            </Border>
+
+                                            <TextBlock Text="Employee Notes" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,8,0,4" />
+                                            <TextBox Text="{Binding LeaveNotes}" Height="50" TextWrapping="Wrap" AcceptsReturn="True" Background="#0F111A" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushBorder}" Padding="4" />
+
+                                            <Button Content="Submit Request" Command="{Binding SubmitLeaveRequestCommand}" Style="{StaticResource ModernButton}" Height="32" Margin="0,12,0,0" />
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Rejection Reason Input Card -->
+                                    <Border Grid.Row="2" CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="14">
+                                        <StackPanel>
+                                            <TextBlock Text="Rejection Reason" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4" />
+                                            <TextBlock Text="Provide a reason below before clicking the Reject action button in the grid." FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,8" />
+                                            <TextBox Text="{Binding RejectionReason, UpdateSourceTrigger=PropertyChanged}" Height="60" TextWrapping="Wrap" AcceptsReturn="True" Background="#0F111A" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushBorder}" Padding="4" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
                             </Grid>
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
+                        </Grid>
+                    </TabItem>
+
+                    <!-- TAB 4: Loan Management Hub -->
+                    <TabItem Header="Loans Hub">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0" Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Loan Registry &amp; Deductions" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center" />
+                            </Grid>
+
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <!-- Loans & Repayments List Grid -->
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="12" />
+                                    <!-- Register New Loan Form Grid -->
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+
+                                <!-- LEFT LOANS CONTENT: Loans and Repayments Grid -->
+                                <Grid Grid.Column="0">
+                                    <Grid.RowDefinitions>
+                                        <!-- Loans summary grid -->
+                                        <RowDefinition Height="3*" />
+                                        <RowDefinition Height="12" />
+                                        <!-- Repayments history title -->
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="8" />
+                                        <!-- Repayments list -->
+                                        <RowDefinition Height="2*" />
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Loans Grid -->
+                                    <Border Grid.Row="0" CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12">
+                                        <DataGrid x:Name="LoansGrid" ItemsSource="{Binding Loans}" AutoGenerateColumns="False" 
+                                                  Background="Transparent" RowBackground="Transparent" AlternatingRowBackground="#121625"
+                                                  BorderThickness="0" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource BrushBorder}"
+                                                  IsReadOnly="True" HeadersVisibility="Column" Foreground="{DynamicResource BrushTextPrimary}">
+                                            <DataGrid.Resources>
+                                                <Style TargetType="DataGridColumnHeader">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+                                                    <Setter Property="FontWeight" Value="SemiBold" />
+                                                    <Setter Property="Padding" Value="6,4" />
+                                                    <Setter Property="BorderThickness" Value="0" />
+                                                </Style>
+                                                <Style TargetType="DataGridCell">
+                                                    <Setter Property="Padding" Value="6,8" />
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="DataGridCell">
+                                                                <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                                                    <ContentPresenter />
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </DataGrid.Resources>
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Description" Binding="{Binding LoanDescription}" Width="*" />
+                                                <DataGridTextColumn Header="Principal" Binding="{Binding PrincipalAmount, StringFormat={}{0:C}}" Width="85" />
+                                                <DataGridTextColumn Header="Int. Rate" Binding="{Binding InterestRate, StringFormat={}{0:P1}}" Width="70" />
+                                                <DataGridTextColumn Header="Total Repay" Binding="{Binding TotalAmountToRepay, StringFormat={}{0:C}}" Width="95" />
+                                                <DataGridTextColumn Header="Remaining" Binding="{Binding RemainingBalance, StringFormat={}{0:C}}" Width="95" />
+                                                <DataGridTextColumn Header="Deduction" Binding="{Binding DeductionAmountPerPeriod, StringFormat={}{0:C}}" Width="85" />
+                                                <DataGridTextColumn Header="Start Date" Binding="{Binding StartDate, StringFormat={}{0:dd/MM/yyyy}}" Width="85" />
+                                                <DataGridTemplateColumn Header="Status" Width="85">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Border Padding="6,2" CornerRadius="4" BorderThickness="1" HorizontalAlignment="Left">
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding Status}" Value="Active">
+                                                                                <Setter Property="Background" Value="#1948BB78" />
+                                                                                <Setter Property="BorderBrush" Value="#3C48BB78" />
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding Status}" Value="FullyPaid">
+                                                                                <Setter Property="Background" Value="#194299E1" />
+                                                                                <Setter Property="BorderBrush" Value="#3C4299E1" />
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding Status}" Value="Suspended">
+                                                                                <Setter Property="Background" Value="#19ED8936" />
+                                                                                <Setter Property="BorderBrush" Value="#3CED8936" />
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding Status}" Value="WrittenOff">
+                                                                                <Setter Property="Background" Value="#19A0AEC0" />
+                                                                                <Setter Property="BorderBrush" Value="#3CA0AEC0" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Border.Style>
+                                                                <TextBlock Text="{Binding Status}" FontSize="10" FontWeight="Bold">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding Status}" Value="Active">
+                                                                                    <Setter Property="Foreground" Value="#FF48BB78" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding Status}" Value="FullyPaid">
+                                                                                    <Setter Property="Foreground" Value="#FF4299E1" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding Status}" Value="Suspended">
+                                                                                    <Setter Property="Foreground" Value="#FFED8936" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding Status}" Value="WrittenOff">
+                                                                                    <Setter Property="Foreground" Value="#FFA0AEC0" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                                <DataGridTemplateColumn Header="Actions" Width="170">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <!-- Suspend Button -->
+                                                                <Button Content="Suspend" Command="{Binding DataContext.SuspendLoanCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" FontSize="9" Padding="4,2" Background="{DynamicResource BrushAlertOrange}" Foreground="White" BorderThickness="0" Margin="0,0,4,0">
+                                                                    <Button.Style>
+                                                                        <Style TargetType="Button">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding Status}" Value="Active">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Button.Style>
+                                                                </Button>
+                                                                <!-- Resume Button -->
+                                                                <Button Content="Resume" Command="{Binding DataContext.ResumeLoanCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" FontSize="9" Padding="4,2" Background="{DynamicResource BrushAlertGreen}" Foreground="White" BorderThickness="0" Margin="0,0,4,0">
+                                                                    <Button.Style>
+                                                                        <Style TargetType="Button">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding Status}" Value="Suspended">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Button.Style>
+                                                                </Button>
+                                                                <!-- Write Off Button -->
+                                                                <Button Content="Write Off" Command="{Binding DataContext.WriteOffLoanCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" FontSize="9" Padding="4,2" Background="{DynamicResource BrushAlertRed}" Foreground="White" BorderThickness="0">
+                                                                    <Button.Style>
+                                                                        <Style TargetType="Button">
+                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding Status}" Value="Active">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding Status}" Value="Suspended">
+                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Button.Style>
+                                                                </Button>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Border>
+
+                                    <!-- Repayment History Title -->
+                                    <TextBlock Grid.Row="2" Text="Repayment Transaction History" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" />
+
+                                    <!-- Repayments Grid -->
+                                    <Border Grid.Row="4" CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12">
+                                        <DataGrid ItemsSource="{Binding SelectedItem.Repayments, ElementName=LoansGrid}" AutoGenerateColumns="False" 
+                                                  Background="Transparent" RowBackground="Transparent" AlternatingRowBackground="#121625"
+                                                  BorderThickness="0" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource BrushBorder}"
+                                                  IsReadOnly="True" HeadersVisibility="Column" Foreground="{DynamicResource BrushTextPrimary}">
+                                            <DataGrid.Resources>
+                                                <Style TargetType="DataGridColumnHeader">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                    <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+                                                    <Setter Property="FontWeight" Value="SemiBold" />
+                                                    <Setter Property="Padding" Value="6,4" />
+                                                    <Setter Property="BorderThickness" Value="0" />
+                                                </Style>
+                                                <Style TargetType="DataGridCell">
+                                                    <Setter Property="Padding" Value="6,8" />
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="DataGridCell">
+                                                                <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                                                    <ContentPresenter />
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </DataGrid.Resources>
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Transaction Date" Binding="{Binding TransactionDate, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Width="140" />
+                                                <DataGridTextColumn Header="Repayment Amount" Binding="{Binding Amount, StringFormat={}{0:C}}" Width="150" />
+                                                <DataGridTextColumn Header="Remaining Balance After" Binding="{Binding RemainingBalanceAfter, StringFormat={}{0:C}}" Width="*" />
+                                                <DataGridTextColumn Header="Processed By" Binding="{Binding CreatedBy}" Width="150" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Border>
+                                </Grid>
+
+                                <!-- RIGHT LOANS CONTENT: Register New Loan Form -->
+                                <Grid Grid.Column="2">
+                                    <Border CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="14" VerticalAlignment="Top">
+                                        <StackPanel>
+                                            <TextBlock Text="Register New Loan" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,10" />
+
+                                            <TextBlock Text="Description" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4" />
+                                            <Border CornerRadius="4" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="#0F111A" Height="30" Padding="6,2">
+                                                <TextBox BorderThickness="0" Background="Transparent" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"
+                                                         Text="{Binding LoanDescription, UpdateSourceTrigger=PropertyChanged}" />
+                                            </Border>
+
+                                            <TextBlock Text="Principal Amount ($)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,8,0,4" />
+                                            <Border CornerRadius="4" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="#0F111A" Height="30" Padding="6,2">
+                                                <TextBox BorderThickness="0" Background="Transparent" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"
+                                                         Text="{Binding LoanPrincipalAmount, UpdateSourceTrigger=PropertyChanged}" />
+                                            </Border>
+
+                                            <TextBlock Text="Interest Rate (e.g. 0.05 for 5%)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,8,0,4" />
+                                            <Border CornerRadius="4" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="#0F111A" Height="30" Padding="6,2">
+                                                <TextBox BorderThickness="0" Background="Transparent" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"
+                                                         Text="{Binding LoanInterestRate, UpdateSourceTrigger=PropertyChanged}" />
+                                            </Border>
+
+                                            <TextBlock Text="Deduction per Period ($)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,8,0,4" />
+                                            <Border CornerRadius="4" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="#0F111A" Height="30" Padding="6,2">
+                                                <TextBox BorderThickness="0" Background="Transparent" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"
+                                                         Text="{Binding LoanDeductionAmountPerPeriod, UpdateSourceTrigger=PropertyChanged}" />
+                                            </Border>
+
+                                            <TextBlock Text="Start Date" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,8,0,4" />
+                                            <DatePicker SelectedDate="{Binding LoanStartDate}" Height="30" BorderBrush="{DynamicResource BrushBorder}" />
+
+                                            <Button Content="Submit Request" Command="{Binding CreateLoanCommand}" Style="{StaticResource ModernButton}" Height="32" Margin="0,16,0,0" />
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
             </Grid>
-        </Border>
+        </Grid>
     </Grid>
 </UserControl>

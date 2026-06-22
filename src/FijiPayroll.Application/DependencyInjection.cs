@@ -34,14 +34,26 @@ public static class DependencyInjection
             lifetime: ServiceLifetime.Transient);
 
         // Register MediatR pipeline behaviours in execution order:
-        // 1. Logging  →  2. Validation  →  Handler
+        // 1. Logging  →  2. Authorization  →  3. Validation  →  4. Transaction  →  5. Audit  →  Handler
         services.AddTransient(
             typeof(IPipelineBehavior<,>),
             typeof(LoggingBehaviour<,>));
 
         services.AddTransient(
             typeof(IPipelineBehavior<,>),
+            typeof(AuthorizationBehaviour<,>));
+
+        services.AddTransient(
+            typeof(IPipelineBehavior<,>),
             typeof(ValidationBehaviour<,>));
+
+        services.AddTransient(
+            typeof(IPipelineBehavior<,>),
+            typeof(TransactionBehaviour<,>));
+
+        services.AddTransient(
+            typeof(IPipelineBehavior<,>),
+            typeof(AuditBehaviour<,>));
 
         // Register application services orchestrating MediatR
         services.AddScoped<IPayrollComponentService, PayrollComponentService>();

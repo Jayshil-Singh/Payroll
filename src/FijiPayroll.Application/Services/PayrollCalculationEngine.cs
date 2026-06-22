@@ -38,8 +38,17 @@ public sealed class PayrollCalculationEngine
                 trace.AppendLine($"[Trace] Frequency: {context.Frequency}");
                 trace.AppendLine($"[Trace] Residency: {emp.ResidencyStatus}");
 
+                decimal standardWorkingDays = GetStandardWorkingDays(context.Frequency);
+                decimal dailyRate = emp.BaseSalary / standardWorkingDays;
+
+                decimal unpaidLeaveReduction = 0;
+                if (emp.UnpaidLeaveDays > 0)
+                {
+                    unpaidLeaveReduction = Math.Round(dailyRate * emp.UnpaidLeaveDays, 2, MidpointRounding.AwayFromZero);
+                }
+
                 decimal basicSalary = Math.Round(emp.BaseSalary, 2, MidpointRounding.AwayFromZero);
-                decimal totalEarnings = basicSalary;
+                decimal totalEarnings = basicSalary - unpaidLeaveReduction;
                 decimal totalAllowances = 0;
                 var employeeAuditEvents = new List<PayrollAuditEvent>();
 
@@ -64,6 +73,53 @@ public sealed class PayrollCalculationEngine
                         ReferenceComponentId = basicComp.Id
                     });
                     trace.AppendLine($"[Trace] Added basic salary component: {basicSalary:C}");
+                }
+
+                if (unpaidLeaveReduction > 0)
+                {
+                    var unpaidComp = context.Components.FirstOrDefault(c => 
+                        c.ComponentCode.Equals("LEAVE_UNPAID", StringComparison.OrdinalIgnoreCase) ||
+                        c.ComponentCode.Equals("LVE_UNP", StringComparison.OrdinalIgnoreCase));
+                    
+                    calculatedLines.Add(new CalculatedLineItemResult
+                    {
+                        ComponentId = unpaidComp?.Id ?? 999901,
+                        ComponentCode = unpaidComp?.ComponentCode ?? "LEAVE_UNPAID",
+                        ComponentName = unpaidComp?.ComponentName ?? "Unpaid Leave Deduction",
+                        ComponentType = ComponentType.Earning,
+                        Amount = -unpaidLeaveReduction,
+                        IsTaxable = true,
+                        AffectsFnpf = true,
+                        EmployerContributionFlag = false,
+                        ReferenceComponentId = unpaidComp?.Id ?? 999901
+                    });
+                    trace.AppendLine($"[Trace] Unpaid Leave: {emp.UnpaidLeaveDays} days. Reduction: -{unpaidLeaveReduction:C}");
+                }
+
+                decimal leaveLoadingAmount = 0;
+                if (emp.LeaveLoadingDays > 0)
+                {
+                    leaveLoadingAmount = Math.Round(dailyRate * emp.LeaveLoadingDays * 0.25m, 2, MidpointRounding.AwayFromZero);
+                    
+                    var loadingComp = context.Components.FirstOrDefault(c => 
+                        c.ComponentCode.Equals("LEAVE_LOADING", StringComparison.OrdinalIgnoreCase) ||
+                        c.ComponentCode.Equals("LVE_LOD", StringComparison.OrdinalIgnoreCase) ||
+                        c.ComponentCode.Equals("LL", StringComparison.OrdinalIgnoreCase));
+                    
+                    calculatedLines.Add(new CalculatedLineItemResult
+                    {
+                        ComponentId = loadingComp?.Id ?? 999902,
+                        ComponentCode = loadingComp?.ComponentCode ?? "LEAVE_LOADING",
+                        ComponentName = loadingComp?.ComponentName ?? "Leave Loading (25%)",
+                        ComponentType = ComponentType.Earning,
+                        Amount = leaveLoadingAmount,
+                        IsTaxable = true,
+                        AffectsFnpf = true,
+                        EmployerContributionFlag = false,
+                        ReferenceComponentId = loadingComp?.Id ?? 999902
+                    });
+                    totalEarnings += leaveLoadingAmount;
+                    trace.AppendLine($"[Trace] Leave Loading: {emp.LeaveLoadingDays} days. Amount: {leaveLoadingAmount:C}");
                 }
 
                 // Calculate active allowances / earnings components
@@ -432,6 +488,84 @@ public sealed class PayrollCalculationEngine
                     totalDeductions = Math.Round(statutoryDeductions + totalVoluntaryDeductions, 2, MidpointRounding.AwayFromZero);
                 }
 
+                // Process Loan Deductions
+                decimal totalLoanDeductions = 0m;
+                if (emp.ActiveLoans != null && emp.ActiveLoans.Any())
+                {
+                    foreach (var loanSnap in emp.ActiveLoans)
+                    {
+                        decimal requestedDeduction = Math.Min(loanSnap.DeductionAmountPerPeriod, loanSnap.RemainingBalance);
+                        if (requestedDeduction <= 0) continue;
+
+                        decimal appliedDeduction = 0m;
+
+                        if (netPay >= requestedDeduction)
+                        {
+                            appliedDeduction = requestedDeduction;
+                            netPay = Math.Round(netPay - appliedDeduction, 2, MidpointRounding.AwayFromZero);
+                            trace.AppendLine($"[Trace] Applied full loan deduction for Loan ID {loanSnap.LoanId} ({loanSnap.LoanDescription}): {appliedDeduction:C}. New Net Pay: {netPay:C}");
+                        }
+                        else // netPay < requestedDeduction
+                        {
+                            if (context.NegativeNetPayPolicy == FijiPayroll.Domain.Entities.Company.NegativeNetPayPolicy.AllowNegativeNetPay)
+                            {
+                                appliedDeduction = requestedDeduction;
+                                netPay = Math.Round(netPay - appliedDeduction, 2, MidpointRounding.AwayFromZero);
+                                trace.AppendLine($"[Trace] Applied full loan deduction for Loan ID {loanSnap.LoanId} ({loanSnap.LoanDescription}): {appliedDeduction:C} (AllowNegativeNetPay). New Net Pay: {netPay:C}");
+                            }
+                            else if (context.NegativeNetPayPolicy == FijiPayroll.Domain.Entities.Company.NegativeNetPayPolicy.BlockDeduction)
+                            {
+                                var excMsg = $"Calculation aborted: Insufficient net pay for employee '{emp.FullName}' to cover loan deduction of {requestedDeduction:C} for Loan ID {loanSnap.LoanId} ({loanSnap.LoanDescription}). Net pay would be {netPay - requestedDeduction:C}.";
+                                trace.AppendLine($"[Error] {excMsg}");
+                                var exceptionEv = new PayrollAuditEvent(
+                                    "INSUFFICIENT_NET_PAY_FOR_LOAN_DEDUCTION",
+                                    "Error",
+                                    excMsg,
+                                    emp.FullName
+                                );
+                                employeeAuditEvents.Add(exceptionEv);
+                                throw new PayrollException("INSUFFICIENT_NET_PAY_FOR_LOAN_DEDUCTION", excMsg);
+                            }
+                            else // PartialDeduction
+                            {
+                                appliedDeduction = Math.Max(0m, netPay);
+                                netPay = 0.00m;
+                                decimal remainder = requestedDeduction - appliedDeduction;
+                                
+                                var partialMsg = $"Loan deduction for Loan ID {loanSnap.LoanId} ({loanSnap.LoanDescription}) partially applied (Reduced by {remainder:C} to {appliedDeduction:C}) due to insufficient net pay.";
+                                trace.AppendLine($"[Warning] {partialMsg}");
+                                var partialEv = new PayrollAuditEvent(
+                                    "LOAN_DEDUCTION_PARTIAL",
+                                    "Warning",
+                                    partialMsg,
+                                    emp.FullName
+                                );
+                                employeeAuditEvents.Add(partialEv);
+                            }
+                        }
+
+                        if (appliedDeduction > 0)
+                        {
+                            calculatedLines.Add(new CalculatedLineItemResult
+                            {
+                                ComponentId = 900000 + loanSnap.LoanId,
+                                ComponentCode = $"LOAN_{loanSnap.LoanId}",
+                                ComponentName = $"Loan Repayment - {loanSnap.LoanDescription}",
+                                ComponentType = ComponentType.Deduction,
+                                Amount = -appliedDeduction,
+                                IsTaxable = false,
+                                AffectsFnpf = false,
+                                EmployerContributionFlag = false,
+                                ReferenceComponentId = loanSnap.LoanId
+                            });
+                            totalLoanDeductions += appliedDeduction;
+                        }
+                    }
+
+                    // Recalculate totalDeductions
+                    totalDeductions = Math.Round(totalDeductions + totalLoanDeductions, 2, MidpointRounding.AwayFromZero);
+                }
+
                 return new CalculatedEmployeeResult
                 {
                     EmployeeId = emp.EmployeeId,
@@ -506,6 +640,17 @@ public sealed class PayrollCalculationEngine
             CalculationRequestId = context.CalculationRequestId,
             Employees = employeeResults,
             AuditEvents = globalAuditEvents
+        };
+    }
+
+    private static decimal GetStandardWorkingDays(PayrollFrequencyType frequency)
+    {
+        return frequency switch
+        {
+            PayrollFrequencyType.Weekly => 5m,
+            PayrollFrequencyType.Fortnightly => 10m,
+            PayrollFrequencyType.Monthly => 260m / 12m,
+            _ => 10m
         };
     }
 }

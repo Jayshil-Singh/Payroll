@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "vBYw5s0/sek=",
+  "dgSpecHash": "3eGws/Y0f3E=",
   "success": true,
   "projectFilePath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.WPF\\FijiPayroll.WPF.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jayshil.singh\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\jayshil.singh\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
+    "C:\\Users\\jayshil.singh\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\jayshil.singh\\.nuget\\packages\\closedxml\\0.102.2\\closedxml.0.102.2.nupkg.sha512",
     "C:\\Users\\jayshil.singh\\.nuget\\packages\\communitytoolkit.mvvm\\8.2.2\\communitytoolkit.mvvm.8.2.2.nupkg.sha512",
     "C:\\Users\\jayshil.singh\\.nuget\\packages\\documentformat.openxml\\2.16.0\\documentformat.openxml.2.16.0.nupkg.sha512",

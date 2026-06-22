@@ -10,6 +10,9 @@ public sealed class WorkflowStepLog : BaseEntity
 {
     private WorkflowStepLog() { }
 
+    /// <summary>Gets the owner company ID context (multi-tenant boundary).</summary>
+    public int CompanyId { get; private set; }
+
     /// <summary>Gets the unique step log entry Guid.</summary>
     public Guid LogId { get; private set; }
 
@@ -35,6 +38,7 @@ public sealed class WorkflowStepLog : BaseEntity
     /// Factory method to create a new step log entry.
     /// </summary>
     public static WorkflowStepLog Create(
+        int companyId,
         Guid logId,
         Guid workflowId,
         string fromState,
@@ -45,6 +49,7 @@ public sealed class WorkflowStepLog : BaseEntity
     {
         return new WorkflowStepLog
         {
+            CompanyId = companyId,
             LogId = logId,
             WorkflowId = workflowId,
             FromState = fromState ?? throw new ArgumentNullException(nameof(fromState)),

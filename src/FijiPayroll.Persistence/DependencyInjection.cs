@@ -48,6 +48,8 @@ public static class DependencyInjection
         services.AddScoped<ISearchIndexRepository, SearchIndexRepository>();
         services.AddScoped<IApprovalWorkflowRepository, ApprovalWorkflowRepository>();
         services.AddScoped<IComplianceRepository, ComplianceRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ILeaveRepository, LeaveRepository>();
 
         // Register the Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -61,6 +63,7 @@ public static class DependencyInjection
         services.AddScoped<EmployeeSeeder>();
         services.AddScoped<RuleModuleSeeder>();
         services.AddScoped<ComplianceSeeder>();
+        services.AddScoped<UserAccountSeeder>();
         services.AddScoped<IJsonSeedLoader, JsonSeedLoader>();
 
         // Register the Reference Data Cache

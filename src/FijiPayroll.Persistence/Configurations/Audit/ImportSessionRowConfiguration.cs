@@ -15,6 +15,9 @@ internal sealed class ImportSessionRowConfiguration : IEntityTypeConfiguration<I
         builder.Property(x => x.ImportSessionId)
                .IsRequired();
 
+        builder.Property(x => x.CompanyId)
+               .IsRequired();
+
         builder.Property(x => x.RowNumber)
                .IsRequired();
 

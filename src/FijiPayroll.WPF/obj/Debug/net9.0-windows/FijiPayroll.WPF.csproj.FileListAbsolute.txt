@@ -146,3 +146,6 @@ C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-wind
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\DiagnosticsDashboardView.baml
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\PayrollConsoleView.g.cs
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\PayrollConsoleView.baml
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\bin\Debug\net9.0-windows\BCrypt.Net-Next.dll
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\LoginView.g.cs
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\LoginView.baml

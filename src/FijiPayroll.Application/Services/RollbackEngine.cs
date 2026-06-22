@@ -105,6 +105,16 @@ public sealed class RollbackEngine
         run.RevertToDraft(user, reason);
         _unitOfWork.PayrollRuns.Update(run);
 
+        // Revert loan repayments
+        var companyLoans = await _unitOfWork.Loans.GetLoansByCompanyAsync(run.CompanyId, cancellationToken);
+        foreach (var loan in companyLoans)
+        {
+            if (loan.Repayments.Any(r => r.PayrollRunId == payrollRunId))
+            {
+                loan.ReverseRepayment(payrollRunId);
+            }
+        }
+
         // Mark active calculations as superseded to allow recalculating cleanly and preserve audit
         foreach (var emp in run.Employees.Where(e => !e.IsSuperseded))
         {
