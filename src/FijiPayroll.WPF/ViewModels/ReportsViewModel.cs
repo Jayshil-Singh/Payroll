@@ -1,7 +1,8 @@
 using FijiPayroll.Application.Common.Interfaces;
 using FijiPayroll.Domain.Interfaces;
-using FijiPayroll.SDK.Interfaces;
 using FijiPayroll.Application.Services;
+using FijiPayroll.SDK.Interfaces;
+using FijiPayroll.WPF.Services;
 using FijiPayroll.Domain.Entities.Payroll;
 using FijiPayroll.Domain.Enumerations;
 using FijiPayroll.WPF.ViewModels.Base;
@@ -15,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
+using IWpfNotificationService = FijiPayroll.WPF.Services.INotificationService;
 
 namespace FijiPayroll.WPF.ViewModels;
 
@@ -26,7 +28,8 @@ public sealed class ReportsViewModel : ViewModelBase
     private readonly IUnitOfWork _unitOfWork;
     private readonly IReportProvider _reportProvider;
     private readonly ITenantProvider _tenantProvider;
-    private readonly INotificationService _notifications;
+    private readonly IWpfNotificationService _notifications;
+
 
     private PayrollRun? _selectedRun;
     private PayrollRun? _selectedCompareRun;
@@ -36,7 +39,7 @@ public sealed class ReportsViewModel : ViewModelBase
         IUnitOfWork unitOfWork,
         IReportProvider reportProvider,
         ITenantProvider tenantProvider,
-        INotificationService notifications)
+        IWpfNotificationService notifications)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _reportProvider = reportProvider ?? throw new ArgumentNullException(nameof(reportProvider));

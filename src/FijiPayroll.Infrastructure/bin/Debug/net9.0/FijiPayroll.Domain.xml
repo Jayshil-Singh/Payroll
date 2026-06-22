@@ -3606,6 +3606,24 @@
             System components cannot be deleted or deactivated.
             </summary>
         </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.ComponentType.Overtime">
+            <summary>
+            Overtime pay component, calculated based on overtime hours and multiplier rates.
+            Adds to gross earnings and is typically taxable and FNPF-applicable.
+            </summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.ComponentType.LoanRepayment">
+            <summary>
+            A deduction for staff loan repayments, auto-calculated from active loan schedules.
+            Reduces take-home pay; not taxable.
+            </summary>
+        </member>
+        <member name="F:FijiPayroll.Domain.Enumerations.ComponentType.LeaveDeduction">
+            <summary>
+            A deduction representing the monetary value of leave days taken (e.g., leave without pay).
+            Reduces gross pay when leave is unpaid or exceeds entitlements.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Enumerations.EmploymentType">
             <summary>
             Defines the type of employment.

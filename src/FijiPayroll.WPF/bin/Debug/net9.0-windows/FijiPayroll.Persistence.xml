@@ -391,6 +391,23 @@
         <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.MigratePlaintextToAesAsync">
+            <summary>
+            Migrates all PLAINTEXT-prefixed encrypted column values to AES-256 using per-tenant security keys.
+            This method bypasses EF query filters to scan ALL companies and their associated PII records.
+            Safe to call multiple times — records already encrypted with AES256 are skipped.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.IsPlaintextEncrypted(System.String)">
+            <summary>
+            Checks if a stored value uses the PLAINTEXT fallback encoding from TenantEncryptionValueConverter.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.ReEncryptValue(System.String,System.String)">
+            <summary>
+            Decrypts a PLAINTEXT-encoded value and re-encrypts it with AES-256 using the specified tenant key.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Persistence.Converters.TenantEncryptionValueConverter">
             <summary>
             Value converter that encrypts and decrypts string values per tenant, with key versioning metadata prepended.

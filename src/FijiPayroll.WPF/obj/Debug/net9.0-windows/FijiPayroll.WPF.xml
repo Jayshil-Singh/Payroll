@@ -1911,7 +1911,7 @@
             Principal View Model coordinating layout panels, global loaders, toast signals, and navigation bounds.
             </summary>
         </member>
-        <member name="M:FijiPayroll.WPF.ViewModels.MainViewModel.#ctor(FijiPayroll.WPF.Services.INavigationService,FijiPayroll.WPF.Services.ILoadingService,FijiPayroll.WPF.Services.INotificationService,FijiPayroll.WPF.Services.IDialogService)">
+        <member name="M:FijiPayroll.WPF.ViewModels.MainViewModel.#ctor(FijiPayroll.WPF.Services.INavigationService,FijiPayroll.WPF.Services.ILoadingService,FijiPayroll.WPF.Services.INotificationService,FijiPayroll.WPF.Services.IDialogService,FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator)">
             <summary>
             Initialises a new instance of the <see cref="T:FijiPayroll.WPF.ViewModels.MainViewModel"/> class.
             </summary>
@@ -2363,11 +2363,6 @@
         <member name="T:FijiPayroll.WPF.ViewModels.ReportsViewModel">
             <summary>
             ViewModel managing report generating panels, payslip distributions, and statutory reports.
-            </summary>
-        </member>
-        <member name="P:FijiPayroll.WPF.ViewModels.ReportsViewModel.Title">
-            <summary>
-            Gets the panel title.
             </summary>
         </member>
         <member name="T:FijiPayroll.WPF.ViewModels.SetupViewModel">
