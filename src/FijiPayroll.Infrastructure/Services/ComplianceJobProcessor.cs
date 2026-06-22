@@ -25,9 +25,6 @@ namespace FijiPayroll.Infrastructure.Services;
 public sealed class ComplianceJobProcessor : IDisposable
 {
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly IEnumerable<IBankFileGenerator> _bankGenerators;
-    private readonly IComplianceFileService _complianceFileService;
-    private readonly IFileStorageProvider _fileStorageProvider;
     private readonly ILogger<ComplianceJobProcessor> _logger;
     private readonly CancellationTokenSource _cts = new();
     private Task? _processingTask;
@@ -38,15 +35,9 @@ public sealed class ComplianceJobProcessor : IDisposable
     /// </summary>
     public ComplianceJobProcessor(
         IServiceScopeFactory scopeFactory,
-        IEnumerable<IBankFileGenerator> bankGenerators,
-        IComplianceFileService complianceFileService,
-        IFileStorageProvider fileStorageProvider,
         ILogger<ComplianceJobProcessor> logger)
     {
         _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
-        _bankGenerators = bankGenerators ?? throw new ArgumentNullException(nameof(bankGenerators));
-        _complianceFileService = complianceFileService ?? throw new ArgumentNullException(nameof(complianceFileService));
-        _fileStorageProvider = fileStorageProvider ?? throw new ArgumentNullException(nameof(fileStorageProvider));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -210,7 +201,9 @@ public sealed class ComplianceJobProcessor : IDisposable
         )).ToList();
 
         // 4. Generate CSV
-        string csvContent = _complianceFileService.GenerateFrcsCsv(company.TIN, paymentDetails, period.Month, period.Year);
+        using var scope = _scopeFactory.CreateScope();
+        var complianceFileService = scope.ServiceProvider.GetRequiredService<IComplianceFileService>();
+        string csvContent = complianceFileService.GenerateFrcsCsv(company.TIN, paymentDetails, period.Month, period.Year);
         string fileHash = ComputeSHA256Hash(csvContent);
         string filename = $"FRCS_MER_{job.CompanyId}_{period.Year}_{period.Month:D2}.csv";
         string outputDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Exports", "Compliance");
@@ -273,7 +266,9 @@ public sealed class ComplianceJobProcessor : IDisposable
         )).ToList();
 
         string tradingName = string.IsNullOrWhiteSpace(company.TradingName) ? company.LegalName : company.TradingName;
-        string csvContent = _complianceFileService.GenerateFnpfCsv(company.FnpfEmployerNumber, tradingName, period.Month, period.Year, paymentDetails);
+        using var scope = _scopeFactory.CreateScope();
+        var complianceFileService = scope.ServiceProvider.GetRequiredService<IComplianceFileService>();
+        string csvContent = complianceFileService.GenerateFnpfCsv(company.FnpfEmployerNumber, tradingName, period.Month, period.Year, paymentDetails);
         string fileHash = ComputeSHA256Hash(csvContent);
         string filename = $"FNPF_Remit_{job.CompanyId}_{period.Year}_{period.Month:D2}.csv";
         string outputDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Exports", "Compliance");
@@ -320,7 +315,9 @@ public sealed class ComplianceJobProcessor : IDisposable
         if (layout == null) throw new InvalidOperationException($"No bank clearing layouts definition found for bank code '{bankCode}'.");
 
         // Resolve generator
-        var generator = _bankGenerators.FirstOrDefault(x => x.BankCode.Equals(bankCode, StringComparison.OrdinalIgnoreCase));
+        using var scope = _scopeFactory.CreateScope();
+        var bankGenerators = scope.ServiceProvider.GetRequiredService<IEnumerable<IBankFileGenerator>>();
+        var generator = bankGenerators.FirstOrDefault(x => x.BankCode.Equals(bankCode, StringComparison.OrdinalIgnoreCase));
         if (generator == null) throw new InvalidOperationException($"No bank file generator plugin registered for bank '{bankCode}'.");
 
         // We fetch the employee details to map their bank account numbers

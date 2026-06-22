@@ -24,7 +24,10 @@ public sealed record CreateLoanCommand(
     decimal InterestRate,
     decimal DeductionAmountPerPeriod,
     DateTime StartDate
-) : IRequest<Result<int>>, ITransactional;
+) : IRequest<Result<int>>, ITransactional, IRequirePermission
+{
+    public string Permission => PermissionConstants.LoansCreate;
+}
 
 /// <summary>
 /// Handler for <see cref="CreateLoanCommand"/>.

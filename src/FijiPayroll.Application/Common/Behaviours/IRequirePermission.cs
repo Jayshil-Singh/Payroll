@@ -6,5 +6,5 @@ namespace FijiPayroll.Application.Common.Behaviours;
 public interface IRequirePermission
 {
     /// <summary>Gets the permission code required to execute this request.</summary>
-    string RequiredPermission { get; }
+    string Permission { get; }
 }

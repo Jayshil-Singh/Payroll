@@ -4,7 +4,9 @@ using FijiPayroll.Persistence.Interceptors;
 using FijiPayroll.WPF.Infrastructure;
 using FijiPayroll.WPF.Services;
 using FijiPayroll.WPF.ViewModels;
+using FijiPayroll.WPF.ViewModels.Auth;
 using FijiPayroll.WPF.Views;
+using FijiPayroll.WPF.Views.Auth;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FijiPayroll.WPF;
@@ -28,6 +30,7 @@ public static class DependencyInjection
         services.AddSingleton<ILoadingService, LoadingService>();
         services.AddSingleton<IApplicationStateStore, ApplicationStateStore>();
         services.AddSingleton<ITenantProvider, WpfTenantProvider>();
+        services.AddSingleton<SessionManager>();
         services.AddSingleton<IAuthSessionStore, AuthSessionStore>();
         services.AddSingleton<WpfSessionIdentityService>();
         services.AddSingleton<ICurrentUserService>(sp => sp.GetRequiredService<WpfSessionIdentityService>());

@@ -1,5 +1,7 @@
+using FijiPayroll.Application.Common.Behaviours;
 using FijiPayroll.Application.Common.Models;
 using FijiPayroll.Domain.Enumerations;
+using FijiPayroll.Shared.Constants;
 using MediatR;
 using System.Collections.Generic;
 
@@ -38,4 +40,7 @@ public sealed record CreateEmployeeCommand(
     string Position,
     string Email,
     IReadOnlyList<PaymentMethodInput> PaymentMethods
-) : IRequest<Result<int>>;
+) : IRequest<Result<int>>, IRequirePermission
+{
+    public string Permission => PermissionConstants.EmployeesCreate;
+}

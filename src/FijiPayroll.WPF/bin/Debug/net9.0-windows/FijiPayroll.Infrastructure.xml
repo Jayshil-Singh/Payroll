@@ -121,7 +121,7 @@
             Implements exponential backoffs and writes JSON audit manifests on file generation.
             </summary>
         </member>
-        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceJobProcessor.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,System.Collections.Generic.IEnumerable{FijiPayroll.SDK.Interfaces.IBankFileGenerator},FijiPayroll.SDK.Interfaces.IComplianceFileService,FijiPayroll.Application.Common.Interfaces.IFileStorageProvider,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.ComplianceJobProcessor})">
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceJobProcessor.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.ComplianceJobProcessor})">
             <summary>
             Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.ComplianceJobProcessor"/> class.
             </summary>

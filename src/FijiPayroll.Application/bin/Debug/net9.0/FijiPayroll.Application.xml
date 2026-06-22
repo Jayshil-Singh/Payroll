@@ -32,7 +32,7 @@
             Marker interface indicating that a command request requires a permission check.
             </summary>
         </member>
-        <member name="P:FijiPayroll.Application.Common.Behaviours.IRequirePermission.RequiredPermission">
+        <member name="P:FijiPayroll.Application.Common.Behaviours.IRequirePermission.Permission">
             <summary>Gets the permission code required to execute this request.</summary>
         </member>
         <member name="T:FijiPayroll.Application.Common.Behaviours.ITransactional">
@@ -112,6 +112,17 @@
             <summary>The permission code that was required but not held.</summary>
         </member>
         <member name="M:FijiPayroll.Application.Common.Exceptions.ForbiddenAccessException.#ctor(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Application.Common.Exceptions.ForbiddenException">
+            <summary>
+            Thrown when a request is forbidden due to missing permissions.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Application.Common.Exceptions.ForbiddenException.Permission">
+            <summary>Gets the permission code that was required but not held.</summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Common.Exceptions.ForbiddenException.#ctor(System.String)">
             <inheritdoc/>
         </member>
         <member name="T:FijiPayroll.Application.Common.Exceptions.NotFoundException">
@@ -607,6 +618,21 @@
             <param name="services">The service collection to register into.</param>
             <returns>The same <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for chaining.</returns>
         </member>
+        <member name="T:FijiPayroll.Application.Features.Auth.Commands.ChangePassword.ChangePasswordCommand">
+            <summary>
+            CQRS Command request to change the password of the currently authenticated user.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Auth.Commands.ChangePassword.ChangePasswordCommand.#ctor(System.String,System.String)">
+            <summary>
+            CQRS Command request to change the password of the currently authenticated user.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Auth.Commands.ChangePassword.ChangePasswordCommandHandler">
+            <summary>
+            Handler for changing the password of the current user.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Application.Features.Auth.Commands.Login.LoginCommand">
             <summary>
             CQRS Command request to authenticate a user context.
@@ -625,6 +651,16 @@
         <member name="T:FijiPayroll.Application.Features.Auth.Commands.Login.LoginCommandValidator">
             <summary>
             Validator for the LoginCommand request.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Auth.Commands.Logout.LogoutCommand">
+            <summary>
+            CQRS Command request to log out the current user and clear their authenticated session.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Auth.Commands.Logout.LogoutCommandHandler">
+            <summary>
+            Handler for executing user logout.
             </summary>
         </member>
         <member name="T:FijiPayroll.Application.Features.Auth.Queries.GetCompaniesForUser.CompanyLookupDto">

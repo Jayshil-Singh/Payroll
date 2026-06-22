@@ -15,7 +15,10 @@ namespace FijiPayroll.Application.Features.Leave.Commands.RejectLeaveRequest;
 /// <summary>
 /// Command to reject a pending leave request with a mandatory reason.
 /// </summary>
-public sealed record RejectLeaveRequestCommand(int RequestId, string Reason) : IRequest<Result>, ITransactional;
+public sealed record RejectLeaveRequestCommand(int RequestId, string Reason) : IRequest<Result>, ITransactional, IRequirePermission
+{
+    public string Permission => PermissionConstants.LeaveApprove;
+}
 
 /// <summary>
 /// Handler for <see cref="RejectLeaveRequestCommand"/>.

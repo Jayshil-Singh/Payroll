@@ -1,6 +1,9 @@
 using FijiPayroll.Domain.Enumerations;
+using FijiPayroll.Shared.Formula;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace FijiPayroll.Domain.Rules.PayrollRules;
 
@@ -19,7 +22,11 @@ public static class PayrollAllowanceEngine
         decimal baseSalary,
         decimal hoursWorked,
         decimal overtimeHours,
-        decimal? manualOverrideValue)
+        decimal? manualOverrideValue,
+        RuleExecutionPipeline? pipeline = null,
+        int companyId = 1,
+        int componentId = 0,
+        string componentCode = "")
     {
         switch (method)
         {
@@ -39,6 +46,43 @@ public static class PayrollAllowanceEngine
                 if (string.IsNullOrWhiteSpace(formula))
                 {
                     return 0m;
+                }
+                
+                if (pipeline != null)
+                {
+                    try
+                    {
+                        string cleanFormula = formula.Replace("{", "").Replace("}", "");
+                        var variables = new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase)
+                        {
+                            { "BaseSalary", baseSalary },
+                            { "GrossPay", baseSalary },
+                            { "HoursWorked", hoursWorked },
+                            { "OvertimeHours", overtimeHours }
+                        };
+                        var context = new RuleExecutionContext(
+                            companyId: companyId,
+                            branchId: null,
+                            departmentId: null,
+                            employeeId: null,
+                            payrollRunId: null,
+                            ruleSetId: null,
+                            fiscalYear: DateTime.Now.Year,
+                            payrollFrequency: "Monthly",
+                            currency: "FJD",
+                            culture: "en-FJ",
+                            variables: variables
+                        );
+                        var result = pipeline.ExecuteAsync(cleanFormula, context, componentId, 1, componentCode).GetAwaiter().GetResult();
+                        if (result.Errors == null || !result.Errors.Any())
+                        {
+                            return Math.Round(result.Value, 2, MidpointRounding.AwayFromZero);
+                        }
+                    }
+                    catch
+                    {
+                        // Fallback
+                    }
                 }
                 return EvaluateFormula(formula, baseSalary, hoursWorked, overtimeHours);
 

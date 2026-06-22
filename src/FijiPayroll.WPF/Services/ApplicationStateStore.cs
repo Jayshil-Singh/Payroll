@@ -83,6 +83,20 @@ public sealed class ApplicationStateStore : IApplicationStateStore, IDisposable
     }
 
     /// <inheritdoc />
+    public bool RememberMe
+    {
+        get { lock (_lock) return _state.RememberMe; }
+        set => SetStateValue(s => s.RememberMe = value, nameof(RememberMe));
+    }
+
+    /// <inheritdoc />
+    public string RememberedUsername
+    {
+        get { lock (_lock) return _state.RememberedUsername; }
+        set => SetStateValue(s => s.RememberedUsername = value, nameof(RememberedUsername));
+    }
+
+    /// <inheritdoc />
     public void Clear()
     {
         lock (_lock)
@@ -94,6 +108,8 @@ public sealed class ApplicationStateStore : IApplicationStateStore, IDisposable
         OnPropertyChanged(nameof(CurrentPayrollRunId));
         OnPropertyChanged(nameof(SelectedFinancialYear));
         OnPropertyChanged(nameof(SelectedEmployeeId));
+        OnPropertyChanged(nameof(RememberMe));
+        OnPropertyChanged(nameof(RememberedUsername));
 
         _ = PersistAsync(_state);
     }
@@ -219,6 +235,8 @@ public sealed class ApplicationStateStore : IApplicationStateStore, IDisposable
         OnPropertyChanged(nameof(CurrentPayrollRunId));
         OnPropertyChanged(nameof(SelectedFinancialYear));
         OnPropertyChanged(nameof(SelectedEmployeeId));
+        OnPropertyChanged(nameof(RememberMe));
+        OnPropertyChanged(nameof(RememberedUsername));
         _ = PersistAsync(pending);
     }
 
@@ -283,6 +301,8 @@ public sealed class ApplicationStateData
     public int? CurrentPayrollRunId { get; set; }
     public int SelectedFinancialYear { get; set; } = DateTime.Now.Year;
     public int? SelectedEmployeeId { get; set; }
+    public bool RememberMe { get; set; }
+    public string RememberedUsername { get; set; } = string.Empty;
 
     public ApplicationStateData Clone() => new()
     {
@@ -290,5 +310,7 @@ public sealed class ApplicationStateData
         CurrentPayrollRunId = CurrentPayrollRunId,
         SelectedFinancialYear = SelectedFinancialYear,
         SelectedEmployeeId = SelectedEmployeeId,
+        RememberMe = RememberMe,
+        RememberedUsername = RememberedUsername,
     };
 }

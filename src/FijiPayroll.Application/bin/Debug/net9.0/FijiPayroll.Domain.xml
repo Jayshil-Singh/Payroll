@@ -4904,7 +4904,7 @@
             Pure stateless engine evaluating allowance amounts based on component configuration.
             </summary>
         </member>
-        <member name="M:FijiPayroll.Domain.Rules.PayrollRules.PayrollAllowanceEngine.CalculateAllowance(FijiPayroll.Domain.Enumerations.CalculationMethod,System.Nullable{System.Decimal},System.String,System.Decimal,System.Decimal,System.Decimal,System.Nullable{System.Decimal})">
+        <member name="M:FijiPayroll.Domain.Rules.PayrollRules.PayrollAllowanceEngine.CalculateAllowance(FijiPayroll.Domain.Enumerations.CalculationMethod,System.Nullable{System.Decimal},System.String,System.Decimal,System.Decimal,System.Decimal,System.Nullable{System.Decimal},FijiPayroll.Shared.Formula.RuleExecutionPipeline,System.Int32,System.Int32,System.String)">
             <summary>
             Computes the allowance value for the current period based on calculation method.
             </summary>

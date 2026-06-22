@@ -137,6 +137,19 @@
             InitializeComponent
             </summary>
         </member>
+        <member name="T:FijiPayroll.WPF.Views.Auth.LoginView">
+            <summary>
+            Interaction logic for LoginView.xaml
+            </summary>
+            <summary>
+            LoginView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.Auth.LoginView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
         <member name="T:FijiPayroll.WPF.Views.CloneWizardWindow">
             <summary>
             Interaction logic for CloneWizardWindow.xaml.
@@ -262,19 +275,6 @@
             </summary>
         </member>
         <member name="M:FijiPayroll.WPF.Views.ErrorRecoveryWindow.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
-        <member name="T:FijiPayroll.WPF.Views.LoginView">
-            <summary>
-            Interaction logic for LoginView.xaml
-            </summary>
-            <summary>
-            LoginView
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.Views.LoginView.InitializeComponent">
             <summary>
             InitializeComponent
             </summary>
@@ -844,6 +844,12 @@
         <member name="P:FijiPayroll.WPF.Services.ApplicationStateStore.SelectedEmployeeId">
             <inheritdoc />
         </member>
+        <member name="P:FijiPayroll.WPF.Services.ApplicationStateStore.RememberMe">
+            <inheritdoc />
+        </member>
+        <member name="P:FijiPayroll.WPF.Services.ApplicationStateStore.RememberedUsername">
+            <inheritdoc />
+        </member>
         <member name="M:FijiPayroll.WPF.Services.ApplicationStateStore.Clear">
             <inheritdoc />
         </member>
@@ -914,6 +920,12 @@
         </member>
         <member name="P:FijiPayroll.WPF.Services.IApplicationStateStore.SelectedEmployeeId">
             <summary>Gets or sets the currently selected Employee ID.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.Services.IApplicationStateStore.RememberMe">
+            <summary>Gets or sets whether the login username should be remembered.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.Services.IApplicationStateStore.RememberedUsername">
+            <summary>Gets or sets the remembered username string.</summary>
         </member>
         <member name="M:FijiPayroll.WPF.Services.IApplicationStateStore.Clear">
             <summary>Clears the entire application state to default values.</summary>
@@ -1285,6 +1297,23 @@
         <member name="M:FijiPayroll.WPF.Services.NotificationService.Info(System.String,System.String)">
             <inheritdoc />
         </member>
+        <member name="T:FijiPayroll.WPF.Services.SessionManager">
+            <summary>
+            Manages user session inactivity timeout.
+            Tracks mouse movement, keyboard activity, and navigation.
+            After 30 minutes of inactivity, logs out the user and prompts for re-authentication.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Services.SessionManager.StartTracking">
+            <summary>
+            Starts tracking user inactivity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Services.SessionManager.StopTracking">
+            <summary>
+            Stops tracking user inactivity.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.WPF.Services.SystemHealthMonitor">
             <summary>
             UI health watchdog that:
@@ -1471,6 +1500,63 @@
             <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.PendingApprovalsViewModel.SelectedEntityTypeFilter"/> just changed.</summary>
             <param name="value">The new property value that was set.</param>
             <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.PendingApprovalsViewModel.SelectedEntityTypeFilter"/> is changed.</remarks>
+        </member>
+        <member name="T:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel">
+            <summary>
+            View model backing the login view.
+            Coordinates authentication, company selection, remember me state, and session establishment.
+            </summary>
+            <inheritdoc/>
+        </member>
+        <member name="E:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.RequestClose">
+            <summary>
+            Event triggered when the login is successful and the window should close.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.Username">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel._username"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.Password">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel._password"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.RememberMe">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel._rememberMe"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.Companies">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel._companies"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.SelectedCompany">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel._selectedCompany"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.ErrorMessage">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel._errorMessage"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.ShowCompanySelection">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel._showCompanySelection"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.IsLoadingCompanies">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel._isLoadingCompanies"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.IsAuthenticating">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel._isAuthenticating"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.IsLoginSuccess">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel._isLoginSuccess"/>
+        </member>
+        <member name="M:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.OnUsernameChanged(System.String)">
+            <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.Username"/> just changed.</summary>
+            <param name="value">The new property value that was set.</param>
+            <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.Username"/> is changed.</remarks>
+        </member>
+        <member name="M:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.OnPasswordChanged(System.String)">
+            <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.Password"/> just changed.</summary>
+            <param name="value">The new property value that was set.</param>
+            <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.Password"/> is changed.</remarks>
+        </member>
+        <member name="M:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.OnSelectedCompanyChanged(FijiPayroll.Application.Features.Auth.Queries.GetCompaniesForUser.CompanyLookupDto)">
+            <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.SelectedCompany"/> just changed.</summary>
+            <param name="value">The new property value that was set.</param>
+            <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel.SelectedCompany"/> is changed.</remarks>
         </member>
         <member name="T:FijiPayroll.WPF.ViewModels.Base.ViewModelBase">
             <summary>
@@ -1828,60 +1914,6 @@
             <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.SelectedEmployee"/> just changed.</summary>
             <param name="value">The new property value that was set.</param>
             <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.EmployeeViewModel.SelectedEmployee"/> is changed.</remarks>
-        </member>
-        <member name="T:FijiPayroll.WPF.ViewModels.LoginViewModel">
-            <summary>
-            View model backing the login view.
-            Coordinates authentication, company selection, and session establishment.
-            </summary>
-            <inheritdoc/>
-        </member>
-        <member name="E:FijiPayroll.WPF.ViewModels.LoginViewModel.RequestClose">
-            <summary>
-            Event triggered when the login is successful and the window should close.
-            </summary>
-        </member>
-        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Username">
-            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._username"/>
-        </member>
-        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Password">
-            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._password"/>
-        </member>
-        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Companies">
-            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._companies"/>
-        </member>
-        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.SelectedCompany">
-            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._selectedCompany"/>
-        </member>
-        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.ErrorMessage">
-            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._errorMessage"/>
-        </member>
-        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.ShowCompanySelection">
-            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._showCompanySelection"/>
-        </member>
-        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.IsLoadingCompanies">
-            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._isLoadingCompanies"/>
-        </member>
-        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.IsAuthenticating">
-            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._isAuthenticating"/>
-        </member>
-        <member name="P:FijiPayroll.WPF.ViewModels.LoginViewModel.IsLoginSuccess">
-            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.LoginViewModel._isLoginSuccess"/>
-        </member>
-        <member name="M:FijiPayroll.WPF.ViewModels.LoginViewModel.OnUsernameChanged(System.String)">
-            <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Username"/> just changed.</summary>
-            <param name="value">The new property value that was set.</param>
-            <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Username"/> is changed.</remarks>
-        </member>
-        <member name="M:FijiPayroll.WPF.ViewModels.LoginViewModel.OnPasswordChanged(System.String)">
-            <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Password"/> just changed.</summary>
-            <param name="value">The new property value that was set.</param>
-            <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.LoginViewModel.Password"/> is changed.</remarks>
-        </member>
-        <member name="M:FijiPayroll.WPF.ViewModels.LoginViewModel.OnSelectedCompanyChanged(FijiPayroll.Application.Features.Auth.Queries.GetCompaniesForUser.CompanyLookupDto)">
-            <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.LoginViewModel.SelectedCompany"/> just changed.</summary>
-            <param name="value">The new property value that was set.</param>
-            <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.LoginViewModel.SelectedCompany"/> is changed.</remarks>
         </member>
         <member name="T:FijiPayroll.WPF.ViewModels.LogViewerViewModel">
             <summary>
@@ -2447,36 +2479,6 @@
         <member name="P:FijiPayroll.WPF.ViewModels.StagedImportViewModel.IsValid">
             <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.StagedImportViewModel._isValid"/>
         </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
-            <summary>
-            GeneratedInternalTypeHelper
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
-            <summary>
-            CreateInstance
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            GetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            SetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
-            <summary>
-            CreateDelegate
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
-            <summary>
-            AddEventHandler
-            </summary>
-        </member>
         <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs">
             <summary>
             A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instances
@@ -2509,6 +2511,36 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedEntityTypeFilter">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedEntityTypeFilter" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Username">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Username" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Password">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Password" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.RememberMe">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "RememberMe" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Companies">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Companies" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedCompany">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedCompany" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ErrorMessage">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ErrorMessage" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ShowCompanySelection">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ShowCompanySelection" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsLoadingCompanies">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsLoadingCompanies" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsAuthenticating">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsAuthenticating" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsLoginSuccess">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsLoginSuccess" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SourceCompanyId">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SourceCompanyId" generated properties.</summary>
@@ -2599,33 +2631,6 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LoanStartDate">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LoanStartDate" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Username">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Username" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Password">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Password" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Companies">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Companies" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedCompany">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedCompany" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ErrorMessage">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ErrorMessage" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ShowCompanySelection">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ShowCompanySelection" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsLoadingCompanies">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsLoadingCompanies" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsAuthenticating">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsAuthenticating" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsLoginSuccess">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsLoginSuccess" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedCategory">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedCategory" generated properties.</summary>
@@ -2786,6 +2791,36 @@
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedEntityTypeFilter">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedEntityTypeFilter" generated properties.</summary>
         </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Username">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Username" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Password">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Password" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.RememberMe">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "RememberMe" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Companies">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Companies" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedCompany">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedCompany" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ErrorMessage">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ErrorMessage" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ShowCompanySelection">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ShowCompanySelection" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsLoadingCompanies">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsLoadingCompanies" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsAuthenticating">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsAuthenticating" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsLoginSuccess">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsLoginSuccess" generated properties.</summary>
+        </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SourceCompanyId">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SourceCompanyId" generated properties.</summary>
         </member>
@@ -2875,33 +2910,6 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LoanStartDate">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LoanStartDate" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Username">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Username" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Password">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Password" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Companies">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Companies" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedCompany">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedCompany" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ErrorMessage">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ErrorMessage" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ShowCompanySelection">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ShowCompanySelection" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsLoadingCompanies">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsLoadingCompanies" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsAuthenticating">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsAuthenticating" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsLoginSuccess">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsLoginSuccess" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedCategory">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedCategory" generated properties.</summary>

@@ -1,9 +1,9 @@
-using FijiPayroll.WPF.ViewModels;
+using FijiPayroll.WPF.ViewModels.Auth;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace FijiPayroll.WPF.Views;
+namespace FijiPayroll.WPF.Views.Auth;
 
 /// <summary>
 /// Interaction logic for LoginView.xaml

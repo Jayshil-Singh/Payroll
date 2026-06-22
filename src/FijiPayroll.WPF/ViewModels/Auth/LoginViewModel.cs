@@ -12,11 +12,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace FijiPayroll.WPF.ViewModels;
+namespace FijiPayroll.WPF.ViewModels.Auth;
 
 /// <summary>
 /// View model backing the login view.
-/// Coordinates authentication, company selection, and session establishment.
+/// Coordinates authentication, company selection, remember me state, and session establishment.
 /// </summary>
 public sealed partial class LoginViewModel : ViewModelBase
 {
@@ -29,6 +29,9 @@ public sealed partial class LoginViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _password = string.Empty;
+
+    [ObservableProperty]
+    private bool _rememberMe;
 
     [ObservableProperty]
     private ObservableCollection<CompanyLookupDto> _companies = new();
@@ -65,12 +68,21 @@ public sealed partial class LoginViewModel : ViewModelBase
         _sessionStore = sessionStore;
         _stateStore = stateStore;
 
+        // Restore remembered credentials if active
+        _rememberMe = _stateStore.RememberMe;
+        if (_rememberMe)
+        {
+            _username = _stateStore.RememberedUsername;
+        }
+
         VerifyUsernameCommand = new AsyncRelayCommand(VerifyUsernameAsync);
         LoginCommand = new AsyncRelayCommand(LoginAsync, CanLogin);
+        ExitCommand = new RelayCommand(Exit);
     }
 
     public IAsyncRelayCommand VerifyUsernameCommand { get; }
     public IAsyncRelayCommand LoginCommand { get; }
+    public ICommand ExitCommand { get; }
 
     private bool CanLogin()
     {
@@ -78,6 +90,11 @@ public sealed partial class LoginViewModel : ViewModelBase
                !string.IsNullOrWhiteSpace(Password) &&
                SelectedCompany != null &&
                !IsAuthenticating;
+    }
+
+    private void Exit()
+    {
+        System.Windows.Application.Current.Shutdown();
     }
 
     partial void OnUsernameChanged(string value)
@@ -165,6 +182,11 @@ public sealed partial class LoginViewModel : ViewModelBase
 
             if (result.IsSuccess && result.Value != null)
             {
+                // Save remember me details
+                _stateStore.RememberMe = RememberMe;
+                _stateStore.RememberedUsername = RememberMe ? Username : string.Empty;
+                await _stateStore.PersistCurrentStateAsync();
+
                 // Set the current company ID in state store first so downstream services resolve it
                 _stateStore.CurrentCompanyId = SelectedCompany.Id;
 

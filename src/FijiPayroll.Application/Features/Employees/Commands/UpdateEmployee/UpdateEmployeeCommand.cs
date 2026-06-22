@@ -1,5 +1,7 @@
+using FijiPayroll.Application.Common.Behaviours;
 using FijiPayroll.Application.Common.Models;
 using FijiPayroll.Domain.Enumerations;
+using FijiPayroll.Shared.Constants;
 using MediatR;
 using System.Collections.Generic;
 
@@ -26,4 +28,7 @@ public sealed record UpdateEmployeeCommand(
     string Position,
     string Email,
     IReadOnlyList<FijiPayroll.Application.Features.Employees.Commands.CreateEmployee.PaymentMethodInput> PaymentMethods
-) : IRequest<Result>;
+) : IRequest<Result>, IRequirePermission
+{
+    public string Permission => PermissionConstants.EmployeesEdit;
+}

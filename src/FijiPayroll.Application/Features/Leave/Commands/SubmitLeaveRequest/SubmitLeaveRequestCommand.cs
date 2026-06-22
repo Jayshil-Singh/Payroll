@@ -24,7 +24,10 @@ public sealed record SubmitLeaveRequestCommand(
     DateTime EndDate,
     decimal TotalDays,
     string? Notes = null
-) : IRequest<Result<int>>, ITransactional;
+) : IRequest<Result<int>>, ITransactional, IRequirePermission
+{
+    public string Permission => PermissionConstants.LeaveCreate;
+}
 
 /// <summary>
 /// Handler for <see cref="SubmitLeaveRequestCommand"/>.

@@ -10,7 +10,9 @@ using Microsoft.Extensions.Configuration;
 using FijiPayroll.WPF.Infrastructure;
 using FijiPayroll.WPF.Services;
 using FijiPayroll.WPF.Views;
+using FijiPayroll.WPF.Views.Auth;
 using FijiPayroll.WPF.ViewModels;
+using FijiPayroll.WPF.ViewModels.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -45,6 +47,7 @@ public partial class App : System.Windows.Application
     private MemorySmoothingScheduler? _memoryScheduler;
     private PriorityDispatcherQueue? _priorityQueue;
     private ComplianceJobProcessor? _complianceJobProcessor;
+    private SessionManager? _sessionManager;
 
     public IServiceProvider? ServiceProvider => _serviceProvider;
     public string CurrentTheme => _currentTheme;
@@ -264,6 +267,9 @@ public partial class App : System.Windows.Application
                 _complianceJobProcessor = _serviceProvider.GetRequiredService<ComplianceJobProcessor>();
                 _complianceJobProcessor.Start();
 
+                _sessionManager = _serviceProvider.GetRequiredService<SessionManager>();
+                _sessionManager.StartTracking();
+
                 _logger.LogInformation("All background monitors started.");
 
                 // ── Stage 6: Open Shell ──────────────────────────────────────────────
@@ -312,7 +318,8 @@ public partial class App : System.Windows.Application
                 Task.Run(() => _integrityValidator?.Dispose()),
                 Task.Run(() => _memoryScheduler?.Dispose()),
                 Task.Run(() => _priorityQueue?.Dispose()),
-                Task.Run(() => _complianceJobProcessor?.Dispose())
+                Task.Run(() => _complianceJobProcessor?.Dispose()),
+                Task.Run(() => _sessionManager?.Dispose())
             ).Wait(shutdownCts.Token);
         }
         catch (OperationCanceledException)

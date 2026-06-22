@@ -33,7 +33,7 @@ public sealed class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehav
     {
         if (request is IRequirePermission permissionRequest)
         {
-            var requiredPermission = permissionRequest.RequiredPermission;
+            var requiredPermission = permissionRequest.Permission;
 
             _logger.LogInformation("Enforcing permission check for request {RequestName}. Required: {Permission}",
                 typeof(TRequest).Name, requiredPermission);
@@ -43,7 +43,7 @@ public sealed class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehav
                 _logger.LogWarning("Access Denied for user '{User}'. Lacks permission: '{Permission}' for request {RequestName}",
                     _currentUserService.Username, requiredPermission, typeof(TRequest).Name);
                 
-                throw new ForbiddenAccessException(requiredPermission);
+                throw new ForbiddenException(requiredPermission);
             }
         }
 

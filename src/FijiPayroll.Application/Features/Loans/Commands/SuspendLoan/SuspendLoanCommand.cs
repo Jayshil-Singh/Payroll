@@ -18,7 +18,10 @@ namespace FijiPayroll.Application.Features.Loans.Commands.SuspendLoan;
 public sealed record SuspendLoanCommand(
     int CompanyId,
     int LoanId
-) : IRequest<Result<Unit>>, ITransactional;
+) : IRequest<Result<Unit>>, ITransactional, IRequirePermission
+{
+    public string Permission => PermissionConstants.LoansManage;
+}
 
 /// <summary>
 /// Handler for <see cref="SuspendLoanCommand"/>.

@@ -21,6 +21,12 @@ public interface IApplicationStateStore : INotifyPropertyChanged
     /// <summary>Gets or sets the currently selected Employee ID.</summary>
     int? SelectedEmployeeId { get; set; }
 
+    /// <summary>Gets or sets whether the login username should be remembered.</summary>
+    bool RememberMe { get; set; }
+
+    /// <summary>Gets or sets the remembered username string.</summary>
+    string RememberedUsername { get; set; }
+
     /// <summary>Clears the entire application state to default values.</summary>
     void Clear();
 

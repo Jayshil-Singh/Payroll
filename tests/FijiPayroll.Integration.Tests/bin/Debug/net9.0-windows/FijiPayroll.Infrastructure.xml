@@ -121,7 +121,7 @@
             Implements exponential backoffs and writes JSON audit manifests on file generation.
             </summary>
         </member>
-        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceJobProcessor.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,System.Collections.Generic.IEnumerable{FijiPayroll.SDK.Interfaces.IBankFileGenerator},FijiPayroll.SDK.Interfaces.IComplianceFileService,FijiPayroll.Application.Common.Interfaces.IFileStorageProvider,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.ComplianceJobProcessor})">
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceJobProcessor.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.ComplianceJobProcessor})">
             <summary>
             Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.ComplianceJobProcessor"/> class.
             </summary>
@@ -400,6 +400,61 @@
         <member name="M:FijiPayroll.Infrastructure.Services.LicenseFingerprintProvider.GenerateFingerprintAsync">
             <inheritdoc />
         </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator">
+            <summary>
+            Infrastructure implementation of license checking and validation using RSA signatures.
+            Supports offline validation, fingerprint validation, and custom public key overrides.
+            </summary>
+        </member>
+        <member name="F:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.DefaultPublicKeyPem">
+            <summary>
+            Default embedded development public key PEM.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.IsLicensed">
+            <summary>Gets a value indicating whether the application has a valid active license.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.DaysRemaining">
+            <summary>Gets the number of days remaining until the license expires.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.Company">
+            <summary>Gets the licensed company name.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.ExpiryDate">
+            <summary>Gets the license expiry date.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.FeatureFlags">
+            <summary>Gets the raw comma-separated feature flags string.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.HardwareHash">
+            <summary>Gets the hardware machine hash string matched in the license.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.ErrorMessage">
+            <summary>Gets the error description if validation fails.</summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.#ctor(FijiPayroll.Application.Common.Interfaces.ILicenseFingerprintProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.InitializeAsync">
+            <summary>
+            Loads and validates the default offline license file (license.fplic) from application base directory.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.ValidateLicenseFileAsync(System.String)">
+            <summary>
+            Validates raw license XML using local public key overrides or default embedded PEM.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.ValidateLicenseAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.HasFeature(System.String)">
+            <summary>
+            Checks if the licensed features contain the requested flag.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Infrastructure.Services.MemoryFormulaCache">
             <summary>
             In-memory cache implementation for compiled AST formula rules.
@@ -448,6 +503,19 @@
             <summary>
             Triggers database migrations or seeding steps for all successfully loaded plugins.
             </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.Reports.ReportProvider">
+            <summary>
+            Service providing high-quality PDF and Excel reports using ClosedXML and custom raw PDF stream construction.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Reports.ReportProvider.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Services.PayrollDifferenceAnalyzer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.Reports.ReportProvider"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Reports.ReportProvider.RenderReportAsync(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Threading.CancellationToken)">
+            <inheritdoc />
         </member>
         <member name="T:FijiPayroll.Infrastructure.Services.SearchContentData">
             <summary>

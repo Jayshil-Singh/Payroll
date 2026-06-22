@@ -16,7 +16,10 @@ namespace FijiPayroll.Application.Features.Leave.Commands.ApproveLeaveRequest;
 /// <summary>
 /// Command to approve a pending leave request and reserve the balance.
 /// </summary>
-public sealed record ApproveLeaveRequestCommand(int RequestId) : IRequest<Result>, ITransactional;
+public sealed record ApproveLeaveRequestCommand(int RequestId) : IRequest<Result>, ITransactional, IRequirePermission
+{
+    public string Permission => PermissionConstants.LeaveApprove;
+}
 
 /// <summary>
 /// Handler for <see cref="ApproveLeaveRequestCommand"/>.

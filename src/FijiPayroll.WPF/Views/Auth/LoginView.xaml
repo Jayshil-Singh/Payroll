@@ -1,12 +1,12 @@
-<Window x:Class="FijiPayroll.WPF.Views.LoginView"
+<Window x:Class="FijiPayroll.WPF.Views.Auth.LoginView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:FijiPayroll.WPF.ViewModels"
+        xmlns:vm="clr-namespace:FijiPayroll.WPF.ViewModels.Auth"
         mc:Ignorable="d"
         Title="FEPS Secure Sign In" 
-        Height="450" Width="400"
+        Height="480" Width="400"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -101,6 +101,15 @@
                              IsEnabled="{Binding IsAuthenticating, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"/>
                 </StackPanel>
 
+                <!-- Remember Me Checkbox -->
+                <CheckBox Content="Remember Me"
+                          IsChecked="{Binding RememberMe}"
+                          Foreground="{DynamicResource BrushTextPrimary}"
+                          FontFamily="{StaticResource FontMain}"
+                          FontSize="13"
+                          Margin="0,0,0,16"
+                          IsEnabled="{Binding IsAuthenticating, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"/>
+
                 <!-- Password (only if company not resolved or showing selection) -->
                 <StackPanel Margin="0,0,0,16" Visibility="{Binding ShowCompanySelection, Converter={StaticResource BoolToVis}}">
                     <TextBlock Text="Password" 
@@ -141,21 +150,38 @@
 
             <!-- Actions area -->
             <StackPanel Grid.Row="2" Margin="0,16,0,0">
-                <!-- Submit Button for username verification -->
-                <Button Content="Next" 
-                        Command="{Binding VerifyUsernameCommand}" 
-                        Style="{StaticResource ModernButton}" 
-                        Height="40"
-                        Visibility="{Binding ShowCompanySelection, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"
-                        IsEnabled="{Binding IsLoadingCompanies, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"/>
+                <!-- Action Buttons -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button Grid.Column="0"
+                            Content="Exit"
+                            Command="{Binding ExitCommand}"
+                            Style="{StaticResource SecondaryButton}"
+                            Height="40"/>
+                            
+                    <!-- Submit Button for username verification -->
+                    <Button Grid.Column="2"
+                            Content="Next" 
+                            Command="{Binding VerifyUsernameCommand}" 
+                            Style="{StaticResource ModernButton}" 
+                            Height="40"
+                            Visibility="{Binding ShowCompanySelection, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"
+                            IsEnabled="{Binding IsLoadingCompanies, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"/>
 
-                <!-- Submit Button for login -->
-                <Button Content="Sign In" 
-                        Command="{Binding LoginCommand}" 
-                        Style="{StaticResource ModernButton}" 
-                        Height="40"
-                        Visibility="{Binding ShowCompanySelection, Converter={StaticResource BoolToVis}}"
-                        IsEnabled="{Binding SelectedCompany, Converter={StaticResource BoolToVis}}"/>
+                    <!-- Submit Button for login -->
+                    <Button Grid.Column="2"
+                            Content="Sign In" 
+                            Command="{Binding LoginCommand}" 
+                            Style="{StaticResource ModernButton}" 
+                            Height="40"
+                            Visibility="{Binding ShowCompanySelection, Converter={StaticResource BoolToVis}}"
+                            IsEnabled="{Binding SelectedCompany, Converter={StaticResource BoolToVis}}"/>
+                </Grid>
 
                 <!-- Loading Rings / Spinners -->
                 <ProgressBar IsIndeterminate="True" 

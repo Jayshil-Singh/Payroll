@@ -18,7 +18,10 @@ namespace FijiPayroll.Application.Features.Loans.Commands.ResumeLoan;
 public sealed record ResumeLoanCommand(
     int CompanyId,
     int LoanId
-) : IRequest<Result<Unit>>, ITransactional;
+) : IRequest<Result<Unit>>, ITransactional, IRequirePermission
+{
+    public string Permission => PermissionConstants.LoansManage;
+}
 
 /// <summary>
 /// Handler for <see cref="ResumeLoanCommand"/>.

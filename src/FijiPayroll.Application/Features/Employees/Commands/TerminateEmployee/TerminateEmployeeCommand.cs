@@ -15,7 +15,10 @@ namespace FijiPayroll.Application.Features.Employees.Commands.TerminateEmployee;
 /// <summary>
 /// Command to terminate (deactivate) an employee, deactivate payment methods, and raise domain events.
 /// </summary>
-public sealed record TerminateEmployeeCommand(int EmployeeId) : IRequest<Result>, ITransactional;
+public sealed record TerminateEmployeeCommand(int EmployeeId) : IRequest<Result>, ITransactional, IRequirePermission
+{
+    public string Permission => PermissionConstants.EmployeesTerminate;
+}
 
 /// <summary>
 /// Handler for <see cref="TerminateEmployeeCommand"/>.
