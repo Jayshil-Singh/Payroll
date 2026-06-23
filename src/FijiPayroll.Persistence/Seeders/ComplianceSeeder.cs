@@ -30,6 +30,7 @@ public sealed class ComplianceSeeder
     {
         await SeedStatutoryRulesAsync(cancellationToken);
         await SeedFileLayoutsAsync(cancellationToken);
+        await SeedCompliancePeriodsAsync(cancellationToken);
     }
 
     private async Task SeedStatutoryRulesAsync(CancellationToken cancellationToken)
@@ -133,6 +134,39 @@ public sealed class ComplianceSeeder
         foreach (var layout in layouts)
         {
             await _context.FileLayoutDefinitions.AddAsync(layout, cancellationToken);
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task SeedCompliancePeriodsAsync(CancellationToken cancellationToken)
+    {
+        if (await _context.CompliancePeriods.AnyAsync(cancellationToken))
+        {
+            return;
+        }
+
+        var periods = new List<CompliancePeriod>
+        {
+            CompliancePeriod.Create(1, 10, 2025, new DateTime(2025, 10, 1), new DateTime(2025, 10, 31)),
+            CompliancePeriod.Create(1, 11, 2025, new DateTime(2025, 11, 1), new DateTime(2025, 11, 30)),
+            CompliancePeriod.Create(1, 12, 2025, new DateTime(2025, 12, 1), new DateTime(2025, 12, 31)),
+            CompliancePeriod.Create(1, 1, 2026, new DateTime(2026, 1, 1), new DateTime(2026, 1, 31)),
+            CompliancePeriod.Create(1, 2, 2026, new DateTime(2026, 2, 1), new DateTime(2026, 2, 28)),
+            CompliancePeriod.Create(1, 3, 2026, new DateTime(2026, 3, 1), new DateTime(2026, 3, 31))
+        };
+
+        periods[0].Lock();
+        periods[0].Close();
+
+        periods[1].Lock();
+        periods[1].Close();
+
+        periods[2].Lock();
+
+        foreach (var p in periods)
+        {
+            await _context.CompliancePeriods.AddAsync(p, cancellationToken);
         }
 
         await _context.SaveChangesAsync(cancellationToken);

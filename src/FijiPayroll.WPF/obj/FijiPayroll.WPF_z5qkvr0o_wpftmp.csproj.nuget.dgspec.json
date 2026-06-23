@@ -1,0 +1,553 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.WPF\\FijiPayroll.WPF.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\FijiPayroll.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\FijiPayroll.Application.csproj",
+        "projectName": "FijiPayroll.Application",
+        "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\FijiPayroll.Application.csproj",
+        "packagesPath": "C:\\Users\\jayshil.singh\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\jayshil.singh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\FijiPayroll.Domain.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\FijiPayroll.Domain.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.SDK\\FijiPayroll.SDK.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.SDK\\FijiPayroll.SDK.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "FluentValidation": {
+              "target": "Package",
+              "version": "[11.9.0, )"
+            },
+            "FluentValidation.DependencyInjectionExtensions": {
+              "target": "Package",
+              "version": "[11.9.0, )"
+            },
+            "MediatR": {
+              "target": "Package",
+              "version": "[12.4.1, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Extensions.DependencyInjection.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\FijiPayroll.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\FijiPayroll.Domain.csproj",
+        "projectName": "FijiPayroll.Domain",
+        "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\FijiPayroll.Domain.csproj",
+        "packagesPath": "C:\\Users\\jayshil.singh\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\jayshil.singh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Infrastructure\\FijiPayroll.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Infrastructure\\FijiPayroll.Infrastructure.csproj",
+        "projectName": "FijiPayroll.Infrastructure",
+        "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Infrastructure\\FijiPayroll.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\jayshil.singh\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Infrastructure\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\jayshil.singh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\FijiPayroll.Application.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\FijiPayroll.Application.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.102.2, )"
+            },
+            "Microsoft.Extensions.Caching.Memory": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Serilog": {
+              "target": "Package",
+              "version": "[4.0.0, )"
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Serilog.Sinks.MSSqlServer": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Persistence\\FijiPayroll.Persistence.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Persistence\\FijiPayroll.Persistence.csproj",
+        "projectName": "FijiPayroll.Persistence",
+        "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Persistence\\FijiPayroll.Persistence.csproj",
+        "packagesPath": "C:\\Users\\jayshil.singh\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Persistence\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\jayshil.singh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\FijiPayroll.Application.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\FijiPayroll.Application.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\FijiPayroll.Domain.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\FijiPayroll.Domain.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.SDK\\FijiPayroll.SDK.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.SDK\\FijiPayroll.SDK.csproj",
+        "projectName": "FijiPayroll.SDK",
+        "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.SDK\\FijiPayroll.SDK.csproj",
+        "packagesPath": "C:\\Users\\jayshil.singh\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.SDK\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\jayshil.singh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj",
+        "projectName": "FijiPayroll.Shared",
+        "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj",
+        "packagesPath": "C:\\Users\\jayshil.singh\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\jayshil.singh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.WPF\\FijiPayroll.WPF.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.WPF\\FijiPayroll.WPF.csproj",
+        "projectName": "FijiPayroll.WPF",
+        "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.WPF\\FijiPayroll.WPF.csproj",
+        "packagesPath": "C:\\Users\\jayshil.singh\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.WPF\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\jayshil.singh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0-windows"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0-windows7.0": {
+            "targetAlias": "net9.0-windows",
+            "projectReferences": {
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\FijiPayroll.Application.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Application\\FijiPayroll.Application.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\FijiPayroll.Domain.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Domain\\FijiPayroll.Domain.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Infrastructure\\FijiPayroll.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Infrastructure\\FijiPayroll.Infrastructure.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Persistence\\FijiPayroll.Persistence.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Persistence\\FijiPayroll.Persistence.csproj"
+              },
+              "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj": {
+                "projectPath": "C:\\Users\\jayshil.singh\\Desktop\\Payroll\\src\\FijiPayroll.Shared\\FijiPayroll.Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0-windows7.0": {
+          "targetAlias": "net9.0-windows",
+          "dependencies": {
+            "CommunityToolkit.Mvvm": {
+              "target": "Package",
+              "version": "[8.2.2, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.WindowsDesktop.App.WPF": {
+              "privateAssets": "none"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.315/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

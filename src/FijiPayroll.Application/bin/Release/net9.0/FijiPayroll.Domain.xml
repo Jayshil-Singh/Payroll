@@ -799,6 +799,9 @@
         <member name="M:FijiPayroll.Domain.Entities.Company.Employee.Update(System.String,System.String,System.String,System.String,System.String,System.Decimal,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.Boolean,System.Boolean,System.Boolean,FijiPayroll.Domain.Enumerations.EmploymentType,System.String,System.String,System.String,System.String)">
             <summary>Updates employee properties.</summary>
         </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.Employee.TerminationDate">
+            <summary>Gets the date of employment termination.</summary>
+        </member>
         <member name="M:FijiPayroll.Domain.Entities.Company.Employee.Terminate(System.String)">
             <summary>
             Terminates the employee by deactivating their record, deactivating all payment methods, and raising a domain event.
@@ -1382,6 +1385,16 @@
         <member name="M:FijiPayroll.Domain.Entities.Company.SetupExecutionRecord.MarkRolledBack">
             <summary>Marks this execution run rolled back.</summary>
         </member>
+        <member name="T:FijiPayroll.Domain.Entities.Company.SystemSettings">
+            <summary>
+            Domain entity representing settings for a company tenant.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.SystemSettings.Create(System.Int32)">
+            <summary>
+            Factory method to construct dynamic system settings.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Entities.Company.TaxBracket">
             <summary>
             Represents a configuration-driven tax bracket for PAYE progressive tax calculations.
@@ -1474,8 +1487,17 @@
         <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.MustChangePassword">
             <summary>Gets whether the user is required to change their password on the next login.</summary>
         </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.EmployeeId">
+            <summary>Gets the associated employee ID if this is an ESS user account.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.PasswordUpdatedAt">
+            <summary>Gets when the password was last updated.</summary>
+        </member>
         <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.Roles">
             <summary>Gets the read-only collection of roles mapped to the user.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserAccount.PasswordHistories">
+            <summary>Gets the password change history collection.</summary>
         </member>
         <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.Create(System.Int32,System.String,System.String,System.String,System.Boolean,System.Boolean)">
             <summary>
@@ -1497,9 +1519,14 @@
             Checks if the account is currently locked out.
             </summary>
         </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.LinkToEmployee(System.Int32)">
+            <summary>
+            Links the user account to a specific employee for ESS access.
+            </summary>
+        </member>
         <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.UpdatePassword(System.String)">
             <summary>
-            Assigns a new password hash and updates force change state.
+            Assigns a new password hash, stores it in history, and updates force change state.
             </summary>
         </member>
         <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.ForcePasswordChange">
@@ -1525,6 +1552,25 @@
         <member name="M:FijiPayroll.Domain.Entities.Company.UserAccount.RemoveRole(FijiPayroll.Domain.Entities.Company.UserRole)">
             <summary>
             Removes a role from the user.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Company.UserPasswordHistory">
+            <summary>
+            Domain entity representing an entry in a user's password history to prevent reusing recent passwords.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserPasswordHistory.UserAccountId">
+            <summary>Gets the parent user account ID.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserPasswordHistory.PasswordHash">
+            <summary>Gets the hashed password value.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Company.UserPasswordHistory.CreatedAt">
+            <summary>Gets when the password was replaced.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Company.UserPasswordHistory.Create(System.Int32,System.String)">
+            <summary>
+            Factory method to construct a new UserPasswordHistory entry.
             </summary>
         </member>
         <member name="T:FijiPayroll.Domain.Entities.Company.UserPermission">
@@ -2695,6 +2741,9 @@
         <member name="P:FijiPayroll.Domain.Entities.Payroll.LoanRepayment.LoanId">
             <summary>Gets the parent loan identifier.</summary>
         </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.LoanRepayment.Loan">
+            <summary>Gets the parent loan navigation property.</summary>
+        </member>
         <member name="P:FijiPayroll.Domain.Entities.Payroll.LoanRepayment.PayrollRunId">
             <summary>Gets the payroll run identifier in which this repayment occurred.</summary>
         </member>
@@ -2754,9 +2803,23 @@
         <member name="P:FijiPayroll.Domain.Entities.Payroll.Notification.SentAt">
             <summary>Gets the timestamp when the notification was successfully sent.</summary>
         </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Notification.IsRead">
+            <summary>Gets a value indicating whether the notification has been read (for desktop alerts).</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Notification.ReadAt">
+            <summary>Gets the timestamp when the notification was read.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.Notification.Category">
+            <summary>Gets the notification category (e.g. Info, Warning, Error, Payroll, System).</summary>
+        </member>
         <member name="M:FijiPayroll.Domain.Entities.Payroll.Notification.Create(System.Int32,FijiPayroll.Domain.Enumerations.NotificationChannel,System.String,System.String,System.String)">
             <summary>
             Factory method to construct a new Notification.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.Notification.Create(System.Int32,FijiPayroll.Domain.Enumerations.NotificationChannel,System.String,System.String,System.String,System.String)">
+            <summary>
+            Factory method to construct a new Notification with a Category.
             </summary>
         </member>
         <member name="M:FijiPayroll.Domain.Entities.Payroll.Notification.MarkAsSent">
@@ -2767,6 +2830,9 @@
         </member>
         <member name="M:FijiPayroll.Domain.Entities.Payroll.Notification.ResetForRetry">
             <summary>Resets status to pending to schedule another retry.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.Notification.MarkAsRead">
+            <summary>Marks a desktop notification as read.</summary>
         </member>
         <member name="T:FijiPayroll.Domain.Entities.Payroll.PayrollAdjustment">
             <summary>
@@ -3293,6 +3359,54 @@
             <summary>
             Immutable snapshot storing the calculation input/output of a payroll run.
             Guaranteed to never be updated once written.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment">
+            <summary>
+            Domain entity representing a retroactive adjustment (e.g. missed overtime, salary correction)
+            applied in a subsequent pay run.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment.CompanyId">
+            <summary>Gets the company ID context (multi-tenant boundary).</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment.EmployeeId">
+            <summary>Gets the employee ID target.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment.Amount">
+            <summary>Gets the monetary amount.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment.ComponentType">
+            <summary>Gets the component type (Earning, Deduction, Allowance, Overtime, etc.).</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment.ComponentName">
+            <summary>Gets the component name.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment.Description">
+            <summary>Gets the detailed correction description.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment.IsApplied">
+            <summary>Gets whether the adjustment has been applied in a payroll run.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment.AppliedInPayrollRunId">
+            <summary>Gets the payroll run ID where this adjustment was applied.</summary>
+        </member>
+        <member name="P:FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment.AppliedAt">
+            <summary>Gets the date when it was marked as applied.</summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment.Create(System.Int32,System.Int32,System.Decimal,FijiPayroll.Domain.Enumerations.ComponentType,System.String,System.String)">
+            <summary>
+            Factory method to construct a new RetroactiveAdjustment.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment.MarkAsApplied(System.Int32)">
+            <summary>
+            Marks the adjustment as applied in the specified payroll run.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment.RevertApplication">
+            <summary>
+            Unapplies/reverts the applied status (e.g. during a run reset or reversal).
             </summary>
         </member>
         <member name="T:FijiPayroll.Domain.Entities.Payroll.StatutoryRule">
@@ -4291,6 +4405,11 @@
             Repository interface for all Compliance-related domain entities.
             </summary>
         </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.IDashboardRepository">
+            <summary>
+            Interface for aggregating dashboard KPI and alert data at the database level.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Interfaces.IEmployeeRepository">
             <summary>
             Repository interface for Employee entity operations.
@@ -4753,6 +4872,11 @@
             <param name="cancellationToken">Cancellation token.</param>
             <exception cref="!:FijiPayroll.Application.Common.Exceptions.EvidencePackTamperedException">Thrown if signature, hash verification, or tenant validation fails.</exception>
         </member>
+        <member name="T:FijiPayroll.Domain.Interfaces.ISystemSettingsRepository">
+            <summary>
+            Repository interface for SystemSettings entity operations.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Domain.Interfaces.ITaxBracketRepository">
             <summary>
             Repository interface for configuration-driven tax brackets.
@@ -4840,6 +4964,9 @@
         <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.PayrollLedgerReversals">
             <summary>Repository for payroll ledger reversals.</summary>
         </member>
+        <member name="P:FijiPayroll.Domain.Interfaces.IUnitOfWork.Dashboard">
+            <summary>Repository for aggregated dashboard metrics.</summary>
+        </member>
         <member name="M:FijiPayroll.Domain.Interfaces.IUnitOfWork.AddAuditLogAsync(FijiPayroll.Domain.Entities.Audit.AuditLog,System.Threading.CancellationToken)">
             <summary>
             Adds an audit log entry to the database context.
@@ -4897,6 +5024,16 @@
         <member name="M:FijiPayroll.Domain.Interfaces.IUserRepository.GetCompaniesByUsernameAsync(System.String,System.Threading.CancellationToken)">
             <summary>
             Resolves all companies associated with an active username.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IUserRepository.GetAllByCompanyAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Returns all user accounts for the specified company.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Domain.Interfaces.IUserRepository.Update(FijiPayroll.Domain.Entities.Company.UserAccount)">
+            <summary>
+            Updates an existing UserAccount entity in the persistence store.
             </summary>
         </member>
         <member name="T:FijiPayroll.Domain.Rules.PayrollRules.PayrollAllowanceEngine">

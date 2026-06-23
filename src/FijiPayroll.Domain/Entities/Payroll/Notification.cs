@@ -39,6 +39,15 @@ public sealed class Notification : BaseEntity
     /// <summary>Gets the timestamp when the notification was successfully sent.</summary>
     public DateTime? SentAt { get; private set; }
 
+    /// <summary>Gets a value indicating whether the notification has been read (for desktop alerts).</summary>
+    public bool IsRead { get; private set; }
+
+    /// <summary>Gets the timestamp when the notification was read.</summary>
+    public DateTime? ReadAt { get; private set; }
+
+    /// <summary>Gets the notification category (e.g. Info, Warning, Error, Payroll, System).</summary>
+    public string Category { get; private set; } = "Info";
+
     private Notification() { } // For EF Core
 
     /// <summary>
@@ -64,8 +73,26 @@ public sealed class Notification : BaseEntity
             Message = message,
             Status = "Pending",
             RetryCount = 0,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            Category = "Info",
+            IsRead = false
         };
+    }
+
+    /// <summary>
+    /// Factory method to construct a new Notification with a Category.
+    /// </summary>
+    public static Notification Create(
+        int companyId,
+        NotificationChannel channel,
+        string recipient,
+        string subject,
+        string message,
+        string category)
+    {
+        var notification = Create(companyId, channel, recipient, subject, message);
+        notification.Category = string.IsNullOrWhiteSpace(category) ? "Info" : category;
+        return notification;
     }
 
     /// <summary>Marks the notification as successfully sent.</summary>
@@ -89,5 +116,12 @@ public sealed class Notification : BaseEntity
     {
         Status = "Pending";
         ErrorMessage = null;
+    }
+
+    /// <summary>Marks a desktop notification as read.</summary>
+    public void MarkAsRead()
+    {
+        IsRead = true;
+        ReadAt = DateTime.UtcNow;
     }
 }

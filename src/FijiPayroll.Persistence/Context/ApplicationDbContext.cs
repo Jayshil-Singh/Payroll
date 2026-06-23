@@ -214,6 +214,7 @@ public class ApplicationDbContext : DbContext
     // ── Loan Module DbSets ──────────────────────────────────────────────────
     public DbSet<Loan> StaffLoans => Set<Loan>();
     public DbSet<LoanRepayment> StaffLoanRepayments => Set<LoanRepayment>();
+    public DbSet<SystemSettings> SystemSettings => Set<SystemSettings>();
 
 
     /// <summary>
@@ -513,6 +514,12 @@ public class ApplicationDbContext : DbContext
         // Loan Module RLS Query Filters
         modelBuilder.Entity<Loan>()
             .HasQueryFilter(x => x.CompanyId == CurrentCompanyId && !x.IsDeleted);
+
+        modelBuilder.Entity<LoanRepayment>()
+            .HasQueryFilter(x => x.Loan != null && x.Loan.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<SystemSettings>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
 
         modelBuilder.Entity<PayrollRunEmployee>()
             .HasQueryFilter(e => e.PayrollRun != null && e.PayrollRun.CompanyId == CurrentCompanyId);

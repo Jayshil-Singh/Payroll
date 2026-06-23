@@ -574,6 +574,30 @@
         <member name="M:FijiPayroll.Persistence.Migrations.AddPhase17Tables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:FijiPayroll.Persistence.Migrations.AddTerminationDateAndSystemSettings">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddTerminationDateAndSystemSettings.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddTerminationDateAndSystemSettings.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddTerminationDateAndSystemSettings.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Migrations.AddNotificationDesktopFields">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddNotificationDesktopFields.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddNotificationDesktopFields.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddNotificationDesktopFields.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="T:FijiPayroll.Persistence.Repositories.ApprovalWorkflowRepository">
             <summary>
             EF Core repository implementation for the <see cref="T:FijiPayroll.Domain.Entities.Audit.ApprovalWorkflow"/> entity.
@@ -888,6 +912,20 @@
         <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetBankBranchByIdAsync(System.Int32,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.SystemSettingsRepository">
+            <summary>
+            EF Core implementation of <see cref="T:FijiPayroll.Domain.Interfaces.ISystemSettingsRepository"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SystemSettingsRepository.GetByCompanyIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SystemSettingsRepository.AddAsync(FijiPayroll.Domain.Entities.Company.SystemSettings,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SystemSettingsRepository.Update(FijiPayroll.Domain.Entities.Company.SystemSettings)">
+            <inheritdoc/>
+        </member>
         <member name="T:FijiPayroll.Persistence.Repositories.TaxBracketRepository">
             <summary>
             Entity Framework Core implementation of the ITaxBracketRepository.
@@ -927,6 +965,9 @@
             <summary>
             Initialises a new instance of the <see cref="T:FijiPayroll.Persistence.Repositories.UnitOfWork"/> class with all repositories.
             </summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.Dashboard">
+            <inheritdoc/>
         </member>
         <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.Loans">
             <inheritdoc/>
@@ -1026,6 +1067,12 @@
             <inheritdoc />
         </member>
         <member name="M:FijiPayroll.Persistence.Repositories.UserRepository.GetCompaniesByUsernameAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UserRepository.GetAllByCompanyAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UserRepository.Update(FijiPayroll.Domain.Entities.Company.UserAccount)">
             <inheritdoc />
         </member>
         <member name="T:FijiPayroll.Persistence.Seeders.ComplianceSeeder">

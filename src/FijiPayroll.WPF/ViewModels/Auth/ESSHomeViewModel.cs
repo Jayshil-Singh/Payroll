@@ -13,9 +13,11 @@ using FijiPayroll.WPF.Services;
 using FijiPayroll.WPF.ViewModels.Base;
 using MediatR;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using FijiPayroll.SDK.Interfaces;
 
 namespace FijiPayroll.WPF.ViewModels.Auth;
 
@@ -28,7 +30,8 @@ public sealed partial class ESSHomeViewModel : ViewModelBase
     private readonly IMediator _mediator;
     private readonly ITenantProvider _tenantProvider;
     private readonly IAuthSessionStore _sessionStore;
-    private readonly INotificationService _notificationService;
+    private readonly FijiPayroll.WPF.Services.INotificationService _notificationService;
+    private readonly IReportProvider _reportProvider;
 
     // ─── Tab Index ────────────────────────────────────────────────────────────
     [ObservableProperty]
@@ -81,12 +84,14 @@ public sealed partial class ESSHomeViewModel : ViewModelBase
         IMediator mediator,
         ITenantProvider tenantProvider,
         IAuthSessionStore sessionStore,
-        INotificationService notificationService)
+        FijiPayroll.WPF.Services.INotificationService notificationService,
+        IReportProvider reportProvider)
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _tenantProvider = tenantProvider ?? throw new ArgumentNullException(nameof(tenantProvider));
         _sessionStore = sessionStore ?? throw new ArgumentNullException(nameof(sessionStore));
         _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
+        _reportProvider = reportProvider ?? throw new ArgumentNullException(nameof(reportProvider));
 
         LoadDataCommand = new AsyncRelayCommand(LoadAllDataAsync);
         SubmitLeaveRequestCommand = new AsyncRelayCommand(SubmitLeaveRequestAsync);
@@ -245,9 +250,45 @@ public sealed partial class ESSHomeViewModel : ViewModelBase
     private async Task DownloadPayslipAsync(PayrollRunSummaryDto? run)
     {
         if (run == null) return;
-        _notificationService.Info($"Preparing payslip for {run.PeriodName}...");
-        // PDF export handled by ReportProvider in future iteration
-        await Task.CompletedTask;
-        _notificationService.Success($"Payslip for {run.PeriodName} is ready. PDF export coming soon.");
+        
+        int? employeeId = GetEmployeeId();
+        if (employeeId == null)
+        {
+            _notificationService.Warning("No employee context linked to this session.");
+            return;
+        }
+
+        IsBusy = true;
+        try
+        {
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "PDF Documents (*.pdf)|*.pdf",
+                FileName = $"Payslip_{run.PeriodName.Replace(" ", "_")}_{employeeId}.pdf",
+                Title = "Download Payslip"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var parameters = new Dictionary<string, string>
+                {
+                    { "@P_CompanyId", GetCompanyId().ToString() },
+                    { "@P_PayrollRunId", run.Id.ToString() },
+                    { "@P_EmployeeId", employeeId.Value.ToString() }
+                };
+
+                byte[] bytes = await _reportProvider.RenderReportAsync("Payslips", "PDF", parameters);
+                await System.IO.File.WriteAllBytesAsync(saveFileDialog.FileName, bytes);
+                _notificationService.Success($"Payslip downloaded successfully to {System.IO.Path.GetFileName(saveFileDialog.FileName)}", "Download Success");
+            }
+        }
+        catch (Exception ex)
+        {
+            _notificationService.Error($"Download failed: {ex.Message}", "Download Error");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }

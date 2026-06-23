@@ -83,7 +83,7 @@ internal sealed class LoanRepaymentConfiguration : IEntityTypeConfiguration<Loan
                .HasColumnType("datetime2")
                .IsRequired();
 
-        builder.HasOne<Loan>()
+        builder.HasOne(x => x.Loan)
                .WithMany(x => x.Repayments)
                .HasForeignKey(x => x.LoanId)
                .OnDelete(DeleteBehavior.Cascade); // If loan is soft-deleted, delete repayments? Actually cascade delete at DB level is OK since cascade is set, but restrict is also fine. Let's do Cascade.

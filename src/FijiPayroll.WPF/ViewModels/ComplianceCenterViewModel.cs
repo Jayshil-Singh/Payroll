@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using FijiPayroll.Application.Common.Interfaces;
 using FijiPayroll.Application.Features.Compliance.Commands;
 using FijiPayroll.Application.Features.Compliance.Queries;
+using FijiPayroll.Application.Features.PayrollRuns.Queries.GetPayrollRunList;
 using FijiPayroll.Application.Services;
+using FijiPayroll.Domain.Entities.Payroll;
 using FijiPayroll.WPF.ViewModels.Base;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +36,11 @@ public sealed class ComplianceCenterViewModel : ViewModelBase
     private RuleSimulationEngine.RuleSimulationResult? _simulationResult;
 
     private ReconciliationVarianceModel? _reconciliationVariance;
+
+    private CompliancePeriod? _selectedPeriod;
+    private PayrollRunSummaryDto? _selectedRun;
+    private ObservableCollection<CompliancePeriod> _periods = new();
+    private ObservableCollection<PayrollRunSummaryDto> _runs = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ComplianceCenterViewModel"/> class.
@@ -76,6 +84,46 @@ public sealed class ComplianceCenterViewModel : ViewModelBase
         get => _recentSubmissions;
         set => SetProperty(ref _recentSubmissions, value);
     }
+
+    // ComboBox Binding Properties
+    public CompliancePeriod? SelectedPeriod
+    {
+        get => _selectedPeriod;
+        set
+        {
+            if (SetProperty(ref _selectedPeriod, value))
+            {
+                OnPropertyChanged(nameof(SelectedPeriodText));
+                OnPropertyChanged(nameof(SelectedPeriodStatusText));
+            }
+        }
+    }
+
+    public PayrollRunSummaryDto? SelectedRun
+    {
+        get => _selectedRun;
+        set => SetProperty(ref _selectedRun, value);
+    }
+
+    public ObservableCollection<CompliancePeriod> Periods
+    {
+        get => _periods;
+        set => SetProperty(ref _periods, value);
+    }
+
+    public ObservableCollection<PayrollRunSummaryDto> Runs
+    {
+        get => _runs;
+        set => SetProperty(ref _runs, value);
+    }
+
+    public string SelectedPeriodText => SelectedPeriod != null
+        ? $"{new DateTime(SelectedPeriod.Year, SelectedPeriod.Month, 1):MMMM yyyy}"
+        : "None Selected";
+
+    public string SelectedPeriodStatusText => SelectedPeriod != null
+        ? $"Status: {SelectedPeriod.Status}"
+        : "Status: N/A";
 
     // Simulation Overrides Binding Properties
     public string FnpfEeRateOverride
@@ -123,6 +171,8 @@ public sealed class ComplianceCenterViewModel : ViewModelBase
         try
         {
             int companyId = _tenantProvider.GetCurrentCompanyId();
+            
+            // 1. Load Dashboard Summary
             var res = await _mediator.Send(new GetComplianceDashboardQuery(companyId));
             if (res.IsSuccess && res.Value != null)
             {
@@ -136,11 +186,42 @@ public sealed class ComplianceCenterViewModel : ViewModelBase
                     RecentSubmissions.Add(sub);
                 }
             }
+
+            // 2. Load Compliance Periods
+            var periodsRes = await _mediator.Send(new GetCompliancePeriodsQuery(companyId));
+            if (periodsRes.IsSuccess && periodsRes.Value != null)
+            {
+                Periods.Clear();
+                foreach (var p in periodsRes.Value)
+                {
+                    Periods.Add(p);
+                }
+
+                if (SelectedPeriod == null && Periods.Count > 0)
+                {
+                    SelectedPeriod = Periods[0];
+                }
+            }
+
+            // 3. Load Payroll Runs
+            var runsRes = await _mediator.Send(new GetPayrollRunListQuery(companyId, null, null, 1, 100));
+            if (runsRes.IsSuccess && runsRes.Value != null)
+            {
+                Runs.Clear();
+                foreach (var r in runsRes.Value.Items)
+                {
+                    Runs.Add(r);
+                }
+
+                if (SelectedRun == null && Runs.Count > 0)
+                {
+                    SelectedRun = Runs[0];
+                }
+            }
         }
         catch (Exception ex)
         {
-            // Log or display error
-            System.Diagnostics.Debug.WriteLine($"Failed to load dashboard: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Failed to load compliance details: {ex.Message}");
         }
         finally
         {
@@ -150,31 +231,68 @@ public sealed class ComplianceCenterViewModel : ViewModelBase
 
     private async Task LockActivePeriodAsync()
     {
+        if (SelectedPeriod == null)
+        {
+            MessageBox.Show("Please select a compliance period first.", "Lock Period", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
         IsBusy = true;
         try
         {
-            // Lock active period (hardcoded mock Period ID 1 for simplicity of cycle UI)
-            await _mediator.Send(new LockPeriodCommand(1, true));
-            await LoadDashboardAsync();
+            var res = await _mediator.Send(new LockPeriodCommand(SelectedPeriod.Id, true));
+            if (res.IsSuccess)
+            {
+                await LoadDashboardAsync();
+            }
+            else
+            {
+                MessageBox.Show($"Failed to lock period: {res.Error}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
         finally { IsBusy = false; }
     }
 
     private async Task UnlockActivePeriodAsync()
     {
+        if (SelectedPeriod == null)
+        {
+            MessageBox.Show("Please select a compliance period first.", "Unlock Period", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
         IsBusy = true;
         try
         {
-            await _mediator.Send(new LockPeriodCommand(1, false));
-            await LoadDashboardAsync();
+            var res = await _mediator.Send(new LockPeriodCommand(SelectedPeriod.Id, false));
+            if (res.IsSuccess)
+            {
+                await LoadDashboardAsync();
+            }
+            else
+            {
+                MessageBox.Show($"Failed to unlock period: {res.Error}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
         finally { IsBusy = false; }
     }
 
     private async Task RunSimulationAsync()
     {
+        if (SelectedRun == null)
+        {
+            MessageBox.Show("Please select a payroll run first.", "Run Simulation", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
         IsBusy = true;
         try
         {
@@ -186,30 +304,48 @@ public sealed class ComplianceCenterViewModel : ViewModelBase
                 new("PAYE_TAX_FREE_THRESHOLD", PayeThresholdOverride)
             };
 
-            // Hardcode payroll run ID 1 for simulation run demonstration
-            var res = await _mediator.Send(new RunSimulationCommand(companyId, 1, overrides));
+            var res = await _mediator.Send(new RunSimulationCommand(companyId, SelectedRun.Id, overrides));
             if (res.IsSuccess)
             {
                 SimulationResult = res.Value;
             }
+            else
+            {
+                MessageBox.Show($"Simulation failed: {res.Error}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
         finally { IsBusy = false; }
     }
 
     private async Task RunReconciliationAsync()
     {
+        if (SelectedRun == null)
+        {
+            MessageBox.Show("Please select a payroll run first.", "Run Reconciliation", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
         IsBusy = true;
         try
         {
-            // Hardcode payroll run ID 1 for variance demonstration
-            var res = await _mediator.Send(new GetReconciliationVarianceQuery(1));
+            var res = await _mediator.Send(new GetReconciliationVarianceQuery(SelectedRun.Id));
             if (res.IsSuccess)
             {
                 ReconciliationVariance = res.Value;
             }
+            else
+            {
+                MessageBox.Show($"Reconciliation failed: {res.Error}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
         finally { IsBusy = false; }
     }
 
@@ -220,13 +356,24 @@ public sealed class ComplianceCenterViewModel : ViewModelBase
         try
         {
             int companyId = _tenantProvider.GetCurrentCompanyId();
-            // Start compliance background job
-            await _mediator.Send(new StartComplianceJobCommand(companyId, jobType));
-            // Reload list of recent files
-            await Task.Delay(1000); // Wait slightly for background polling
-            await LoadDashboardAsync();
+            var res = await _mediator.Send(new StartComplianceJobCommand(companyId, jobType));
+            if (res.IsSuccess)
+            {
+                MessageBox.Show($"Compliance job '{jobType}' started successfully. Job ID: {res.Value}", "Job Started", MessageBoxButton.OK, MessageBoxImage.Information);
+                await LoadDashboardAsync();
+            }
+            else
+            {
+                MessageBox.Show($"Failed to start job: {res.Error}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-        catch { }
-        finally { IsBusy = false; }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }

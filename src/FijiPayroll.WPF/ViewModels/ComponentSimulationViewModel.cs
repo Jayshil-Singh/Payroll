@@ -109,7 +109,7 @@ public sealed partial class ComponentSimulationViewModel : ObservableObject
         {
             var context = new SimulationEngine.SimulationContext
             {
-                CompanyId = 1,
+                CompanyId = _tenantProvider.GetCurrentCompanyId(),
                 EmployeeId = SelectedEmployee.Id,
                 ComponentCode = ComponentCode,
                 OriginalExpression = ExpressionText,

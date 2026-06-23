@@ -927,6 +927,21 @@
         <member name="M:FijiPayroll.Application.Features.Compliance.Queries.GetComplianceDashboardQueryHandler.Handle(FijiPayroll.Application.Features.Compliance.Queries.GetComplianceDashboardQuery,System.Threading.CancellationToken)">
             <inheritdoc/>
         </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.GetCompliancePeriodsQuery">
+            <summary>
+            CQRS Query to retrieve a list of all compliance periods for a company.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Compliance.Queries.GetCompliancePeriodsQuery.#ctor(System.Int32)">
+            <summary>
+            CQRS Query to retrieve a list of all compliance periods for a company.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Compliance.Queries.GetCompliancePeriodsQueryHandler">
+            <summary>
+            Handles GetCompliancePeriodsQuery.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Application.Features.Compliance.Queries.DiagnosticsInfoModel">
             <summary>Represents diagnostics HUD layout values.</summary>
         </member>
@@ -1713,6 +1728,16 @@
         <member name="M:FijiPayroll.Application.Features.Lookups.Queries.GetLookups.GetLookupsQueryHandler.Handle(FijiPayroll.Application.Features.Lookups.Queries.GetLookups.GetLookupsQuery,System.Threading.CancellationToken)">
             <inheritdoc />
         </member>
+        <member name="T:FijiPayroll.Application.Features.Notifications.Queries.GetDesktopNotificationsQuery">
+            <summary>
+            Retrieves recent desktop-channel notifications for the specified company.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Notifications.Queries.GetDesktopNotificationsQuery.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Retrieves recent desktop-channel notifications for the specified company.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Application.Features.PayrollComponents.Commands.CloneComponents.CloneComponentsCommand">
             <summary>
             Command to clone payroll components from a source company to a target company.
@@ -2285,6 +2310,68 @@
         </member>
         <member name="M:FijiPayroll.Application.Features.Search.Queries.SearchQueryHandler.Handle(FijiPayroll.Application.Features.Search.Queries.SearchQuery,System.Threading.CancellationToken)">
             <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Settings.Commands.UpdateSystemSettingsCommand">
+            <summary>
+            Creates or updates the SystemSettings record for the specified company.
+            All fields are optional updates; existing values are preserved if not provided.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Settings.Queries.GetSystemSettingsQuery">
+            <summary>
+            Returns the SystemSettings for the currently active company, creating a default
+            record if one does not yet exist.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Settings.Queries.GetSystemSettingsQuery.#ctor(System.Int32)">
+            <summary>
+            Returns the SystemSettings for the currently active company, creating a default
+            record if one does not yet exist.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Users.Commands.ToggleUserStatusCommand">
+            <summary>
+            Activates or deactivates a user account.
+            Only the system admin cannot be deactivated.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Users.Commands.ToggleUserStatusCommand.#ctor(System.Int32,System.Boolean)">
+            <summary>
+            Activates or deactivates a user account.
+            Only the system admin cannot be deactivated.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Users.Commands.ResetUserPasswordCommand">
+            <summary>
+            Resets a user's password to a provided new hash and flags MustChangePassword.
+            The caller is responsible for hashing the plain-text password before sending the command.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Users.Commands.ResetUserPasswordCommand.#ctor(System.Int32,System.String)">
+            <summary>
+            Resets a user's password to a provided new hash and flags MustChangePassword.
+            The caller is responsible for hashing the plain-text password before sending the command.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Users.Commands.CreateUserCommand">
+            <summary>
+            Creates a new user account for the specified company.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Users.Commands.CreateUserCommand.#ctor(System.Int32,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Creates a new user account for the specified company.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Application.Features.Users.Queries.GetUserListQuery">
+            <summary>
+            Returns all user accounts belonging to the specified company.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Application.Features.Users.Queries.GetUserListQuery.#ctor(System.Int32)">
+            <summary>
+            Returns all user accounts belonging to the specified company.
+            </summary>
         </member>
         <member name="T:FijiPayroll.Application.Features.Workflows.Queries.GetPendingWorkflows.GetPendingWorkflowsQuery">
             <summary>

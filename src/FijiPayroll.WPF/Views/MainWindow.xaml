@@ -140,6 +140,16 @@
                     </StackPanel>
                 </RadioButton>
 
+                <!-- System Settings Nav Button -->
+                <RadioButton Style="{StaticResource SidebarNavItem}" Command="{Binding NavigateSettingsCommand}"
+                             sec:Security.RequiredPermission="AdminAccess"
+                             sec:Security.RestrictionAction="Hide">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="16" VerticalAlignment="Center" Width="24" Foreground="{Binding RelativeSource={RelativeSource AncestorType=RadioButton}, Path=Foreground}" />
+                        <TextBlock Text="System Settings" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+
             </StackPanel>
 
             <!-- User Session Details Footer -->
@@ -196,6 +206,136 @@
 
                     <!-- Right: Theme Switcher & Connection Details -->
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Notification Bell Button -->
+                        <Grid Margin="0,0,16,0" VerticalAlignment="Center">
+                            <Button Command="{Binding ToggleNotificationFeedCommand}" x:Name="NotificationBellButton"
+                                    Content="&#xEA8F;" ToolTip="Notifications" 
+                                    FontFamily="Segoe MDL2 Assets" Background="Transparent" 
+                                    Foreground="{DynamicResource BrushTextPrimary}" BorderThickness="0" 
+                                    Width="32" Height="32" Cursor="Hand"/>
+                            
+                            <!-- Unread Badge -->
+                            <Border Background="#FF4D4D" CornerRadius="8" MinWidth="16" Height="16" 
+                                    HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-2,-2,0"
+                                    Padding="4,0" IsHitTestVisible="False">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding UnreadNotificationsCount}" Value="0">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <TextBlock Text="{Binding UnreadNotificationsCount}" Foreground="White" 
+                                           FontSize="10" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+
+                            <!-- Notification Dropdown Popup -->
+                            <Popup IsOpen="{Binding IsNotificationFeedOpen, Mode=TwoWay}" 
+                                   PlacementTarget="{Binding ElementName=NotificationBellButton}" 
+                                   Placement="Bottom" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Slide">
+                                <Border Background="#1F2438" BorderBrush="#2D3548" BorderThickness="1" CornerRadius="8" 
+                                        Width="320" Height="400" Margin="0,4,0,0">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Header -->
+                                        <Grid Grid.Row="0" Margin="12,12,12,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="Notifications" Foreground="#FFFFFF" FontWeight="Bold" FontSize="14"/>
+                                            <Button Grid.Column="1" Command="{Binding MarkAllNotificationsReadCommand}" 
+                                                    Content="Mark all read" Background="Transparent" BorderThickness="0" 
+                                                    Foreground="#0D99FF" FontSize="11" Cursor="Hand"/>
+                                        </Grid>
+
+                                        <Border Grid.Row="0" BorderBrush="#2D3548" BorderThickness="0,0,0,1" VerticalAlignment="Bottom"/>
+
+                                        <!-- Notification List -->
+                                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="4,0">
+                                            <ItemsControl ItemsSource="{Binding RecentNotifications}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border BorderBrush="#2D3548" BorderThickness="0,0,0,1" Padding="12" Background="Transparent">
+                                                            <Border.Style>
+                                                                <Style TargetType="Border">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsRead}" Value="False">
+                                                                            <Setter Property="Background" Value="#1A2035"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <StackPanel Grid.Column="0">
+                                                                    <!-- Title and Message -->
+                                                                    <TextBlock Text="{Binding Title}" Foreground="#FFFFFF" FontWeight="SemiBold" FontSize="12" TextWrapping="Wrap"/>
+                                                                    <TextBlock Text="{Binding Message}" Foreground="#A0AEC0" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                                                    <TextBlock Text="{Binding CreatedUtc, StringFormat={}{0:g}}" Foreground="#718096" FontSize="9" Margin="0,6,0,0"/>
+                                                                </StackPanel>
+                                                                
+                                                                <!-- Mark Read Check / Button -->
+                                                                <Button Grid.Column="1" VerticalAlignment="Top" Margin="8,0,0,0"
+                                                                        Command="{Binding DataContext.MarkNotificationReadCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                        CommandParameter="{Binding}"
+                                                                        Content="&#xE73E;" FontFamily="Segoe MDL2 Assets" 
+                                                                        Background="Transparent" BorderThickness="0" 
+                                                                        Foreground="#718096" Cursor="Hand" ToolTip="Mark as Read">
+                                                                    <Button.Style>
+                                                                        <Style TargetType="Button">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsRead}" Value="True">
+                                                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Button.Style>
+                                                                </Button>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+
+                                        <!-- Empty State -->
+                                        <TextBlock Grid.Row="1" Text="No notifications" Foreground="#718096" FontSize="12" 
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding RecentNotifications.Count}" Value="0">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+
+                                        <!-- Footer / Close -->
+                                        <Border Grid.Row="2" BorderBrush="#2D3548" BorderThickness="0,1,0,0" Padding="8">
+                                            <Button Command="{Binding CloseNotificationFeedCommand}" Content="Close" 
+                                                    HorizontalAlignment="Center" Background="Transparent" BorderThickness="0" 
+                                                    Foreground="#A0AEC0" FontSize="11" Cursor="Hand"/>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
                         <!-- Theme switch button -->
                         <Button Command="{Binding ToggleThemeCommand}" Content="&#xE706;" ToolTip="Toggle Theme Mode" FontFamily="Segoe MDL2 Assets" Background="Transparent" Foreground="{DynamicResource BrushTextPrimary}" BorderThickness="0" Width="32" Height="32" Cursor="Hand" Margin="0,0,20,0"/>
 

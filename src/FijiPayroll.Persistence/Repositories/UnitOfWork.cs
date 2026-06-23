@@ -94,7 +94,11 @@ public sealed class UnitOfWork : IUnitOfWork
         PayrollLedgerReversals = new PayrollLedgerReversalRepository(context);
         Leave = new LeaveRepository(context);
         Loans = new LoanRepository(context);
+        Dashboard = new DashboardRepository(context);
     }
+
+    /// <inheritdoc/>
+    public IDashboardRepository Dashboard { get; }
 
     /// <inheritdoc/>
     public ILoanRepository Loans { get; }

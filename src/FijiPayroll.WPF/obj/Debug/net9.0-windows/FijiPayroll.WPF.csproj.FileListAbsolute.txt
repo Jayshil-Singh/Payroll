@@ -153,3 +153,7 @@ C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-wind
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\ESSShellWindow.baml
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\Auth\ESSHomeView.g.cs
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\ESSShellWindow.g.cs
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\Dialogs\PasswordInputDialog.baml
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\Settings\SettingsView.baml
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\Dialogs\PasswordInputDialog.g.cs
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\Settings\SettingsView.g.cs

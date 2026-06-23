@@ -149,3 +149,11 @@ C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-wi
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\FijiPayroll.WPF.pdb
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\FijiPayroll.WPF.genruntimeconfig.cache
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\ref\FijiPayroll.WPF.dll
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\Views\Auth\ESSHomeView.baml
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\Views\Dialogs\PasswordInputDialog.baml
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\Views\ESSShellWindow.baml
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\Views\Settings\SettingsView.baml
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\Views\Auth\ESSHomeView.g.cs
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\Views\Dialogs\PasswordInputDialog.g.cs
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\Views\ESSShellWindow.g.cs
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\Views\Settings\SettingsView.g.cs

@@ -34,4 +34,14 @@ public interface IUserRepository
     /// Resolves all companies associated with an active username.
     /// </summary>
     Task<IReadOnlyList<Company>> GetCompaniesByUsernameAsync(string username, CancellationToken ct);
+
+    /// <summary>
+    /// Returns all user accounts for the specified company.
+    /// </summary>
+    Task<IReadOnlyList<UserAccount>> GetAllByCompanyAsync(int companyId, CancellationToken ct);
+
+    /// <summary>
+    /// Updates an existing UserAccount entity in the persistence store.
+    /// </summary>
+    void Update(UserAccount user);
 }

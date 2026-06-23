@@ -15,6 +15,7 @@ public interface IComplianceRepository
     // CompliancePeriod
     Task<CompliancePeriod?> GetPeriodByIdAsync(int id, CancellationToken cancellationToken = default);
     Task<CompliancePeriod?> GetActivePeriodAsync(int companyId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<CompliancePeriod>> GetPeriodsByCompanyAsync(int companyId, CancellationToken cancellationToken = default);
     Task AddPeriodAsync(CompliancePeriod period, CancellationToken cancellationToken = default);
 
     // ComplianceBatch
@@ -58,6 +59,8 @@ public interface IComplianceRepository
     Task<Notification?> GetNotificationByIdAsync(int id, CancellationToken cancellationToken = default);
     Task AddNotificationAsync(Notification notification, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<Notification>> GetPendingNotificationsAsync(int limit, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Notification>> GetDesktopNotificationsAsync(int companyId, int limit, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Notification>> GetUnreadDesktopNotificationsAsync(int companyId, CancellationToken cancellationToken = default);
 
     // FRCSSubmission
     Task<FRCSSubmission?> GetFRCSSubmissionByIdAsync(int id, CancellationToken cancellationToken = default);

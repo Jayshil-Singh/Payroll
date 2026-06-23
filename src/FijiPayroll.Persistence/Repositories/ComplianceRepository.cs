@@ -39,6 +39,15 @@ public sealed class ComplianceRepository : IComplianceRepository
             .FirstOrDefaultAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<CompliancePeriod>> GetPeriodsByCompanyAsync(int companyId, CancellationToken cancellationToken = default)
+    {
+        return await _context.CompliancePeriods
+            .Where(x => x.CompanyId == companyId)
+            .OrderByDescending(x => x.Year)
+            .ThenByDescending(x => x.Month)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task AddPeriodAsync(CompliancePeriod period, CancellationToken cancellationToken = default)
     {
         await _context.CompliancePeriods.AddAsync(period, cancellationToken);
@@ -188,6 +197,23 @@ public sealed class ComplianceRepository : IComplianceRepository
             .Take(limit)
             .ToListAsync(cancellationToken);
         return items;
+    }
+
+    public async Task<IReadOnlyList<Notification>> GetDesktopNotificationsAsync(int companyId, int limit, CancellationToken cancellationToken = default)
+    {
+        return await _context.Notifications
+            .Where(x => x.CompanyId == companyId && x.Channel == NotificationChannel.Desktop)
+            .OrderByDescending(x => x.CreatedAt)
+            .Take(limit)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<Notification>> GetUnreadDesktopNotificationsAsync(int companyId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Notifications
+            .Where(x => x.CompanyId == companyId && x.Channel == NotificationChannel.Desktop && !x.IsRead)
+            .OrderByDescending(x => x.CreatedAt)
+            .ToListAsync(cancellationToken);
     }
 
     // ── FRCSSubmission ────────────────────────────────────────────────────

@@ -1332,6 +1332,9 @@ namespace FijiPayroll.Persistence.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
+                    b.Property<DateTime?>("TerminationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Tin")
                         .IsRequired()
                         .HasColumnType("nvarchar(1000)");
@@ -2319,6 +2322,70 @@ namespace FijiPayroll.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("SetupExecutionRecords", "company");
+                });
+
+            modelBuilder.Entity("FijiPayroll.Domain.Entities.Company.SystemSettings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BackupDirectory")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DefaultPayFrequency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("DefaultPayrollCalendar")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("DefaultSubmissionPaths")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ExportDirectory")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ImportDirectory")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("NegativePayPolicy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("SmtpHost")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("SmtpPassword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("SmtpPort")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("SmtpSslEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SmtpUsername")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("SystemSettings", "company");
                 });
 
             modelBuilder.Entity("FijiPayroll.Domain.Entities.Company.TaxBracket", b =>
@@ -3707,6 +3774,12 @@ namespace FijiPayroll.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(50)")
+                        .HasDefaultValue("Info");
+
                     b.Property<string>("Channel")
                         .IsRequired()
                         .HasColumnType("nvarchar(20)");
@@ -3720,9 +3793,17 @@ namespace FijiPayroll.Persistence.Migrations
                     b.Property<string>("ErrorMessage")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsRead")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ReadAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Recipient")
                         .IsRequired()
@@ -5047,7 +5128,7 @@ namespace FijiPayroll.Persistence.Migrations
 
             modelBuilder.Entity("FijiPayroll.Domain.Entities.Payroll.LoanRepayment", b =>
                 {
-                    b.HasOne("FijiPayroll.Domain.Entities.Payroll.Loan", null)
+                    b.HasOne("FijiPayroll.Domain.Entities.Payroll.Loan", "Loan")
                         .WithMany("Repayments")
                         .HasForeignKey("LoanId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -5058,6 +5139,8 @@ namespace FijiPayroll.Persistence.Migrations
                         .HasForeignKey("PayrollRunId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Loan");
                 });
 
             modelBuilder.Entity("FijiPayroll.Domain.Entities.Payroll.PayrollLedgerComponent", b =>

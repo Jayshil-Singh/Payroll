@@ -67,6 +67,9 @@ public interface IUnitOfWork : IDisposable
     /// <summary>Repository for payroll ledger reversals.</summary>
     IPayrollLedgerReversalRepository PayrollLedgerReversals { get; }
 
+    /// <summary>Repository for aggregated dashboard metrics.</summary>
+    IDashboardRepository Dashboard { get; }
+
     /// <summary>
     /// Adds an audit log entry to the database context.
     /// </summary>

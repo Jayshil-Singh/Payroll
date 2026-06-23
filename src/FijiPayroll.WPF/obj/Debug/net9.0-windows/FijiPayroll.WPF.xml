@@ -271,6 +271,19 @@
             InitializeComponent
             </summary>
         </member>
+        <member name="T:FijiPayroll.WPF.Views.Dialogs.PasswordInputDialog">
+            <summary>
+            Interaction logic for PasswordInputDialog.xaml
+            </summary>
+            <summary>
+            PasswordInputDialog
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.Dialogs.PasswordInputDialog.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
         <member name="T:FijiPayroll.WPF.Views.EmployeeView">
             <summary>
             Interaction logic for EmployeeView.xaml.
@@ -516,6 +529,20 @@
             </summary>
         </member>
         <member name="M:FijiPayroll.WPF.Views.ReportsView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.Settings.SettingsView">
+            <summary>
+            Code-behind for SettingsView. Handles the PasswordBox password binding workaround
+            (WPF PasswordBox does not support two-way data binding for security reasons).
+            </summary>
+            <summary>
+            SettingsView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.Settings.SettingsView.InitializeComponent">
             <summary>
             InitializeComponent
             </summary>
@@ -1413,21 +1440,10 @@
         </member>
         <member name="T:FijiPayroll.WPF.ViewModels.AdminViewModel">
             <summary>
-            ViewModel managing role permission views, audit logs, and general settings.
+            ViewModel for the Administration panel.
+            Manages the user account list with live search, toggle active/inactive,
+            password reset, and new user creation capabilities.
             </summary>
-        </member>
-        <member name="P:FijiPayroll.WPF.ViewModels.AdminViewModel.Title">
-            <summary>
-            Gets the panel title.
-            </summary>
-        </member>
-        <member name="M:FijiPayroll.WPF.ViewModels.AdminViewModel.#ctor(System.IServiceProvider)">
-            <summary>
-            Initialises a new instance of the <see cref="T:FijiPayroll.WPF.ViewModels.AdminViewModel"/> class.
-            </summary>
-        </member>
-        <member name="P:FijiPayroll.WPF.ViewModels.AdminViewModel.OpenStagedImportCommand">
-            <summary>Gets the open staged import command.</summary>
         </member>
         <member name="T:FijiPayroll.WPF.ViewModels.ApprovalWorkflowItem">
             <summary>
@@ -1891,12 +1907,70 @@
         </member>
         <member name="T:FijiPayroll.WPF.ViewModels.DashboardViewModel">
             <summary>
-            ViewModel for the executive dashboard panel containing KPI widgets and status summaries.
+            ViewModel for the executive dashboard panel containing live KPI widgets,
+            payroll financial summaries, system alerts, and historic chart data.
             </summary>
         </member>
         <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.Title">
+            <summary>Gets the panel title.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.RefreshCommand">
+            <summary>Refreshes all dashboard data from the database.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.ActiveEmployeesCount">
+            <summary>Count of currently active employees in the company.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.TerminatedThisMonthCount">
+            <summary>Count of employees terminated during the current calendar month.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.OpenPeriodsCount">
+            <summary>Count of open payroll periods.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.CurrentPeriodCode">
+            <summary>Period code of the current open payroll period.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.CurrentRunStatus">
+            <summary>Status of the most recent payroll run.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.PostedRunsCount">
+            <summary>Total count of posted/finalized payroll runs.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.LatestGrossPay">
+            <summary>Gross pay total from the latest posted payroll.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.LatestPAYETax">
+            <summary>PAYE tax total from the latest posted payroll.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.LatestFNPFEmployee">
+            <summary>FNPF employee (8%) contribution total.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.LatestFNPFEmployer">
+            <summary>FNPF employer (10%) contribution total.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.LatestNetPay">
+            <summary>Net pay total from the latest posted payroll.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.SystemAlerts">
+            <summary>Observable list of system alert strings to display in the alerts pane.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.HasSystemAlerts">
+            <summary>Indicates whether there are any active system alerts.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.LoadStatusText">
+            <summary>Loading status text shown while data is fetching.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.IsDataLoaded">
+            <summary>Whether the dashboard has successfully loaded data.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.RecentRuns">
+            <summary>Recent payroll runs for the chart.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.DashboardViewModel.ChartBars">
+            <summary>Scaled chart bar items derived from recent runs.</summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.ViewModels.ChartBarItem">
             <summary>
-            Gets the panel screen title.
+            Represents one bar in the disbursements chart, with scaled height and label.
             </summary>
         </member>
         <member name="T:FijiPayroll.WPF.ViewModels.DiagnosticsDashboardViewModel">
@@ -2025,7 +2099,7 @@
             Principal View Model coordinating layout panels, global loaders, toast signals, and navigation bounds.
             </summary>
         </member>
-        <member name="M:FijiPayroll.WPF.ViewModels.MainViewModel.#ctor(FijiPayroll.WPF.Services.INavigationService,FijiPayroll.WPF.Services.ILoadingService,FijiPayroll.WPF.Services.INotificationService,FijiPayroll.WPF.Services.IDialogService,FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator)">
+        <member name="M:FijiPayroll.WPF.ViewModels.MainViewModel.#ctor(FijiPayroll.WPF.Services.INavigationService,FijiPayroll.WPF.Services.ILoadingService,FijiPayroll.WPF.Services.INotificationService,FijiPayroll.WPF.Services.IDialogService,FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator,MediatR.IMediator,FijiPayroll.Application.Common.Interfaces.ITenantProvider)">
             <summary>
             Initialises a new instance of the <see cref="T:FijiPayroll.WPF.ViewModels.MainViewModel"/> class.
             </summary>
@@ -2479,6 +2553,12 @@
             ViewModel managing report generating panels, payslip distributions, and statutory reports.
             </summary>
         </member>
+        <member name="T:FijiPayroll.WPF.ViewModels.Settings.SettingsViewModel">
+            <summary>
+            ViewModel for the system settings configuration screen.
+            Allows admins to configure payroll defaults, directory paths, and SMTP email settings.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.WPF.ViewModels.SetupViewModel">
             <summary>
             ViewModel managing setup configuration panels (e.g. tax tables, allowances configuration).
@@ -2560,36 +2640,6 @@
         </member>
         <member name="P:FijiPayroll.WPF.ViewModels.StagedImportViewModel.IsValid">
             <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.StagedImportViewModel._isValid"/>
-        </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
-            <summary>
-            GeneratedInternalTypeHelper
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
-            <summary>
-            CreateInstance
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            GetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            SetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
-            <summary>
-            CreateDelegate
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
-            <summary>
-            AddEventHandler
-            </summary>
         </member>
         <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs">
             <summary>

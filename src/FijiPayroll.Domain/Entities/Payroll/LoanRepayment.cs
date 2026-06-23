@@ -15,6 +15,9 @@ public sealed class LoanRepayment : AuditableEntity
     /// <summary>Gets the parent loan identifier.</summary>
     public int LoanId { get; private set; }
 
+    /// <summary>Gets the parent loan navigation property.</summary>
+    public Loan Loan { get; private set; } = null!;
+
     /// <summary>Gets the payroll run identifier in which this repayment occurred.</summary>
     public int PayrollRunId { get; private set; }
 

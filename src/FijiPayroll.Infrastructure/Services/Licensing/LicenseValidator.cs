@@ -22,13 +22,13 @@ public sealed class LicenseValidator : ILicenseProvider
     /// Default embedded development public key PEM.
     /// </summary>
     public const string DefaultPublicKeyPem = @"-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu3juMOvG8UfEny/uAT2p
-lJR6aDZg5xPPyPK8VZzc7FjNA5IWMzRs/MDPd9qx4+DoNVuz5ofcpJAlzmRPXn5Y
-SfTmVYPV+Bh2weFkHivxbxK+sutjrV5ckFEzihZVbfO64XaZowceVN8vjoRtJK1e
-CSZITlcztZ1Zc+W0vNWHqx+IC+hxl8J0qxiEzQHercrNxGe/88h982oxatkotucc
-abHTXGCkJ0MClDtri0ow9yffCNBh74ZRjkQ1MT8cBm817URPlh94ruG6c4eQ2MjB
-x4xmYfWkJ3Ev7DydUxtz/xT4tSsJFs+NKxkyg8dyqZMExzJyURx971xTL/mh7TEQ
-NQIDAQAB
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5nJoprX7bOjfV3h5EC4C
+Z4Fgk/eOgseKTGgs9GmLHeGVBrI2FxK7jwN/2mtxhb859vyadYi3ArPZ+8eIBg9G
+xSRCOBSpRL4aQjauc2wb566KGrAU/3ssU/SNFlwSNC4J+0zoNlTYr/AtdZB4Enny
+fNuoD/6QURGuEsd0w8mgzitT8VmH/fwkPIUM3wyWtLAkd+eAhr/sbRG8WXZ6gMlX
+X8M+EKw3uabiuf9cR/vD8qECvLQPaULYSbOOQrZhZj9mNV9YlaElUcO5npWKMqc9
+81bQjA3L2oCfe0C96kPIQt6u/HjpdPEJ+C88O82Q1zHuZONbzcVboitutVG1MCIZ
+7QIDAQAB
 -----END PUBLIC KEY-----";
 
     /// <summary>Gets a value indicating whether the application has a valid active license.</summary>

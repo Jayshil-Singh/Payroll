@@ -71,4 +71,21 @@ public sealed class UserRepository : IUserRepository
             .Where(c => companyIds.Contains(c.Id) && !c.IsDeleted && c.IsActive)
             .ToListAsync(ct);
     }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<UserAccount>> GetAllByCompanyAsync(int companyId, CancellationToken ct)
+    {
+        return await _context.UserAccounts
+            .IgnoreQueryFilters()
+            .Include(u => u.Roles)
+            .Where(u => u.CompanyId == companyId)
+            .OrderBy(u => u.DisplayName)
+            .ToListAsync(ct);
+    }
+
+    /// <inheritdoc />
+    public void Update(UserAccount user)
+    {
+        _context.UserAccounts.Update(user);
+    }
 }

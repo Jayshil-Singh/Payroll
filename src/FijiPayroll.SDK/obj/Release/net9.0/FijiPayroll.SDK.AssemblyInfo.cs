@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FijiPayroll.SDK")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+54c432445a04e19fea10dfd1a96ce2279761062c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c8662d5ae090f9020597480bfe3a59730cf0d9e5")]
 [assembly: System.Reflection.AssemblyProductAttribute("FijiPayroll.SDK")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FijiPayroll.SDK")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

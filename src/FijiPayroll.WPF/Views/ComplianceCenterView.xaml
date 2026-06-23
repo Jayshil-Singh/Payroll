@@ -11,6 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -20,14 +21,60 @@
             <TextBlock Text="Manage statutory compliance cycles, run engine rate simulations, and export direct bank transfer files." FontSize="13" Foreground="#A0AEC0" Margin="0,4,0,0" />
         </StackPanel>
 
+        <!-- Selection Parameters -->
+        <Border Grid.Row="1" Margin="0,0,0,15" CornerRadius="6" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                    <TextBlock Text="Selected Compliance Period" Foreground="#A0AEC0" FontSize="11" Margin="0,0,0,6" FontWeight="SemiBold" />
+                    <ComboBox ItemsSource="{Binding Periods}" SelectedItem="{Binding SelectedPeriod}" Height="32" Background="#0F111A" Foreground="#FFFFFF" BorderBrush="#2E3656">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0}/{1} (Status: {2})">
+                                            <Binding Path="Month" />
+                                            <Binding Path="Year" />
+                                            <Binding Path="Status" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                    <TextBlock Text="Selected Payroll Run (for Variance &amp; Simulation)" Foreground="#A0AEC0" FontSize="11" Margin="0,0,0,6" FontWeight="SemiBold" />
+                    <ComboBox ItemsSource="{Binding Runs}" SelectedItem="{Binding SelectedRun}" Height="32" Background="#0F111A" Foreground="#FFFFFF" BorderBrush="#2E3656">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} - {1} ({2})">
+                                            <Binding Path="RunCode" />
+                                            <Binding Path="PeriodName" />
+                                            <Binding Path="Status" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+        </Border>
+
         <!-- KPI Summary Cards -->
-        <UniformGrid Grid.Row="1" Columns="3" Margin="0,0,0,20">
-            <!-- Card 1: Active Period -->
+        <UniformGrid Grid.Row="2" Columns="3" Margin="0,0,0,20">
+            <!-- Card 1: Selected Period -->
             <Border Margin="0,0,8,0" CornerRadius="6" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="15">
                 <StackPanel>
-                    <TextBlock Text="ACTIVE PERIOD" FontSize="11" Foreground="#A0AEC0" FontWeight="Bold" />
-                    <TextBlock Text="{Binding ActivePeriodName}" FontSize="18" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,6,0,0" />
-                    <TextBlock Text="{Binding ActivePeriodStatus, StringFormat='Status: {0}'}" FontSize="12" Foreground="#38B2AC" Margin="0,2,0,0" />
+                    <TextBlock Text="SELECTED PERIOD STATUS" FontSize="11" Foreground="#A0AEC0" FontWeight="Bold" />
+                    <TextBlock Text="{Binding SelectedPeriodText}" FontSize="18" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,6,0,0" />
+                    <TextBlock Text="{Binding SelectedPeriodStatusText}" FontSize="12" Foreground="#38B2AC" Margin="0,2,0,0" />
                 </StackPanel>
             </Border>
 
@@ -62,7 +109,7 @@
         </UniformGrid>
 
         <!-- Main Workspace Tabs -->
-        <TabControl Grid.Row="2" Background="#151928" BorderBrush="#2E3656" BorderThickness="1" Padding="15">
+        <TabControl Grid.Row="3" Background="#151928" BorderBrush="#2E3656" BorderThickness="1" Padding="15">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="Header" Value="{Binding Header}"/>

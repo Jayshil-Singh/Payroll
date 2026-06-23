@@ -42,6 +42,7 @@ public sealed class ReportProvider : IReportProvider
     {
         int companyId = GetIntParameter(parameters, "@P_CompanyId", "CompanyId");
         int runId = GetIntParameter(parameters, "@P_PayrollRunId", "PayrollRunId");
+        int employeeId = GetIntParameter(parameters, "@P_EmployeeId", "EmployeeId");
 
         var company = await _unitOfWork.Setup.GetCompanyByIdAsync(companyId, cancellationToken);
         if (company == null) throw new InvalidOperationException($"Company with ID {companyId} not found.");
@@ -67,8 +68,8 @@ public sealed class ReportProvider : IReportProvider
                  string.Equals(normReport, "Payslips", StringComparison.OrdinalIgnoreCase))
         {
             return format.Equals("Excel", StringComparison.OrdinalIgnoreCase)
-                ? GeneratePayslipBatchExcel(company, run)
-                : GeneratePayslipBatchPdf(company, run);
+                ? GeneratePayslipBatchExcel(company, run, employeeId)
+                : GeneratePayslipBatchPdf(company, run, employeeId);
         }
         else if (string.Equals(normReport, "DepartmentSummary", StringComparison.OrdinalIgnoreCase) || 
                  string.Equals(normReport, "PayrollVariance", StringComparison.OrdinalIgnoreCase) ||
@@ -239,10 +240,14 @@ public sealed class ReportProvider : IReportProvider
         return ms.ToArray();
     }
 
-    private byte[] GeneratePayslipBatchExcel(Domain.Entities.Company.Company company, PayrollRun run)
+    private byte[] GeneratePayslipBatchExcel(Domain.Entities.Company.Company company, PayrollRun run, int employeeId = 0)
     {
         using var workbook = new XLWorkbook();
         var employees = run.Employees.Where(e => !e.IsSuperseded).ToList();
+        if (employeeId > 0)
+        {
+            employees = employees.Where(e => e.EmployeeId == employeeId).ToList();
+        }
 
         foreach (var emp in employees)
         {
@@ -562,9 +567,13 @@ public sealed class ReportProvider : IReportProvider
         return writer.Build();
     }
 
-    private byte[] GeneratePayslipBatchPdf(Domain.Entities.Company.Company company, PayrollRun run)
+    private byte[] GeneratePayslipBatchPdf(Domain.Entities.Company.Company company, PayrollRun run, int employeeId = 0)
     {
         var employees = run.Employees.Where(e => !e.IsSuperseded).ToList();
+        if (employeeId > 0)
+        {
+            employees = employees.Where(e => e.EmployeeId == employeeId).ToList();
+        }
         var writer = new SimplePdfWriter();
 
         // 1. Catalog

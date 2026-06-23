@@ -50,6 +50,8 @@ public static class DependencyInjection
         services.AddScoped<IComplianceRepository, ComplianceRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ILeaveRepository, LeaveRepository>();
+        services.AddScoped<IDashboardRepository, DashboardRepository>();
+        services.AddScoped<ISystemSettingsRepository, SystemSettingsRepository>();
 
         // Register the Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();

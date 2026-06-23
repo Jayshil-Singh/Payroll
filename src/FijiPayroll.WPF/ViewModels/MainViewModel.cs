@@ -1,8 +1,17 @@
 using FijiPayroll.WPF.ViewModels.Base;
 using FijiPayroll.WPF.Services;
+using FijiPayroll.WPF.ViewModels.Settings;
 using CommunityToolkit.Mvvm.Input;
 using System.Windows.Input;
 using System.Windows;
+using FijiPayroll.Application.Features.Notifications.Queries;
+using FijiPayroll.Application.Features.Notifications.Commands;
+using FijiPayroll.Application.Common.Interfaces;
+using MediatR;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System;
 
 namespace FijiPayroll.WPF.ViewModels;
 
@@ -16,6 +25,25 @@ public sealed class MainViewModel : ViewModelBase
     private readonly INotificationService _notificationService;
     private readonly IDialogService _dialogService;
     private readonly FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator _licenseValidator;
+    private readonly IMediator _mediator;
+    private readonly ITenantProvider _tenantProvider;
+
+    private bool _isNotificationFeedOpen;
+    private int _unreadNotificationsCount;
+
+    public ObservableCollection<DesktopNotificationDto> RecentNotifications { get; } = new();
+
+    public bool IsNotificationFeedOpen
+    {
+        get => _isNotificationFeedOpen;
+        set => SetProperty(ref _isNotificationFeedOpen, value);
+    }
+
+    public int UnreadNotificationsCount
+    {
+        get => _unreadNotificationsCount;
+        set => SetProperty(ref _unreadNotificationsCount, value);
+    }
 
     /// <summary>
     /// Initialises a new instance of the <see cref="MainViewModel"/> class.
@@ -25,13 +53,17 @@ public sealed class MainViewModel : ViewModelBase
         ILoadingService loadingService,
         INotificationService notificationService,
         IDialogService dialogService,
-        FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator licenseValidator)
+        FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator licenseValidator,
+        IMediator mediator,
+        ITenantProvider tenantProvider)
     {
         _navigationService = navigationService;
         _loadingService = loadingService;
         _notificationService = notificationService;
         _dialogService = dialogService;
         _licenseValidator = licenseValidator;
+        _mediator = mediator;
+        _tenantProvider = tenantProvider;
 
         // Subscribe to navigation changes
         _navigationService.CurrentViewChanged += () =>
@@ -77,6 +109,7 @@ public sealed class MainViewModel : ViewModelBase
 
         NavigateApprovalsCommand = new RelayCommand(() => _navigationService.NavigateTo<ApprovalDashboardViewModel>());
         NavigateAdminCommand = new RelayCommand(() => _navigationService.NavigateTo<AdminViewModel>());
+        NavigateSettingsCommand = new RelayCommand(() => _navigationService.NavigateTo<SettingsViewModel>());
         NavigateLogViewerCommand = new RelayCommand(() => _navigationService.NavigateTo<LogViewerViewModel>());
 
         NavigateComplianceCommand = new RelayCommand(() =>
@@ -109,6 +142,20 @@ public sealed class MainViewModel : ViewModelBase
                 OnPropertyChanged(nameof(CurrentTheme));
             }
         });
+
+        // Notification Center Commands
+        ToggleNotificationFeedCommand = new RelayCommand(() =>
+        {
+            IsNotificationFeedOpen = !IsNotificationFeedOpen;
+            if (IsNotificationFeedOpen)
+            {
+                _ = LoadNotificationsAsync();
+            }
+        });
+        LoadNotificationsCommand = new AsyncRelayCommand(LoadNotificationsAsync);
+        MarkNotificationReadCommand = new AsyncRelayCommand<DesktopNotificationDto>(MarkNotificationReadAsync);
+        MarkAllNotificationsReadCommand = new AsyncRelayCommand(MarkAllNotificationsReadAsync);
+        CloseNotificationFeedCommand = new RelayCommand(() => IsNotificationFeedOpen = false);
     }
 
     /// <summary>
@@ -170,6 +217,7 @@ public sealed class MainViewModel : ViewModelBase
     public ICommand NavigateReportsCommand { get; }
     public ICommand NavigateApprovalsCommand { get; }
     public ICommand NavigateAdminCommand { get; }
+    public ICommand NavigateSettingsCommand { get; }
     public ICommand NavigateLogViewerCommand { get; }
     public ICommand NavigateComplianceCommand { get; }
     public ICommand NavigateDiagnosticsCommand { get; }
@@ -178,5 +226,74 @@ public sealed class MainViewModel : ViewModelBase
     public ICommand GoBackCommand { get; }
     public ICommand GoForwardCommand { get; }
     public ICommand ToggleThemeCommand { get; }
+
+    // Notification Center Commands
+    public ICommand ToggleNotificationFeedCommand { get; }
+    public ICommand LoadNotificationsCommand { get; }
+    public ICommand MarkNotificationReadCommand { get; }
+    public ICommand MarkAllNotificationsReadCommand { get; }
+    public ICommand CloseNotificationFeedCommand { get; }
+
+    // ── Notification Async Methods ─────────────────────────────────────────
+
+    private async Task LoadNotificationsAsync()
+    {
+        try
+        {
+            var companyId = _tenantProvider.GetCurrentCompanyId();
+            var result = await _mediator.Send(new GetDesktopNotificationsQuery(companyId, 30));
+            if (result.IsSuccess)
+            {
+                System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                {
+                    RecentNotifications.Clear();
+                    foreach (var n in result.Value!)
+                        RecentNotifications.Add(n);
+                    UnreadNotificationsCount = result.Value!.Count(n => !n.IsRead);
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[NotificationFeed] Load failed: {ex.Message}");
+        }
+    }
+
+    private async Task MarkNotificationReadAsync(DesktopNotificationDto? dto)
+    {
+        if (dto == null || dto.IsRead) return;
+        try
+        {
+            var result = await _mediator.Send(new MarkNotificationReadCommand(dto.Id));
+            if (result.IsSuccess)
+            {
+                dto.IsRead = true;
+                UnreadNotificationsCount = RecentNotifications.Count(n => !n.IsRead);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[NotificationFeed] MarkRead failed: {ex.Message}");
+        }
+    }
+
+    private async Task MarkAllNotificationsReadAsync()
+    {
+        try
+        {
+            var companyId = _tenantProvider.GetCurrentCompanyId();
+            var result = await _mediator.Send(new MarkAllNotificationsReadCommand(companyId));
+            if (result.IsSuccess)
+            {
+                foreach (var n in RecentNotifications)
+                    n.IsRead = true;
+                UnreadNotificationsCount = 0;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[NotificationFeed] MarkAllRead failed: {ex.Message}");
+        }
+    }
 }
 

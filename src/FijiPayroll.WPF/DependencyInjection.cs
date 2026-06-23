@@ -5,8 +5,10 @@ using FijiPayroll.WPF.Infrastructure;
 using FijiPayroll.WPF.Services;
 using FijiPayroll.WPF.ViewModels;
 using FijiPayroll.WPF.ViewModels.Auth;
+using FijiPayroll.WPF.ViewModels.Settings;
 using FijiPayroll.WPF.Views;
 using FijiPayroll.WPF.Views.Auth;
+using FijiPayroll.WPF.Views.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FijiPayroll.WPF;
@@ -63,6 +65,7 @@ public static class DependencyInjection
         services.AddTransient<ComplianceCenterViewModel>();
         services.AddTransient<DiagnosticsDashboardViewModel>();
         services.AddTransient<PayrollConsoleViewModel>();
+        services.AddTransient<SettingsViewModel>();
 
         // Existing feature ViewModels
         services.AddTransient<PayrollComponentViewModel>();
@@ -100,6 +103,7 @@ public static class DependencyInjection
         services.AddTransient<ComplianceCenterView>();
         services.AddTransient<DiagnosticsDashboardView>();
         services.AddTransient<PayrollConsoleView>();
+        services.AddTransient<SettingsView>();
 
         return services;
     }

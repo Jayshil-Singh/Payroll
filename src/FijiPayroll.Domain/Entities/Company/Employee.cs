@@ -243,6 +243,9 @@ public sealed class Employee : SoftDeleteEntity
         RecalculateDataQualityScore();
     }
 
+    /// <summary>Gets the date of employment termination.</summary>
+    public DateTime? TerminationDate { get; private set; }
+
     /// <summary>
     /// Terminates the employee by deactivating their record, deactivating all payment methods, and raising a domain event.
     /// </summary>
@@ -250,6 +253,7 @@ public sealed class Employee : SoftDeleteEntity
     public void Terminate(string terminatedBy)
     {
         IsActive = false;
+        TerminationDate = DateTime.UtcNow;
         foreach (var pm in _paymentMethods)
         {
             pm.Deactivate();

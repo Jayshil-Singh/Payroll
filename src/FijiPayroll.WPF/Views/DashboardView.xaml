@@ -1,199 +1,411 @@
 <UserControl x:Class="FijiPayroll.WPF.Views.DashboardView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:FijiPayroll.WPF.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="900"
+             xmlns:vm="clr-namespace:FijiPayroll.WPF.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="700" d:DesignWidth="1000"
              Background="Transparent">
-    <Grid Margin="24">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Page Header -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,24">
-            <TextBlock Text="Executive Dashboard" 
-                       FontSize="28" 
-                       FontWeight="Bold" 
-                       Foreground="#FFFFFF" 
-                       FontFamily="Segoe UI Semibold" />
-            <TextBlock Text="Fiji Enterprise Payroll System — Operations Overview" 
-                       FontSize="14" 
-                       Foreground="#A0AEC0" 
-                       Margin="0,4,0,0" />
-        </StackPanel>
+        <!-- Loading / Error Overlay -->
+        <Border Grid.RowSpan="2" Background="#CC0B0E18" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"
+                Panel.ZIndex="50" CornerRadius="0">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="200" Height="4" Background="Transparent"
+                             Foreground="{DynamicResource BrushAccent}" BorderThickness="0"/>
+                <TextBlock Text="{Binding LoadStatusText}" Foreground="{DynamicResource BrushTextSecondary}"
+                           FontSize="13" HorizontalAlignment="Center" Margin="0,12,0,0"/>
+            </StackPanel>
+        </Border>
 
-        <!-- KPI Widgets Grid -->
-        <Grid Grid.Row="1" Margin="0,0,0,24">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <!-- Scrollable Content -->
+        <ScrollViewer Grid.Row="0" Grid.RowSpan="2" VerticalScrollBarVisibility="Auto">
+            <Grid Margin="24,24,24,24">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-            <!-- Card 1: Total Employees -->
-            <Border Grid.Column="0" Margin="0,0,8,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="16">
-                <StackPanel>
-                    <TextBlock Text="Total Active Employees" FontSize="12" Foreground="#A0AEC0" FontWeight="SemiBold" />
-                    <TextBlock Text="10,482" FontSize="26" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,8,0,0" />
-                    <TextBlock Text="+12% this month" FontSize="11" Foreground="#48BB78" Margin="0,4,0,0" />
-                </StackPanel>
-            </Border>
-
-            <!-- Card 2: Active Run Status -->
-            <Border Grid.Column="1" Margin="8,0,8,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="16">
-                <StackPanel>
-                    <TextBlock Text="Current Payroll Cycle" FontSize="12" Foreground="#A0AEC0" FontWeight="SemiBold" />
-                    <TextBlock Text="Calculated" FontSize="26" Foreground="#0D99FF" FontWeight="Bold" Margin="0,8,0,0" />
-                    <TextBlock Text="Pending approval" FontSize="11" Foreground="#ED8936" Margin="0,4,0,0" />
-                </StackPanel>
-            </Border>
-
-            <!-- Card 3: Active Allowances/Deductions -->
-            <Border Grid.Column="2" Margin="8,0,8,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="16">
-                <StackPanel>
-                    <TextBlock Text="Active Components" FontSize="12" Foreground="#A0AEC0" FontWeight="SemiBold" />
-                    <TextBlock Text="48" FontSize="26" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,8,0,0" />
-                    <TextBlock Text="2 statutory tables" FontSize="11" Foreground="#A0AEC0" Margin="0,4,0,0" />
-                </StackPanel>
-            </Border>
-
-            <!-- Card 4: FNPF Contributions Total -->
-            <Border Grid.Column="3" Margin="8,0,0,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="16">
-                <StackPanel>
-                    <TextBlock Text="Estimated FNPF Portions" FontSize="12" Foreground="#A0AEC0" FontWeight="SemiBold" />
-                    <TextBlock Text="$1.24M" FontSize="26" Foreground="#38B2AC" FontWeight="Bold" Margin="0,8,0,0" />
-                    <TextBlock Text="18% total contribution" FontSize="11" Foreground="#38B2AC" Margin="0,4,0,0" />
-                </StackPanel>
-            </Border>
-        </Grid>
-
-        <!-- Main Dashboard Split Content -->
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <!-- Chart/Activity Placeholder -->
-            <Border Grid.Column="0" Margin="0,0,12,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="20">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    
-                    <TextBlock Grid.Row="0" Text="Monthly Disbursements Analytics" FontSize="16" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,16" />
-
-                    <!-- Chart Mock Visuals -->
-                    <Grid Grid.Row="1" Margin="10,20,10,10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <!-- Y-Axis Labels -->
-                        <StackPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" Margin="0,0,12,0">
-                            <TextBlock Text="$2.0M" Foreground="#718096" FontSize="10" VerticalAlignment="Top"/>
-                            <TextBlock Text="$1.5M" Foreground="#718096" FontSize="10" Margin="0,25,0,0" />
-                            <TextBlock Text="$1.0M" Foreground="#718096" FontSize="10" Margin="0,25,0,0" />
-                            <TextBlock Text="$0.5M" Foreground="#718096" FontSize="10" Margin="0,25,0,0" />
-                            <TextBlock Text="$0.0M" Foreground="#718096" FontSize="10" Margin="0,25,0,0" />
-                        </StackPanel>
-
-                        <!-- Bars -->
-                        <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" Height="140">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <Border Grid.Column="0" Background="#2E3656" Height="80" Width="40" CornerRadius="4,4,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                            <Border Grid.Column="1" Background="#2E3656" Height="100" Width="40" CornerRadius="4,4,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                            <Border Grid.Column="2" Background="#2E3656" Height="90" Width="40" CornerRadius="4,4,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                            <Border Grid.Column="3" Background="#0D99FF" Height="130" Width="40" CornerRadius="4,4,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                            <Border Grid.Column="4" Background="#38B2AC" Height="110" Width="40" CornerRadius="4,4,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                        </Grid>
-
-                        <!-- X-Axis Labels -->
-                        <Grid Grid.Row="1" Grid.Column="1" Margin="0,8,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Jan" Foreground="#718096" FontSize="11" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Text="Feb" Foreground="#718096" FontSize="11" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="2" Text="Mar" Foreground="#718096" FontSize="11" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="3" Text="Apr" Foreground="#718096" FontSize="11" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="4" Text="May" Foreground="#718096" FontSize="11" HorizontalAlignment="Center"/>
-                        </Grid>
-                    </Grid>
+                <!-- Page Header -->
+                <Grid Grid.Row="0" Margin="0,0,0,24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Executive Dashboard"
+                                   FontSize="28" FontWeight="Bold"
+                                   Foreground="{DynamicResource BrushTextPrimary}"
+                                   FontFamily="Segoe UI Semibold" />
+                        <TextBlock Text="Fiji Enterprise Payroll System — Live Operations Overview"
+                                   FontSize="14" Foreground="{DynamicResource BrushTextSecondary}"
+                                   Margin="0,4,0,0" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding LoadStatusText}" Foreground="{DynamicResource BrushTextSecondary}"
+                                   FontSize="11" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                        <Button Command="{Binding RefreshCommand}"
+                                Content="&#xE72C; Refresh"
+                                FontFamily="Segoe MDL2 Assets, Segoe UI"
+                                Background="{DynamicResource BrushBgPanel}"
+                                Foreground="{DynamicResource BrushTextPrimary}"
+                                BorderBrush="{DynamicResource BrushBorder}"
+                                BorderThickness="1"
+                                Padding="12,6" Cursor="Hand" Height="32">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#232B45"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </StackPanel>
                 </Grid>
-            </Border>
 
-            <!-- Notifications Pane -->
-            <Border Grid.Column="1" Margin="12,0,0,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="20">
-                <StackPanel>
-                    <TextBlock Text="System Alerts" FontSize="16" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,16" />
-                    
-                    <Border BorderBrush="#2D3748" BorderThickness="0,0,0,1" Padding="0,0,0,12" Margin="0,0,0,12">
+                <!-- Row 1: KPI Cards (top row: employees + payroll cycle) -->
+                <Grid Grid.Row="1" Margin="0,0,0,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Card 1: Active Employees -->
+                    <Border Grid.Column="0" Margin="0,0,8,0" CornerRadius="8"
+                            Background="{DynamicResource BrushBgPanel}"
+                            BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="16">
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Ellipse Width="8" Height="8" Fill="#ED8936" Margin="0,4,8,0" VerticalAlignment="Top"/>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="Pending Approval Run PR-2026-06" FontSize="13" Foreground="#FFFFFF" FontWeight="SemiBold"/>
-                                <TextBlock Text="Awaiting HR administrator validation" FontSize="11" Foreground="#A0AEC0" Margin="0,2,0,0"/>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                <TextBlock Text="&#xE716;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                           Foreground="#0D99FF" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Active Employees" FontSize="12"
+                                           Foreground="{DynamicResource BrushTextSecondary}" FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
+                            <TextBlock Grid.Row="1" Text="{Binding ActiveEmployeesCount}"
+                                       FontSize="30" Foreground="{DynamicResource BrushTextPrimary}"
+                                       FontWeight="Bold" Margin="0,8,0,0"/>
+                            <TextBlock Grid.Row="2"
+                                       Foreground="#FC8181" FontSize="11" Margin="0,4,0,0">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0} terminated this month">
+                                        <Binding Path="TerminatedThisMonthCount"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
                         </Grid>
                     </Border>
 
-                    <Border BorderBrush="#2D3748" BorderThickness="0,0,0,1" Padding="0,0,0,12" Margin="0,0,0,12">
+                    <!-- Card 2: Current Payroll Cycle -->
+                    <Border Grid.Column="1" Margin="8,0,8,0" CornerRadius="8"
+                            Background="{DynamicResource BrushBgPanel}"
+                            BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="16">
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Ellipse Width="8" Height="8" Fill="#48BB78" Margin="0,4,8,0" VerticalAlignment="Top"/>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="Tax Brackets Updated" FontSize="13" Foreground="#FFFFFF" FontWeight="SemiBold"/>
-                                <TextBlock Text="Standard resident brackets loaded" FontSize="11" Foreground="#A0AEC0" Margin="0,2,0,0"/>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                <TextBlock Text="&#xE8A5;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                           Foreground="#0D99FF" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Current Payroll Cycle" FontSize="12"
+                                           Foreground="{DynamicResource BrushTextSecondary}" FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
+                            <TextBlock Grid.Row="1" Text="{Binding CurrentRunStatus}"
+                                       FontSize="22" Foreground="#0D99FF"
+                                       FontWeight="Bold" Margin="0,8,0,0" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Grid.Row="2" Text="{Binding CurrentPeriodCode}"
+                                       FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"
+                                       Margin="0,4,0,0"/>
                         </Grid>
                     </Border>
 
-                    <Border Padding="0,0,0,4">
+                    <!-- Card 3: Open Periods -->
+                    <Border Grid.Column="2" Margin="8,0,8,0" CornerRadius="8"
+                            Background="{DynamicResource BrushBgPanel}"
+                            BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="16">
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Ellipse Width="8" Height="8" Fill="#3182CE" Margin="0,4,8,0" VerticalAlignment="Top"/>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="FNPF Exemption Updated" FontSize="13" Foreground="#FFFFFF" FontWeight="SemiBold"/>
-                                <TextBlock Text="Employee EMP-401 configured" FontSize="11" Foreground="#A0AEC0" Margin="0,2,0,0"/>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                <TextBlock Text="&#xE81C;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                           Foreground="#ED8936" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Open Periods" FontSize="12"
+                                           Foreground="{DynamicResource BrushTextSecondary}" FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
+                            <TextBlock Grid.Row="1" Text="{Binding OpenPeriodsCount}"
+                                       FontSize="30" Foreground="{DynamicResource BrushTextPrimary}"
+                                       FontWeight="Bold" Margin="0,8,0,0"/>
+                            <TextBlock Grid.Row="2"
+                                       Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" Margin="0,4,0,0">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0} posted run(s) total">
+                                        <Binding Path="PostedRunsCount"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
                         </Grid>
                     </Border>
-                </StackPanel>
-            </Border>
-        </Grid>
+
+                    <!-- Card 4: FNPF Contributions -->
+                    <Border Grid.Column="3" Margin="8,0,0,0" CornerRadius="8"
+                            Background="{DynamicResource BrushBgPanel}"
+                            BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="16">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                <TextBlock Text="&#xE9F9;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                           Foreground="#38B2AC" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="FNPF Contributions" FontSize="12"
+                                           Foreground="{DynamicResource BrushTextSecondary}" FontWeight="SemiBold"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock Grid.Row="1" Text="{Binding LatestFNPFFormatted}"
+                                       FontSize="30" Foreground="#38B2AC"
+                                       FontWeight="Bold" Margin="0,8,0,0"/>
+                            <TextBlock Grid.Row="2" Text="18% total (Emp 8% + Er 10%)"
+                                       FontSize="11" Foreground="#38B2AC" Margin="0,4,0,0"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- Row 2: Financial Summary cards -->
+                <Grid Grid.Row="2" Margin="0,0,0,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Gross Pay -->
+                    <Border Grid.Column="0" Margin="0,0,8,0" CornerRadius="8"
+                            Background="#111827" BorderBrush="#1E2B44" BorderThickness="1" Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="Latest Gross Pay" FontSize="11"
+                                       Foreground="{DynamicResource BrushTextSecondary}" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding LatestGrossPayFormatted}"
+                                       FontSize="24" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- PAYE -->
+                    <Border Grid.Column="1" Margin="8,0,8,0" CornerRadius="8"
+                            Background="#111827" BorderBrush="#1E2B44" BorderThickness="1" Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="Latest PAYE Tax" FontSize="11"
+                                       Foreground="{DynamicResource BrushTextSecondary}" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding LatestPAYETaxFormatted}"
+                                       FontSize="24" Foreground="#FC8181" FontWeight="Bold" Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Net Pay -->
+                    <Border Grid.Column="2" Margin="8,0,0,0" CornerRadius="8"
+                            Background="#111827" BorderBrush="#1E2B44" BorderThickness="1" Padding="16">
+                        <StackPanel>
+                            <TextBlock Text="Latest Net Pay" FontSize="11"
+                                       Foreground="{DynamicResource BrushTextSecondary}" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding LatestNetPayFormatted}"
+                                       FontSize="24" Foreground="#48BB78" FontWeight="Bold" Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Row 3: Chart + Alerts -->
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Chart: Monthly Disbursements -->
+                    <Border Grid.Column="0" Margin="0,0,12,0" CornerRadius="8"
+                            Background="{DynamicResource BrushBgPanel}"
+                            BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="Monthly Disbursements Analytics"
+                                       FontSize="16" Foreground="{DynamicResource BrushTextPrimary}"
+                                       FontWeight="Bold" Margin="0,0,0,16"/>
+
+                            <!-- Empty State -->
+                            <TextBlock Grid.Row="1" Text="No posted payroll runs yet."
+                                       Foreground="{DynamicResource BrushTextSecondary}"
+                                       FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       Visibility="{Binding IsDataLoaded, Converter={StaticResource BoolToVis}}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ChartBars.Count}" Value="0">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <!-- Bar Chart -->
+                            <ItemsControl Grid.Row="1" ItemsSource="{Binding ChartBars}"
+                                          VerticalAlignment="Bottom" MinHeight="140">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Rows="1"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="6,0">
+                                            <TextBlock Text="{Binding GrossPay, StringFormat=\${0:N0}}"
+                                                       FontSize="9" Foreground="{DynamicResource BrushTextSecondary}"
+                                                       HorizontalAlignment="Center" Margin="0,0,0,4"/>
+                                            <Border Width="40" CornerRadius="4,4,0,0" VerticalAlignment="Bottom"
+                                                    Height="{Binding BarHeight}"
+                                                    Background="{Binding BarColor}">
+                                                <Border.ToolTip>
+                                                    <ToolTip>
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding Label}" FontWeight="Bold"/>
+                                                            <TextBlock Text="{Binding GrossPay, StringFormat='Gross: \${0:N0}'}"/>
+                                                            <TextBlock Text="{Binding PAYETax, StringFormat='PAYE: \${0:N0}'}"/>
+                                                            <TextBlock Text="{Binding NetPay, StringFormat='Net: \${0:N0}'}"/>
+                                                        </StackPanel>
+                                                    </ToolTip>
+                                                </Border.ToolTip>
+                                            </Border>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- X-Axis Labels -->
+                            <ItemsControl Grid.Row="2" ItemsSource="{Binding ChartBars}" Margin="0,8,0,0">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <UniformGrid Rows="1"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Label}" Foreground="#718096"
+                                                   FontSize="10" HorizontalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </Border>
+
+                    <!-- System Alerts Pane -->
+                    <Border Grid.Column="1" Margin="12,0,0,0" CornerRadius="8"
+                            Background="{DynamicResource BrushBgPanel}"
+                            BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+                                <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets"
+                                           Foreground="#ED8936" FontSize="16" VerticalAlignment="Center"
+                                           Margin="0,0,8,0"/>
+                                <TextBlock Text="System Alerts" FontSize="16"
+                                           Foreground="{DynamicResource BrushTextPrimary}"
+                                           FontWeight="Bold" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <!-- No Alerts -->
+                            <TextBlock Grid.Row="1" Text="&#xE8FB;  All systems operational"
+                                       FontFamily="Segoe MDL2 Assets, Segoe UI"
+                                       Foreground="#48BB78" FontSize="13"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasSystemAlerts}" Value="False">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <!-- Alert List -->
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                                          Visibility="{Binding HasSystemAlerts, Converter={StaticResource BoolToVis}}">
+                                <ItemsControl ItemsSource="{Binding SystemAlerts}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="{DynamicResource BrushBorder}"
+                                                    BorderThickness="0,0,0,1"
+                                                    Padding="0,0,0,12" Margin="0,0,0,12">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Ellipse Width="8" Height="8" Fill="#ED8936"
+                                                             Margin="0,4,10,0" VerticalAlignment="Top"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding}"
+                                                               FontSize="12"
+                                                               Foreground="{DynamicResource BrushTextPrimary}"
+                                                               TextWrapping="Wrap"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>

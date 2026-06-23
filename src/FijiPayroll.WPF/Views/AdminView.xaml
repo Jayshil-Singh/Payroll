@@ -5,112 +5,393 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FijiPayroll.WPF.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800"
+             d:DesignHeight="700" d:DesignWidth="1024"
              Background="Transparent">
-    <Grid Margin="24">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,24">
-            <TextBlock Text="{Binding Title}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Segoe UI Semibold" />
-            <TextBlock Text="System administration tools, role-based permission grids, and transaction audit trails." FontSize="14" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,0" />
-        </StackPanel>
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
 
-        <!-- Main Workspace -->
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="320" />
-            </Grid.ColumnDefinitions>
+        <!-- Section Header Style -->
+        <Style x:Key="SectionHeader" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource BrushAccent}" />
+            <Setter Property="Margin"     Value="0,0,0,12" />
+        </Style>
 
-            <!-- Role Access Mapping Grid -->
-            <Border Grid.Column="0" Margin="0,0,16,0" CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20">
+        <!-- Field Label Style -->
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="12" />
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
+            <Setter Property="Margin"     Value="0,0,0,4" />
+        </Style>
+
+        <!-- Input TextBox Style -->
+        <Style x:Key="InputBox" TargetType="TextBox">
+            <Setter Property="Background"       Value="#111827" />
+            <Setter Property="Foreground"       Value="{DynamicResource BrushTextPrimary}" />
+            <Setter Property="BorderBrush"      Value="{DynamicResource BrushBorder}" />
+            <Setter Property="BorderThickness"  Value="1" />
+            <Setter Property="Padding"          Value="10,8" />
+            <Setter Property="FontSize"         Value="13" />
+            <Setter Property="Height"           Value="36" />
+            <Setter Property="CaretBrush"       Value="{DynamicResource BrushAccent}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- Loading / Busy overlay -->
+        <Border Background="#CC0B0E18"
+                Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"
+                Panel.ZIndex="100">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="200" Height="4"
+                             Background="Transparent"
+                             Foreground="{DynamicResource BrushAccent}"
+                             BorderThickness="0"/>
+                <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource BrushTextSecondary}"
+                           FontSize="13" HorizontalAlignment="Center" Margin="0,12,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Grid Margin="24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{Binding Title}" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Segoe UI Semibold" />
+                    <TextBlock Text="Manage active user accounts, trigger security password resets, and configure access permissions." FontSize="14" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,0" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Command="{Binding LoadUsersCommand}"
+                            Content="&#xE72C; Refresh"
+                            FontFamily="Segoe MDL2 Assets, Segoe UI"
+                            Style="{StaticResource SecondaryButton}"
+                            Width="100" Margin="0,0,10,0"/>
+                    <Button Command="{Binding OpenNewUserCommand}"
+                            Content="&#xE710; Add User"
+                            FontFamily="Segoe MDL2 Assets, Segoe UI"
+                            Style="{StaticResource ModernButton}"
+                            Width="110"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Status Banner -->
+            <Border Grid.Row="1" CornerRadius="6" Margin="0,0,0,16" Padding="12,8" Background="#1A1F2E" BorderThickness="1">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="BorderBrush" Value="#48BB78"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding HasError}" Value="True">
+                                <Setter Property="BorderBrush" Value="#FC8181"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    
-                    <TextBlock Grid.Row="0" Text="User Accounts &amp; Security Roles" FontSize="16" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,0,0,8" />
-                    <TextBlock Grid.Row="1" Text="Configure active user logons and allocate system permission tags." FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,16" />
-
-                    <!-- User List Mock -->
-                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-                        <StackPanel>
-                            <!-- User 1 -->
-                            <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Padding="0,10">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="150" />
-                                        <ColumnDefinition Width="100" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
-                                        <TextBlock Text="Jayesh Sharma" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" FontSize="13" />
-                                        <TextBlock Text="jayshil.singh@company.com" Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" Margin="0,2,0,0" />
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="HR Administrator" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"/>
-                                    <Border Grid.Column="2" Background="{DynamicResource BrushAccent}" Padding="8,4" CornerRadius="4" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <TextBlock Text="Active" Foreground="#FFFFFF" FontSize="11" FontWeight="SemiBold"/>
-                                    </Border>
-                                </Grid>
-                            </Border>
-                            <!-- User 2 -->
-                            <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Padding="0,10">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="150" />
-                                        <ColumnDefinition Width="100" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
-                                        <TextBlock Text="Sereana Qila" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" FontSize="13" />
-                                        <TextBlock Text="sereana.q@company.com" Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" Margin="0,2,0,0" />
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="Payroll Specialist" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"/>
-                                    <Border Grid.Column="2" Background="{DynamicResource BrushAccent}" Padding="8,4" CornerRadius="4" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                        <TextBlock Text="Active" Foreground="#FFFFFF" FontSize="11" FontWeight="SemiBold"/>
-                                    </Border>
-                                </Grid>
-                            </Border>
-                        </StackPanel>
-                    </ScrollViewer>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="&#xE946;" FontFamily="Segoe MDL2 Assets"
+                               Foreground="{DynamicResource BrushAccent}" FontSize="14"
+                               VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Grid.Column="1" Text="{Binding StatusMessage}"
+                               Foreground="{DynamicResource BrushTextSecondary}"
+                               FontSize="12" VerticalAlignment="Center"/>
                 </Grid>
             </Border>
 
-            <!-- Admin Action Utilities Pane -->
-            <StackPanel Grid.Column="1">
-                <!-- Backup Tools -->
-                <Border CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20" Margin="0,0,0,16">
-                    <StackPanel>
-                        <TextBlock Text="Database Backup" FontSize="16" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,0,0,8" />
-                        <TextBlock Text="Create a snapshot backup of the current database configuration." FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" />
-                        <Button Content="Backup Database Now" Margin="0,16,0,0" Height="32" Style="{StaticResource SecondaryButton}" />
-                    </StackPanel>
+            <!-- Search Bar -->
+            <Border Grid.Row="2" CornerRadius="6" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12" Margin="0,0,0,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <!-- Search Input Box -->
+                    <Border CornerRadius="4" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="#0F111A" Width="320" HorizontalAlignment="Left" Height="34" Padding="10,4">
+                        <Grid>
+                            <TextBlock Text="Search by name, username or role..." 
+                                       Foreground="#4A5568" 
+                                       VerticalAlignment="Center" 
+                                       IsHitTestVisible="False" 
+                                       Visibility="{Binding SearchText.Length, Converter={StaticResource BoolToVis}, ConverterParameter=invert}"/>
+                            <TextBox BorderThickness="0" 
+                                     Background="Transparent" 
+                                     Foreground="#FFFFFF" 
+                                     CaretBrush="#FFFFFF"
+                                     VerticalAlignment="Center"
+                                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Main Split Workspace -->
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- User accounts data grid -->
+                <Border Grid.Column="0" Margin="0,0,0,0" CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="1">
+                    <Grid>
+                        <DataGrid ItemsSource="{Binding UsersView}" 
+                                  SelectedItem="{Binding SelectedUser}"
+                                  AutoGenerateColumns="False" 
+                                  IsReadOnly="True" 
+                                  HeadersVisibility="Column" 
+                                  GridLinesVisibility="Horizontal"
+                                  BorderThickness="0" 
+                                  Background="Transparent"
+                                  RowHeight="44"
+                                  ColumnHeaderHeight="40"
+                                  SelectionMode="Single"
+                                  CanUserAddRows="False"
+                                  Foreground="{DynamicResource BrushTextPrimary}">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#171C2E"/>
+                                    <Setter Property="Foreground" Value="#A0AEC0"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="Padding" Value="12,0"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}"/>
+                                </Style>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="Padding" Value="12,0"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="DataGridCell">
+                                                <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                                                    <ContentPresenter VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#252C42"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="#2B3654"/>
+                                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Resources>
+
+                            <DataGrid.Columns>
+                                <!-- Display Name -->
+                                <DataGridTextColumn Header="Full Name" Binding="{Binding DisplayName}" Width="1.5*" />
+
+                                <!-- Username -->
+                                <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="*" />
+
+                                <!-- Primary Role -->
+                                <DataGridTemplateColumn Header="Role" Width="1.2*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border CornerRadius="4" Padding="8,3" HorizontalAlignment="Left" Background="#1D2A44">
+                                                <TextBlock Text="{Binding PrimaryRole}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource BrushAccent}" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <!-- Is Active Status -->
+                                <DataGridTemplateColumn Header="Status" Width="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border CornerRadius="4" Padding="8,3" HorizontalAlignment="Left">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Background" Value="#223E36"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                <Setter Property="Background" Value="#3D2727"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <TextBlock FontSize="11" FontWeight="Bold">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Text" Value="Active"/>
+                                                            <Setter Property="Foreground" Value="{DynamicResource BrushAlertGreen}"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                    <Setter Property="Text" Value="Inactive"/>
+                                                                    <Setter Property="Foreground" Value="{DynamicResource BrushAlertRed}"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <!-- Last Login Date -->
+                                <DataGridTextColumn Header="Last Login" Binding="{Binding LastLoginAt, StringFormat=\{0:dd/MM/yyyy HH:mm\}, TargetNullValue='Never'}" Width="1.2*" />
+
+                                <!-- Action Buttons -->
+                                <DataGridTemplateColumn Header="Actions" Width="200">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <!-- Reset Password button -->
+                                                <Button Content="Reset" 
+                                                        Command="{Binding DataContext.ResetPasswordCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                        CommandParameter="{Binding}"
+                                                        Style="{StaticResource SecondaryButton}" 
+                                                        Height="26" Width="60" Margin="0,0,6,0"
+                                                        FontSize="11" Padding="4,0" />
+                                                
+                                                <!-- Toggle active state button -->
+                                                <Button Command="{Binding DataContext.ToggleStatusCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                        CommandParameter="{Binding}"
+                                                        Height="26" Width="90" FontSize="11" Padding="4,0">
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
+                                                            <Setter Property="Content" Value="Deactivate"/>
+                                                            <Setter Property="Foreground" Value="{DynamicResource BrushAlertRed}"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                                    <Setter Property="Content" Value="Activate"/>
+                                                                    <Setter Property="Foreground" Value="{DynamicResource BrushAlertGreen}"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                </Button>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
                 </Border>
 
-                <!-- Data Import Engine -->
-                <Border CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20" Margin="0,0,0,16">
-                    <StackPanel>
-                        <TextBlock Text="Staged Import Engine" FontSize="16" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,0,0,8" />
-                        <TextBlock Text="Load and validate external spreadsheets in staging tables before master schema commit." FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" />
-                        <Button Content="Open Staged Imports" Command="{Binding OpenStagedImportCommand}" Margin="0,16,0,0" Height="32" Style="{StaticResource SecondaryButton}" />
-                    </StackPanel>
-                </Border>
+                <!-- Right Pane: Add New User Slide-in Panel -->
+                <Border Grid.Column="1" Width="340" Margin="16,0,0,0" CornerRadius="8"
+                        Background="{DynamicResource BrushBgPanel}"
+                        BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1"
+                        Padding="20" VerticalAlignment="Stretch"
+                        Visibility="{Binding IsNewUserPanelOpen, Converter={StaticResource BoolToVis}}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                <!-- Audit logs overview -->
-                <Border CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20">
-                    <StackPanel>
-                        <TextBlock Text="Audit Trails Overview" FontSize="16" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,0,0,8" />
-                        <TextBlock Text="Verify security access logs and transition history logs." FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" />
-                        <Button Content="Open Access Audit Logs" Command="{Binding DataContext.NavigateLogViewerCommand, RelativeSource={RelativeSource AncestorType=Window}}" Margin="0,16,0,0" Height="32" Style="{StaticResource SecondaryButton}" />
-                    </StackPanel>
+                        <!-- Panel Header -->
+                        <Grid Grid.Row="0" Margin="0,0,0,16">
+                            <TextBlock Text="Create New Account" Style="{StaticResource SectionHeader}"/>
+                            <Button Content="&#xE711;" FontFamily="Segoe MDL2 Assets" 
+                                    Background="Transparent" BorderThickness="0" 
+                                    Foreground="{DynamicResource BrushTextSecondary}"
+                                    Command="{Binding CancelNewUserCommand}"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center" 
+                                    FontSize="14" Cursor="Hand" />
+                        </Grid>
+
+                        <!-- Panel Form Fields -->
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock Text="Username / Email" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding NewUsername, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource InputBox}" Margin="0,0,0,14"/>
+
+                                <TextBlock Text="Full Name" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding NewDisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{StaticResource InputBox}" Margin="0,0,0,14"/>
+
+                                <TextBlock Text="Temporary Password" Style="{StaticResource FieldLabel}"/>
+                                <PasswordBox x:Name="NewUserPasswordBox"
+                                             Background="#111827"
+                                             Foreground="{DynamicResource BrushTextPrimary}"
+                                             BorderBrush="{DynamicResource BrushBorder}"
+                                             BorderThickness="1"
+                                             Padding="10,8"
+                                             Height="36"
+                                             Margin="0,0,0,14"
+                                             PasswordChanged="NewUserPasswordBox_PasswordChanged">
+                                    <PasswordBox.Template>
+                                        <ControlTemplate TargetType="PasswordBox">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    CornerRadius="5">
+                                                <ScrollViewer x:Name="PART_ContentHost"
+                                                              Margin="{TemplateBinding Padding}"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsFocused" Value="True">
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </PasswordBox.Template>
+                                </PasswordBox>
+
+                                <CheckBox IsChecked="{Binding NewIsSystemAdmin, Mode=TwoWay}"
+                                          Content="Grant System Administrator Role"
+                                          Foreground="{DynamicResource BrushTextPrimary}"
+                                          FontSize="13" Margin="0,6,0,20"/>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <!-- Panel Footer Buttons -->
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                            <Button Command="{Binding CancelNewUserCommand}"
+                                    Content="Cancel"
+                                    Style="{StaticResource SecondaryButton}"
+                                    Width="90" Height="36" Margin="0,0,10,0"/>
+                            <Button Command="{Binding CreateUserCommand}"
+                                    Content="Create"
+                                    Style="{StaticResource ModernButton}"
+                                    Width="90" Height="36"/>
+                        </StackPanel>
+                    </Grid>
                 </Border>
-            </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

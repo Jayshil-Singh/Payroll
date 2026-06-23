@@ -250,6 +250,9 @@ internal sealed class NotificationConfiguration : IEntityTypeConfiguration<Notif
         builder.Property(x => x.ErrorMessage).HasColumnType("nvarchar(max)").IsRequired(false);
         builder.Property(x => x.CreatedAt).HasColumnType("datetime2").IsRequired();
         builder.Property(x => x.SentAt).HasColumnType("datetime2").IsRequired(false);
+        builder.Property(x => x.IsRead).IsRequired().HasDefaultValue(false);
+        builder.Property(x => x.ReadAt).HasColumnType("datetime2").IsRequired(false);
+        builder.Property(x => x.Category).HasColumnType("nvarchar(50)").IsRequired().HasDefaultValue("Info");
     }
 }
 
