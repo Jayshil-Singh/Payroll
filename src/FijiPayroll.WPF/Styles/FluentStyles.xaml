@@ -1,7 +1,9 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:vm="clr-namespace:FijiPayroll.WPF.ViewModels"
-                    xmlns:v="clr-namespace:FijiPayroll.WPF.Views">
+                    xmlns:authvm="clr-namespace:FijiPayroll.WPF.ViewModels.Auth"
+                    xmlns:v="clr-namespace:FijiPayroll.WPF.Views"
+                    xmlns:authv="clr-namespace:FijiPayroll.WPF.Views.Auth">
 
     <!-- ViewModel to View Mappings -->
     <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
@@ -42,6 +44,11 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:PayrollConsoleViewModel}">
         <v:PayrollConsoleView />
+    </DataTemplate>
+
+    <!-- ESS Portal -->
+    <DataTemplate DataType="{x:Type authvm:ESSHomeViewModel}">
+        <authv:ESSHomeView />
     </DataTemplate>
 
     <!-- Fonts -->

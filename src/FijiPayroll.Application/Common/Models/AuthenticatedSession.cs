@@ -11,5 +11,6 @@ public sealed class AuthenticatedSession
     public IReadOnlyList<string> Roles { get; init; } = Array.Empty<string>();
     public IReadOnlyList<string> Permissions { get; init; } = Array.Empty<string>();
     public bool MustChangePassword { get; init; }
+    public int? EmployeeId { get; init; }
     public bool IsAuthenticated => UserId > 0 && !string.IsNullOrWhiteSpace(Username);
 }

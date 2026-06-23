@@ -90,7 +90,8 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, Result<A
             CompanyIds = new List<int> { user.CompanyId },
             Roles = roles,
             Permissions = permissions,
-            MustChangePassword = user.MustChangePassword
+            MustChangePassword = user.MustChangePassword,
+            EmployeeId = user.EmployeeId
         };
 
         _logger.LogInformation("User '{Username}' authenticated successfully. Session established.", user.Username);

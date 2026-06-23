@@ -137,6 +137,24 @@
             InitializeComponent
             </summary>
         </member>
+        <member name="T:FijiPayroll.WPF.Views.Auth.ESSHomeView">
+            <summary>
+            Interaction logic for ESSHomeView.xaml
+            </summary>
+            <summary>
+            ESSHomeView
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.Auth.ESSHomeView.Tab_Checked(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Switches visible tab panel based on the checked RadioButton's Tag value.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.Auth.ESSHomeView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
         <member name="T:FijiPayroll.WPF.Views.Auth.LoginView">
             <summary>
             Interaction logic for LoginView.xaml
@@ -278,6 +296,33 @@
             <summary>
             InitializeComponent
             </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.ESSShellWindow">
+            <summary>
+            Lightweight ESS shell window — the host container for the Employee Self-Service portal.
+            Replaces MainWindow for users whose only role is "Employee".
+            Shares the same INavigationService singleton so ESSHomeViewModel is resolved correctly.
+            </summary>
+            <summary>
+            ESSShellWindow
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.Views.ESSShellWindow.ActiveToasts">
+            <summary>Active toast notifications displayed in the ESS shell overlay.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.Views.ESSShellWindow.CurrentViewModel">
+            <summary>Current navigation view model, resolved from the shared navigation service.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.Views.ESSShellWindow.WelcomeMessage">
+            <summary>Welcome greeting derived from the active ESS view model.</summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.ESSShellWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Views.ESSToastItem">
+            <summary>Toast item for ESS shell notification overlay.</summary>
         </member>
         <member name="T:FijiPayroll.WPF.Views.LogViewerView">
             <summary>
@@ -1501,6 +1546,43 @@
             <param name="value">The new property value that was set.</param>
             <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.PendingApprovalsViewModel.SelectedEntityTypeFilter"/> is changed.</remarks>
         </member>
+        <member name="T:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel">
+            <summary>
+            ViewModel for the Employee Self-Service (ESS) portal.
+            Scoped exclusively to the logged-in employee – all queries are constrained to their EmployeeId.
+            </summary>
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel.Title">
+            <summary>Gets the display title for the ESS portal.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel.WelcomeMessage">
+            <summary>Gets the current employee's display name, or a default greeting.</summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel.ActiveTabIndex">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel._activeTabIndex"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel.EmployeeProfile">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel._employeeProfile"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel.SelectedPayslipRun">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel._selectedPayslipRun"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel.SelectedLeaveType">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel._selectedLeaveType"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel.LeaveStartDate">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel._leaveStartDate"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel.LeaveEndDate">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel._leaveEndDate"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel.LeaveTotalDays">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel._leaveTotalDays"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel.LeaveNotes">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Auth.ESSHomeViewModel._leaveNotes"/>
+        </member>
         <member name="T:FijiPayroll.WPF.ViewModels.Auth.LoginViewModel">
             <summary>
             View model backing the login view.
@@ -2479,6 +2561,36 @@
         <member name="P:FijiPayroll.WPF.ViewModels.StagedImportViewModel.IsValid">
             <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.StagedImportViewModel._isValid"/>
         </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
+            </summary>
+        </member>
         <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs">
             <summary>
             A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instances
@@ -2511,6 +2623,30 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedEntityTypeFilter">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedEntityTypeFilter" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ActiveTabIndex">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ActiveTabIndex" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.EmployeeProfile">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "EmployeeProfile" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedPayslipRun">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedPayslipRun" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedLeaveType">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedLeaveType" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveStartDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveStartDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveEndDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveEndDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveTotalDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveTotalDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveNotes">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveNotes" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Username">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Username" generated properties.</summary>
@@ -2598,21 +2734,6 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsLoadingDetails">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsLoadingDetails" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedLeaveType">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedLeaveType" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveStartDate">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveStartDate" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveEndDate">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveEndDate" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveTotalDays">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveTotalDays" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveNotes">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveNotes" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.RejectionReason">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "RejectionReason" generated properties.</summary>
@@ -2791,6 +2912,30 @@
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedEntityTypeFilter">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedEntityTypeFilter" generated properties.</summary>
         </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ActiveTabIndex">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ActiveTabIndex" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.EmployeeProfile">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "EmployeeProfile" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedPayslipRun">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedPayslipRun" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedLeaveType">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedLeaveType" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveStartDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveStartDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveEndDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveEndDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveTotalDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveTotalDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveNotes">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveNotes" generated properties.</summary>
+        </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Username">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Username" generated properties.</summary>
         </member>
@@ -2877,21 +3022,6 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsLoadingDetails">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsLoadingDetails" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedLeaveType">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedLeaveType" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveStartDate">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveStartDate" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveEndDate">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveEndDate" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveTotalDays">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveTotalDays" generated properties.</summary>
-        </member>
-        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveNotes">
-            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveNotes" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.RejectionReason">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "RejectionReason" generated properties.</summary>

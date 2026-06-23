@@ -62,6 +62,13 @@ internal sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAc
                .IsRequired()
                .HasDefaultValue(false);
 
+        builder.Property(x => x.EmployeeId)
+               .IsRequired(false);
+
+        builder.Property(x => x.PasswordUpdatedAt)
+               .HasColumnType("datetime2")
+               .IsRequired();
+
         // Audit Columns
         builder.Property(x => x.CreatedBy)
                .HasColumnType("nvarchar(100)")
@@ -85,6 +92,11 @@ internal sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAc
 
         // Configure relationships
         builder.HasMany(x => x.Roles)
+               .WithOne()
+               .HasForeignKey(x => x.UserAccountId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(x => x.PasswordHistories)
                .WithOne()
                .HasForeignKey(x => x.UserAccountId)
                .OnDelete(DeleteBehavior.Cascade);

@@ -2407,6 +2407,9 @@ namespace FijiPayroll.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("FailedLoginCount")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -2443,6 +2446,9 @@ namespace FijiPayroll.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<DateTime>("PasswordUpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .IsRequired()
@@ -2459,6 +2465,31 @@ namespace FijiPayroll.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("UserAccounts", "company");
+                });
+
+            modelBuilder.Entity("FijiPayroll.Domain.Entities.Company.UserPasswordHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("UserAccountId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserAccountId");
+
+                    b.ToTable("UserPasswordHistories", "company");
                 });
 
             modelBuilder.Entity("FijiPayroll.Domain.Entities.Company.UserPermission", b =>
@@ -4611,6 +4642,73 @@ namespace FijiPayroll.Persistence.Migrations
                     b.ToTable("PayrollSnapshots", "payroll");
                 });
 
+            modelBuilder.Entity("FijiPayroll.Domain.Entities.Payroll.RetroactiveAdjustment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<DateTime?>("AppliedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("AppliedInPayrollRunId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ComponentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ComponentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsApplied")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsApplied");
+
+                    b.HasIndex("CompanyId", "EmployeeId");
+
+                    b.ToTable("RetroactiveAdjustments", "payroll");
+                });
+
             modelBuilder.Entity("FijiPayroll.Domain.Entities.Payroll.StatutoryRule", b =>
                 {
                     b.Property<int>("Id")
@@ -4836,6 +4934,15 @@ namespace FijiPayroll.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ParentRuleSet");
+                });
+
+            modelBuilder.Entity("FijiPayroll.Domain.Entities.Company.UserPasswordHistory", b =>
+                {
+                    b.HasOne("FijiPayroll.Domain.Entities.Company.UserAccount", null)
+                        .WithMany("PasswordHistories")
+                        .HasForeignKey("UserAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FijiPayroll.Domain.Entities.Company.UserPermission", b =>
@@ -5084,6 +5191,8 @@ namespace FijiPayroll.Persistence.Migrations
 
             modelBuilder.Entity("FijiPayroll.Domain.Entities.Company.UserAccount", b =>
                 {
+                    b.Navigation("PasswordHistories");
+
                     b.Navigation("Roles");
                 });
 

@@ -96,6 +96,9 @@ public class ApplicationDbContext : DbContext
     /// <summary>Gets or sets the user accounts DbSet.</summary>
     public DbSet<UserAccount> UserAccounts => Set<UserAccount>();
 
+    /// <summary>Gets or sets the user password histories DbSet.</summary>
+    public DbSet<UserPasswordHistory> UserPasswordHistories => Set<UserPasswordHistory>();
+
     /// <summary>Gets or sets the user roles DbSet.</summary>
     public DbSet<UserRole> UserRoles => Set<UserRole>();
 
@@ -184,6 +187,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<PayrollPeriod> PayrollPeriods => Set<PayrollPeriod>();
     public DbSet<PayrollGroup> PayrollGroups => Set<PayrollGroup>();
     public DbSet<PayrollAdjustment> PayrollAdjustments => Set<PayrollAdjustment>();
+    public DbSet<RetroactiveAdjustment> RetroactiveAdjustments => Set<RetroactiveAdjustment>();
     public DbSet<PayrollSnapshot> PayrollSnapshots => Set<PayrollSnapshot>();
     public DbSet<PayrollExceptionQueue> PayrollExceptionQueues => Set<PayrollExceptionQueue>();
     public DbSet<PayrollRunHistory> PayrollRunHistories => Set<PayrollRunHistory>();
@@ -451,6 +455,9 @@ public class ApplicationDbContext : DbContext
             .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
 
         modelBuilder.Entity<PayrollAdjustment>()
+            .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
+
+        modelBuilder.Entity<RetroactiveAdjustment>()
             .HasQueryFilter(x => x.CompanyId == CurrentCompanyId);
 
         modelBuilder.Entity<PayrollSnapshot>()

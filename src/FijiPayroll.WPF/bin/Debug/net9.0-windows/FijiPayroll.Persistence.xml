@@ -228,6 +228,11 @@
             EF Core configuration mapping for UserAccount entity.
             </summary>
         </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.UserPasswordHistoryConfiguration">
+            <summary>
+            EF Core configuration mapping for UserPasswordHistory entity.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Persistence.Configurations.Company.UserPermissionConfiguration">
             <summary>
             EF Core configuration mapping for UserPermission entity.
@@ -273,6 +278,11 @@
             EF Core mapping configuration for the PayrollRunStateHistory audit entity.
             </summary>
         </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Payroll.RetroactiveAdjustmentConfiguration">
+            <summary>
+            EF Core configuration mapping for RetroactiveAdjustment entity.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.Persistence.Context.ApplicationDbContext">
             <summary>
             Entity Framework Core database context for the Fiji Enterprise Payroll System.
@@ -309,6 +319,9 @@
         </member>
         <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.UserAccounts">
             <summary>Gets or sets the user accounts DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.UserPasswordHistories">
+            <summary>Gets or sets the user password histories DbSet.</summary>
         </member>
         <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.UserRoles">
             <summary>Gets or sets the user roles DbSet.</summary>
@@ -547,6 +560,18 @@
             <inheritdoc />
         </member>
         <member name="M:FijiPayroll.Persistence.Migrations.AddLoanManagementTables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Migrations.AddPhase17Tables">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddPhase17Tables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddPhase17Tables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddPhase17Tables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="T:FijiPayroll.Persistence.Repositories.ApprovalWorkflowRepository">

@@ -1,0 +1,126 @@
+<Window x:Class="FijiPayroll.WPF.Views.ESSShellWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="FijiPayroll — Employee Portal"
+        Height="820" Width="1200"
+        MinHeight="640" MinWidth="900"
+        WindowStartupLocation="CenterScreen"
+        Background="#0F1525"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="52"/>
+            <!-- Top nav bar -->
+            <RowDefinition Height="*"/>
+            <!-- Content -->
+        </Grid.RowDefinitions>
+
+        <!-- ══════════ TOP NAV BAR ══════════ -->
+        <Border Grid.Row="0" Background="#0A101E"
+                BorderBrush="#1E2C45" BorderThickness="0,0,0,1">
+            <Grid Margin="20,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Logo -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="30" Height="30" CornerRadius="6"
+                            Background="#1E3A5F" Margin="0,0,10,0">
+                        <TextBlock Text="FP" Foreground="#4A90D9"
+                                   FontWeight="Black" FontSize="12"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel>
+                        <TextBlock Text="FijiPayroll" Foreground="#FFFFFF"
+                                   FontWeight="Bold" FontSize="14"/>
+                        <TextBlock Text="Employee Self-Service" Foreground="#6B7EA0"
+                                   FontSize="10"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Breadcrumb / page title -->
+                <TextBlock Grid.Column="1" Text="{Binding WelcomeMessage}"
+                           Foreground="#8A9BBE" FontSize="13"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                <!-- Right actions -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <!-- Notification Bell placeholder -->
+                    <Border Width="32" Height="32" CornerRadius="6"
+                            Background="#1A2035" Cursor="Hand" Margin="0,0,8,0">
+                        <TextBlock Text="&#xE7E7;" FontFamily="Segoe MDL2 Assets"
+                                   FontSize="14" Foreground="#6B7EA0"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+
+                    <!-- User avatar -->
+                    <Border Width="32" Height="32" CornerRadius="16"
+                            Background="#1E3A5F" Margin="0,0,8,0">
+                        <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets"
+                                   FontSize="16" Foreground="#4A90D9"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+
+                    <!-- Sign out -->
+                    <Button Content="Sign Out"
+                            Click="SignOut_Click"
+                            Background="Transparent"
+                            Foreground="#8A9BBE"
+                            BorderThickness="0"
+                            FontSize="12"
+                            Cursor="Hand"
+                            Padding="8,4"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ══════════ MAIN CONTENT AREA ══════════ -->
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Background="#0F1525">
+            <!-- DataTemplate resolves ESSHomeViewModel → ESSHomeView automatically via FluentStyles.xaml -->
+            <ContentControl Content="{Binding CurrentViewModel}"/>
+        </ScrollViewer>
+
+        <!-- ══════════ TOAST NOTIFICATION OVERLAY ══════════ -->
+        <ItemsControl Grid.Row="1"
+                      x:Name="ToastContainer"
+                      VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                      Margin="0,0,20,20"
+                      Panel.ZIndex="100"
+                      IsHitTestVisible="False">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="#1A2035" CornerRadius="8"
+                            BorderBrush="{Binding TypeBrush}" BorderThickness="1,1,1,3"
+                            Padding="16,10" Margin="0,6,0,0"
+                            MinWidth="280" MaxWidth="380">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Title}" Foreground="#FFFFFF"
+                                       FontWeight="Bold" FontSize="13"/>
+                            <TextBlock Text="{Binding Message}" Foreground="#C8D8F0"
+                                       FontSize="11" Margin="0,4,0,0"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</Window>

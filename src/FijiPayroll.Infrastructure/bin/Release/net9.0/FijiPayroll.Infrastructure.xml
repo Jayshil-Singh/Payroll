@@ -1,0 +1,568 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FijiPayroll.Infrastructure</name>
+    </assembly>
+    <members>
+        <member name="T:FijiPayroll.Infrastructure.DependencyInjection">
+            <summary>
+            Extension methods to register all Infrastructure layer services (EventBus, FileStorage, PluginLoader)
+            with the dependency injection container. Called from the WPF composition root.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.DependencyInjection.AddInfrastructure(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>Registers infrastructure services and the plugin loader mechanism.</summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.BankGenerators.BSPBankGenerator">
+            <summary>
+            Bank South Pacific (BSP) payment clearing file generator.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.BSPBankGenerator.BankCode">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.BSPBankGenerator.BankName">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.BankGenerators.ANZBankGenerator">
+            <summary>
+            ANZ Bank payment clearing file generator.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.ANZBankGenerator.BankCode">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.ANZBankGenerator.BankName">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.BankGenerators.WestpacBankGenerator">
+            <summary>
+            Westpac Fiji payment clearing file generator.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.WestpacBankGenerator.BankCode">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.WestpacBankGenerator.BankName">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.BankGenerators.BREDBankGenerator">
+            <summary>
+            BRED Bank payment clearing file generator.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.BREDBankGenerator.BankCode">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.BREDBankGenerator.BankName">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.BankGenerators.HFCBankGenerator">
+            <summary>
+            HFC Bank payment clearing file generator.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.HFCBankGenerator.BankCode">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.HFCBankGenerator.BankName">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.BankGenerators.KontikiBankGenerator">
+            <summary>
+            Kontiki Finance payment clearing file generator.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.KontikiBankGenerator.BankCode">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.KontikiBankGenerator.BankName">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.BankGenerators.BaseBankGenerator">
+            <summary>
+            Abstract base class implementing IBankFileGenerator, providing placeholder token replacement utilities.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.BaseBankGenerator.BankCode">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.BankGenerators.BaseBankGenerator.BankName">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.BankGenerators.BaseBankGenerator.Generate(System.String,System.String,System.String,System.DateTime,System.String,System.Collections.Generic.IEnumerable{FijiPayroll.SDK.Contracts.PaymentDetail},System.String,System.String,System.String,System.Char)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.BCryptPasswordHasher">
+            <summary>
+            Implementation of IPasswordHasher using BCrypt.Net.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.BCryptPasswordHasher.Hash(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.BCryptPasswordHasher.Verify(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceFileService">
+            <summary>
+            Infrastructure service for generating FRCS MER and FNPF Contribution CSV file exports.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceFileService.GenerateFrcsCsv(System.String,System.Collections.Generic.IEnumerable{FijiPayroll.SDK.Contracts.PaymentDetail},System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceFileService.GenerateFnpfCsv(System.String,System.String,System.Int32,System.Int32,System.Collections.Generic.IEnumerable{FijiPayroll.SDK.Contracts.PaymentDetail})">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceJobProcessor">
+            <summary>
+            Background worker processing compliance jobs asynchronously from database queues.
+            Implements exponential backoffs and writes JSON audit manifests on file generation.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceJobProcessor.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.ComplianceJobProcessor})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.ComplianceJobProcessor"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceJobProcessor.Start">
+            <summary>
+            Starts the background polling loop.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceJobProcessor.Stop">
+            <summary>
+            Stops the background polling loop.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceJobProcessor.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.CorrelationContext">
+            <summary>
+            Scoped implementation of ICorrelationContext generating a unique correlation ID per scope.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.CorrelationContext.CorrelationId">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.EventBus">
+            <summary>
+            Thread-safe, in-memory implementation of IEventBus.
+            Combines MediatR notification dispatching with dynamic runtime subscriber support.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.EventBus.#ctor(MediatR.IMediator)">
+            <summary>Initializes the event bus with MediatR.</summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.EventBus.PublishAsync``1(``0,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.EventBus.Subscribe``1(System.Func{``0,System.Threading.Tasks.Task})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.BuildVersionProvider">
+            <summary>
+            Infrastructure implementation retrieving system assembly versions, Git head commits, and system hashes.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.BuildVersionProvider.GetApplicationVersion">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.BuildVersionProvider.GetGitCommitHash">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.BuildVersionProvider.GetAssemblyVersionSnapshot">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.BuildVersionProvider.GetSystemBuildVersionHash">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ComplianceMetadataAssembler">
+            <summary>
+            Infrastructure assembler responsible for gathering compliance validations and summarizing step-level employee traces.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ComplianceMetadataAssembler.#ctor(FijiPayroll.Application.Services.ComplianceValidationService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ComplianceMetadataAssembler"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ComplianceMetadataAssembler.AssembleValidationResults(System.Int32,System.Collections.Generic.IEnumerable{FijiPayroll.Domain.Entities.Payroll.PayrollLedgerEmployee})">
+            <summary>
+            Evaluates the ledger records against statutory FRCS/FNPF compliance rules.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ComplianceMetadataAssembler.AssembleTraceability(System.Collections.Generic.IEnumerable{FijiPayroll.Domain.Entities.Payroll.PayrollRunEmployee})">
+            <summary>
+            Summarizes the execution traces from PayrollRunEmployee records.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackGeneratorService">
+            <summary>
+            Infrastructure service orchestrating the generation of the compliance evidence pack ZIP, JSON, and PDF summary.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackGeneratorService.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Infrastructure.Services.ComplianceEvidence.SSRSReportSnapshotService,FijiPayroll.Infrastructure.Services.ComplianceEvidence.SimplePdfGenerator,FijiPayroll.Infrastructure.Services.ComplianceEvidence.FileArchiveManager,FijiPayroll.Infrastructure.Services.ComplianceEvidence.ComplianceMetadataAssembler,FijiPayroll.Domain.Interfaces.IBuildVersionProvider,FijiPayroll.Domain.Interfaces.IEvidencePackSignatureService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackGeneratorService"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackGeneratorService.GenerateEvidencePackAsync(System.Int32,System.Int32,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackGeneratorService.GenerateEvidenceZipArchiveAsync(FijiPayroll.Domain.Entities.Payroll.EvidencePack,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackSignatureService">
+            <summary>
+            Infrastructure service handling RSA-2048 signature generation and manifest placement.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackSignatureService.#ctor(FijiPayroll.Domain.Interfaces.IBuildVersionProvider,FijiPayroll.Domain.Interfaces.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackSignatureService"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.EvidencePackSignatureService.SignEvidenceZipAsync(System.Byte[],System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.KeyStorage">
+            <summary>
+            Internal key storage management simulating secure machine keys.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.FileArchiveManager">
+            <summary>
+            Packages the compliance evidence artifacts into a structured ZIP package using resource-safe streams and rented buffers.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.FileArchiveManager.CreateEvidenceZipAsync(FijiPayroll.Domain.Entities.Payroll.EvidencePack,System.Byte[],System.Collections.Generic.IReadOnlyList{FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotResult},System.Threading.CancellationToken)">
+            <summary>
+            Bundles all evidence pack elements into a single compressed ZIP archive.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotRegistry">
+            <summary>
+            Registry containing metadata definitions and version hashes for all supported SSRS reports.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotRegistry.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotRegistry"/> class.
+            Registers the standard compliance reports.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotRegistry.RegisterReport(FijiPayroll.Infrastructure.Services.ComplianceEvidence.RegisteredReportDefinition)">
+            <summary>
+            Registers a report definition in the registry.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotRegistry.GetRegisteredReports">
+            <summary>
+            Gets all registered report definitions.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotRegistry.TryGetReport(System.String,FijiPayroll.Infrastructure.Services.ComplianceEvidence.RegisteredReportDefinition@)">
+            <summary>
+            Attempts to retrieve a registered report definition.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.RegisteredReportDefinition">
+            <summary>
+            Captures the template path and expected parameters for a registered SSRS report.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.RegisteredReportDefinition.#ctor(System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String})">
+            <summary>
+            Captures the template path and expected parameters for a registered SSRS report.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.SignatureVerifierService">
+            <summary>
+            Infrastructure service verifying cryptographic RSA signatures and manifest boundaries.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.SignatureVerifierService.#ctor(FijiPayroll.Application.Common.Interfaces.ITenantProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.SignatureVerifierService"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.SignatureVerifierService.VerifyEvidencePackSignatureAsync(System.Byte[],System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ManifestContent">
+            <summary>
+            Serializable DTO matching the signature manifest schema.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ManifestContent.#ctor(System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.String,System.DateTime)">
+            <summary>
+            Serializable DTO matching the signature manifest schema.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.SimplePdfGenerator">
+            <summary>
+            Simple PDF Generator with zero external dependencies. Produces standard PDF binary output.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.SimplePdfGenerator.GeneratePdf(FijiPayroll.Domain.Entities.Payroll.EvidencePack)">
+            <summary>
+            Generates a binary PDF document containing the core evidence pack summaries.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.SSRSReportSnapshotService">
+            <summary>
+            Service to render SSRS reports into deterministic snapshots.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.SSRSReportSnapshotService.#ctor(FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotRegistry,System.IServiceProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.SSRSReportSnapshotService"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.SSRSReportSnapshotService.RenderReportSnapshotsAsync(FijiPayroll.Domain.Entities.Payroll.PayrollRun,System.Threading.CancellationToken)">
+            <summary>
+            Renders snapshots for all registered reports for a given payroll run.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotResult">
+            <summary>
+            Combines the SSRSReportSnapshot domain metadata with the raw PDF file bytes.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotResult.Snapshot">
+            <summary>Gets the snapshot metadata.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotResult.PdfBytes">
+            <summary>Gets the PDF report content bytes.</summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotResult.#ctor(FijiPayroll.Domain.Entities.Payroll.SSRSReportSnapshot,System.Byte[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.ComplianceEvidence.ReportSnapshotResult"/> class.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.EvidencePack.DigitalSignatureService">
+            <summary>
+            Infrastructure implementation of IDigitalSignatureService.
+            Integrates with KeyStorage to sign and verify compliance payloads.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.EvidencePack.DigitalSignatureService.SignData(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.EvidencePack.DigitalSignatureService.VerifySignature(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.FileStorageProvider">
+            <summary>
+            Provides storage capabilities writing files directly to local disk folders
+            or secure network UNC shares, completely isolated from the database tables.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.FileStorageProvider.#ctor(Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.FileStorageProvider})">
+            <summary>Initializes the storage provider, setting up base directories.</summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.FileStorageProvider.SaveFileAsync(System.String,System.IO.Stream,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.FileStorageProvider.GetFileAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.FileStorageProvider.DeleteFileAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.ImportEngine">
+            <summary>
+            Implementation of IImportEngine providing Excel template generation, import parsing, validation,
+            and atomic commit operations using ClosedXML.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ImportEngine.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Common.Interfaces.ITenantProvider,FijiPayroll.Application.Common.Interfaces.ICurrentUserService,FijiPayroll.Application.Common.Interfaces.IReferenceDataCache)">
+            <summary>Initializes the import engine.</summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ImportEngine.GenerateTemplateAsync(System.IO.Stream,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ImportEngine.ValidateImportAsync(System.IO.Stream,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.ImportEngine.CommitImportAsync(System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.LicenseFingerprintProvider">
+            <summary>
+            Infrastructure implementation of the ILicenseFingerprintProvider.
+            Generates a resilient hardware fingerprint and installation ID.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.LicenseFingerprintProvider.GenerateFingerprintAsync">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator">
+            <summary>
+            Infrastructure implementation of license checking and validation using RSA signatures.
+            Supports offline validation, fingerprint validation, and custom public key overrides.
+            </summary>
+        </member>
+        <member name="F:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.DefaultPublicKeyPem">
+            <summary>
+            Default embedded development public key PEM.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.IsLicensed">
+            <summary>Gets a value indicating whether the application has a valid active license.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.DaysRemaining">
+            <summary>Gets the number of days remaining until the license expires.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.Company">
+            <summary>Gets the licensed company name.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.ExpiryDate">
+            <summary>Gets the license expiry date.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.FeatureFlags">
+            <summary>Gets the raw comma-separated feature flags string.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.HardwareHash">
+            <summary>Gets the hardware machine hash string matched in the license.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.ErrorMessage">
+            <summary>Gets the error description if validation fails.</summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.#ctor(FijiPayroll.Application.Common.Interfaces.ILicenseFingerprintProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.InitializeAsync">
+            <summary>
+            Loads and validates the default offline license file (license.fplic) from application base directory.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.ValidateLicenseFileAsync(System.String)">
+            <summary>
+            Validates raw license XML using local public key overrides or default embedded PEM.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.ValidateLicenseAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.HasFeature(System.String)">
+            <summary>
+            Checks if the licensed features contain the requested flag.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.MemoryFormulaCache">
+            <summary>
+            In-memory cache implementation for compiled AST formula rules.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.MemoryFormulaCache.#ctor(Microsoft.Extensions.Caching.Memory.IMemoryCache)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.MemoryFormulaCache"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.MemoryFormulaCache.GetOrAdd(System.Int32,System.Nullable{System.Int32},System.Int32,System.Int32,System.Int32,System.String,System.Func{FijiPayroll.Shared.Formula.AstNode})">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.NotificationService">
+            <summary>
+            Infrastructure notification service that routes alerts to application logger diagnostics.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.NotificationService.#ctor(Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.NotificationService})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.NotificationService"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.NotificationService.SendAsync(System.String,System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.PluginLoader">
+            <summary>
+            Scans the application folder for dynamically loaded assemblies implementing IModulePlugin,
+            registers their dependencies at startup, and coordinates database updates.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.PluginLoader.#ctor(Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.PluginLoader})">
+            <summary>Initializes the plugin loader.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.PluginLoader.LoadedPlugins">
+            <summary>Gets all active, fully registered plugins.</summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.PluginLoader.DiscoverAndRegisterPlugins(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Discovers dll assemblies in the 'Plugins' subdirectory, instantiates plugin entry points,
+            and triggers their dependency registration logic.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.PluginLoader.InitializePluginsDatabaseAsync(System.IServiceProvider)">
+            <summary>
+            Triggers database migrations or seeding steps for all successfully loaded plugins.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.Reports.ReportProvider">
+            <summary>
+            Service providing high-quality PDF and Excel reports using ClosedXML and custom raw PDF stream construction.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Reports.ReportProvider.#ctor(FijiPayroll.Domain.Interfaces.IUnitOfWork,FijiPayroll.Application.Services.PayrollDifferenceAnalyzer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Infrastructure.Services.Reports.ReportProvider"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.Reports.ReportProvider.RenderReportAsync(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.SearchContentData">
+            <summary>
+            Structured data stored in the SearchIndex.Content property.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.SearchContentData.Title">
+            <summary>Display title.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.SearchContentData.Snippet">
+            <summary>Display snippet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.SearchContentData.EmployeeName">
+            <summary>Employee full name.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.SearchContentData.Department">
+            <summary>Department name.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.SearchContentData.Notes">
+            <summary>Notes or branch/position details.</summary>
+        </member>
+        <member name="P:FijiPayroll.Infrastructure.Services.SearchContentData.Other">
+            <summary>Other details (TIN, FNPF, Email, etc.).</summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.CachedSearchEntry">
+            <summary>
+            Hybrid cache search entry holding both raw entity and pre-parsed search content.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Infrastructure.Services.SearchService">
+            <summary>
+            Multi-tenant fuzzy search service using SQL table + memory cache hybrid indexer.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.SearchService.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,FijiPayroll.Application.Common.Interfaces.ITenantProvider,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.SearchService})">
+            <summary>
+            Initializes a new instance of SearchService.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.SearchService.IndexEntityAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.SearchService.SearchAsync(System.String,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Infrastructure.Services.SearchService.Dispose">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

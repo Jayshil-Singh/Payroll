@@ -17,6 +17,7 @@ public sealed class UserAccount : AuditableEntity
     private string _passwordHash = string.Empty;
     private string _displayName = string.Empty;
     private readonly List<UserRole> _roles = new();
+    private readonly List<UserPasswordHistory> _passwordHistories = new();
 
     private UserAccount() { } // For EF Core
 
@@ -62,8 +63,17 @@ public sealed class UserAccount : AuditableEntity
     /// <summary>Gets whether the user is required to change their password on the next login.</summary>
     public bool MustChangePassword { get; private set; }
 
+    /// <summary>Gets the associated employee ID if this is an ESS user account.</summary>
+    public int? EmployeeId { get; private set; }
+
+    /// <summary>Gets when the password was last updated.</summary>
+    public DateTime PasswordUpdatedAt { get; private set; } = DateTime.UtcNow;
+
     /// <summary>Gets the read-only collection of roles mapped to the user.</summary>
     public IReadOnlyCollection<UserRole> Roles => _roles.AsReadOnly();
+
+    /// <summary>Gets the password change history collection.</summary>
+    public IReadOnlyCollection<UserPasswordHistory> PasswordHistories => _passwordHistories.AsReadOnly();
 
     /// <summary>
     /// Factory method to construct a new UserAccount.
@@ -125,12 +135,32 @@ public sealed class UserAccount : AuditableEntity
     }
 
     /// <summary>
-    /// Assigns a new password hash and updates force change state.
+    /// Links the user account to a specific employee for ESS access.
+    /// </summary>
+    public void LinkToEmployee(int employeeId)
+    {
+        if (employeeId <= 0) throw new ArgumentOutOfRangeException(nameof(employeeId));
+        EmployeeId = employeeId;
+    }
+
+    /// <summary>
+    /// Assigns a new password hash, stores it in history, and updates force change state.
     /// </summary>
     public void UpdatePassword(string newHash)
     {
+        // Add to history if not empty
+        if (!string.IsNullOrEmpty(PasswordHash))
+        {
+            _passwordHistories.Add(UserPasswordHistory.Create(Id, PasswordHash));
+            if (_passwordHistories.Count > 5)
+            {
+                _passwordHistories.RemoveAt(0);
+            }
+        }
+
         PasswordHash = newHash;
         MustChangePassword = false;
+        PasswordUpdatedAt = DateTime.UtcNow;
     }
 
     /// <summary>

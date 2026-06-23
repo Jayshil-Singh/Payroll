@@ -149,3 +149,7 @@ C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-wind
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\bin\Debug\net9.0-windows\BCrypt.Net-Next.dll
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\Auth\LoginView.g.cs
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\Auth\LoginView.baml
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\Auth\ESSHomeView.baml
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\ESSShellWindow.baml
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\Auth\ESSHomeView.g.cs
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\ESSShellWindow.g.cs

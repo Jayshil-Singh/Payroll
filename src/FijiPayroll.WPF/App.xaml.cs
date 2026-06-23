@@ -281,12 +281,32 @@ public partial class App : System.Windows.Application
                     LoadThemeSettings();
 
                     var navigationService = _serviceProvider.GetRequiredService<INavigationService>();
-                    navigationService.NavigateTo<DashboardViewModel>();
+                    var sessionStore = _serviceProvider.GetRequiredService<IAuthSessionStore>();
 
-                    var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
-                    mainWindow.Show();
+                    bool isEmployeeSelfService =
+                        sessionStore.Current.Roles.Contains("Employee", StringComparer.OrdinalIgnoreCase) &&
+                        sessionStore.Current.Roles.Count == 1; // Pure employee accounts only
+
+                    if (isEmployeeSelfService)
+                    {
+                        // Employee Self-Service portal — full-screen dedicated ESS shell
+                        _logger?.LogInformation("ESS mode: navigating to Employee Self-Service portal.");
+                        navigationService.NavigateTo<ESSHomeViewModel>();
+
+                        var essShell = _serviceProvider.GetRequiredService<ESSShellWindow>();
+                        essShell.Show();
+                    }
+                    else
+                    {
+                        // Staff / admin — normal payroll shell
+                        navigationService.NavigateTo<DashboardViewModel>();
+                        var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+                        mainWindow.Show();
+                    }
+
                     splash.Close();
                 });
+
             }
             catch (Exception ex)
             {
