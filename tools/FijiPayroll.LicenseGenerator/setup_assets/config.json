@@ -1,0 +1,6 @@
+{
+  "DefaultPublisher": "Datec Fiji Pte Limited",
+  "PrivateKeyPath": "keys\\private_key.pem",
+  "DefaultFeatures": "*",
+  "DefaultExpiryDays": 365
+}

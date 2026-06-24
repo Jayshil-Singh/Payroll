@@ -1,4 +1,5 @@
 using FijiPayroll.Application.Common.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -16,14 +17,21 @@ public sealed class FileStorageProvider : IFileStorageProvider
     private readonly string _baseDirectory;
     private readonly ILogger<FileStorageProvider> _logger;
 
-    /// <summary>Initializes the storage provider, setting up base directories.</summary>
-    public FileStorageProvider(ILogger<FileStorageProvider> logger)
+    /// <summary>Initializes the storage provider, setting up base directories from configuration.</summary>
+    public FileStorageProvider(ILogger<FileStorageProvider> logger, IConfiguration configuration)
     {
         _logger = logger;
-        // Sensible default path: AppData Local FijiPayroll Attachments
-        _baseDirectory = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "FijiPayroll", "Attachments");
+        string? rootDir = configuration["FileStorage:RootDirectory"];
+        if (!string.IsNullOrEmpty(rootDir))
+        {
+            _baseDirectory = rootDir;
+        }
+        else
+        {
+            _baseDirectory = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                "Fiji Payroll", "Exports");
+        }
 
         if (!Directory.Exists(_baseDirectory))
         {

@@ -2,6 +2,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Linq;
 using System.Linq;
+using System.IO;
+using System.Text.Json;
 
 namespace FijiPayroll.LicenseGenerator;
 
@@ -56,69 +58,245 @@ m75FHgmaBulP4bsXlmjjtImzx9S85nmIYDrID2tPo4+DYd4uIYx6sd+adyRHcD6p
 1K15G/WAXOnhGwovc5F8DMk=
 -----END PRIVATE KEY-----";
 
-    private static int Main(string[] args)
+    private static void SafeSetColor(ConsoleColor color)
     {
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
-        Console.WriteLine("║      Fiji Enterprise Payroll — License Generator v1.0       ║");
-        Console.WriteLine("╚══════════════════════════════════════════════════════════════╝");
-        Console.ResetColor();
-        Console.WriteLine();
-
-        if (args.Length == 0 || args.Contains("--help") || args.Contains("-h"))
-        {
-            PrintUsage();
-            return 0;
-        }
-
-        // Parse arguments
-        string? company = GetArgValue(args, "--company");
-        string? expiryStr = GetArgValue(args, "--expiry");
-        string hardwareHash = GetArgValue(args, "--hash") ?? string.Empty;
-        string featureFlags = GetArgValue(args, "--features") ?? "*";
-        string? privKeyPath = GetArgValue(args, "--privkey");
-        string outputPath = GetArgValue(args, "--output") ?? "license.fplic";
-
-        // Validate required arguments
-        if (string.IsNullOrWhiteSpace(company))
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("ERROR: --company is required.");
-            Console.ResetColor();
-            return 1;
-        }
-
-        if (string.IsNullOrWhiteSpace(expiryStr) || !DateTime.TryParseExact(expiryStr, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out var expiryDate))
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("ERROR: --expiry is required and must be in yyyy-MM-dd format.");
-            Console.ResetColor();
-            return 1;
-        }
-
-        // Load private key
-        string privateKeyPem;
-        if (!string.IsNullOrEmpty(privKeyPath))
-        {
-            if (!File.Exists(privKeyPath))
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"ERROR: Private key file not found: {privKeyPath}");
-                Console.ResetColor();
-                return 1;
-            }
-            privateKeyPem = File.ReadAllText(privKeyPath);
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("INFO: Using default embedded development private key.");
-            Console.ResetColor();
-            privateKeyPem = DefaultPrivateKeyPem;
-        }
-
         try
         {
+            if (!Console.IsOutputRedirected)
+            {
+                Console.ForegroundColor = color;
+            }
+        }
+        catch { }
+    }
+
+    private static void SafeResetColor()
+    {
+        try
+        {
+            if (!Console.IsOutputRedirected)
+            {
+                Console.ResetColor();
+            }
+        }
+        catch { }
+    }
+
+    private static void SafeWaitForKey()
+    {
+        try
+        {
+            if (!Console.IsInputRedirected)
+            {
+                Console.ReadKey(true);
+            }
+        }
+        catch { }
+    }
+
+    private static int Main(string[] args)
+    {
+        bool interactive = args.Length == 0;
+        try
+        {
+            SafeSetColor(ConsoleColor.Cyan);
+            Console.WriteLine("╔══════════════════════════════════════════════════════════════╗");
+            Console.WriteLine("║      Fiji Enterprise Payroll — License Generator v1.0       ║");
+            Console.WriteLine("╚══════════════════════════════════════════════════════════════╝");
+            SafeResetColor();
+            Console.WriteLine();
+
+            string? company = null;
+            string? expiryStr = null;
+            string hardwareHash = "";
+            string featureFlags = "*";
+            string? privKeyPath = null;
+
+            // Default output path: Desktop for interactive, local for CLI
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string defaultOutputPath = !string.IsNullOrEmpty(desktopPath) && interactive
+                ? Path.Combine(desktopPath, "license.fplic")
+                : "license.fplic";
+            string outputPath = defaultOutputPath;
+
+            // Try to load defaults from config.json if it exists
+            string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
+            if (File.Exists(configPath))
+            {
+                try
+                {
+                    string json = File.ReadAllText(configPath);
+                    using var doc = JsonDocument.Parse(json);
+                    var root = doc.RootElement;
+                    if (root.TryGetProperty("DefaultFeatures", out var featuresProp))
+                    {
+                        featureFlags = featuresProp.GetString() ?? "*";
+                    }
+                    if (root.TryGetProperty("PrivateKeyPath", out var keyPathProp))
+                    {
+                        string kPath = keyPathProp.GetString() ?? "";
+                        if (!string.IsNullOrEmpty(kPath))
+                        {
+                            privKeyPath = Path.IsPathRooted(kPath) ? kPath : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, kPath);
+                        }
+                    }
+                    if (root.TryGetProperty("DefaultExpiryDays", out var expiryDaysProp) && expiryDaysProp.TryGetInt32(out int days))
+                    {
+                        expiryStr = DateTime.Today.AddDays(days).ToString("yyyy-MM-dd");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    SafeSetColor(ConsoleColor.Yellow);
+                    Console.WriteLine($"Warning: Failed to load config.json: {ex.Message}");
+                    SafeResetColor();
+                }
+            }
+
+            if (interactive)
+            {
+                SafeSetColor(ConsoleColor.Yellow);
+                Console.WriteLine("--- Interactive License Generation Wizard ---");
+                SafeResetColor();
+                Console.WriteLine();
+
+                while (string.IsNullOrWhiteSpace(company))
+                {
+                    Console.Write("Enter Company/Tenant Name (Required): ");
+                    company = Console.ReadLine()?.Trim();
+                }
+
+                string defaultExpiry = expiryStr ?? "";
+                expiryStr = null; // Clear to force prompt but use default as fallback
+
+                string expiryPrompt = string.IsNullOrEmpty(defaultExpiry)
+                    ? "Enter Expiry Date (yyyy-MM-dd, Required): "
+                    : $"Enter Expiry Date (yyyy-MM-dd, Required, press Enter for default '{defaultExpiry}'): ";
+
+                while (string.IsNullOrWhiteSpace(expiryStr))
+                {
+                    Console.Write(expiryPrompt);
+                    string? inputExpiry = Console.ReadLine()?.Trim();
+                    if (string.IsNullOrEmpty(inputExpiry) && !string.IsNullOrEmpty(defaultExpiry))
+                    {
+                        expiryStr = defaultExpiry;
+                        break;
+                    }
+                    else if (!string.IsNullOrEmpty(inputExpiry))
+                    {
+                        if (DateTime.TryParseExact(inputExpiry, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out _))
+                        {
+                            expiryStr = inputExpiry;
+                        }
+                        else
+                        {
+                            SafeSetColor(ConsoleColor.Red);
+                            Console.WriteLine("Invalid date format. Please use yyyy-MM-dd.");
+                            SafeResetColor();
+                        }
+                    }
+                }
+
+                Console.Write("Enter Hardware Fingerprint (Optional, press Enter to bypass): ");
+                hardwareHash = Console.ReadLine()?.Trim() ?? string.Empty;
+
+                Console.Write($"Enter Feature Flags (Optional, default '{featureFlags}'): ");
+                string? inputFeatures = Console.ReadLine()?.Trim();
+                if (!string.IsNullOrEmpty(inputFeatures))
+                {
+                    featureFlags = inputFeatures;
+                }
+
+                Console.Write($"Enter Output File Path (Optional, default '{defaultOutputPath}'): ");
+                string? inputOutput = Console.ReadLine()?.Trim();
+                if (!string.IsNullOrEmpty(inputOutput))
+                {
+                    outputPath = inputOutput;
+                }
+
+                string keyPrompt = string.IsNullOrEmpty(privKeyPath)
+                    ? "Enter Private Key File Path (Optional, press Enter to use default dev key): "
+                    : $"Enter Private Key File Path (Optional, press Enter to use configured '{privKeyPath}'): ";
+
+                Console.Write(keyPrompt);
+                string? inputKey = Console.ReadLine()?.Trim();
+                if (!string.IsNullOrEmpty(inputKey))
+                {
+                    privKeyPath = inputKey;
+                }
+                Console.WriteLine();
+            }
+            else
+            {
+                if (args.Contains("--help") || args.Contains("-h"))
+                {
+                    PrintUsage();
+                    return 0;
+                }
+
+                // Parse arguments
+                company = GetArgValue(args, "--company");
+                expiryStr = GetArgValue(args, "--expiry");
+                hardwareHash = GetArgValue(args, "--hash") ?? string.Empty;
+                featureFlags = GetArgValue(args, "--features") ?? featureFlags;
+                privKeyPath = GetArgValue(args, "--privkey") ?? privKeyPath;
+                outputPath = GetArgValue(args, "--output") ?? outputPath;
+            }
+
+            // Validate required arguments for non-interactive
+            if (!interactive)
+            {
+                if (string.IsNullOrWhiteSpace(company))
+                {
+                    SafeSetColor(ConsoleColor.Red);
+                    Console.WriteLine("ERROR: --company is required.");
+                    SafeResetColor();
+                    return 1;
+                }
+
+                if (string.IsNullOrWhiteSpace(expiryStr) || !DateTime.TryParseExact(expiryStr, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out _))
+                {
+                    SafeSetColor(ConsoleColor.Red);
+                    Console.WriteLine("ERROR: --expiry is required and must be in yyyy-MM-dd format.");
+                    SafeResetColor();
+                    return 1;
+                }
+            }
+
+            // Load private key
+            string privateKeyPem;
+            if (!string.IsNullOrEmpty(privKeyPath))
+            {
+                if (!File.Exists(privKeyPath))
+                {
+                    if (!interactive)
+                    {
+                        SafeSetColor(ConsoleColor.Red);
+                        Console.WriteLine($"ERROR: Private key file not found: {privKeyPath}");
+                        SafeResetColor();
+                        return 1;
+                    }
+                    else
+                    {
+                        SafeSetColor(ConsoleColor.Yellow);
+                        Console.WriteLine($"Warning: Private key not found at {privKeyPath}. Using default embedded development key.");
+                        SafeResetColor();
+                        privateKeyPem = DefaultPrivateKeyPem;
+                    }
+                }
+                else
+                {
+                    privateKeyPem = File.ReadAllText(privKeyPath);
+                }
+            }
+            else
+            {
+                SafeSetColor(ConsoleColor.Yellow);
+                Console.WriteLine("INFO: Using default embedded development private key.");
+                SafeResetColor();
+                privateKeyPem = DefaultPrivateKeyPem;
+            }
+
             // Build the canonical message exactly as LicenseValidator expects
             string canonicalMessage = $"Company={company}&ExpiryDate={expiryStr}&HardwareHash={hardwareHash}&FeatureFlags={featureFlags}";
 
@@ -143,12 +321,19 @@ m75FHgmaBulP4bsXlmjjtImzx9S85nmIYDrID2tPo4+DYd4uIYx6sd+adyRHcD6p
                 )
             );
 
+            // Ensure output folder directory exists
+            string? outDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
+            {
+                Directory.CreateDirectory(outDir);
+            }
+
             File.WriteAllText(outputPath, licenseXml.ToString());
 
-            Console.ForegroundColor = ConsoleColor.Green;
+            SafeSetColor(ConsoleColor.Green);
             Console.WriteLine();
             Console.WriteLine($"✔ License generated successfully.");
-            Console.ResetColor();
+            SafeResetColor();
             Console.WriteLine();
             Console.WriteLine($"  Company:       {company}");
             Console.WriteLine($"  Expiry Date:   {expiryStr}");
@@ -157,13 +342,33 @@ m75FHgmaBulP4bsXlmjjtImzx9S85nmIYDrID2tPo4+DYd4uIYx6sd+adyRHcD6p
             Console.WriteLine($"  Output File:   {Path.GetFullPath(outputPath)}");
             Console.WriteLine();
 
+            if (interactive)
+            {
+                SafeSetColor(ConsoleColor.Yellow);
+                Console.WriteLine("Press any key to exit...");
+                SafeResetColor();
+                SafeWaitForKey();
+            }
+
             return 0;
         }
         catch (Exception ex)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"FATAL: Failed to generate license: {ex.Message}");
-            Console.ResetColor();
+            SafeSetColor(ConsoleColor.Red);
+            Console.WriteLine();
+            Console.WriteLine("FATAL ERROR: Failed to run or generate license.");
+            Console.WriteLine($"Details: {ex.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+            SafeResetColor();
+
+            if (interactive)
+            {
+                SafeSetColor(ConsoleColor.Yellow);
+                Console.WriteLine();
+                Console.WriteLine("Press any key to exit...");
+                SafeResetColor();
+                SafeWaitForKey();
+            }
             return 2;
         }
     }

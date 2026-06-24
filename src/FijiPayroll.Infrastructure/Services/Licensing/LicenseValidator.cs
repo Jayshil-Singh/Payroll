@@ -61,13 +61,23 @@ X8M+EKw3uabiuf9cR/vD8qECvLQPaULYSbOOQrZhZj9mNV9YlaElUcO5npWKMqc9
     }
 
     /// <summary>
-    /// Loads and validates the default offline license file (license.fplic) from application base directory.
+    /// Loads and validates the default offline license file (license.fplic) from the enterprise license directory, with a fallback to the application base directory.
     /// </summary>
     public async Task InitializeAsync()
     {
         try
         {
-            string licensePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "license.fplic");
+            string licensePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Fiji Payroll", "License", "license.fplic");
+            if (!File.Exists(licensePath))
+            {
+                // Fallback to application base directory (e.g. for developer/consultant setups)
+                string localPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "license.fplic");
+                if (File.Exists(localPath))
+                {
+                    licensePath = localPath;
+                }
+            }
+
             if (!File.Exists(licensePath))
             {
                 IsLicensed = false;

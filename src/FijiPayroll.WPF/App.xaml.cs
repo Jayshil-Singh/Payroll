@@ -61,6 +61,13 @@ public partial class App : System.Windows.Application
         DispatcherUnhandledException += OnDispatcherUnhandledException;
         TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
 
+        // Check for headless migration CLI arguments first
+        if (e.Args.Contains("--migrate") || e.Args.Contains("/migrate") || e.Args.Contains("--bootstrap") || e.Args.Contains("/bootstrap"))
+        {
+            RunHeadlessMigration();
+            return;
+        }
+
         // Initialize and show splash screen
         var splash = new SplashWindow();
         splash.Show();
@@ -75,12 +82,21 @@ public partial class App : System.Windows.Application
 
                 var services = new ServiceCollection();
 
-                string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                string dbDir = Path.Combine(userProfile, "FijiPayroll");
-                if (!Directory.Exists(dbDir)) Directory.CreateDirectory(dbDir);
+                // Load configuration from appsettings.json
+                var configBuilder = new ConfigurationBuilder()
+                    .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                var configuration = configBuilder.Build();
+                services.AddSingleton<IConfiguration>(configuration);
 
-                string connectionString = $"Server=(localdb)\\mssqllocaldb;Database=FijiPayrollDb;Trusted_Connection=True;" +
-                    $"MultipleActiveResultSets=true;AttachDbFileName={Path.Combine(dbDir, "FijiPayrollDb.mdf")}";
+                string? connectionString = configuration.GetConnectionString("DefaultConnection");
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    string dbDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Fiji Payroll");
+                    if (!Directory.Exists(dbDir)) Directory.CreateDirectory(dbDir);
+                    connectionString = $"Server=(localdb)\\mssqllocaldb;Database=FijiPayrollDb;Trusted_Connection=True;" +
+                        $"MultipleActiveResultSets=true;AttachDbFileName={Path.Combine(dbDir, "FijiPayrollDb.mdf")}";
+                }
 
                 // Shared log buffer — must be registered before DI build
                 var logBuffer = new LogBuffer();
@@ -102,7 +118,6 @@ public partial class App : System.Windows.Application
                 // Application layers
                 services.AddApplication();
                 services.AddPersistence(connectionString);
-                var configuration = new ConfigurationBuilder().Build();
                 services.AddInfrastructure(configuration);
 
 
@@ -142,8 +157,10 @@ public partial class App : System.Windows.Application
                                 task.Wait();
                                 if (task.Result)
                                 {
-                                    // Save the license file to the app directory as license.fplic
-                                    string targetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "license.fplic");
+                                    // Save the license file to the app data directory
+                                    string targetDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Fiji Payroll", "License");
+                                    if (!Directory.Exists(targetDir)) Directory.CreateDirectory(targetDir);
+                                    string targetPath = Path.Combine(targetDir, "license.fplic");
                                     File.WriteAllText(targetPath, licenseContent);
                                     licenseLoaded = true;
                                     MessageBox.Show("License validated and registered successfully.", "License Success", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -450,5 +467,122 @@ public partial class App : System.Windows.Application
         }
         catch { }
         Shutdown(-1);
+    }
+
+    private void RunHeadlessMigration()
+    {
+        string commonDataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Fiji Payroll");
+        string logsDir = Path.Combine(commonDataDir, "Logs");
+        if (!Directory.Exists(logsDir)) Directory.CreateDirectory(logsDir);
+        string bootstrapLogPath = Path.Combine(logsDir, "bootstrap.log");
+
+        void Log(string message)
+        {
+            string line = $"[{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC] {message}{Environment.NewLine}";
+            File.AppendAllText(bootstrapLogPath, line);
+        }
+
+        Log("======================================================================");
+        Log("Headless Database Bootstrap & Migration Started.");
+        try
+        {
+            // Load configuration from appsettings.json
+            var configBuilder = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: true);
+            var configuration = configBuilder.Build();
+
+            string? connectionString = configuration.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                string dbDir = commonDataDir;
+                if (!Directory.Exists(dbDir)) Directory.Exists(dbDir); // Wait, make sure we create it
+                if (!Directory.Exists(dbDir)) Directory.CreateDirectory(dbDir);
+                connectionString = $"Server=(localdb)\\mssqllocaldb;Database=FijiPayrollDb;Trusted_Connection=True;MultipleActiveResultSets=true;AttachDbFileName={Path.Combine(dbDir, "FijiPayrollDb.mdf")}";
+            }
+
+            Log($"Resolved Connection String: {connectionString}");
+
+            var services = new ServiceCollection();
+            
+            // Shared log buffer
+            var logBuffer = new LogBuffer();
+            services.AddSingleton<ILogBuffer>(logBuffer);
+            services.AddLogging(logging =>
+            {
+                logging.ClearProviders();
+                logging.AddProvider(new InMemoryLoggerProvider(logBuffer));
+            });
+
+            // Register standard monitors required by infrastructure / plugins
+            var priorityQueue = new PriorityDispatcherQueue();
+            services.AddSingleton(priorityQueue);
+            services.AddSingleton<SystemHealthMonitor>();
+            services.AddSingleton<SystemIntegrityValidator>();
+            services.AddSingleton<MemorySmoothingScheduler>();
+            services.AddSingleton<ViewModelLeakDetector>();
+
+            // Layer services
+            services.AddApplication();
+            services.AddPersistence(connectionString);
+            services.AddInfrastructure(configuration);
+            services.AddPresentation();
+            services.AddSingleton<IConfiguration>(configuration);
+
+            using var serviceProvider = services.BuildServiceProvider();
+            Log("DI Container successfully built.");
+
+            using var scope = serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            
+            Log("Executing Entity Framework Migrations...");
+            context.Database.Migrate();
+            Log("Migrations completed successfully.");
+
+            Log("Initializing dynamic plugin schemas...");
+            var pluginLoader = serviceProvider.GetRequiredService<PluginLoader>();
+            pluginLoader.InitializePluginsDatabaseAsync(scope.ServiceProvider).Wait();
+            Log("Plugin schemas registered.");
+
+            Log("Securing PII Data (plaintext to AES-256 migration)...");
+            context.MigratePlaintextToAesAsync().Wait();
+            Log("PII data encryption complete.");
+
+            Log("Running Database Seeders...");
+            
+            Log("Seeding Rule Modules...");
+            scope.ServiceProvider.GetRequiredService<RuleModuleSeeder>().SeedAsync().Wait();
+            
+            Log("Seeding Tax Brackets...");
+            scope.ServiceProvider.GetRequiredService<TaxBracketSeeder>().SeedAsync().Wait();
+            
+            Log("Seeding Payroll Components...");
+            scope.ServiceProvider.GetRequiredService<PayrollComponentSeeder>().SeedAsync().Wait();
+            
+            Log("Seeding Default Employee structures...");
+            scope.ServiceProvider.GetRequiredService<EmployeeSeeder>().SeedAsync().Wait();
+            
+            Log("Seeding Compliance templates...");
+            scope.ServiceProvider.GetRequiredService<ComplianceSeeder>().SeedAsync().Wait();
+            
+            Log("Seeding Default Administrator account...");
+            scope.ServiceProvider.GetRequiredService<UserAccountSeeder>().SeedAsync().Wait();
+
+            Log("Database seeding complete.");
+            Log("Headless Database Bootstrap & Migration Completed Successfully.");
+            Log("======================================================================");
+            Environment.Exit(0);
+        }
+        catch (Exception ex)
+        {
+            Log($"FATAL ERROR during bootstrap: {ex.Message}");
+            Log($"Stack Trace: {ex.StackTrace}");
+            if (ex.InnerException != null)
+            {
+                Log($"Inner Exception: {ex.InnerException.Message}");
+            }
+            Log("======================================================================");
+            Environment.Exit(1);
+        }
     }
 }

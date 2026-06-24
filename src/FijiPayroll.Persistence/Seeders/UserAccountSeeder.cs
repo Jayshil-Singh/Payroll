@@ -143,7 +143,7 @@ public sealed class UserAccountSeeder
 
             if (!adminUserExists)
             {
-                var passwordHash = _passwordHasher.Hash("Admin@1234");
+                var passwordHash = _passwordHasher.Hash("ChangeMe123!");
                 var adminUser = UserAccount.Create(
                     companyId: company.Id,
                     username: "admin",

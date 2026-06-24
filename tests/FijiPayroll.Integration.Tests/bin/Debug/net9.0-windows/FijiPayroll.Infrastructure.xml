@@ -361,8 +361,8 @@
             or secure network UNC shares, completely isolated from the database tables.
             </summary>
         </member>
-        <member name="M:FijiPayroll.Infrastructure.Services.FileStorageProvider.#ctor(Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.FileStorageProvider})">
-            <summary>Initializes the storage provider, setting up base directories.</summary>
+        <member name="M:FijiPayroll.Infrastructure.Services.FileStorageProvider.#ctor(Microsoft.Extensions.Logging.ILogger{FijiPayroll.Infrastructure.Services.FileStorageProvider},Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>Initializes the storage provider, setting up base directories from configuration.</summary>
         </member>
         <member name="M:FijiPayroll.Infrastructure.Services.FileStorageProvider.SaveFileAsync(System.String,System.IO.Stream,System.Threading.CancellationToken)">
             <inheritdoc />
@@ -439,7 +439,7 @@
         </member>
         <member name="M:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.InitializeAsync">
             <summary>
-            Loads and validates the default offline license file (license.fplic) from application base directory.
+            Loads and validates the default offline license file (license.fplic) from the enterprise license directory, with a fallback to the application base directory.
             </summary>
         </member>
         <member name="M:FijiPayroll.Infrastructure.Services.Licensing.LicenseValidator.ValidateLicenseFileAsync(System.String)">
