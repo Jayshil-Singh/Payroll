@@ -24,8 +24,8 @@
 
         <!-- ── 1. Page Header ── -->
         <StackPanel Grid.Row="0" Margin="0,0,0,20">
-            <TextBlock Text="Pending Change Requests" FontSize="28" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Segoe UI Semibold" />
-            <TextBlock Text="Review, execute approvals, or perform bulk validation for master data and payroll calculation requests." FontSize="14" Foreground="#A0AEC0" Margin="0,4,0,0" />
+            <TextBlock Text="Pending Change Requests" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Segoe UI Semibold" />
+            <TextBlock Text="Review, execute approvals, or perform bulk validation for master data and payroll calculation requests." FontSize="14" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,0" />
         </StackPanel>
 
         <!-- ── 2. Action & Filter Bar ── -->
@@ -38,36 +38,36 @@
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <!-- Search Input Box -->
-                    <Border CornerRadius="4" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="#0F111A" Width="280" Height="32" Padding="8,4">
+                    <Border CornerRadius="4" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="{DynamicResource BrushBgDeep}" Width="280" Height="32" Padding="8,4">
                         <Grid>
                             <TextBlock Text="Search by Entity ID or Requester..." 
-                                       Foreground="#4A5568" 
+                                       Foreground="{DynamicResource BrushTextSecondary}" 
                                        VerticalAlignment="Center" 
                                        IsHitTestVisible="False" 
                                        Visibility="{Binding SearchText.Length, Converter={StaticResource BoolToVisConverter}, ConverterParameter=invert}"/>
                             <TextBox BorderThickness="0" 
                                      Background="Transparent" 
-                                     Foreground="#FFFFFF" 
-                                     CaretBrush="#FFFFFF"
+                                     Foreground="{DynamicResource BrushTextPrimary}" 
+                                     CaretBrush="{DynamicResource BrushTextPrimary}"
                                      VerticalAlignment="Center"
                                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                         </Grid>
                     </Border>
 
                     <!-- Filter ComboBox -->
-                    <TextBlock Text="Type:" Foreground="#A0AEC0" VerticalAlignment="Center" Margin="16,0,8,0" FontSize="13" FontWeight="SemiBold"/>
+                    <TextBlock Text="Type:" Foreground="{DynamicResource BrushTextSecondary}" VerticalAlignment="Center" Margin="16,0,8,0" FontSize="13" FontWeight="SemiBold"/>
                     <ComboBox Height="32" Width="140" 
                               ItemsSource="{Binding EntityTypeFilters}" 
                               SelectedItem="{Binding SelectedEntityTypeFilter}"
                               VerticalContentAlignment="Center" 
-                              Background="#0F111A" 
-                              Foreground="#FFFFFF" 
+                              Background="{DynamicResource BrushBgDeep}" 
+                              Foreground="{DynamicResource BrushTextPrimary}" 
                               BorderBrush="{DynamicResource BrushBorder}" 
                               BorderThickness="1">
                         <ComboBox.Resources>
                             <!-- Override popup colors for modern styling -->
-                            <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#1B2032" />
-                            <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#FFFFFF" />
+                            <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="{DynamicResource ColorBgPanel}" />
+                            <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="{DynamicResource ColorTextPrimary}" />
                         </ComboBox.Resources>
                     </ComboBox>
                 </StackPanel>
@@ -77,8 +77,6 @@
                     <Button Content="Bulk Approve Selected" 
                             Command="{Binding BulkApproveCommand}" 
                             Style="{StaticResource SecondaryButton}" 
-                            Background="#2E3656" 
-                            Foreground="{DynamicResource BrushTextPrimary}" 
                             FontWeight="SemiBold"
                             Height="32" 
                             Padding="16,0" 
@@ -227,7 +225,7 @@
                                 <TextBlock Text="Review Change Request" Style="{StaticResource Header2}" Margin="0,0,0,16"/>
 
                                 <!-- Detail Fields -->
-                                <Border Background="#111625" CornerRadius="6" Padding="12" Margin="0,0,0,16">
+                                <Border Background="{DynamicResource BrushBgDeep}" CornerRadius="6" Padding="12" Margin="0,0,0,16">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
@@ -240,30 +238,30 @@
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Module:" Foreground="#718096" FontSize="12" Margin="0,4,0,4"/>
-                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedWorkflow.EntityType}" Foreground="#FFFFFF" FontWeight="SemiBold" FontSize="13" Margin="0,4,0,4"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Module:" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="0,4,0,4"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedWorkflow.EntityType}" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" FontSize="13" Margin="0,4,0,4"/>
 
-                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Entity ID:" Foreground="#718096" FontSize="12" Margin="0,4,0,4"/>
-                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedWorkflow.EntityId}" Foreground="#0D99FF" FontWeight="Bold" FontSize="13" Margin="0,4,0,4"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Entity ID:" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="0,4,0,4"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedWorkflow.EntityId}" Foreground="{DynamicResource BrushAccent}" FontWeight="Bold" FontSize="13" Margin="0,4,0,4"/>
 
-                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Requested By:" Foreground="#718096" FontSize="12" Margin="0,4,0,4"/>
-                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedWorkflow.RequestedBy}" Foreground="#FFFFFF" FontSize="13" Margin="0,4,0,4"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Requested By:" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="0,4,0,4"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedWorkflow.RequestedBy}" Foreground="{DynamicResource BrushTextPrimary}" FontSize="13" Margin="0,4,0,4"/>
 
-                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Approver Role:" Foreground="#718096" FontSize="12" Margin="0,4,0,4"/>
-                                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedWorkflow.CurrentApproverRole}" Foreground="#ED8936" FontWeight="SemiBold" FontSize="13" Margin="0,4,0,4"/>
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Approver Role:" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="0,4,0,4"/>
+                                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedWorkflow.CurrentApproverRole}" Foreground="{DynamicResource BrushAlertOrange}" FontWeight="SemiBold" FontSize="13" Margin="0,4,0,4"/>
                                     </Grid>
                                 </Border>
 
                                 <!-- Comments TextBox -->
-                                <TextBlock Text="Decision Comments" FontWeight="SemiBold" FontSize="13" Foreground="#FFFFFF" Margin="0,0,0,6"/>
+                                <TextBlock Text="Decision Comments" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,6"/>
                                 <TextBox Text="{Binding Comments, UpdateSourceTrigger=PropertyChanged}" 
                                          Height="80" 
                                          AcceptsReturn="True" 
                                          TextWrapping="Wrap" 
-                                         Background="#111625" 
+                                         Background="{DynamicResource BrushBgDeep}" 
                                          BorderBrush="{DynamicResource BrushBorder}" 
-                                         Foreground="White" 
-                                         CaretBrush="White" 
+                                         Foreground="{DynamicResource BrushTextPrimary}" 
+                                         CaretBrush="{DynamicResource BrushTextPrimary}" 
                                          Padding="8" 
                                          Margin="0,0,0,16"/>
 

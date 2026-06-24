@@ -115,8 +115,9 @@
     </Style>
 
     <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
-        <Setter Property="Background" Value="#2E3656" />
-        <Setter Property="BorderBrush" Value="#3F4972" />
+        <Setter Property="Background" Value="{DynamicResource BrushBgDeep}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Template">
             <Setter.Value>
@@ -130,13 +131,11 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#3E4872" />
-                            <Setter Property="BorderBrush" Value="#4F5B8F" />
+                            <Setter Property="Background" Value="{DynamicResource BrushBgSidebar}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="#1C2133" />
-                            <Setter Property="BorderBrush" Value="#252D47" />
-                            <Setter Property="Foreground" Value="#525E7E" />
+                            <Setter Property="Background" Value="{DynamicResource BrushBgDeep}" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -172,11 +171,11 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="#171D2F" />
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushBgDeep}" />
                             <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="#1B2238" />
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushBgSidebar}" />
                             <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BrushAccent}" />
                             <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
                         </Trigger>

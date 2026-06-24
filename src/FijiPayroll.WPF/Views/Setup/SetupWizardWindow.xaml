@@ -18,8 +18,8 @@
         
         <!-- Premium Styled Textbox -->
         <Style x:Key="WizardTextBox" TargetType="TextBox">
-            <Setter Property="Background" Value="#171D2F"/>
-            <Setter Property="BorderBrush" Value="#2E3656"/>
+            <Setter Property="Background" Value="{DynamicResource BrushBgPanel}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}"/>
             <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,6"/>
@@ -37,7 +37,6 @@
                             </Trigger>
                             <Trigger Property="IsFocused" Value="true">
                                 <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}"/>
-                                <Setter Property="Background" Value="#1A2238"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -47,8 +46,8 @@
 
         <!-- Styled PasswordBox -->
         <Style x:Key="WizardPasswordBox" TargetType="PasswordBox">
-            <Setter Property="Background" Value="#171D2F"/>
-            <Setter Property="BorderBrush" Value="#2E3656"/>
+            <Setter Property="Background" Value="{DynamicResource BrushBgPanel}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}"/>
             <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="8,6"/>
@@ -65,7 +64,6 @@
                             </Trigger>
                             <Trigger Property="IsFocused" Value="true">
                                 <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}"/>
-                                <Setter Property="Background" Value="#1A2238"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -75,8 +73,8 @@
 
         <!-- Premium Styled ComboBox -->
         <Style x:Key="WizardComboBox" TargetType="ComboBox">
-            <Setter Property="Background" Value="#171D2F"/>
-            <Setter Property="BorderBrush" Value="#2E3656"/>
+            <Setter Property="Background" Value="{DynamicResource BrushBgPanel}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}"/>
             <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
             <Setter Property="Padding" Value="8,6"/>
             <Setter Property="Margin" Value="0,4,0,12"/>
@@ -91,7 +89,7 @@
 
         <!-- DatePicker Custom styling -->
         <Style x:Key="WizardDatePicker" TargetType="DatePicker">
-            <Setter Property="Background" Value="#171D2F"/>
+            <Setter Property="Background" Value="{DynamicResource BrushBgPanel}"/>
             <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
             <Setter Property="Margin" Value="0,4,0,12"/>
         </Style>
@@ -147,7 +145,7 @@
                                 <Setter Property="Background" Value="Transparent"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentStep}" Value="1">
-                                        <Setter Property="Background" Value="#1B2238"/>
+                                        <Setter Property="Background" Value="{DynamicResource BrushBgDeep}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -164,7 +162,7 @@
                                 <Setter Property="Background" Value="Transparent"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentStep}" Value="2">
-                                        <Setter Property="Background" Value="#1B2238"/>
+                                        <Setter Property="Background" Value="{DynamicResource BrushBgDeep}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -181,7 +179,7 @@
                                 <Setter Property="Background" Value="Transparent"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentStep}" Value="3">
-                                        <Setter Property="Background" Value="#1B2238"/>
+                                        <Setter Property="Background" Value="{DynamicResource BrushBgDeep}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -198,7 +196,7 @@
                                 <Setter Property="Background" Value="Transparent"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentStep}" Value="4">
-                                        <Setter Property="Background" Value="#1B2238"/>
+                                        <Setter Property="Background" Value="{DynamicResource BrushBgDeep}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -215,7 +213,7 @@
                                 <Setter Property="Background" Value="Transparent"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentStep}" Value="5">
-                                        <Setter Property="Background" Value="#1B2238"/>
+                                        <Setter Property="Background" Value="{DynamicResource BrushBgDeep}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -232,7 +230,7 @@
                                 <Setter Property="Background" Value="Transparent"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentStep}" Value="6">
-                                        <Setter Property="Background" Value="#1B2238"/>
+                                        <Setter Property="Background" Value="{DynamicResource BrushBgDeep}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -249,7 +247,7 @@
                                 <Setter Property="Background" Value="Transparent"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentStep}" Value="7">
-                                        <Setter Property="Background" Value="#1B2238"/>
+                                        <Setter Property="Background" Value="{DynamicResource BrushBgDeep}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -266,7 +264,7 @@
                                 <Setter Property="Background" Value="Transparent"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentStep}" Value="8">
-                                        <Setter Property="Background" Value="#1B2238"/>
+                                        <Setter Property="Background" Value="{DynamicResource BrushBgDeep}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -283,7 +281,7 @@
                                 <Setter Property="Background" Value="Transparent"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding CurrentStep}" Value="9">
-                                        <Setter Property="Background" Value="#1B2238"/>
+                                        <Setter Property="Background" Value="{DynamicResource BrushBgDeep}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -299,7 +297,7 @@
             <!-- Bottom Progress Tracker -->
             <StackPanel Grid.Row="2" Margin="24,20,24,32">
                 <TextBlock Text="{Binding CurrentStep, StringFormat='Step {0} of 9'}" Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" HorizontalAlignment="Center" Margin="0,0,0,8" />
-                <ProgressBar Value="{Binding CurrentStep}" Maximum="9" Height="6" Background="#1A2035" BorderThickness="0" Foreground="{DynamicResource BrushAccent}">
+                <ProgressBar Value="{Binding CurrentStep}" Maximum="9" Height="6" Background="{DynamicResource BrushBorder}" BorderThickness="0" Foreground="{DynamicResource BrushAccent}">
                     <ProgressBar.Template>
                         <ControlTemplate TargetType="ProgressBar">
                             <Border CornerRadius="3" Background="{TemplateBinding Background}" ClipToBounds="True">
@@ -333,7 +331,7 @@
 
             <!-- Header -->
             <StackPanel Grid.Row="0" Margin="0,0,0,24">
-                <TextBlock Text="{Binding StepTitle}" FontSize="24" FontWeight="Bold" Foreground="#FFFFFF" />
+                <TextBlock Text="{Binding StepTitle}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" />
                 <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Margin="0,12,0,0" />
             </StackPanel>
 
@@ -361,6 +359,26 @@
                         <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Database Name"/>
                         <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding DbName, UpdateSourceTrigger=PropertyChanged}"/>
 
+                        <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Authentication Type"/>
+                        <ComboBox ItemsSource="{Binding AuthTypes}" SelectedItem="{Binding DbAuthType}" Style="{StaticResource WizardComboBox}"/>
+
+                        <StackPanel Visibility="{Binding DbShowSqlAuth, Converter={StaticResource BoolToVisConverter}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,8,0">
+                                    <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Database Username *"/>
+                                    <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding DbUsername, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                    <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Database Password *"/>
+                                    <PasswordBox x:Name="TxtDbPassword" Style="{StaticResource WizardPasswordBox}" PasswordChanged="TxtDbPassword_PasswordChanged"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+
                         <Grid Margin="0,8,0,16">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -383,11 +401,11 @@
                                         </Style>
                                     </Ellipse.Style>
                                 </Ellipse>
-                                <TextBlock Text="{Binding DbConnectionStatus}" Foreground="#FFFFFF" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding DbConnectionStatus}" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Grid>
 
-                        <Border BorderThickness="1" BorderBrush="{DynamicResource BrushBorder}" Background="#0D111A" CornerRadius="4" Padding="12" Height="100">
+                        <Border BorderThickness="1" BorderBrush="{DynamicResource BrushBorder}" Background="{DynamicResource BrushBgSidebar}" CornerRadius="4" Padding="12" Height="100">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <TextBlock Text="{Binding DbStatusDetails, TargetNullValue='Connection status log logs here...'}" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12.5" TextWrapping="Wrap"/>
                             </ScrollViewer>
@@ -541,20 +559,136 @@
                             </Style.Triggers>
                         </Style>
                     </Grid.Style>
-                    <StackPanel>
-                        <TextBlock Style="{StaticResource BodyText}" Text="Seed default standard earnings, deductions, and statutory components." Margin="0,0,0,20"/>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource BodyText}" Text="Seed default standard earnings, deductions, and statutory components." Margin="0,0,0,16"/>
 
-                        <Border Background="#171D2F" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="16" CornerRadius="6">
-                            <StackPanel>
-                                <CheckBox IsChecked="{Binding UseDefaultComponents}" Content="Use FEPS Default Components Library" Foreground="#FFFFFF" FontWeight="Bold" FontSize="14" Margin="0,0,0,12"/>
-                                <TextBlock Text="If enabled, the system will seed:" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12.5" Margin="24,0,0,4"/>
-                                <TextBlock Text="• Earnings: Basic Salary, Overtime (1.5x), Allowance, Bonus" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="24,0,0,2"/>
-                                <TextBlock Text="• Deductions: PAYE Tax, FNPF Employee contribution (8.0%), Loan Deduction, Advance Recovery" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="24,0,0,2"/>
-                                <TextBlock Text="• Employer: FNPF Employer contribution (10.0%)" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="24,0,0,0"/>
+                            <Border Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="16" CornerRadius="6" Margin="0,0,0,16">
+                                <StackPanel>
+                                    <CheckBox IsChecked="{Binding UseDefaultComponents}" Content="Use FEPS Default Components Library" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" FontSize="14" Margin="0,0,0,12"/>
+                                    <TextBlock Text="If enabled, the system will seed:" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12.5" Margin="24,0,0,4"/>
+                                    <TextBlock Text="• Earnings: Basic Salary, Overtime (1.5x), Allowance, Bonus" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="24,0,0,2"/>
+                                    <TextBlock Text="• Deductions: PAYE Tax, FNPF Employee contribution (8.0%), Loan Deduction, Advance Recovery" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="24,0,0,2"/>
+                                    <TextBlock Text="• Employer: FNPF Employer contribution (10.0%)" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="24,0,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,1,0,0" Margin="0,0,0,16"/>
+
+                            <!-- Custom Allowances & Deductions Header -->
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Custom Allowances &amp; Deductions" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"/>
+                                <Button Grid.Column="1" Command="{Binding ToggleAddComponentFormCommand}" Content="+ Add Custom Component" Style="{StaticResource SecondaryButton}" Height="30" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <!-- Add Component Form (Toggled) -->
+                            <StackPanel Visibility="{Binding ShowAddComponentForm, Converter={StaticResource BoolToVisConverter}}" Margin="0,0,0,16">
+                                <Border Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="16" CornerRadius="6">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Row 0: Code & Name -->
+                                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,8,12">
+                                            <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Component Code *"/>
+                                            <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding NewComponentCode, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="0" Grid.Column="1" Margin="8,0,0,12">
+                                            <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Component Name *"/>
+                                            <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding NewComponentName, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+
+                                        <!-- Row 1: Type & Method -->
+                                        <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,8,12">
+                                            <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Component Type"/>
+                                            <ComboBox SelectedValue="{Binding NewComponentType}" SelectedValuePath="Content" Style="{StaticResource WizardComboBox}">
+                                                <ComboBoxItem Content="Allowance"/>
+                                                <ComboBoxItem Content="Deduction"/>
+                                                <ComboBoxItem Content="Earning"/>
+                                            </ComboBox>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Grid.Column="1" Margin="8,0,0,12">
+                                            <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Calculation Method"/>
+                                            <ComboBox SelectedValue="{Binding NewCalculationMethod}" SelectedValuePath="Content" Style="{StaticResource WizardComboBox}">
+                                                <ComboBoxItem Content="Fixed"/>
+                                                <ComboBoxItem Content="Percentage"/>
+                                                <ComboBoxItem Content="Manual"/>
+                                            </ComboBox>
+                                        </StackPanel>
+
+                                        <!-- Row 2: Value & Options -->
+                                        <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,8,12">
+                                            <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Default Value / Rate"/>
+                                            <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding NewCalculationValue, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="2" Grid.Column="1" Margin="8,16,0,12" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <CheckBox IsChecked="{Binding NewIsTaxable}" Content="Taxable" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,16,0"/>
+                                            <CheckBox IsChecked="{Binding NewIsFnpfApplicable}" Content="Subject to FNPF" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        </StackPanel>
+
+                                        <!-- Row 3: Add button -->
+                                        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <Button Command="{Binding ToggleAddComponentFormCommand}" Content="Cancel" Style="{StaticResource SecondaryButton}" Width="80" Height="30" Margin="0,0,8,0"/>
+                                            <Button Command="{Binding AddCustomComponentCommand}" Content="Save Component" Style="{StaticResource ModernButton}" Width="130" Height="30"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
                             </StackPanel>
-                        </Border>
-                    </StackPanel>
+
+                            <!-- Custom Components List -->
+                            <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="{DynamicResource BrushBgPanel}" CornerRadius="4" Padding="8" MinHeight="100">
+                                <ListView ItemsSource="{Binding CustomComponents}" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource BrushTextPrimary}">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn Header="Code" DisplayMemberBinding="{Binding Code}" Width="90"/>
+                                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="150"/>
+                                            <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="90"/>
+                                            <GridViewColumn Header="Method" DisplayMemberBinding="{Binding CalculationMethod}" Width="90"/>
+                                            <GridViewColumn Header="Value" DisplayMemberBinding="{Binding CalculationValue}" Width="85"/>
+                                            <GridViewColumn Header="Taxable" Width="70">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox IsChecked="{Binding IsTaxable}" IsEnabled="False" HorizontalAlignment="Center"/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn Header="FNPF" Width="70">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox IsChecked="{Binding IsFnpfApplicable}" IsEnabled="False" HorizontalAlignment="Center"/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn Header="Actions" Width="70">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Button Command="{Binding DataContext.RemoveCustomComponentCommand, RelativeSource={RelativeSource AncestorType=ListView}}" 
+                                                                CommandParameter="{Binding}" 
+                                                                Content="Delete" 
+                                                                Foreground="Red" Background="Transparent" BorderThickness="0" Cursor="Hand" Padding="2,0"/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
                 </Grid>
+
 
                 <!-- STEP 6: Leave Setup -->
                 <Grid>
@@ -572,9 +706,9 @@
                         <StackPanel>
                             <TextBlock Style="{StaticResource BodyText}" Text="Configure default leave entitlements and parameters for the tenant policies." Margin="0,0,0,16"/>
 
-                            <Border Background="#171D2F" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12" CornerRadius="4" Margin="0,0,0,12">
+                            <Border Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12" CornerRadius="4" Margin="0,0,0,12">
                                 <StackPanel>
-                                    <TextBlock Text="Annual Leave Policy" Foreground="#FFFFFF" FontWeight="Bold" FontSize="13" Margin="0,0,0,8"/>
+                                    <TextBlock Text="Annual Leave Policy" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" FontSize="13" Margin="0,0,0,8"/>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -597,9 +731,9 @@
                                 </StackPanel>
                             </Border>
 
-                            <Border Background="#171D2F" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12" CornerRadius="4" Margin="0,0,0,12">
+                            <Border Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12" CornerRadius="4" Margin="0,0,0,12">
                                 <StackPanel>
-                                    <TextBlock Text="Sick Leave Policy" Foreground="#FFFFFF" FontWeight="Bold" FontSize="13" Margin="0,0,0,8"/>
+                                    <TextBlock Text="Sick Leave Policy" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" FontSize="13" Margin="0,0,0,8"/>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -671,10 +805,12 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBox Text="{Binding ImportFilePath}" Style="{StaticResource WizardTextBox}" Margin="0,0,8,0" IsReadOnly="True" VerticalAlignment="Center"/>
-                            <Button Grid.Column="1" Command="{Binding BrowseFileCommand}" Content="Browse" Style="{StaticResource SecondaryButton}" Width="90" Height="34" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <Button Grid.Column="2" Command="{Binding ParseFileCommand}" Content="Parse &amp; Validate" Style="{StaticResource ModernButton}" Width="130" Height="34" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1" Command="{Binding DownloadTemplateCommand}" Content="Download Template" Style="{StaticResource SecondaryButton}" Width="140" Height="34" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <Button Grid.Column="2" Command="{Binding BrowseFileCommand}" Content="Browse" Style="{StaticResource SecondaryButton}" Width="90" Height="34" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <Button Grid.Column="3" Command="{Binding ParseFileCommand}" Content="Parse &amp; Validate" Style="{StaticResource ModernButton}" Width="130" Height="34" VerticalAlignment="Center"/>
                         </Grid>
 
                         <Grid Grid.Row="2">
@@ -683,8 +819,8 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Text="{Binding ImportStatusText}" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12.5" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                            <Border Grid.Row="1" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="#171D2F" CornerRadius="4" Padding="8">
-                                <ListView ItemsSource="{Binding ImportedEmployees}" Background="Transparent" BorderThickness="0" Foreground="#FFFFFF">
+                            <Border Grid.Row="1" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="{DynamicResource BrushBgPanel}" CornerRadius="4" Padding="8">
+                                <ListView ItemsSource="{Binding ImportedEmployees}" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource BrushTextPrimary}">
                                     <ListView.View>
                                         <GridView>
                                             <GridViewColumn Header="Emp No" DisplayMemberBinding="{Binding EmployeeNumber}" Width="70"/>
@@ -760,7 +896,7 @@
                         <StackPanel>
                             <TextBlock Style="{StaticResource BodyText}" Text="Review the configuration summary below before locking setup." Margin="0,0,0,16"/>
 
-                            <Border Background="#171D2F" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="16" CornerRadius="6" Margin="0,0,0,16">
+                            <Border Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="16" CornerRadius="6" Margin="0,0,0,16">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="150"/>
@@ -776,30 +912,30 @@
                                     </Grid.RowDefinitions>
 
                                     <TextBlock Grid.Row="0" Text="Company Legal Name:" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,6"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CompanyName}" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,6"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CompanyName}" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,0,0,6"/>
 
                                     <TextBlock Grid.Row="1" Text="TIN &amp; FNPF Number:" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,6"/>
                                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,6">
-                                        <TextBlock Text="{Binding CompanyTIN}" Foreground="#FFFFFF" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding CompanyTIN}" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold"/>
                                         <TextBlock Text=" / " Foreground="{DynamicResource BrushTextSecondary}"/>
-                                        <TextBlock Text="{Binding CompanyFnpf}" Foreground="#FFFFFF" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding CompanyFnpf}" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold"/>
                                     </StackPanel>
 
                                     <TextBlock Grid.Row="2" Text="Fiscal Calendar:" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,6"/>
                                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,6">
-                                        <TextBlock Text="{Binding CalendarStartDate, StringFormat='\{0:yyyy-MM-dd\}'}" Foreground="#FFFFFF"/>
+                                        <TextBlock Text="{Binding CalendarStartDate, StringFormat='\{0:yyyy-MM-dd\}'}" Foreground="{DynamicResource BrushTextPrimary}"/>
                                         <TextBlock Text=" to " Foreground="{DynamicResource BrushTextSecondary}"/>
-                                        <TextBlock Text="{Binding CalendarEndDate, StringFormat='\{0:yyyy-MM-dd\}'}" Foreground="#FFFFFF"/>
+                                        <TextBlock Text="{Binding CalendarEndDate, StringFormat='\{0:yyyy-MM-dd\}'}" Foreground="{DynamicResource BrushTextPrimary}"/>
                                     </StackPanel>
 
                                     <TextBlock Grid.Row="3" Text="Pay Frequency:" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,6"/>
-                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding CalendarFrequency}" Foreground="#FFFFFF" Margin="0,0,0,6"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding CalendarFrequency}" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,6"/>
 
                                     <TextBlock Grid.Row="4" Text="Imported Employees:" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,6"/>
-                                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ImportedCount}" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,6"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ImportedCount}" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,0,0,6"/>
 
                                     <TextBlock Grid.Row="5" Text="Admin Username:" Foreground="{DynamicResource BrushTextSecondary}"/>
-                                    <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding AdminUsername}" Foreground="#FFFFFF" FontWeight="Bold"/>
+                                    <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding AdminUsername}" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold"/>
                                 </Grid>
                             </Border>
 
@@ -823,7 +959,7 @@
         </Grid>
 
         <!-- Global Busy Loader Overlay -->
-        <Grid Grid.ColumnSpan="2" Background="#E00B0E18" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisConverter}}" Panel.ZIndex="1000">
+        <Grid Grid.ColumnSpan="2" Background="#E0FFFFFF" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisConverter}}" Panel.ZIndex="1000">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="40" Height="40" Background="Transparent" Foreground="{DynamicResource BrushAccent}" BorderThickness="0"/>
                 <TextBlock Text="Applying configuration and migrating database. Please wait..." Foreground="{DynamicResource BrushTextPrimary}" FontSize="14" FontWeight="SemiBold" Margin="0,16,0,0"/>

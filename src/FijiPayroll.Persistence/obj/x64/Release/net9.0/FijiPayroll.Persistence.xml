@@ -1,0 +1,1198 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FijiPayroll.Persistence</name>
+    </assembly>
+    <members>
+        <member name="T:FijiPayroll.Persistence.ApplicationDbContextFactory">
+            <summary>
+            Design-time factory for EF Core migrations tooling.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Audit.ApprovalWorkflowConfiguration">
+            <summary>
+            EF Core configuration mapping for the ApprovalWorkflow entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Audit.AuditLogConfiguration">
+            <summary>
+            EF Core configuration mapping for the AuditLog entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Audit.CompanySetupAuditConfiguration">
+            <summary>
+            EF Core configuration mapping for the CompanySetupAudit entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Audit.CompanySetupAuditConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Audit.CompanySetupAudit})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Audit.EntityEventConfiguration">
+            <summary>
+            EF Core configuration mapping for the EntityEvent outbox entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Audit.ImportJobConfiguration">
+            <summary>
+            EF Core configuration mapping for the ImportJob entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Audit.SearchIndexConfiguration">
+            <summary>
+            EF Core configuration mapping for the SearchIndex entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Audit.WorkflowStepLogConfiguration">
+            <summary>
+            EF Core configuration mapping for the WorkflowStepLog entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.ApprovalConfigConfiguration">
+            <summary>
+            EF Core configuration mapping for the ApprovalConfig entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.ApprovalConfigConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.ApprovalConfig})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.BankBranchConfiguration">
+            <summary>
+            EF Core configuration mapping for the BankBranch entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.BankBranchConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.BankBranch})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.BankMasterConfiguration">
+            <summary>
+            EF Core configuration mapping for the BankMaster entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.BankMasterConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.BankMaster})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.CompanyBankAccountConfiguration">
+            <summary>
+            EF Core configuration mapping for the CompanyBankAccount entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.CompanyBankAccountConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.CompanyBankAccount})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.CompanyConfiguration">
+            <summary>
+            EF Core configuration mapping for the Company tenant aggregate.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.CompanySeedVersionConfiguration">
+            <summary>
+            EF Core configuration mapping for the CompanySeedVersion entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.CompanySeedVersionConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.CompanySeedVersion})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.CompanySetupStateConfiguration">
+            <summary>
+            EF Core configuration mapping for the CompanySetupState entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.CompanySetupStateConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.CompanySetupState})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.CompanySetupTaskConfiguration">
+            <summary>
+            EF Core configuration mapping for the CompanySetupTask entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.CompanySetupTaskConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.CompanySetupTask})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.EmployeeConfiguration">
+            <summary>
+            EF Core mapping configuration for the Employee entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.FiscalCalendarConfiguration">
+            <summary>
+            EF Core configuration mapping for the FiscalCalendar entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.FiscalCalendarConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.FiscalCalendar})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.FiscalPeriodConfiguration">
+            <summary>
+            EF Core configuration mapping for the FiscalPeriod entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.FiscalPeriodConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.FiscalPeriod})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.FnpfConfigurationConfiguration">
+            <summary>
+            EF Core configuration mapping for the FnpfConfiguration entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.FnpfConfigurationConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.FnpfConfiguration})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.LeaveTypeConfiguration">
+            <summary>
+            EF Core configuration for the LeaveType entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.LeaveBalanceConfiguration">
+            <summary>
+            EF Core configuration for the LeaveBalance entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.LeaveRequestConfiguration">
+            <summary>
+            EF Core configuration for the LeaveRequest entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.LeaveTransactionConfiguration">
+            <summary>
+            EF Core configuration for the LeaveTransaction entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.LeaveAccrualPolicyConfiguration">
+            <summary>
+            EF Core configuration for the LeaveAccrualPolicy entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.LoanConfiguration">
+            <summary>
+            EF Core configuration for the Loan entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.LoanRepaymentConfiguration">
+            <summary>
+            EF Core configuration for the LoanRepayment entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.MasterLookupConfiguration">
+            <summary>
+            EF Core configuration mapping for the MasterLookup entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.PayPeriodScheduleConfiguration">
+            <summary>
+            EF Core configuration mapping for the PayPeriodSchedule entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.PayPeriodScheduleConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.PayPeriodSchedule})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.PayrollComponentConfiguration">
+            <summary>
+            EF Core Fluent API configuration for the <see cref="T:FijiPayroll.Domain.Entities.Company.PayrollComponent"/> entity.
+            Maps to the <c>company.PayrollComponents</c> table as specified in Database.md §5.6.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.PayrollComponentConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.PayrollComponent})">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.PayrollFrequencyDefinitionConfiguration">
+            <summary>
+            EF Core configuration mapping for the PayrollFrequencyDefinition entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.PayrollFrequencyDefinitionConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.PayrollFrequencyDefinition})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.SetupCheckpointConfiguration">
+            <summary>
+            EF Core configuration mapping for the SetupCheckpoint entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.SetupCheckpointConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.SetupCheckpoint})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.SetupExecutionRecordConfiguration">
+            <summary>
+            EF Core configuration mapping for the SetupExecutionRecord entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.Company.SetupExecutionRecordConfiguration.Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{FijiPayroll.Domain.Entities.Company.SetupExecutionRecord})">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.TaxBracketConfiguration">
+            <summary>
+            EF Core mapping configuration for the TaxBracket configuration ruleset entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.UserAccountConfiguration">
+            <summary>
+            EF Core configuration mapping for UserAccount entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.UserPasswordHistoryConfiguration">
+            <summary>
+            EF Core configuration mapping for UserPasswordHistory entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.UserPermissionConfiguration">
+            <summary>
+            EF Core configuration mapping for UserPermission entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Company.UserRoleConfiguration">
+            <summary>
+            EF Core configuration mapping for UserRole entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.ConfigurationExtensions">
+            <summary>
+            Contains extension methods for EF Core entity configurations.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Configurations.ConfigurationExtensions.ConfigureSoftDeleteAndAudit``1(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{``0})">
+            <summary>
+            Configures the standard SoftDelete, Auditing, and Concurrency properties for entities inheriting from SoftDeleteEntity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Payroll.PayrollRunConfiguration">
+            <summary>
+            EF Core mapping configuration for the PayrollRun aggregate root entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Payroll.PayrollRunEmployeeConfiguration">
+            <summary>
+            EF Core mapping configuration for the PayrollRunEmployee entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Payroll.PayrollRunEmployeeTraceConfiguration">
+            <summary>
+            EF Core mapping configuration for the PayrollRunEmployeeTrace entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Payroll.PayrollRunLineItemConfiguration">
+            <summary>
+            EF Core mapping configuration for the PayrollRunLineItem entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Payroll.PayrollRunStateHistoryConfiguration">
+            <summary>
+            EF Core mapping configuration for the PayrollRunStateHistory audit entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Configurations.Payroll.RetroactiveAdjustmentConfiguration">
+            <summary>
+            EF Core configuration mapping for RetroactiveAdjustment entity.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Context.ApplicationDbContext">
+            <summary>
+            Entity Framework Core database context for the Fiji Enterprise Payroll System.
+            Implements transactional control and automatically applies auditable interceptors.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.CurrentCompanyId">
+            <summary>Gets the current resolved company tenant ID.</summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{FijiPayroll.Persistence.Context.ApplicationDbContext})">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Persistence.Context.ApplicationDbContext"/> class.
+            Used for EF migrations and design-time tooling.
+            </summary>
+            <param name="options">Context configuration options.</param>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{FijiPayroll.Persistence.Context.ApplicationDbContext},FijiPayroll.Persistence.Interceptors.AuditableEntityInterceptor,FijiPayroll.Application.Common.Interfaces.ITenantProvider)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Persistence.Context.ApplicationDbContext"/> class with interceptors and tenant provider.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{FijiPayroll.Persistence.Context.ApplicationDbContext},FijiPayroll.Persistence.Interceptors.AuditableEntityInterceptor,FijiPayroll.Persistence.Interceptors.AuditLogInterceptor,FijiPayroll.Application.Common.Interfaces.ITenantProvider)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Persistence.Context.ApplicationDbContext"/> class with interceptors, audit interceptor, and tenant provider.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.PayrollComponents">
+            <summary>
+            Gets or sets the payroll components DbSet.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.Companies">
+            <summary>Gets or sets the companies DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.UserAccounts">
+            <summary>Gets or sets the user accounts DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.UserPasswordHistories">
+            <summary>Gets or sets the user password histories DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.UserRoles">
+            <summary>Gets or sets the user roles DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.UserPermissions">
+            <summary>Gets or sets the user permissions DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.MasterLookups">
+            <summary>Gets or sets the master lookups DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.Employees">
+            <summary>Gets or sets the employees DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.TaxBrackets">
+            <summary>Gets or sets the tax brackets DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.PayrollRuns">
+            <summary>Gets or sets the payroll runs DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.PayrollRunEmployees">
+            <summary>Gets or sets the payroll run employees DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.PayrollRunEmployeeTraces">
+            <summary>Gets or sets the payroll run employee traces DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.PayrollRunLineItems">
+            <summary>Gets or sets the payroll run line items DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.PayrollRunStateHistories">
+            <summary>Gets or sets the payroll run state histories DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.AuditLogs">
+            <summary>Gets or sets the audit logs DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.EntityEvents">
+            <summary>Gets or sets the entity events (transactional outbox) DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.ImportJobs">
+            <summary>Gets or sets the import jobs DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.SearchIndexes">
+            <summary>Gets or sets the search indexes DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.ApprovalWorkflows">
+            <summary>Gets or sets the approval workflows DbSet.</summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Context.ApplicationDbContext.WorkflowStepLogs">
+            <summary>Gets or sets the workflow step logs DbSet.</summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.BeginTransactionAsync(System.Threading.CancellationToken)">
+            <summary>
+            Begins a database transaction asynchronously.
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.CommitTransactionAsync(System.Threading.CancellationToken)">
+            <summary>
+            Commits the current database transaction.
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.RollbackTransactionAsync(System.Threading.CancellationToken)">
+            <summary>
+            Rolls back the current database transaction.
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.SaveChanges(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.SaveChangesAsync(System.Boolean,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.MigratePlaintextToAesAsync">
+            <summary>
+            Migrates all PLAINTEXT-prefixed encrypted column values to AES-256 using per-tenant security keys.
+            This method bypasses EF query filters to scan ALL companies and their associated PII records.
+            Safe to call multiple times — records already encrypted with AES256 are skipped.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.IsPlaintextEncrypted(System.String)">
+            <summary>
+            Checks if a stored value uses the PLAINTEXT fallback encoding from TenantEncryptionValueConverter.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Context.ApplicationDbContext.ReEncryptValue(System.String,System.String)">
+            <summary>
+            Decrypts a PLAINTEXT-encoded value and re-encrypts it with AES-256 using the specified tenant key.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Converters.TenantEncryptionValueConverter">
+            <summary>
+            Value converter that encrypts and decrypts string values per tenant, with key versioning metadata prepended.
+            Prefix format: [Algorithm]:[KeyVersion]:[KeyIdentifier]:[CipherText]
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Converters.TenantEncryptionValueConverter.CurrentKey">
+            <summary>
+            Gets or sets the thread/async-scoped tenant security key used for the active operation.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Converters.TenantEncryptionValueConverter.#ctor">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Persistence.Converters.TenantEncryptionValueConverter"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Converters.TenantEncryptionValueConverter.Encrypt(System.String)">
+            <summary>
+            Encrypts plain text using the current tenant's security key.
+            Format: AES256:v1:[KeyIdentifier]:[Base64CipherText]
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Converters.TenantEncryptionValueConverter.Decrypt(System.String)">
+            <summary>
+            Decrypts a formatted cipher text string.
+            Supports both active AES256:v1 and PLAINTEXT fallback formats.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.DependencyInjection">
+            <summary>
+            Extension methods to register all Persistence layer services (EF Core DbContext,
+            repositories, unit of work, and interceptors) with the dependency injection container.
+            Called from the WPF composition root.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.DependencyInjection.AddPersistence(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String)">
+            <summary>
+            Registers database connection, EF Core interceptors, and repositories in the DI container.
+            </summary>
+            <param name="services">The service collection to register into.</param>
+            <param name="connectionString">The SQL Server database connection string.</param>
+            <returns>The same <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for chaining.</returns>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Interceptors.AuditableEntityInterceptor">
+             <summary>
+             EF Core SaveChanges interceptor that automatically stamps audit fields
+             (<c>CreatedAt</c>, <c>CreatedBy</c>, <c>ModifiedAt</c>, <c>ModifiedBy</c>)
+             on all <see cref="T:FijiPayroll.Domain.Entities.Common.AuditableEntity"/> instances before they are written to the database.
+            
+             This interceptor is registered in <see cref="T:FijiPayroll.Persistence.DependencyInjection"/>
+             and applied globally to the <c>ApplicationDbContext</c>.
+             </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Interceptors.AuditableEntityInterceptor.#ctor(FijiPayroll.Persistence.Interceptors.ICurrentUserAccessor)">
+            <summary>Initialises the interceptor with user context access.</summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Interceptors.AuditableEntityInterceptor.SavingChanges(Microsoft.EntityFrameworkCore.Diagnostics.DbContextEventData,Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult{System.Int32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Interceptors.AuditableEntityInterceptor.SavingChangesAsync(Microsoft.EntityFrameworkCore.Diagnostics.DbContextEventData,Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult{System.Int32},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Interceptors.ICurrentUserAccessor">
+            <summary>
+            Minimal accessor interface allowing the interceptor to obtain the current username
+            without taking a full dependency on <c>ICurrentUserService</c>.
+            Implemented in the Infrastructure layer by the session service.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Interceptors.ICurrentUserAccessor.Username">
+            <summary>Current username. Never null; defaults to "System" for background tasks.</summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Interceptors.AuditLogInterceptor">
+            <summary>
+            EF Core interceptor that captures entity modifications (added, modified, deleted) and domain events,
+            serialises the audit log and publishes the domain events to the outbox table in the same transaction.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Interceptors.AuditLogInterceptor.#ctor(FijiPayroll.Application.Common.Interfaces.ICorrelationContext,FijiPayroll.Persistence.Interceptors.ICurrentUserAccessor,FijiPayroll.Application.Common.Interfaces.ITenantProvider,FijiPayroll.Application.Common.Interfaces.IEventBus)">
+            <summary>Initialises the interceptor.</summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Interceptors.AuditLogInterceptor.SavingChanges(Microsoft.EntityFrameworkCore.Diagnostics.DbContextEventData,Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult{System.Int32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Interceptors.AuditLogInterceptor.SavingChangesAsync(Microsoft.EntityFrameworkCore.Diagnostics.DbContextEventData,Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult{System.Int32},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Interceptors.AuditLogInterceptor.SavedChanges(Microsoft.EntityFrameworkCore.Diagnostics.SaveChangesCompletedEventData,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Interceptors.AuditLogInterceptor.SavedChangesAsync(Microsoft.EntityFrameworkCore.Diagnostics.SaveChangesCompletedEventData,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Migrations.AddUserAuthenticationAndTenantColumns">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddUserAuthenticationAndTenantColumns.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddUserAuthenticationAndTenantColumns.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddUserAuthenticationAndTenantColumns.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Migrations.AddLeaveManagementTables">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddLeaveManagementTables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddLeaveManagementTables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddLeaveManagementTables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Migrations.AddLoanManagementTables">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddLoanManagementTables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddLoanManagementTables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddLoanManagementTables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Migrations.AddPhase17Tables">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddPhase17Tables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddPhase17Tables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddPhase17Tables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Migrations.AddTerminationDateAndSystemSettings">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddTerminationDateAndSystemSettings.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddTerminationDateAndSystemSettings.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddTerminationDateAndSystemSettings.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Migrations.AddNotificationDesktopFields">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddNotificationDesktopFields.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddNotificationDesktopFields.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Migrations.AddNotificationDesktopFields.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.ApprovalWorkflowRepository">
+            <summary>
+            EF Core repository implementation for the <see cref="T:FijiPayroll.Domain.Entities.Audit.ApprovalWorkflow"/> entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.ApprovalWorkflowRepository.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext)">
+            <summary>
+            Initializes with DbContext.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.ApprovalWorkflowRepository.AddAsync(FijiPayroll.Domain.Entities.Audit.ApprovalWorkflow,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.ApprovalWorkflowRepository.Update(FijiPayroll.Domain.Entities.Audit.ApprovalWorkflow)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.ApprovalWorkflowRepository.GetByIdAsync(System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.ApprovalWorkflowRepository.GetPendingWorkflowsAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.ComplianceRepository">
+            <summary>
+            Entity Framework Core implementation of the IComplianceRepository.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.ComplianceRepository.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Persistence.Repositories.ComplianceRepository"/> class.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.EmployeeRepository">
+            <summary>
+            Entity Framework Core implementation of the IEmployeeRepository.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.EmployeeRepository.GetByCompanyAndFrequencyAsync(System.Int32,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.EmployeeRepository.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.EmployeeRepository.AddAsync(FijiPayroll.Domain.Entities.Company.Employee,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.EmployeeRepository.GetPagedAsync(System.Int32,System.String,System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.EmployeeRepository.GetByIdsAsync(System.Collections.Generic.IEnumerable{System.Int32},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.ImportJobRepository">
+            <summary>
+            EF Core repository implementation for the <see cref="T:FijiPayroll.Domain.Entities.Audit.ImportJob"/> entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.ImportJobRepository.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext)">
+            <summary>Initializes the repository with the DbContext.</summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.ImportJobRepository.AddAsync(FijiPayroll.Domain.Entities.Audit.ImportJob,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.ImportJobRepository.GetByJobIdAsync(System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.LeaveRepository">
+            <summary>
+            Entity Framework implementation of <see cref="T:FijiPayroll.Domain.Interfaces.ILeaveRepository"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext)">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.GetTypeByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.GetTypesByCompanyAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.AddTypeAsync(FijiPayroll.Domain.Entities.Leave.LeaveType,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.GetBalanceAsync(System.Int32,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.GetBalancesByEmployeeAsync(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.AddBalanceAsync(FijiPayroll.Domain.Entities.Leave.LeaveBalance,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.GetRequestByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.GetRequestsByEmployeeAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.GetRequestsByCompanyAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.AddRequestAsync(FijiPayroll.Domain.Entities.Leave.LeaveRequest,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.AddTransactionAsync(FijiPayroll.Domain.Entities.Leave.LeaveTransaction,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.GetPolicyByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LeaveRepository.AddPolicyAsync(FijiPayroll.Domain.Entities.Leave.LeaveAccrualPolicy,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.LoanRepository">
+            <summary>
+            Entity Framework implementation of <see cref="T:FijiPayroll.Domain.Interfaces.ILoanRepository"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LoanRepository.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext)">
+            <summary>Initializes dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LoanRepository.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LoanRepository.GetLoansByEmployeeAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LoanRepository.GetLoansByCompanyAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LoanRepository.AddAsync(FijiPayroll.Domain.Entities.Payroll.Loan,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.LoanRepository.AddRepaymentAsync(FijiPayroll.Domain.Entities.Payroll.LoanRepayment,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.MasterLookupRepository">
+            <summary>
+            Entity Framework Core implementation of the IMasterLookupRepository.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.MasterLookupRepository.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext)">
+            <summary>Initializes repository dependencies.</summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.MasterLookupRepository.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.MasterLookupRepository.GetByCategoryAsync(System.Int32,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.MasterLookupRepository.CodeExistsAsync(System.Int32,System.String,System.String,System.Nullable{System.Int32},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.MasterLookupRepository.AddAsync(FijiPayroll.Domain.Entities.Company.MasterLookup,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.MasterLookupRepository.Update(FijiPayroll.Domain.Entities.Company.MasterLookup)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.PayrollComponentRepository">
+            <summary>
+            Entity Framework Core implementation of the <see cref="T:FijiPayroll.Domain.Interfaces.IPayrollComponentRepository"/> interface.
+            Provides data access operations for <see cref="T:FijiPayroll.Domain.Entities.Company.PayrollComponent"/> entities.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollComponentRepository.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Persistence.Repositories.PayrollComponentRepository"/> class.
+            </summary>
+            <param name="context">The database context.</param>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollComponentRepository.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollComponentRepository.GetByCompanyAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollComponentRepository.GetByCompanyAndTypeAsync(System.Int32,FijiPayroll.Domain.Enumerations.ComponentType,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollComponentRepository.CodeExistsAsync(System.Int32,System.String,System.Nullable{System.Int32},System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollComponentRepository.IsUsedInPayrollRunsAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollComponentRepository.AddAsync(FijiPayroll.Domain.Entities.Company.PayrollComponent,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollComponentRepository.Update(FijiPayroll.Domain.Entities.Company.PayrollComponent)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollComponentRepository.GetMaxDisplayOrderAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollComponentRepository.GetPagedAsync(System.Int32,System.String,System.Nullable{FijiPayroll.Domain.Enumerations.ComponentType},System.Boolean,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.PayrollRunRepository">
+            <summary>
+            Entity Framework Core implementation of the IPayrollRunRepository.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollRunRepository.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollRunRepository.GetByIdWithDetailsAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollRunRepository.AcquireLockAsync(System.Int32,System.Guid,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollRunRepository.AddAsync(FijiPayroll.Domain.Entities.Payroll.PayrollRun,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollRunRepository.GetPagedAsync(System.Int32,System.Nullable{FijiPayroll.Domain.Enumerations.PayrollFrequencyType},System.Nullable{FijiPayroll.Domain.Enumerations.PayrollRunStatus},System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollRunRepository.GetByPeriodIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.PayrollRunRepository.Update(FijiPayroll.Domain.Entities.Payroll.PayrollRun)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.SearchIndexRepository">
+            <summary>
+            EF Core repository implementation for the <see cref="T:FijiPayroll.Domain.Entities.Audit.SearchIndex"/> entity.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SearchIndexRepository.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext)">
+            <summary>Initializes the repository with the DbContext.</summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SearchIndexRepository.AddAsync(FijiPayroll.Domain.Entities.Audit.SearchIndex,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SearchIndexRepository.Update(FijiPayroll.Domain.Entities.Audit.SearchIndex)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SearchIndexRepository.GetByEntityAsync(System.Int32,System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SearchIndexRepository.GetByCompanyAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SearchIndexRepository.SearchLikeAsync(System.Int32,System.String[],System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.SetupRepository">
+            <summary>
+            Entity Framework Core implementation of the ISetupRepository.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Persistence.Repositories.SetupRepository"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetCompanyByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetSetupStateAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.AddSetupStateAsync(FijiPayroll.Domain.Entities.Company.CompanySetupState,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.AddSetupTaskAsync(FijiPayroll.Domain.Entities.Company.CompanySetupTask,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetSetupTasksAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.AddSetupCheckpointAsync(FijiPayroll.Domain.Entities.Company.SetupCheckpoint,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.RemoveCheckpointsAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.AddSetupExecutionRecordAsync(FijiPayroll.Domain.Entities.Company.SetupExecutionRecord,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetSetupExecutionRecordAsync(System.Int32,System.Guid,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.RemoveExecutionRecordsAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.AddSetupAuditAsync(FijiPayroll.Domain.Entities.Audit.CompanySetupAudit,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetFiscalCalendarsAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetPayrollFrequencyDefinitionsAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetCompanyBankAccountsAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetApprovalConfigsAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.RemoveSetupStateAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetActiveFnpfConfigurationAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetBankMasterByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SetupRepository.GetBankBranchByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.SystemSettingsRepository">
+            <summary>
+            EF Core implementation of <see cref="T:FijiPayroll.Domain.Interfaces.ISystemSettingsRepository"/>.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SystemSettingsRepository.GetByCompanyIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SystemSettingsRepository.AddAsync(FijiPayroll.Domain.Entities.Company.SystemSettings,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.SystemSettingsRepository.Update(FijiPayroll.Domain.Entities.Company.SystemSettings)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.TaxBracketRepository">
+            <summary>
+            Entity Framework Core implementation of the ITaxBracketRepository.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.TaxBracketRepository.GetBracketsByVersionAndFrequencyAsync(System.String,FijiPayroll.Domain.Enumerations.PayrollFrequencyType,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.TaxBracketRepository.AddAsync(FijiPayroll.Domain.Entities.Company.TaxBracket,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.TaxBracketRepository.AnyAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.UnitOfWork">
+            <summary>
+            Entity Framework Core implementation of the <see cref="T:FijiPayroll.Domain.Interfaces.IUnitOfWork"/> interface.
+            Orchestrates transaction boundaries and coordinates repository changes.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UnitOfWork.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext,FijiPayroll.Domain.Interfaces.IPayrollComponentRepository,FijiPayroll.Domain.Interfaces.IPayrollRunRepository,FijiPayroll.Domain.Interfaces.IEmployeeRepository,FijiPayroll.Domain.Interfaces.ITaxBracketRepository,FijiPayroll.Domain.Interfaces.IMasterLookupRepository)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Persistence.Repositories.UnitOfWork"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UnitOfWork.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext,FijiPayroll.Domain.Interfaces.IPayrollComponentRepository,FijiPayroll.Domain.Interfaces.IPayrollRunRepository,FijiPayroll.Domain.Interfaces.IEmployeeRepository,FijiPayroll.Domain.Interfaces.ITaxBracketRepository,FijiPayroll.Domain.Interfaces.IMasterLookupRepository,FijiPayroll.Domain.Interfaces.IImportJobRepository)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Persistence.Repositories.UnitOfWork"/> class with ImportJobs.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UnitOfWork.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext,FijiPayroll.Domain.Interfaces.IPayrollComponentRepository,FijiPayroll.Domain.Interfaces.IPayrollRunRepository,FijiPayroll.Domain.Interfaces.IEmployeeRepository,FijiPayroll.Domain.Interfaces.ITaxBracketRepository,FijiPayroll.Domain.Interfaces.IMasterLookupRepository,FijiPayroll.Domain.Interfaces.IImportJobRepository,FijiPayroll.Domain.Interfaces.ISearchIndexRepository)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Persistence.Repositories.UnitOfWork"/> class with ImportJobs and SearchIndexes.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UnitOfWork.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext,FijiPayroll.Domain.Interfaces.IPayrollComponentRepository,FijiPayroll.Domain.Interfaces.IPayrollRunRepository,FijiPayroll.Domain.Interfaces.IEmployeeRepository,FijiPayroll.Domain.Interfaces.ITaxBracketRepository,FijiPayroll.Domain.Interfaces.IMasterLookupRepository,FijiPayroll.Domain.Interfaces.IImportJobRepository,FijiPayroll.Domain.Interfaces.ISearchIndexRepository,FijiPayroll.Domain.Interfaces.IApprovalWorkflowRepository,FijiPayroll.Domain.Interfaces.ISetupRepository,FijiPayroll.Domain.Interfaces.IComplianceRepository)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Persistence.Repositories.UnitOfWork"/> class with all repositories.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.Dashboard">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.Loans">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollComponents">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollRuns">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.Employees">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.TaxBrackets">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.MasterLookups">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.ImportJobs">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.SearchIndexes">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.Workflows">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.Setup">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.Compliance">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollPeriods">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollGroups">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollAdjustments">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollSnapshots">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollExceptionQueues">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollRunHistories">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.BackgroundJobs">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.PayrollLedgerReversals">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.Persistence.Repositories.UnitOfWork.Leave">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UnitOfWork.AddAuditLogAsync(FijiPayroll.Domain.Entities.Audit.AuditLog,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UnitOfWork.SaveChangesAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UnitOfWork.BeginTransactionAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UnitOfWork.CommitTransactionAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UnitOfWork.RollbackTransactionAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UnitOfWork.Dispose">
+            <summary>
+            Disposes the database context.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Repositories.UserRepository">
+            <summary>
+            Entity Framework Core implementation of the IUserRepository.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UserRepository.GetByUsernameAsync(System.String,System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UserRepository.GetByIdAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UserRepository.AddAsync(FijiPayroll.Domain.Entities.Company.UserAccount,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UserRepository.GetPermissionsForUserAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UserRepository.GetCompaniesByUsernameAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UserRepository.GetAllByCompanyAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Repositories.UserRepository.Update(FijiPayroll.Domain.Entities.Company.UserAccount)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Seeders.ComplianceSeeder">
+            <summary>
+            Seeds standard statutory rules and bank clearing layout templates.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Seeders.ComplianceSeeder.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FijiPayroll.Persistence.Seeders.ComplianceSeeder"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Seeders.ComplianceSeeder.SeedAsync(System.Threading.CancellationToken)">
+            <summary>
+            Seeds the default compliance records asynchronously if they are not already present.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Seeders.EmployeeSeeder">
+            <summary>
+            Idempotent database seeder for employees.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Seeders.EmployeeSeeder.SeedAsync(System.Threading.CancellationToken)">
+            <summary>
+            Seeds default employees if none exist.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Seeders.JsonSeedLoader">
+            <summary>
+            Implements <see cref="T:FijiPayroll.Application.Common.Interfaces.IJsonSeedLoader"/> to seed company reference data from local Seeds JSON templates.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Seeders.JsonSeedLoader.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Persistence.Seeders.JsonSeedLoader"/> class.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Seeders.JsonSeedLoader.SeedBanksAsync(System.Int32,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Seeders.PayrollComponentSeeder">
+            <summary>
+            Handles database seeding for standard Fiji payroll components.
+            Executes only when the database is first created or during migration bootstrapping.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Seeders.PayrollComponentSeeder.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext)">
+            <summary>
+            Initialises a new instance of the <see cref="T:FijiPayroll.Persistence.Seeders.PayrollComponentSeeder"/> class.
+            </summary>
+            <param name="context">The database context.</param>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Seeders.PayrollComponentSeeder.SeedAsync(System.Threading.CancellationToken)">
+            <summary>
+            Seeds the standard payroll components if none exist.
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Seeders.RuleModuleSeeder">
+            <summary>
+            Seeds standard rule modules like PAYROLL, LEAVE, etc.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:FijiPayroll.Persistence.Seeders.TaxBracketSeeder" -->
+        <member name="M:FijiPayroll.Persistence.Seeders.TaxBracketSeeder.SeedAsync(System.Threading.CancellationToken)">
+            <summary>
+            Seeds the tax brackets if none exist.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Seeders.UserAccountSeeder">
+            <summary>
+            Idempotent database seeder for admin users and permissions mapping.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Seeders.UserAccountSeeder.SeedAsync(System.Threading.CancellationToken)">
+            <summary>
+            Seeds default company if none exists, then seeds default admin user with PayrollAdministrator role and all permissions.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.Persistence.Services.ApprovalEngine">
+            <summary>
+            Implementation of IApprovalEngine that manages ApprovalWorkflow aggregate transitions.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Services.ApprovalEngine.#ctor(FijiPayroll.Persistence.Context.ApplicationDbContext,FijiPayroll.Application.Common.Interfaces.IEventBus,FijiPayroll.Application.Common.Interfaces.ITenantProvider)">
+            <summary>
+            Initializes dependencies.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Services.ApprovalEngine.SubmitAsync(System.String,System.String,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Services.ApprovalEngine.ApproveAsync(System.Guid,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Services.ApprovalEngine.RejectAsync(System.Guid,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:FijiPayroll.Persistence.Services.ReferenceDataCache">
+            <summary>
+            Thread-safe in-memory caching implementation for Reference Data.
+            Automatically handles sliding cache expirations and multi-tenant key mappings.
+            Resides in Persistence to have direct query access to ApplicationDbContext.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Services.ReferenceDataCache.#ctor(System.IServiceProvider,FijiPayroll.Application.Common.Interfaces.ITenantProvider,Microsoft.Extensions.Logging.ILogger{FijiPayroll.Persistence.Services.ReferenceDataCache})">
+            <summary>Initializes the reference data cache.</summary>
+        </member>
+        <member name="M:FijiPayroll.Persistence.Services.ReferenceDataCache.GetLookupsByCategoryAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Services.ReferenceDataCache.GetLookupByCodeAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Services.ReferenceDataCache.InvalidateCategory(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FijiPayroll.Persistence.Services.ReferenceDataCache.InvalidateAll">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

@@ -6,6 +6,7 @@ using FijiPayroll.Persistence.Repositories;
 using FijiPayroll.Persistence.Seeders;
 using FijiPayroll.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FijiPayroll.Persistence;
@@ -35,7 +36,13 @@ public static class DependencyInjection
         // Register the EF Core DbContext using SQL Server
         services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
-            options.UseSqlServer(connectionString);
+            var config = sp.GetRequiredService<IConfiguration>();
+            string? conn = config.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrEmpty(conn))
+            {
+                conn = connectionString;
+            }
+            options.UseSqlServer(conn);
         });
 
         // Register repositories

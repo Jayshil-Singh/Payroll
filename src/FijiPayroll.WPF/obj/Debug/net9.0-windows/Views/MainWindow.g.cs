@@ -8,8 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using FijiPayroll.Application.Common.Interfaces;
 using FijiPayroll.WPF.Helpers;
 using FijiPayroll.WPF.ViewModels;
+using FijiPayroll.WPF.Views;
 using System;
 using System.Diagnostics;
 using System.Windows;

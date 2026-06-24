@@ -39,4 +39,12 @@ public partial class SetupWizardWindow : Window
             viewModel.AdminConfirmPassword = pbox.Password;
         }
     }
+
+    private void TxtDbPassword_PasswordChanged(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is SetupWizardViewModel viewModel && sender is PasswordBox pbox)
+        {
+            viewModel.DbPassword = pbox.Password;
+        }
+    }
 }

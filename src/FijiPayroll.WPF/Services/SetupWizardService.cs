@@ -304,6 +304,36 @@ public sealed class SetupWizardService : ISetupWizardService
                 }
             }
 
+            // Seed Custom Components
+            if (data.CustomComponents != null)
+            {
+                int order = 100;
+                foreach (var cc in data.CustomComponents)
+                {
+                    var compType = Enum.TryParse<ComponentType>(cc.Type, true, out var t) ? t : ComponentType.Allowance;
+                    var calcMethod = Enum.TryParse<CalculationMethod>(cc.CalculationMethod, true, out var m) ? m : CalculationMethod.Fixed;
+                    
+                    var comp = PayrollComponent.Create(
+                        companyId: company.Id,
+                        componentCode: cc.Code,
+                        componentName: cc.Name,
+                        componentType: compType,
+                        calculationMethod: calcMethod,
+                        calculationValue: (calcMethod == CalculationMethod.Fixed || calcMethod == CalculationMethod.Percentage) ? (cc.DefaultValue > 0 ? cc.DefaultValue : 1.0m) : null,
+                        formula: null,
+                        isTaxable: cc.IsTaxable,
+                        isFnpfApplicable: cc.SubjectToFnpf,
+                        displayOrder: order++,
+                        description: "Custom component added during onboarding setup wizard",
+                        isSystemComponent: false
+                    );
+                    
+                    comp.CreatedBy = data.Administrator.Username;
+                    comp.CreatedAt = DateTime.UtcNow;
+                    await context.PayrollComponents.AddAsync(comp);
+                }
+            }
+
             // 6. Create Leave Policies
             foreach (var policyData in data.LeavePolicies)
             {
@@ -580,5 +610,46 @@ public sealed class SetupWizardService : ISetupWizardService
         }
 
         return list;
+    }
+
+    public async Task GenerateEmployeeImportTemplateAsync(string filePath)
+    {
+        await Task.Run(() =>
+        {
+            using var workbook = new ClosedXML.Excel.XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Employees Template");
+            
+            // Set Headers
+            worksheet.Cell(1, 1).Value = "Employee Number";
+            worksheet.Cell(1, 2).Value = "First Name";
+            worksheet.Cell(1, 3).Value = "Last Name";
+            worksheet.Cell(1, 4).Value = "TIN";
+            worksheet.Cell(1, 5).Value = "FNPF";
+            worksheet.Cell(1, 6).Value = "Department";
+            worksheet.Cell(1, 7).Value = "Position";
+            worksheet.Cell(1, 8).Value = "Pay Rate";
+
+            // Format headers
+            var headerRow = worksheet.Row(1);
+            headerRow.Height = 24;
+            headerRow.Style.Font.Bold = true;
+            headerRow.Style.Font.FontColor = ClosedXML.Excel.XLColor.White;
+            headerRow.Style.Fill.BackgroundColor = ClosedXML.Excel.XLColor.FromHtml("#1B2032");
+            headerRow.Style.Alignment.Horizontal = ClosedXML.Excel.XLAlignmentHorizontalValues.Center;
+            headerRow.Style.Alignment.Vertical = ClosedXML.Excel.XLAlignmentVerticalValues.Center;
+
+            // Add sample data row as placeholder
+            worksheet.Cell(2, 1).Value = "EMP001";
+            worksheet.Cell(2, 2).Value = "John";
+            worksheet.Cell(2, 3).Value = "Doe";
+            worksheet.Cell(2, 4).Value = "123456789";
+            worksheet.Cell(2, 5).Value = "987654";
+            worksheet.Cell(2, 6).Value = "Finance";
+            worksheet.Cell(2, 7).Value = "Accountant";
+            worksheet.Cell(2, 8).Value = 2500.00;
+
+            worksheet.Columns().AdjustToContents();
+            workbook.SaveAs(filePath);
+        });
     }
 }

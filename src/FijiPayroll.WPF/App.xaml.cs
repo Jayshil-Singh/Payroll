@@ -39,7 +39,7 @@ public partial class App : System.Windows.Application
 {
     private IServiceProvider? _serviceProvider;
     private ILogger<App>? _logger;
-    private string _currentTheme = "Dark";
+    private string _currentTheme = "Light";
     private readonly string _themeConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "theme_config.txt");
 
     // Monitor references for orderly shutdown
@@ -450,6 +450,7 @@ public partial class App : System.Windows.Application
 
     public void SetTheme(string themeName)
     {
+        themeName = "Light"; // Force Light theme mode
         var mergedDicts = Resources.MergedDictionaries;
         var themeDict = mergedDicts.FirstOrDefault(d =>
             d.Source != null &&
@@ -458,15 +459,15 @@ public partial class App : System.Windows.Application
 
         if (themeDict != null) mergedDicts.Remove(themeDict);
 
-        string sourcePath = themeName == "Light" ? "Styles/Theme.Light.xaml" : "Styles/Theme.Dark.xaml";
+        string sourcePath = "Styles/Theme.Light.xaml";
         mergedDicts.Insert(0, new ResourceDictionary { Source = new Uri(sourcePath, UriKind.RelativeOrAbsolute) });
-        _currentTheme = themeName;
+        _currentTheme = "Light";
 
-        try { File.WriteAllText(_themeConfigPath, themeName); }
+        try { File.WriteAllText(_themeConfigPath, "Light"); }
         catch { }
     }
 
-    public void ToggleTheme() => SetTheme(_currentTheme == "Dark" ? "Light" : "Dark");
+    public void ToggleTheme() => SetTheme("Light");
 
     // ─── Exception Handlers ───────────────────────────────────────────────────
 

@@ -2667,6 +2667,15 @@
         <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.DbStatusDetails">
             <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._dbStatusDetails"/>
         </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.DbAuthType">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._dbAuthType"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.DbUsername">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._dbUsername"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.DbPassword">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._dbPassword"/>
+        </member>
         <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.CalendarStartDate">
             <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._calendarStartDate"/>
         </member>
@@ -2778,6 +2787,11 @@
         <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.AdminEmail">
             <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._adminEmail"/>
         </member>
+        <member name="M:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.OnDbAuthTypeChanged(System.String)">
+            <summary>Executes the logic for when <see cref="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.DbAuthType"/> just changed.</summary>
+            <param name="value">The new property value that was set.</param>
+            <remarks>This method is invoked right after the value of <see cref="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.DbAuthType"/> is changed.</remarks>
+        </member>
         <member name="T:FijiPayroll.WPF.ViewModels.StagedImportViewModel">
             <summary>
             ViewModel backing the Staged Import pipeline dashboard/dialog.
@@ -2834,36 +2848,6 @@
         </member>
         <member name="P:FijiPayroll.WPF.ViewModels.StagedImportViewModel.IsValid">
             <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.StagedImportViewModel._isValid"/>
-        </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
-            <summary>
-            GeneratedInternalTypeHelper
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
-            <summary>
-            CreateInstance
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            GetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            SetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
-            <summary>
-            CreateDelegate
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
-            <summary>
-            AddEventHandler
-            </summary>
         </member>
         <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs">
             <summary>
@@ -3149,6 +3133,15 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DbStatusDetails">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DbStatusDetails" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DbAuthType">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DbAuthType" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DbUsername">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DbUsername" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DbPassword">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DbPassword" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CalendarStartDate">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CalendarStartDate" generated properties.</summary>
@@ -3581,6 +3574,15 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DbStatusDetails">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DbStatusDetails" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DbAuthType">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DbAuthType" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DbUsername">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DbUsername" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DbPassword">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DbPassword" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CalendarStartDate">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CalendarStartDate" generated properties.</summary>

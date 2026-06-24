@@ -42,6 +42,24 @@ public sealed partial class SetupWizardViewModel : ViewModelBase
     [ObservableProperty]
     private string _dbStatusDetails = string.Empty;
 
+    [ObservableProperty]
+    private string _dbAuthType = "Windows Authentication"; // Windows Authentication, SQL Server Authentication
+
+    [ObservableProperty]
+    private string _dbUsername = "sa";
+
+    [ObservableProperty]
+    private string _dbPassword = string.Empty;
+
+    public bool DbShowSqlAuth => DbAuthType == "SQL Server Authentication";
+
+    public ObservableCollection<string> AuthTypes { get; } = new() { "Windows Authentication", "SQL Server Authentication" };
+
+    partial void OnDbAuthTypeChanged(string value)
+    {
+        OnPropertyChanged(nameof(DbShowSqlAuth));
+    }
+
     // ─── Step 2: Fiscal Calendar ─────────────────────────────────────────────
     [ObservableProperty]
     private DateTime _calendarStartDate = new DateTime(DateTime.Today.Year, 1, 1);
@@ -110,6 +128,32 @@ public sealed partial class SetupWizardViewModel : ViewModelBase
     [ObservableProperty]
     private bool _useDefaultComponents = true;
 
+    public ObservableCollection<SetupWizardCustomComponentViewModel> CustomComponents { get; } = new();
+
+    [ObservableProperty]
+    private string _newComponentCode = string.Empty;
+
+    [ObservableProperty]
+    private string _newComponentName = string.Empty;
+
+    [ObservableProperty]
+    private string _newComponentType = "Allowance"; // Allowance, Deduction, Earning
+
+    [ObservableProperty]
+    private string _newCalculationMethod = "Fixed"; // Fixed, Percentage, Manual
+
+    [ObservableProperty]
+    private decimal _newCalculationValue = 100.00m;
+
+    [ObservableProperty]
+    private bool _newIsTaxable = true;
+
+    [ObservableProperty]
+    private bool _newIsFnpfApplicable = true;
+
+    [ObservableProperty]
+    private bool _showAddComponentForm;
+
     // ─── Step 6: Leave Setup ─────────────────────────────────────────────────
     [ObservableProperty] private decimal _leaveAnnualDays = 10;
     [ObservableProperty] private decimal _leaveAnnualMaxCarry = 5;
@@ -158,6 +202,10 @@ public sealed partial class SetupWizardViewModel : ViewModelBase
     public ICommand BrowseFileCommand { get; }
     public ICommand ParseFileCommand { get; }
     public ICommand CompleteSetupCommand { get; }
+    public ICommand AddCustomComponentCommand { get; }
+    public ICommand RemoveCustomComponentCommand { get; }
+    public ICommand ToggleAddComponentFormCommand { get; }
+    public ICommand DownloadTemplateCommand { get; }
 
     public event Action? SetupCompletedSuccessfully;
 
@@ -172,6 +220,10 @@ public sealed partial class SetupWizardViewModel : ViewModelBase
         BrowseFileCommand = new RelayCommand(BrowseFile);
         ParseFileCommand = new AsyncRelayCommand(ParseFileAsync);
         CompleteSetupCommand = new AsyncRelayCommand(CompleteSetupAsync);
+        AddCustomComponentCommand = new RelayCommand(AddCustomComponent);
+        RemoveCustomComponentCommand = new RelayCommand<SetupWizardCustomComponentViewModel>(RemoveCustomComponent);
+        ToggleAddComponentFormCommand = new RelayCommand(() => ShowAddComponentForm = !ShowAddComponentForm);
+        DownloadTemplateCommand = new AsyncRelayCommand(DownloadTemplateAsync);
     }
 
     private void UpdateStepTitle()
@@ -321,7 +373,9 @@ public sealed partial class SetupWizardViewModel : ViewModelBase
         DbIsConnected = false;
         (NextCommand as RelayCommand)?.NotifyCanExecuteChanged();
 
-        string connStr = $"Server={DbServer};Database={DbName};Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
+        string connStr = DbShowSqlAuth
+            ? $"Server={DbServer};Database={DbName};User ID={DbUsername};Password={DbPassword};MultipleActiveResultSets=true;TrustServerCertificate=True"
+            : $"Server={DbServer};Database={DbName};Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
 
         try
         {
@@ -445,6 +499,16 @@ public sealed partial class SetupWizardViewModel : ViewModelBase
                     NegativeNetPayPolicy = NegativeNetPayPolicy
                 },
                 UseDefaultComponents = UseDefaultComponents,
+                CustomComponents = CustomComponents.Select(cc => new SetupWizardCustomComponent
+                {
+                    Code = cc.Code,
+                    Name = cc.Name,
+                    Type = cc.Type,
+                    CalculationMethod = cc.CalculationMethod,
+                    DefaultValue = cc.CalculationValue,
+                    IsTaxable = cc.IsTaxable,
+                    SubjectToFnpf = cc.IsFnpfApplicable
+                }).ToList(),
                 LeavePolicies = new List<SetupWizardLeavePolicy>
                 {
                     new() { LeaveTypeName = "Annual Leave", Category = "AnnualLeave", EntitlementDays = LeaveAnnualDays, MaxCarryOverDays = LeaveAnnualMaxCarry, MaximumBalance = LeaveAnnualMaxBalance },
@@ -477,4 +541,105 @@ public sealed partial class SetupWizardViewModel : ViewModelBase
             IsBusy = false;
         }
     }
+
+    private void AddCustomComponent()
+    {
+        if (string.IsNullOrWhiteSpace(NewComponentCode))
+        {
+            _notificationService.Warning("Component Code is required.", "Validation Error");
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(NewComponentName))
+        {
+            _notificationService.Warning("Component Name is required.", "Validation Error");
+            return;
+        }
+
+        string cleanCode = NewComponentCode.Trim().ToUpperInvariant();
+        
+        if (CustomComponents.Any(c => c.Code.Equals(cleanCode, StringComparison.OrdinalIgnoreCase)))
+        {
+            _notificationService.Warning($"A custom component with code '{cleanCode}' already exists.", "Duplicate Code");
+            return;
+        }
+
+        var reserved = new[] { "BASIC", "PAYE", "FNPF_EE", "FNPF_ER", "OVERTIME", "BONUS", "ALLOWANCE", "LOAN_DED", "ADV_REC" };
+        if (reserved.Contains(cleanCode))
+        {
+            _notificationService.Warning($"Code '{cleanCode}' is reserved by the system.", "Reserved Code");
+            return;
+        }
+
+        if ((NewCalculationMethod == "Fixed" || NewCalculationMethod == "Percentage") && NewCalculationValue <= 0)
+        {
+            _notificationService.Warning("Calculation Value must be greater than zero for Fixed/Percentage methods.", "Invalid Value");
+            return;
+        }
+
+        CustomComponents.Add(new SetupWizardCustomComponentViewModel
+        {
+            Code = cleanCode,
+            Name = NewComponentName.Trim(),
+            Type = NewComponentType,
+            CalculationMethod = NewCalculationMethod,
+            CalculationValue = NewCalculationValue,
+            IsTaxable = NewIsTaxable,
+            IsFnpfApplicable = NewIsFnpfApplicable
+        });
+
+        NewComponentCode = string.Empty;
+        NewComponentName = string.Empty;
+        NewCalculationValue = 100.00m;
+        ShowAddComponentForm = false;
+
+        _notificationService.Success("Custom component added to list.", "Component Staged");
+    }
+
+    private void RemoveCustomComponent(SetupWizardCustomComponentViewModel? item)
+    {
+        if (item != null)
+        {
+            CustomComponents.Remove(item);
+            _notificationService.Success("Custom component removed.", "Component Removed");
+        }
+    }
+
+    private async Task DownloadTemplateAsync()
+    {
+        var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+        {
+            Filter = "Excel Files (*.xlsx)|*.xlsx",
+            Title = "Save Employee Import Template",
+            FileName = "FEPS_Employee_Import_Template.xlsx"
+        };
+
+        if (saveFileDialog.ShowDialog() == true)
+        {
+            IsBusy = true;
+            try
+            {
+                await _setupService.GenerateEmployeeImportTemplateAsync(saveFileDialog.FileName);
+                _notificationService.Success("Excel template generated successfully.", "Template Downloaded");
+            }
+            catch (Exception ex)
+            {
+                _notificationService.Error($"Failed to generate template: {ex.Message}", "Generation Error");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+    }
+}
+
+public sealed class SetupWizardCustomComponentViewModel : ViewModelBase
+{
+    public string Code { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Type { get; set; } = "Allowance"; // Allowance, Deduction, Earning
+    public string CalculationMethod { get; set; } = "Fixed"; // Fixed, Percentage, Manual
+    public decimal CalculationValue { get; set; }
+    public bool IsTaxable { get; set; } = true;
+    public bool IsFnpfApplicable { get; set; } = true;
 }

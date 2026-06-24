@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 using FijiPayroll.Domain.Enumerations;
+using FijiPayroll.WPF.ViewModels;
 using FijiPayroll.WPF.Views;
 using System;
 using System.Diagnostics;

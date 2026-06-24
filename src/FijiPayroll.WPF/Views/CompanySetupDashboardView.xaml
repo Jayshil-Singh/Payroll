@@ -36,11 +36,11 @@
                 <TextBlock Text="{Binding TitleText}" 
                            FontSize="28" 
                            FontWeight="Bold" 
-                           Foreground="#FFFFFF" 
+                           Foreground="{DynamicResource BrushTextPrimary}" 
                            FontFamily="Segoe UI Semibold" />
                 <TextBlock Text="Complete the wizard steps to configure and lock your tenant environment." 
                            FontSize="14" 
-                           Foreground="#A0AEC0" 
+                           Foreground="{DynamicResource BrushTextSecondary}" 
                            Margin="0,4,0,0" />
             </StackPanel>
 
@@ -61,20 +61,20 @@
             </Grid.ColumnDefinitions>
 
             <!-- LEFT PANEL: Steps Checklist -->
-            <Border Grid.Column="0" Margin="0,0,16,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="20">
+            <Border Grid.Column="0" Margin="0,0,16,0" CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="20">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="Onboarding Steps Progress" FontSize="16" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,16" />
+                    <TextBlock Grid.Row="0" Text="Onboarding Steps Progress" FontSize="16" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,0,0,16" />
 
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <ItemsControl ItemsSource="{Binding Tasks}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border BorderBrush="#2D3748" BorderThickness="0,0,0,1" Padding="0,12" Margin="0,0,0,4">
+                                    <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Padding="0,12" Margin="0,0,0,4">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
@@ -87,7 +87,7 @@
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock" BasedOn="{StaticResource ChecklistIconStyle}">
                                                         <Setter Property="Text" Value="&#xE71B;"/>
-                                                        <Setter Property="Foreground" Value="#718096"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}"/>
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding IsCompleted}" Value="True">
                                                                 <Setter Property="Text" Value="&#xE73E;"/>
@@ -100,14 +100,14 @@
 
                                             <!-- Step Title & Description -->
                                             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding Title}" FontSize="13" Foreground="#FFFFFF" FontWeight="SemiBold"/>
-                                                <TextBlock Text="{Binding Description}" FontSize="11" Foreground="#A0AEC0" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                                <TextBlock Text="{Binding Title}" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold"/>
+                                                <TextBlock Text="{Binding Description}" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0" TextWrapping="Wrap"/>
                                                 
                                                 <!-- Metadata showing who & when completed -->
                                                 <StackPanel Orientation="Horizontal" Margin="0,4,0,0" Visibility="{Binding IsCompleted, Converter={StaticResource BoolToVisConverter}}">
-                                                    <TextBlock Text="By: " FontSize="10" Foreground="#718096"/>
-                                                    <TextBlock Text="{Binding CompletedBy}" FontSize="10" Foreground="#718096" Margin="2,0,8,0"/>
-                                                    <TextBlock Text="{Binding CompletedUtc, StringFormat='\{0:yyyy-MM-dd HH:mm\}'}" FontSize="10" Foreground="#718096"/>
+                                                    <TextBlock Text="By: " FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                                    <TextBlock Text="{Binding CompletedBy}" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="2,0,8,0"/>
+                                                    <TextBlock Text="{Binding CompletedUtc, StringFormat='\{0:yyyy-MM-dd HH:mm\}'}" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </Grid>
@@ -120,7 +120,7 @@
             </Border>
 
             <!-- RIGHT PANEL: Action Area for active step -->
-            <Border Grid.Column="1" Margin="4,0,0,0" CornerRadius="8" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="24">
+            <Border Grid.Column="1" Margin="4,0,0,0" CornerRadius="8" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="24">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -130,20 +130,20 @@
 
                     <!-- Header area of Active Step -->
                     <StackPanel Grid.Row="0" Margin="0,0,0,20">
-                        <TextBlock Text="Current Step Status" FontSize="14" Foreground="#A0AEC0" FontWeight="SemiBold" />
+                        <TextBlock Text="Current Step Status" FontSize="14" Foreground="{DynamicResource BrushTextSecondary}" FontWeight="SemiBold" />
                         <Grid Margin="0,8,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             
-                            <TextBlock Text="{Binding CurrentStep, StringFormat='Step: \{0\}'}" FontSize="24" Foreground="#FFFFFF" FontWeight="Bold" />
+                            <TextBlock Text="{Binding CurrentStep, StringFormat='Step: \{0\}'}" FontSize="24" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" />
                             
                             <Border Grid.Column="1" Background="#2B6CB0" CornerRadius="4" Padding="8,4" VerticalAlignment="Center">
                                 <TextBlock Text="Active Wizard Phase" Foreground="#FFFFFF" FontSize="11" FontWeight="Bold" />
                             </Border>
                         </Grid>
-                        <Border BorderBrush="#2E3656" BorderThickness="0,0,0,1" Margin="0,16,0,0" />
+                        <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Margin="0,16,0,0" />
                     </StackPanel>
 
                     <!-- Content details -->
@@ -154,12 +154,12 @@
                                 <Border Width="60" Height="60" CornerRadius="30" Background="#1C4D2C" BorderBrush="#48BB78" BorderThickness="2" HorizontalAlignment="Center" Margin="0,0,0,16">
                                     <TextBlock Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="28" Foreground="#48BB78" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Border>
-                                <TextBlock Text="Onboarding Completed Successfully" FontSize="20" Foreground="#FFFFFF" FontWeight="Bold" HorizontalAlignment="Center" />
-                                <TextBlock Text="This tenant environment has been locked and registered." FontSize="14" Foreground="#A0AEC0" HorizontalAlignment="Center" Margin="0,8,0,0" />
+                                <TextBlock Text="Onboarding Completed Successfully" FontSize="20" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" HorizontalAlignment="Center" />
+                                <TextBlock Text="This tenant environment has been locked and registered." FontSize="14" Foreground="{DynamicResource BrushTextSecondary}" HorizontalAlignment="Center" Margin="0,8,0,0" />
                                 
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
-                                    <TextBlock Text="Completed UTC: " FontSize="12" Foreground="#718096" />
-                                    <TextBlock Text="{Binding SetupCompletedUtc, StringFormat='\{0:yyyy-MM-dd HH:mm:ss\}'}" FontSize="12" Foreground="#FFFFFF" FontWeight="SemiBold" />
+                                    <TextBlock Text="Completed UTC: " FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" />
+                                    <TextBlock Text="{Binding SetupCompletedUtc, StringFormat='\{0:yyyy-MM-dd HH:mm:ss\}'}" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="SemiBold" />
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
@@ -185,8 +185,8 @@
                                 </Grid.RowDefinitions>
 
                                 <StackPanel Grid.Row="0">
-                                    <TextBlock Text="Dry-Run System Validation" FontSize="16" Foreground="#FFFFFF" FontWeight="Bold" />
-                                    <TextBlock Text="Click the button below to run checking rules across all setup steps." FontSize="13" Foreground="#A0AEC0" Margin="0,4,0,16" />
+                                    <TextBlock Text="Dry-Run System Validation" FontSize="16" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" />
+                                    <TextBlock Text="Click the button below to run checking rules across all setup steps." FontSize="13" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,16" />
                                     
                                     <Button Command="{Binding ValidateSetupCommand}" 
                                             Content="Run System Check" 
@@ -195,7 +195,7 @@
                                             Height="36" 
                                             HorizontalAlignment="Left" />
                                     
-                                    <Border BorderBrush="#2E3656" BorderThickness="0,0,0,1" Margin="0,16,0,16" />
+                                    <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Margin="0,16,0,16" />
                                 </StackPanel>
 
                                 <!-- Validation Lists -->
@@ -229,7 +229,7 @@
                                                                 <ColumnDefinition Width="*" />
                                                             </Grid.ColumnDefinitions>
                                                             <TextBlock Grid.Column="0" Text="&#xE711;" FontFamily="Segoe MDL2 Assets" Foreground="#FC8181" Margin="0,2,8,0" FontSize="12" VerticalAlignment="Top"/>
-                                                            <TextBlock Grid.Column="1" Text="{Binding}" Foreground="#F7FAFC" FontSize="12" TextWrapping="Wrap" />
+                                                            <TextBlock Grid.Column="1" Text="{Binding}" Foreground="{DynamicResource BrushTextPrimary}" FontSize="12" TextWrapping="Wrap" />
                                                         </Grid>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
@@ -261,7 +261,7 @@
                                                                 <ColumnDefinition Width="*" />
                                                             </Grid.ColumnDefinitions>
                                                             <TextBlock Grid.Column="0" Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" Foreground="#FBD38D" Margin="0,2,8,0" FontSize="12" VerticalAlignment="Top"/>
-                                                            <TextBlock Grid.Column="1" Text="{Binding}" Foreground="#F7FAFC" FontSize="12" TextWrapping="Wrap" />
+                                                            <TextBlock Grid.Column="1" Text="{Binding}" Foreground="{DynamicResource BrushTextPrimary}" FontSize="12" TextWrapping="Wrap" />
                                                         </Grid>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
@@ -284,10 +284,10 @@
                                     </Style>
                                 </Grid.Style>
                                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                    <TextBlock Text="Complete this step to advance to the next step of configuration." FontSize="14" Foreground="#A0AEC0" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Complete this step to advance to the next step of configuration." FontSize="14" Foreground="{DynamicResource BrushTextSecondary}" HorizontalAlignment="Center" />
                                     
-                                    <Border Margin="0,20,0,0" Padding="20" Background="#121625" CornerRadius="6" BorderBrush="#2D3748" BorderThickness="1">
-                                        <TextBlock Text="Use the modular forms in the configuration panels of FEPS to configure details before marking this phase as completed." Foreground="#718096" FontSize="12" HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="300" TextWrapping="Wrap" />
+                                    <Border Margin="0,20,0,0" Padding="20" Background="{DynamicResource BrushBgDeep}" CornerRadius="6" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1">
+                                        <TextBlock Text="Use the modular forms in the configuration panels of FEPS to configure details before marking this phase as completed." Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="300" TextWrapping="Wrap" />
                                     </Border>
                                 </StackPanel>
                             </Grid>

@@ -39,6 +39,22 @@ public interface ISetupWizardService
     /// Parses an employee Excel or CSV file for wizard import.
     /// </summary>
     Task<List<SetupWizardEmployeeImport>> ParseEmployeesAsync(string filePath);
+
+    /// <summary>
+    /// Generates a blank Excel template for employee imports.
+    /// </summary>
+    Task GenerateEmployeeImportTemplateAsync(string filePath);
+}
+
+public sealed class SetupWizardCustomComponent
+{
+    public string Code { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string Type { get; set; } = "Allowance"; // Allowance, Deduction, Earning
+    public string CalculationMethod { get; set; } = "Fixed"; // Fixed, Percentage, Manual
+    public decimal DefaultValue { get; set; }
+    public bool IsTaxable { get; set; } = true;
+    public bool SubjectToFnpf { get; set; } = true;
 }
 
 public sealed class SetupWizardData
@@ -47,6 +63,7 @@ public sealed class SetupWizardData
     public SetupWizardCalendarData Calendar { get; set; } = new();
     public SetupWizardDefaultsData Defaults { get; set; } = new();
     public bool UseDefaultComponents { get; set; } = true;
+    public List<SetupWizardCustomComponent> CustomComponents { get; set; } = new();
     public List<SetupWizardLeavePolicy> LeavePolicies { get; set; } = new();
     public List<SetupWizardEmployeeImport> Employees { get; set; } = new();
     public SetupWizardUserData Administrator { get; set; } = new();

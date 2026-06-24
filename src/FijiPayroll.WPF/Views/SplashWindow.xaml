@@ -9,7 +9,7 @@
         Background="Transparent"
         Topmost="True">
 
-    <Border CornerRadius="12" Background="#0F1322" BorderBrush="#2E3656" BorderThickness="1.5">
+    <Border CornerRadius="12" Background="#FFFFFF" BorderBrush="#E2E8F0" BorderThickness="1.5">
         <Grid Margin="32">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -20,23 +20,23 @@
 
             <!-- Brand Logo Emblem -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,24">
-                <Border Width="48" Height="48" Background="#0D99FF" CornerRadius="10">
+                <Border Width="48" Height="48" Background="#0066CC" CornerRadius="10">
                     <TextBlock Text="FJ" Foreground="#FFFFFF" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Border>
                 <StackPanel Margin="16,0,0,0" VerticalAlignment="Center">
-                    <TextBlock Text="FIJI ENTERPRISE PAYROLL" Foreground="#FFFFFF" FontWeight="Bold" FontSize="20" />
-                    <TextBlock Text="Clean Architecture &amp; Deterministic Engine" Foreground="#A0AEC0" FontSize="11" Margin="0,2,0,0" />
+                    <TextBlock Text="FIJI ENTERPRISE PAYROLL" Foreground="#2D3748" FontWeight="Bold" FontSize="20" />
+                    <TextBlock Text="Clean Architecture &amp; Deterministic Engine" Foreground="#718096" FontSize="11" Margin="0,2,0,0" />
                 </StackPanel>
             </StackPanel>
 
             <!-- Status Stage Tracker -->
             <StackPanel Grid.Row="1" VerticalAlignment="Center">
-                <TextBlock x:Name="ProgressTitleLabel" Text="System Starting..." Foreground="#FFFFFF" FontSize="14" FontWeight="SemiBold" />
-                <TextBlock x:Name="ProgressDetailsLabel" Text="Loading assemblies..." Foreground="#A0AEC0" FontSize="12" Margin="0,4,0,0" />
+                <TextBlock x:Name="ProgressTitleLabel" Text="System Starting..." Foreground="#2D3748" FontSize="14" FontWeight="SemiBold" />
+                <TextBlock x:Name="ProgressDetailsLabel" Text="Loading assemblies..." Foreground="#718096" FontSize="12" Margin="0,4,0,0" />
             </StackPanel>
 
             <!-- Progress Bar -->
-            <ProgressBar Grid.Row="2" x:Name="LoadingProgressBar" Height="6" Maximum="100" Value="10" Background="#1B2032" Foreground="#0D99FF" BorderThickness="0" Margin="0,0,0,16">
+            <ProgressBar Grid.Row="2" x:Name="LoadingProgressBar" Height="6" Maximum="100" Value="10" Background="#EDF2F7" Foreground="#0066CC" BorderThickness="0" Margin="0,0,0,16">
                 <ProgressBar.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="3"/>
@@ -45,7 +45,7 @@
             </ProgressBar>
 
             <!-- Footer Claims info -->
-            <TextBlock Grid.Row="3" Text="Version 2026.1.0 (Production Hardened) — Safe Boot Mode" Foreground="#626D8A" FontSize="10" HorizontalAlignment="Center" />
+            <TextBlock Grid.Row="3" Text="Version 2026.1.0 (Production Hardened) — Safe Boot Mode" Foreground="#A0AEC0" FontSize="10" HorizontalAlignment="Center" />
         </Grid>
     </Border>
 </Window>

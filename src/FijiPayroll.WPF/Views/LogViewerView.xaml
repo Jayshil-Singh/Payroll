@@ -4,114 +4,104 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FijiPayroll.WPF.Views"
-             xmlns:services="clr-namespace:FijiPayroll.WPF.Services"
+             xmlns:services="clr-namespace:FijiPayroll.Application.Common.Interfaces;assembly=FijiPayroll.Application"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="900"
              Background="Transparent">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+    </UserControl.Resources>
 
     <Grid Margin="24">
         <Grid.RowDefinitions>
-            <!-- Header Title -->
-            <RowDefinition Height="Auto" />
-            <!-- Filter Actions Bar -->
-            <RowDefinition Height="Auto" />
-            <!-- Diagnostics HUD -->
-            <RowDefinition Height="Auto" />
-            <!-- Logs List Grid -->
-            <RowDefinition Height="*" />
-            <!-- Active Selected Log Exception trace Details -->
-            <RowDefinition Height="Auto" MaxHeight="220" />
+            <!-- Header -->
+            <RowDefinition Height="Auto"/>
+            <!-- Action / Filter Bar -->
+            <RowDefinition Height="Auto"/>
+            <!-- Diagnostics Panel -->
+            <RowDefinition Height="Auto"/>
+            <!-- Console Content -->
+            <RowDefinition Height="*"/>
+            <!-- Exception Trace Details -->
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
+        <!-- ── 1. Page Header ── -->
         <StackPanel Grid.Row="0" Margin="0,0,0,20">
-            <TextBlock Text="System Diagnostics &amp; Audit Logs" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Segoe UI Semibold" />
-            <TextBlock Text="Real-time internal system trace outputs, database events, and engine execution details." FontSize="14" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,0" />
+            <TextBlock Text="System Diagnostic Logs" FontSize="26" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Segoe UI Semibold" />
+            <TextBlock Text="Monitor runtime health logs, memory footprint buffers, and framework tracing events." FontSize="13" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,0" />
         </StackPanel>
 
-        <!-- Filters Bar -->
+        <!-- ── 2. Filter & Command Bar ── -->
         <Border Grid.Row="1" CornerRadius="6" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12" Margin="0,0,0,16">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <!-- Search Input -->
                     <ColumnDefinition Width="*" />
-                    <!-- Checkboxes filters -->
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                
-                <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <!-- Search Box -->
-                    <Border CornerRadius="4" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="#0F111A" Width="300" Height="32" Padding="8,4">
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Search input -->
+                    <Border CornerRadius="4" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="{DynamicResource BrushBgDeep}" Width="300" Height="32" Padding="8,4">
                         <Grid>
-                            <TextBlock Text="Search log message or category..." Foreground="#4A5568" VerticalAlignment="Center" IsHitTestVisible="False">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ElementName=SearchInput, Path=Text}" Value="">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                            <TextBox x:Name="SearchInput" Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"/>
+                            <TextBlock Text="Search log message or category..." Foreground="{DynamicResource BrushTextSecondary}" VerticalAlignment="Center" IsHitTestVisible="False"
+                                       Visibility="{Binding SearchText.Length, Converter={StaticResource BoolToVisConverter}, ConverterParameter=invert}"/>
+                            <TextBox BorderThickness="0" Background="Transparent" Foreground="{DynamicResource BrushTextPrimary}" CaretBrush="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"
+                                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
                         </Grid>
                     </Border>
+
+                    <!-- Filter by level -->
+                    <TextBlock Text="Level:" Foreground="{DynamicResource BrushTextSecondary}" VerticalAlignment="Center" Margin="16,0,8,0" FontSize="13" FontWeight="SemiBold"/>
+                    <ComboBox Height="32" Width="140" ItemsSource="{Binding LogLevels}" SelectedItem="{Binding SelectedLogLevel}" VerticalContentAlignment="Center" Background="{DynamicResource BrushBgDeep}" Foreground="{DynamicResource BrushTextPrimary}">
+                        <ComboBox.Resources>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="{DynamicResource ColorBgPanel}" />
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{DynamicResource ColorAccent}" />
+                        </ComboBox.Resources>
+                    </ComboBox>
                 </StackPanel>
 
-                <!-- Checkbox Filters -->
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <CheckBox Content="Info" IsChecked="{Binding ShowInfo}" Foreground="{DynamicResource BrushTextPrimary}" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                    <CheckBox Content="Warning" IsChecked="{Binding ShowWarning}" Foreground="{DynamicResource BrushTextPrimary}" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                    <CheckBox Content="Error" IsChecked="{Binding ShowError}" Foreground="{DynamicResource BrushTextPrimary}" Margin="16,0,0,0" VerticalAlignment="Center"/>
+                <!-- Action Button -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="Clear Buffer" Command="{Binding ClearLogsCommand}" Style="{StaticResource SecondaryButton}" Height="32" Padding="16,0" />
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!-- Diagnostics HUD -->
-        <Border Grid.Row="2" Margin="0,0,0,10" CornerRadius="6"
-                Background="#0A0E17" BorderBrush="#1A2540" BorderThickness="1" Padding="12,8">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <!-- Live VMs -->
-                <StackPanel Orientation="Horizontal" Margin="0,0,24,0">
-                    <Ellipse Width="8" Height="8" Fill="#4ADE80" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                    <TextBlock Text="Live ViewModels: " Foreground="#4A5568" FontSize="11" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding LiveViewModelCount}" Foreground="#A0AEC0" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                </StackPanel>
-                <!-- Memory -->
-                <StackPanel Orientation="Horizontal" Margin="0,0,24,0">
-                    <Ellipse Width="8" Height="8" Fill="#60A5FA" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                    <TextBlock Text="Memory: " Foreground="#4A5568" FontSize="11" VerticalAlignment="Center"/>
-                    <TextBlock Foreground="#A0AEC0" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center">
+        <!-- ── 3. Health Diagnostics Bar ── -->
+        <Border Grid.Row="2" CornerRadius="6,6,0,0" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1,1,1,0">
+            <Grid Height="38" Background="{DynamicResource BrushBgDeep}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12,8">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Live ViewModels: " Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding LiveViewModelCount}" Foreground="{DynamicResource BrushTextPrimary}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1,0,0,0" Margin="16,4" Height="12" />
+                    
+                    <TextBlock Text="Memory: " Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" VerticalAlignment="Center"/>
+                    <TextBlock Foreground="{DynamicResource BrushTextPrimary}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center">
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0} MB">
-                                <Binding Path="WorkingSetMb"/>
+                            <MultiBinding StringFormat="{}{0} MB / {1} MB limit">
+                                <Binding Path="MemoryUsedMb" />
+                                <Binding Path="MemoryLimitMb" />
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
+                    <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1,0,0,0" Margin="16,4" Height="12" />
+                    
+                    <TextBlock Text="Visible Logs: " Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding FilteredLogs.Count}" Foreground="{DynamicResource BrushTextPrimary}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 </StackPanel>
-                <!-- Log Count -->
-                <StackPanel Orientation="Horizontal">
-                    <Ellipse Width="8" Height="8" Fill="#F59E0B" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                    <TextBlock Text="Visible Logs: " Foreground="#4A5568" FontSize="11" VerticalAlignment="Center"/>
-                    <TextBlock Text="{Binding FilteredLogs.Count}" Foreground="#A0AEC0" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                </StackPanel>
-            </StackPanel>
+            </Grid>
         </Border>
 
-        <!-- Log List Grid -->
-        <Border Grid.Row="3" CornerRadius="8,8,0,0" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="0">
+        <!-- ── 4. Main Console ListView Grid ── -->
+        <Border Grid.Row="3" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="{DynamicResource BrushBgPanel}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <!-- Headers -->
                     <RowDefinition Height="Auto" />
-                    <!-- List data -->
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <!-- Grid headers -->
-                <Border Grid.Row="0" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Padding="16,12" Background="#0A0E17">
+                <Border Grid.Row="0" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Padding="16,12" Background="{DynamicResource BrushBgDeep}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="150" />
@@ -126,7 +116,6 @@
                     </Grid>
                 </Border>
 
-                <!-- Scrollable list of entries -->
                 <ListView Grid.Row="1" x:Name="LogListView" ItemsSource="{Binding FilteredLogs}" Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
@@ -146,10 +135,10 @@
                             </Setter>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#171D2F"/>
+                                    <Setter Property="Background" Value="{DynamicResource BrushBgDeep}"/>
                                 </Trigger>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#222B45"/>
+                                    <Setter Property="Background" Value="{DynamicResource BrushBgSidebar}"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -165,26 +154,24 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Time -->
                                 <TextBlock Grid.Column="0" Text="{Binding Timestamp, StringFormat='{}{0:yyyy-MM-dd HH:mm:ss}'}" Foreground="{DynamicResource BrushTextSecondary}" VerticalAlignment="Center" FontSize="12"/>
 
-                                <!-- Severity Badge -->
                                 <Border Grid.Column="1" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left" VerticalAlignment="Center">
                                     <Border.Style>
                                         <Style TargetType="Border">
-                                            <Setter Property="Background" Value="#2A314A"/>
+                                            <Setter Property="Background" Value="{DynamicResource BrushBgDeep}"/>
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Level}" Value="Information">
-                                                    <Setter Property="Background" Value="#102A45"/>
+                                                    <Setter Property="Background" Value="#EBF8FF"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Level}" Value="Warning">
-                                                    <Setter Property="Background" Value="#452710"/>
+                                                    <Setter Property="Background" Value="#FEFCBF"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Level}" Value="Error">
-                                                    <Setter Property="Background" Value="#451010"/>
+                                                    <Setter Property="Background" Value="#FED7D7"/>
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Level}" Value="Critical">
-                                                    <Setter Property="Background" Value="#451010"/>
+                                                    <Setter Property="Background" Value="#FED7D7"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -192,7 +179,7 @@
                                     <TextBlock Text="{Binding Level}" FontSize="10" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <TextBlock.Style>
                                             <Style TargetType="TextBlock">
-                                                <Setter Property="Foreground" Value="#626D8A"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}"/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding Level}" Value="Information">
                                                         <Setter Property="Foreground" Value="{DynamicResource BrushAccent}"/>
@@ -212,10 +199,7 @@
                                     </TextBlock>
                                 </Border>
 
-                                <!-- Category -->
                                 <TextBlock Grid.Column="2" Text="{Binding Category}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource BrushTextSecondary}" VerticalAlignment="Center" Margin="0,0,12,0" FontSize="11" FontFamily="Consolas"/>
-
-                                <!-- Message -->
                                 <TextBlock Grid.Column="3" Text="{Binding Message}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontSize="12"/>
                             </Grid>
                         </DataTemplate>
@@ -225,7 +209,7 @@
         </Border>
 
         <!-- Selected Log Details Expandable Panel -->
-        <Border Grid.Row="4" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1,0,1,1" CornerRadius="0,0,8,8" Background="#0A0E17" Padding="16">
+        <Border Grid.Row="4" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1,0,1,1" CornerRadius="0,0,8,8" Background="{DynamicResource BrushBgDeep}" Padding="16">
             <Border.Style>
                 <Style TargetType="Border">
                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -233,7 +217,6 @@
                         <DataTrigger Binding="{Binding ElementName=LogListView, Path=SelectedItem}" Value="{x:Null}">
                             <Setter Property="Visibility" Value="Collapsed" />
                         </DataTrigger>
-                        <!-- Only visible when item is selected -->
                         <DataTrigger Binding="{Binding ElementName=LogListView, Path=SelectedItem, Converter={x:Null}}" Value="False">
                             <Setter Property="Visibility" Value="Visible" />
                         </DataTrigger>
@@ -247,7 +230,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="Diagnostic Context Details" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,6" />
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <TextBox Text="{Binding ElementName=LogListView, Path=SelectedItem.Exception, Mode=OneWay, TargetNullValue='No exception trace recorded for this log entry.'}" IsReadOnly="True" Background="Transparent" Foreground="#FF9B9B" BorderThickness="0" TextWrapping="Wrap" AcceptsReturn="True" FontFamily="Consolas" FontSize="11"/>
+                    <TextBox Text="{Binding ElementName=LogListView, Path=SelectedItem.Exception, Mode=OneWay, TargetNullValue='No exception trace recorded for this log entry.'}" IsReadOnly="True" Background="Transparent" Foreground="#C53030" BorderThickness="0" TextWrapping="Wrap" AcceptsReturn="True" FontFamily="Consolas" FontSize="11"/>
                 </ScrollViewer>
             </Grid>
         </Border>

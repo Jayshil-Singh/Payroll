@@ -17,20 +17,20 @@
 
         <!-- Header -->
         <StackPanel Grid.Row="0" Margin="0,0,0,20">
-            <TextBlock Text="{Binding Title}" FontSize="26" FontWeight="Bold" Foreground="#FFFFFF" FontFamily="Segoe UI Semibold" />
-            <TextBlock Text="Manage statutory compliance cycles, run engine rate simulations, and export direct bank transfer files." FontSize="13" Foreground="#A0AEC0" Margin="0,4,0,0" />
+            <TextBlock Text="{Binding Title}" FontSize="26" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Segoe UI Semibold" />
+            <TextBlock Text="Manage statutory compliance cycles, run engine rate simulations, and export direct bank transfer files." FontSize="13" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,0" />
         </StackPanel>
 
         <!-- Selection Parameters -->
-        <Border Grid.Row="1" Margin="0,0,0,15" CornerRadius="6" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="15">
+        <Border Grid.Row="1" Margin="0,0,0,15" CornerRadius="6" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="15">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                    <TextBlock Text="Selected Compliance Period" Foreground="#A0AEC0" FontSize="11" Margin="0,0,0,6" FontWeight="SemiBold" />
-                    <ComboBox ItemsSource="{Binding Periods}" SelectedItem="{Binding SelectedPeriod}" Height="32" Background="#0F111A" Foreground="#FFFFFF" BorderBrush="#2E3656">
+                    <TextBlock Text="Selected Compliance Period" Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" Margin="0,0,0,6" FontWeight="SemiBold" />
+                    <ComboBox ItemsSource="{Binding Periods}" SelectedItem="{Binding SelectedPeriod}" Height="32" Background="{DynamicResource BrushBgDeep}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushBorder}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock>
@@ -47,8 +47,8 @@
                     </ComboBox>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                    <TextBlock Text="Selected Payroll Run (for Variance &amp; Simulation)" Foreground="#A0AEC0" FontSize="11" Margin="0,0,0,6" FontWeight="SemiBold" />
-                    <ComboBox ItemsSource="{Binding Runs}" SelectedItem="{Binding SelectedRun}" Height="32" Background="#0F111A" Foreground="#FFFFFF" BorderBrush="#2E3656">
+                    <TextBlock Text="Selected Payroll Run (for Variance &amp; Simulation)" Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" Margin="0,0,0,6" FontWeight="SemiBold" />
+                    <ComboBox ItemsSource="{Binding Runs}" SelectedItem="{Binding SelectedRun}" Height="32" Background="{DynamicResource BrushBgDeep}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushBorder}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock>
@@ -70,51 +70,45 @@
         <!-- KPI Summary Cards -->
         <UniformGrid Grid.Row="2" Columns="3" Margin="0,0,0,20">
             <!-- Card 1: Selected Period -->
-            <Border Margin="0,0,8,0" CornerRadius="6" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="15">
+            <Border Margin="0,0,8,0" CornerRadius="6" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="15">
                 <StackPanel>
-                    <TextBlock Text="SELECTED PERIOD STATUS" FontSize="11" Foreground="#A0AEC0" FontWeight="Bold" />
-                    <TextBlock Text="{Binding SelectedPeriodText}" FontSize="18" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,6,0,0" />
+                    <TextBlock Text="SELECTED PERIOD STATUS" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" FontWeight="Bold" />
+                    <TextBlock Text="{Binding SelectedPeriodText}" FontSize="18" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,6,0,0" />
                     <TextBlock Text="{Binding SelectedPeriodStatusText}" FontSize="12" Foreground="#38B2AC" Margin="0,2,0,0" />
                 </StackPanel>
             </Border>
 
             <!-- Card 2: Validation Errors -->
-            <Border Margin="8,0,8,0" CornerRadius="6" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="15">
+            <Border Margin="8,0,8,0" CornerRadius="6" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="15">
                 <StackPanel>
-                    <TextBlock Text="COMPLIANCE WARNINGS" FontSize="11" Foreground="#A0AEC0" FontWeight="Bold" />
+                    <TextBlock Text="COMPLIANCE WARNINGS" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" FontWeight="Bold" />
                     <TextBlock Text="{Binding OutstandingValidationErrorsCount}" FontSize="18" Foreground="#FF5E5E" FontWeight="Bold" Margin="0,6,0,0" />
                     <TextBlock Text="Requires employee data adjustments" FontSize="12" Foreground="#FF5E5E" Margin="0,2,0,0" />
                 </StackPanel>
             </Border>
 
             <!-- Card 3: Actions -->
-            <Border Margin="8,0,0,0" CornerRadius="6" Background="#1B2032" BorderBrush="#2E3656" BorderThickness="1" Padding="15">
+            <Border Margin="8,0,0,0" CornerRadius="6" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="15">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Content="Lock Period" Command="{Binding LockPeriodCommand}" Width="100" Height="32" Background="#0D99FF" Foreground="#FFFFFF" FontWeight="SemiBold" BorderThickness="0" Margin="0,0,10,0">
+                    <Button Content="Lock Period" Command="{Binding LockPeriodCommand}" Width="100" Height="32" Background="{DynamicResource BrushAccent}" Foreground="#FFFFFF" FontWeight="SemiBold" BorderThickness="0" Margin="0,0,10,0">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="4"/>
                             </Style>
                         </Button.Resources>
                     </Button>
-                    <Button Content="Unlock" Command="{Binding UnlockPeriodCommand}" Width="100" Height="32" Background="#2E3656" Foreground="#FFFFFF" FontWeight="SemiBold" BorderBrush="#4A5568" BorderThickness="1">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="4"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                    <Button Content="Unlock" Command="{Binding UnlockPeriodCommand}" Width="100" Height="32" Style="{StaticResource SecondaryButton}" />
                 </StackPanel>
             </Border>
         </UniformGrid>
 
         <!-- Main Workspace Tabs -->
-        <TabControl Grid.Row="3" Background="#151928" BorderBrush="#2E3656" BorderThickness="1" Padding="15">
+        <TabControl Grid.Row="3" Background="{DynamicResource BrushBgDeep}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="15">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="Header" Value="{Binding Header}"/>
-                    <Setter Property="Background" Value="#1B2032"/>
-                    <Setter Property="Foreground" Value="#A0AEC0"/>
+                    <Setter Property="Background" Value="{DynamicResource BrushBgPanel}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}"/>
                     <Setter Property="Padding" Value="15,8"/>
                     <Setter Property="BorderThickness" Value="0"/>
                 </Style>
@@ -146,8 +140,8 @@
                     </StackPanel>
 
                     <!-- Submissions list -->
-                    <GroupBox Grid.Row="1" Header="Recent Generated Export Submissions" Foreground="#FFFFFF" BorderBrush="#2E3656" BorderThickness="1" Padding="5">
-                        <DataGrid ItemsSource="{Binding RecentSubmissions}" AutoGenerateColumns="False" IsReadOnly="True" Background="#0F111A" Foreground="#FFFFFF" BorderThickness="0" RowBackground="#151928" AlternatingRowBackground="#1B2032" GridLinesVisibility="None" Padding="10">
+                    <GroupBox Grid.Row="1" Header="Recent Generated Export Submissions" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="5">
+                        <DataGrid ItemsSource="{Binding RecentSubmissions}" AutoGenerateColumns="False" IsReadOnly="True" Background="{DynamicResource BrushBgDeep}" Foreground="{DynamicResource BrushTextPrimary}" BorderThickness="0" RowBackground="{DynamicResource BrushBgPanel}" AlternatingRowBackground="{DynamicResource BrushBgDeep}" GridLinesVisibility="None" Padding="10">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Document Type" Binding="{Binding DocumentType}" Width="*" />
                                 <DataGridTextColumn Header="Filing Status" Binding="{Binding Status}" Width="120" />
@@ -162,51 +156,15 @@
             <!-- Tab 2: Bank Direct Credits -->
             <TabItem Header="Bank Exports">
                 <StackPanel>
-                    <TextBlock Text="Select target bank template format to generate direct-credit clearing file:" Foreground="#FFFFFF" FontSize="14" Margin="0,0,0,15" />
+                    <TextBlock Text="Select target bank template format to generate direct-credit clearing file:" Foreground="{DynamicResource BrushTextPrimary}" FontSize="14" Margin="0,0,0,15" />
                     
                     <WrapPanel Margin="0,0,0,10">
-                        <Button Content="BSP Direct Credit" Command="{Binding GenerateFileCommand}" CommandParameter="Bank_Generate_1_BSP" Width="170" Height="40" Background="#1B2032" Foreground="#FFFFFF" FontWeight="SemiBold" BorderBrush="#2E3656" BorderThickness="1" Margin="0,0,10,10">
-                            <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="4"/>
-                                </Style>
-                            </Button.Resources>
-                        </Button>
-                        <Button Content="ANZ Direct Credit" Command="{Binding GenerateFileCommand}" CommandParameter="Bank_Generate_1_ANZ" Width="170" Height="40" Background="#1B2032" Foreground="#FFFFFF" FontWeight="SemiBold" BorderBrush="#2E3656" BorderThickness="1" Margin="0,0,10,10">
-                            <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="4"/>
-                                </Style>
-                            </Button.Resources>
-                        </Button>
-                        <Button Content="Westpac Direct Credit" Command="{Binding GenerateFileCommand}" CommandParameter="Bank_Generate_1_WBC" Width="170" Height="40" Background="#1B2032" Foreground="#FFFFFF" FontWeight="SemiBold" BorderBrush="#2E3656" BorderThickness="1" Margin="0,0,10,10">
-                            <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="4"/>
-                                </Style>
-                            </Button.Resources>
-                        </Button>
-                        <Button Content="BRED Direct Credit" Command="{Binding GenerateFileCommand}" CommandParameter="Bank_Generate_1_BRED" Width="170" Height="40" Background="#1B2032" Foreground="#FFFFFF" FontWeight="SemiBold" BorderBrush="#2E3656" BorderThickness="1" Margin="0,0,10,10">
-                            <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="4"/>
-                                </Style>
-                            </Button.Resources>
-                        </Button>
-                        <Button Content="HFC Direct Credit" Command="{Binding GenerateFileCommand}" CommandParameter="Bank_Generate_1_HFC" Width="170" Height="40" Background="#1B2032" Foreground="#FFFFFF" FontWeight="SemiBold" BorderBrush="#2E3656" BorderThickness="1" Margin="0,0,10,10">
-                            <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="4"/>
-                                </Style>
-                            </Button.Resources>
-                        </Button>
-                        <Button Content="Kontiki Direct Credit" Command="{Binding GenerateFileCommand}" CommandParameter="Bank_Generate_1_KNTK" Width="170" Height="40" Background="#1B2032" Foreground="#FFFFFF" FontWeight="SemiBold" BorderBrush="#2E3656" BorderThickness="1" Margin="0,0,10,10">
-                            <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="4"/>
-                                </Style>
-                            </Button.Resources>
-                        </Button>
+                        <Button Content="BSP Direct Credit" Command="{Binding GenerateFileCommand}" CommandParameter="Bank_Generate_1_BSP" Width="170" Height="40" Style="{StaticResource SecondaryButton}" Margin="0,0,10,10" />
+                        <Button Content="ANZ Direct Credit" Command="{Binding GenerateFileCommand}" CommandParameter="Bank_Generate_1_ANZ" Width="170" Height="40" Style="{StaticResource SecondaryButton}" Margin="0,0,10,10" />
+                        <Button Content="Westpac Direct Credit" Command="{Binding GenerateFileCommand}" CommandParameter="Bank_Generate_1_WBC" Width="170" Height="40" Style="{StaticResource SecondaryButton}" Margin="0,0,10,10" />
+                        <Button Content="BRED Direct Credit" Command="{Binding GenerateFileCommand}" CommandParameter="Bank_Generate_1_BRED" Width="170" Height="40" Style="{StaticResource SecondaryButton}" Margin="0,0,10,10" />
+                        <Button Content="HFC Direct Credit" Command="{Binding GenerateFileCommand}" CommandParameter="Bank_Generate_1_HFC" Width="170" Height="40" Style="{StaticResource SecondaryButton}" Margin="0,0,10,10" />
+                        <Button Content="Kontiki Direct Credit" Command="{Binding GenerateFileCommand}" CommandParameter="Bank_Generate_1_KNTK" Width="170" Height="40" Style="{StaticResource SecondaryButton}" Margin="0,0,10,10" />
                     </WrapPanel>
                 </StackPanel>
             </TabItem>
@@ -228,21 +186,21 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                            <TextBlock Text="FNPF EE Rate" Foreground="#A0AEC0" FontSize="11" Margin="0,0,0,4" />
-                            <TextBox Text="{Binding FnpfEeRateOverride}" Height="28" Background="#0F111A" Foreground="#FFFFFF" BorderBrush="#2E3656" SelectionBrush="#0D99FF" Padding="5,2" />
+                            <TextBlock Text="FNPF EE Rate" Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" Margin="0,0,0,4" />
+                            <TextBox Text="{Binding FnpfEeRateOverride}" Height="28" Background="{DynamicResource BrushBgDeep}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushBorder}" SelectionBrush="#0D99FF" Padding="5,2" />
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Margin="0,0,10,0">
-                            <TextBlock Text="FNPF ER Rate" Foreground="#A0AEC0" FontSize="11" Margin="0,0,0,4" />
-                            <TextBox Text="{Binding FnpfErRateOverride}" Height="28" Background="#0F111A" Foreground="#FFFFFF" BorderBrush="#2E3656" SelectionBrush="#0D99FF" Padding="5,2" />
+                            <TextBlock Text="FNPF ER Rate" Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" Margin="0,0,0,4" />
+                            <TextBox Text="{Binding FnpfErRateOverride}" Height="28" Background="{DynamicResource BrushBgDeep}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushBorder}" SelectionBrush="#0D99FF" Padding="5,2" />
                         </StackPanel>
 
                         <StackPanel Grid.Column="2" Margin="0,0,10,0">
-                            <TextBlock Text="PAYE Free Threshold" Foreground="#A0AEC0" FontSize="11" Margin="0,0,0,4" />
-                            <TextBox Text="{Binding PayeThresholdOverride}" Height="28" Background="#0F111A" Foreground="#FFFFFF" BorderBrush="#2E3656" SelectionBrush="#0D99FF" Padding="5,2" />
+                            <TextBlock Text="PAYE Free Threshold" Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" Margin="0,0,0,4" />
+                            <TextBox Text="{Binding PayeThresholdOverride}" Height="28" Background="{DynamicResource BrushBgDeep}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushBorder}" SelectionBrush="#0D99FF" Padding="5,2" />
                         </StackPanel>
 
-                        <Button Grid.Column="3" Content="Run Simulation" Command="{Binding RunSimulationCommand}" VerticalAlignment="Bottom" Width="140" Height="28" Background="#0D99FF" Foreground="#FFFFFF" FontWeight="SemiBold" BorderThickness="0">
+                        <Button Grid.Column="3" Content="Run Simulation" Command="{Binding RunSimulationCommand}" VerticalAlignment="Bottom" Width="140" Height="28" Background="{DynamicResource BrushAccent}" Foreground="#FFFFFF" FontWeight="SemiBold" BorderThickness="0">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="4"/>
@@ -252,7 +210,7 @@
                     </Grid>
 
                     <!-- Simulation results summary -->
-                    <GroupBox Grid.Row="1" Header="Simulated Variance Comparison" Foreground="#FFFFFF" BorderBrush="#2E3656" BorderThickness="1" Padding="5">
+                    <GroupBox Grid.Row="1" Header="Simulated Variance Comparison" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="5">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -260,14 +218,14 @@
                             </Grid.RowDefinitions>
 
                             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5,5,5,10">
-                                <TextBlock Text="Total FNPF Variance: " Foreground="#A0AEC0" />
-                                <TextBlock Text="{Binding SimulationResult.FnpfVariance, StringFormat='${0:N2}'}" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <TextBlock Text="Total FNPF Variance: " Foreground="{DynamicResource BrushTextSecondary}" />
+                                <TextBlock Text="{Binding SimulationResult.FnpfVariance, StringFormat='${0:N2}'}" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,0,20,0"/>
                                 
-                                <TextBlock Text="Total PAYE Variance: " Foreground="#A0AEC0" />
-                                <TextBlock Text="{Binding SimulationResult.PayeVariance, StringFormat='${0:N2}'}" Foreground="#FFFFFF" FontWeight="Bold" />
+                                <TextBlock Text="Total PAYE Variance: " Foreground="{DynamicResource BrushTextSecondary}" />
+                                <TextBlock Text="{Binding SimulationResult.PayeVariance, StringFormat='${0:N2}'}" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" />
                               </StackPanel>
 
-                            <DataGrid Grid.Row="1" ItemsSource="{Binding SimulationResult.EmployeeVariances}" AutoGenerateColumns="False" IsReadOnly="True" Background="#0F111A" Foreground="#FFFFFF" BorderThickness="0" RowBackground="#151928" AlternatingRowBackground="#1B2032" GridLinesVisibility="None" Padding="10">
+                            <DataGrid Grid.Row="1" ItemsSource="{Binding SimulationResult.EmployeeVariances}" AutoGenerateColumns="False" IsReadOnly="True" Background="{DynamicResource BrushBgDeep}" Foreground="{DynamicResource BrushTextPrimary}" BorderThickness="0" RowBackground="{DynamicResource BrushBgPanel}" AlternatingRowBackground="{DynamicResource BrushBgDeep}" GridLinesVisibility="None" Padding="10">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Employee Name" Binding="{Binding EmployeeName}" Width="*" />
                                     <DataGridTextColumn Header="Original FNPF" Binding="{Binding OriginalFnpf, StringFormat='${0:N2}'}" Width="110" />
@@ -291,7 +249,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Button Grid.Row="0" Content="Run Reconciliation Audit" Command="{Binding RunReconciliationCommand}" Width="200" Height="34" Background="#0D99FF" Foreground="#FFFFFF" FontWeight="SemiBold" BorderThickness="0" Margin="0,0,0,15" HorizontalAlignment="Left">
+                    <Button Grid.Row="0" Content="Run Reconciliation Audit" Command="{Binding RunReconciliationCommand}" Width="200" Height="34" Background="{DynamicResource BrushAccent}" Foreground="#FFFFFF" FontWeight="SemiBold" BorderThickness="0" Margin="0,0,0,15" HorizontalAlignment="Left">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="4"/>
@@ -299,36 +257,36 @@
                         </Button.Resources>
                     </Button>
 
-                    <GroupBox Grid.Row="1" Header="Ledger vs Submission Variance Review" Foreground="#FFFFFF" BorderBrush="#2E3656" BorderThickness="1" Padding="15">
+                    <GroupBox Grid.Row="1" Header="Ledger vs Submission Variance Review" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="15">
                         <StackPanel>
                             <TextBlock Text="{Binding ReconciliationVariance.ReconciliationStatus, StringFormat='Reconciliation Status: {0}'}" FontSize="16" FontWeight="Bold" Foreground="#38B2AC" Margin="0,0,0,15"/>
 
                             <UniformGrid Columns="3" Margin="0,0,0,20">
                                 <StackPanel Margin="0,0,10,0">
-                                    <TextBlock Text="TOTAL LEDGER GROSS" FontSize="11" Foreground="#A0AEC0"/>
-                                    <TextBlock Text="{Binding ReconciliationVariance.LedgerGross, StringFormat='${0:N2}'}" FontSize="18" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,4,0,0"/>
+                                    <TextBlock Text="TOTAL LEDGER GROSS" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Text="{Binding ReconciliationVariance.LedgerGross, StringFormat='${0:N2}'}" FontSize="18" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,4,0,0"/>
                                 </StackPanel>
                                 <StackPanel Margin="0,0,10,0">
-                                    <TextBlock Text="TOTAL SUBMISSION GROSS" FontSize="11" Foreground="#A0AEC0"/>
-                                    <TextBlock Text="{Binding ReconciliationVariance.SubmissionGross, StringFormat='${0:N2}'}" FontSize="18" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,4,0,0"/>
+                                    <TextBlock Text="TOTAL SUBMISSION GROSS" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Text="{Binding ReconciliationVariance.SubmissionGross, StringFormat='${0:N2}'}" FontSize="18" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,4,0,0"/>
                                 </StackPanel>
                                 <StackPanel>
-                                    <TextBlock Text="GROSS VARIANCE" FontSize="11" Foreground="#A0AEC0"/>
+                                    <TextBlock Text="GROSS VARIANCE" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
                                     <TextBlock Text="{Binding ReconciliationVariance.GrossVariance, StringFormat='${0:N2}'}" FontSize="18" Foreground="#FF5E5E" FontWeight="Bold" Margin="0,4,0,0"/>
                                 </StackPanel>
                             </UniformGrid>
 
                             <UniformGrid Columns="3">
                                 <StackPanel Margin="0,0,10,0">
-                                    <TextBlock Text="TOTAL LEDGER PAYE" FontSize="11" Foreground="#A0AEC0"/>
-                                    <TextBlock Text="{Binding ReconciliationVariance.LedgerPaye, StringFormat='${0:N2}'}" FontSize="18" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,4,0,0"/>
+                                    <TextBlock Text="TOTAL LEDGER PAYE" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Text="{Binding ReconciliationVariance.LedgerPaye, StringFormat='${0:N2}'}" FontSize="18" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,4,0,0"/>
                                 </StackPanel>
                                 <StackPanel Margin="0,0,10,0">
-                                    <TextBlock Text="TOTAL SUBMISSION PAYE" FontSize="11" Foreground="#A0AEC0"/>
-                                    <TextBlock Text="{Binding ReconciliationVariance.SubmissionPaye, StringFormat='${0:N2}'}" FontSize="18" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,4,0,0"/>
+                                    <TextBlock Text="TOTAL SUBMISSION PAYE" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Text="{Binding ReconciliationVariance.SubmissionPaye, StringFormat='${0:N2}'}" FontSize="18" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" Margin="0,4,0,0"/>
                                 </StackPanel>
                                 <StackPanel>
-                                    <TextBlock Text="PAYE VARIANCE" FontSize="11" Foreground="#A0AEC0"/>
+                                    <TextBlock Text="PAYE VARIANCE" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
                                     <TextBlock Text="{Binding ReconciliationVariance.PayeVariance, StringFormat='${0:N2}'}" FontSize="18" Foreground="#FF5E5E" FontWeight="Bold" Margin="0,4,0,0"/>
                                 </StackPanel>
                             </UniformGrid>

@@ -8,7 +8,7 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1024"
-             Background="#F9FAFB">
+             Background="{DynamicResource BrushBgDeep}">
 
     <UserControl.Resources>
         <!-- Converter to display Yes/No instead of True/False -->
@@ -51,52 +51,28 @@
                 <!-- Header Actions -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <!-- Refresh Button -->
-                    <Button Content="Refresh"
+                    <Button Content="🔄 Refresh"
                             Command="{Binding LoadComponentsCommand}"
-                            Background="Transparent" BorderBrush="#D1D5DB" BorderThickness="1" Foreground="#374151" FontWeight="Medium"
-                            Padding="14,8" Margin="0,0,10,0" Cursor="Hand">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="6"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                            Style="{StaticResource SecondaryButton}"
+                            Padding="14,8" Margin="0,0,10,0" />
 
                     <!-- Rule Simulation Button -->
                     <Button Content="⚡ Rule Simulation"
                             Command="{Binding OpenSimulationCommand}"
-                            Background="#2E3656" BorderBrush="#3F4972" BorderThickness="1" Foreground="White" FontWeight="SemiBold"
-                            Padding="14,8" Margin="0,0,10,0" Cursor="Hand">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="6"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                            Style="{StaticResource SecondaryButton}"
+                            Padding="14,8" Margin="0,0,10,0" />
 
                     <!-- Clone Wizard Button -->
                     <Button Content="📋 Clone Wizard"
                             Command="{Binding OpenCloneWizardCommand}"
-                            Background="#2E3656" BorderBrush="#3F4972" BorderThickness="1" Foreground="White" FontWeight="SemiBold"
-                            Padding="14,8" Margin="0,0,10,0" Cursor="Hand">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="6"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                            Style="{StaticResource SecondaryButton}"
+                            Padding="14,8" Margin="0,0,10,0" />
 
                     <!-- Package Manager Button -->
                     <Button Content="📦 Package Manager"
                             Command="{Binding OpenPackageManagerCommand}"
-                            Background="#2E3656" BorderBrush="#3F4972" BorderThickness="1" Foreground="White" FontWeight="SemiBold"
-                            Padding="14,8" Margin="0,0,10,0" Cursor="Hand">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="6"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
+                            Style="{StaticResource SecondaryButton}"
+                            Padding="14,8" Margin="0,0,10,0" />       </Button>
 
                     <!-- New Component Button -->
                     <Button Content="+ New Component"
@@ -187,15 +163,15 @@
         <!-- ── 3. Data Grid ── -->
         <Grid Grid.Row="2">
             <!-- Loading Indicator Overlay -->
-            <Grid Panel.ZIndex="10" Background="#80F9FAFB" Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
+            <Grid Panel.ZIndex="10" Background="#80FFFFFF" Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                     <ProgressBar IsIndeterminate="True" Width="200" Height="4"/>
-                    <TextBlock Text="Loading components..." FontSize="14" Foreground="#374151" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                    <TextBlock Text="Loading components..." FontSize="14" Foreground="{DynamicResource BrushTextPrimary}" HorizontalAlignment="Center" Margin="0,8,0,0"/>
                 </StackPanel>
             </Grid>
 
             <!-- Main DataGrid -->
-            <Border BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="6" Background="White">
+            <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" CornerRadius="6" Background="{DynamicResource BrushBgPanel}">
                 <DataGrid ItemsSource="{Binding Components}" 
                           AutoGenerateColumns="False" 
                           CanUserAddRows="False" 
@@ -205,12 +181,12 @@
                           RowHeight="44" 
                           HeadersVisibility="Column" 
                           GridLinesVisibility="Horizontal"
-                          HorizontalGridLinesBrush="#E5E7EB" 
-                          AlternatingRowBackground="#F9FAFB">
+                          HorizontalGridLinesBrush="{DynamicResource BrushBorder}" 
+                          AlternatingRowBackground="{DynamicResource BrushBgDeep}">
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="Background" Value="#F3F4F6"/>
-                            <Setter Property="Foreground" Value="#374151"/>
+                            <Setter Property="Background" Value="{DynamicResource BrushBgDeep}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
                             <Setter Property="FontWeight" Value="SemiBold"/>
                             <Setter Property="FontSize" Value="13"/>
                             <Setter Property="Padding" Value="12,8"/>
@@ -379,7 +355,7 @@
         </Grid>
 
         <!-- ── 4. Pagination / Footer ── -->
-        <Border Grid.Row="3" Background="#F3F4F6" BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,16,0,0">
+        <Border Grid.Row="3" Background="{DynamicResource BrushBgDeep}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,16,0,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -388,12 +364,12 @@
                 
                 <!-- Status Info -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="Total Records: " Foreground="#4B5563"/>
-                    <TextBlock Text="{Binding TotalCount}" FontWeight="Bold" Foreground="#111827"/>
-                    <TextBlock Text=" | Page " Foreground="#4B5563" Margin="8,0,0,0"/>
-                    <TextBlock Text="{Binding PageNumber}" FontWeight="Bold" Foreground="#111827"/>
-                    <TextBlock Text=" of " Foreground="#4B5563"/>
-                    <TextBlock Text="{Binding TotalPages}" FontWeight="Bold" Foreground="#111827"/>
+                    <TextBlock Text="Total Records: " Foreground="{DynamicResource BrushTextSecondary}"/>
+                    <TextBlock Text="{Binding TotalCount}" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                    <TextBlock Text=" | Page " Foreground="{DynamicResource BrushTextSecondary}" Margin="8,0,0,0"/>
+                    <TextBlock Text="{Binding PageNumber}" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                    <TextBlock Text=" of " Foreground="{DynamicResource BrushTextSecondary}"/>
+                    <TextBlock Text="{Binding TotalPages}" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                 </StackPanel>
 
                 <!-- Page Navigation Buttons -->

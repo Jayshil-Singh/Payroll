@@ -1,0 +1,14 @@
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\bin\x64\Release\net9.0\FijiPayroll.SDK.deps.json
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\bin\x64\Release\net9.0\FijiPayroll.SDK.dll
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\bin\x64\Release\net9.0\FijiPayroll.SDK.pdb
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\bin\x64\Release\net9.0\FijiPayroll.SDK.xml
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\obj\x64\Release\net9.0\FijiPayroll.SDK.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\obj\x64\Release\net9.0\FijiPayroll.SDK.AssemblyInfoInputs.cache
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\obj\x64\Release\net9.0\FijiPayroll.SDK.AssemblyInfo.cs
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\obj\x64\Release\net9.0\FijiPayroll.SDK.csproj.CoreCompileInputs.cache
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\obj\x64\Release\net9.0\FijiPayroll.SDK.sourcelink.json
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\obj\x64\Release\net9.0\FijiPayroll.SDK.dll
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\obj\x64\Release\net9.0\refint\FijiPayroll.SDK.dll
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\obj\x64\Release\net9.0\FijiPayroll.SDK.xml
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\obj\x64\Release\net9.0\FijiPayroll.SDK.pdb
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.SDK\obj\x64\Release\net9.0\ref\FijiPayroll.SDK.dll
