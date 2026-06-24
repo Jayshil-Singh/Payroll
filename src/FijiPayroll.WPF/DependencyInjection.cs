@@ -6,9 +6,11 @@ using FijiPayroll.WPF.Services;
 using FijiPayroll.WPF.ViewModels;
 using FijiPayroll.WPF.ViewModels.Auth;
 using FijiPayroll.WPF.ViewModels.Settings;
+using FijiPayroll.WPF.ViewModels.Setup;
 using FijiPayroll.WPF.Views;
 using FijiPayroll.WPF.Views.Auth;
 using FijiPayroll.WPF.Views.Settings;
+using FijiPayroll.WPF.Views.Setup;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FijiPayroll.WPF;
@@ -30,6 +32,7 @@ public static class DependencyInjection
         services.AddSingleton<INotificationService, NotificationService>();
         services.AddSingleton<IDialogService, DialogService>();
         services.AddSingleton<ILoadingService, LoadingService>();
+        services.AddSingleton<ISetupWizardService, SetupWizardService>();
         services.AddSingleton<IApplicationStateStore, ApplicationStateStore>();
         services.AddSingleton<ITenantProvider, WpfTenantProvider>();
         services.AddSingleton<SessionManager>();
@@ -53,6 +56,7 @@ public static class DependencyInjection
         // ── ViewModels (Main & Module Shells) ────────────────────────────────
         services.AddSingleton<MainViewModel>();
         services.AddTransient<LoginViewModel>();
+        services.AddTransient<SetupWizardViewModel>();
         services.AddTransient<ESSHomeViewModel>();
         services.AddTransient<DashboardViewModel>();
         services.AddTransient<EmployeeViewModel>();
@@ -87,6 +91,7 @@ public static class DependencyInjection
         services.AddTransient<MainWindow>();
         services.AddTransient<ESSShellWindow>();
         services.AddTransient<LoginView>();
+        services.AddTransient<SetupWizardWindow>();
         services.AddTransient<ESSHomeView>();
         services.AddTransient<PayrollComponentView>();
         services.AddTransient<PayrollComponentEditorWindow>();

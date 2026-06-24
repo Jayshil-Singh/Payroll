@@ -163,3 +163,5 @@ C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\bin\Debug\net9.0-wind
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\bin\Debug\net9.0-windows\Microsoft.Extensions.FileProviders.Abstractions.dll
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\bin\Debug\net9.0-windows\Microsoft.Extensions.FileProviders.Physical.dll
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\bin\Debug\net9.0-windows\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\Setup\SetupWizardWindow.g.cs
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Debug\net9.0-windows\Views\Setup\SetupWizardWindow.baml

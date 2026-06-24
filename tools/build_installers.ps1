@@ -30,7 +30,7 @@ Write-Host "WPF published successfully."
 
 # 3. Publish LicenseGenerator
 Write-Host "--> Publishing FijiPayroll.LicenseGenerator..."
-$LicGenPublishDir = "$ProjectRoot\tools\FijiPayroll.LicenseGenerator\bin\Release\net9.0\win-x64\publish"
+$LicGenPublishDir = "$ProjectRoot\tools\FijiPayroll.LicenseGenerator\bin\Release\net9.0-windows\win-x64\publish"
 & dotnet publish $LicGenProj -c Release -r win-x64 --self-contained true -o $LicGenPublishDir
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Failed to publish LicenseGenerator"

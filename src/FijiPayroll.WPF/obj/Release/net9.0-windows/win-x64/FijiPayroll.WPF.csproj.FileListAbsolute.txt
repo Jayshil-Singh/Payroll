@@ -547,3 +547,5 @@ C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-wi
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\win-x64\FijiPayroll.WPF.pdb
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\win-x64\FijiPayroll.WPF.genruntimeconfig.cache
 C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\win-x64\ref\FijiPayroll.WPF.dll
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\win-x64\Views\Setup\SetupWizardWindow.g.cs
+C:\Users\jayshil.singh\Desktop\Payroll\src\FijiPayroll.WPF\obj\Release\net9.0-windows\win-x64\Views\Setup\SetupWizardWindow.baml

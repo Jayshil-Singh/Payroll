@@ -35,7 +35,7 @@ Name: "{app}\keys"
 Name: "{app}\templates"
 
 [Files]
-Source: "..\..\tools\FijiPayroll.LicenseGenerator\bin\Release\net9.0\win-x64\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\tools\FijiPayroll.LicenseGenerator\bin\Release\net9.0-windows\win-x64\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "feps_license_icon.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\FijiPayroll.LicenseGenerator\setup_assets\config.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\FijiPayroll.LicenseGenerator\setup_assets\keys\private_key.pem"; DestDir: "{app}\keys"; Flags: ignoreversion

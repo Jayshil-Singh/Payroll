@@ -11,6 +11,7 @@ using FijiPayroll.WPF.Infrastructure;
 using FijiPayroll.WPF.Services;
 using FijiPayroll.WPF.Views;
 using FijiPayroll.WPF.Views.Auth;
+using FijiPayroll.WPF.Views.Setup;
 using FijiPayroll.WPF.ViewModels;
 using FijiPayroll.WPF.ViewModels.Auth;
 using Microsoft.EntityFrameworkCore;
@@ -194,55 +195,103 @@ public partial class App : System.Windows.Application
                     }
                 }
 
-                // ── Stage 2: Database ────────────────────────────────────────────────
-                splash.UpdateProgress(40, "Connecting Database", "Opening local SQL Server database...");
-                await Task.Delay(300);
-
-                using var scope = _serviceProvider.CreateScope();
-                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                await context.Database.MigrateAsync();
-                
-                // Initialize database tables for dynamic plugins
-                var pluginLoader = _serviceProvider.GetRequiredService<PluginLoader>();
-                await pluginLoader.InitializePluginsDatabaseAsync(scope.ServiceProvider);
-
-                // Run PII plaintext to AES-256 migration
-                splash.UpdateProgress(50, "Securing PII Data", "Migrating plaintext records to AES-256...");
-                await context.MigratePlaintextToAesAsync();
-
-                _logger.LogInformation("Database connected, schema validated, plugin schemas registered, and dynamic PII encrypted.");
-
-                // ── Stage 3: Seeders ─────────────────────────────────────────────────
-                splash.UpdateProgress(60, "Running Seeders", "Loading Fiji tax tables & company components...");
-                await Task.Delay(300);
-
-                var ruleModuleSeeder = scope.ServiceProvider.GetRequiredService<RuleModuleSeeder>();
-                await ruleModuleSeeder.SeedAsync();
-
-                var taxSeeder = scope.ServiceProvider.GetRequiredService<TaxBracketSeeder>();
-                await taxSeeder.SeedAsync();
-
-                var componentSeeder = scope.ServiceProvider.GetRequiredService<PayrollComponentSeeder>();
-                await componentSeeder.SeedAsync();
-
-                var employeeSeeder = scope.ServiceProvider.GetRequiredService<EmployeeSeeder>();
-                await employeeSeeder.SeedAsync();
-
-                var complianceSeeder = scope.ServiceProvider.GetRequiredService<ComplianceSeeder>();
-                await complianceSeeder.SeedAsync();
-
-                var userSeeder = scope.ServiceProvider.GetRequiredService<UserAccountSeeder>();
-                await userSeeder.SeedAsync();
-
-                _logger.LogInformation("FRCS tax tables, employee structures, compliance rules/layouts, and admin credentials seeded successfully.");
-
-                // ── Stage 4: State Recovery ──────────────────────────────────────────
-                splash.UpdateProgress(75, "Recovering State", "Restoring last session...");
-                await Task.Delay(200);
-
+                // ── Stage 1.6: Check Setup Wizard ───────────────────────────────────
+                splash.UpdateProgress(35, "Checking Configuration", "Checking installation setup status...");
                 var stateStore = _serviceProvider.GetRequiredService<IApplicationStateStore>();
-                await stateStore.LoadPersistedStateAsync();
-                _logger.LogInformation("Application state restored.");
+                var setupWizardService = _serviceProvider.GetRequiredService<ISetupWizardService>();
+                bool isSetupCompleted = await setupWizardService.IsSetupCompletedAsync();
+
+                if (!isSetupCompleted)
+                {
+                    _logger.LogInformation("Setup is incomplete. Launching guided Setup Wizard.");
+                    bool setupWizardSuccess = false;
+                    
+                    Dispatcher.Invoke(() =>
+                    {
+                        splash.Hide();
+                        var wizardWindow = _serviceProvider.GetRequiredService<SetupWizardWindow>();
+                        setupWizardSuccess = wizardWindow.ShowDialog() == true;
+                        if (setupWizardSuccess)
+                        {
+                            splash.Show();
+                        }
+                    });
+
+                    if (!setupWizardSuccess)
+                    {
+                        _logger.LogWarning("Setup Wizard was not completed. Shutting down.");
+                        Dispatcher.Invoke(() =>
+                        {
+                            splash.Close();
+                            Shutdown();
+                        });
+                        return;
+                    }
+
+                    // Run plugin database initialization and security migrations post-wizard
+                    splash.UpdateProgress(95, "Completing Setup", "Configuring plugin dynamic structures...");
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                        var pluginLoader = scope.ServiceProvider.GetRequiredService<PluginLoader>();
+                        await pluginLoader.InitializePluginsDatabaseAsync(scope.ServiceProvider);
+                        await context.MigratePlaintextToAesAsync();
+                    }
+
+                    // Reload configurations and state after setup completion
+                    await stateStore.LoadPersistedStateAsync();
+                }
+                else
+                {
+                    // ── Stage 2: Database ────────────────────────────────────────────────
+                    splash.UpdateProgress(40, "Connecting Database", "Opening local SQL Server database...");
+                    await Task.Delay(300);
+
+                    using var scope = _serviceProvider.CreateScope();
+                    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                    await context.Database.MigrateAsync();
+                    
+                    // Initialize database tables for dynamic plugins
+                    var pluginLoader = _serviceProvider.GetRequiredService<PluginLoader>();
+                    await pluginLoader.InitializePluginsDatabaseAsync(scope.ServiceProvider);
+
+                    // Run PII plaintext to AES-256 migration
+                    splash.UpdateProgress(50, "Securing PII Data", "Migrating plaintext records to AES-256...");
+                    await context.MigratePlaintextToAesAsync();
+
+                    _logger.LogInformation("Database connected, schema validated, plugin schemas registered, and dynamic PII encrypted.");
+
+                    // ── Stage 3: Seeders ─────────────────────────────────────────────────
+                    splash.UpdateProgress(60, "Running Seeders", "Loading Fiji tax tables & company components...");
+                    await Task.Delay(300);
+
+                    var ruleModuleSeeder = scope.ServiceProvider.GetRequiredService<RuleModuleSeeder>();
+                    await ruleModuleSeeder.SeedAsync();
+
+                    var taxSeeder = scope.ServiceProvider.GetRequiredService<TaxBracketSeeder>();
+                    await taxSeeder.SeedAsync();
+
+                    var componentSeeder = scope.ServiceProvider.GetRequiredService<PayrollComponentSeeder>();
+                    await componentSeeder.SeedAsync();
+
+                    var employeeSeeder = scope.ServiceProvider.GetRequiredService<EmployeeSeeder>();
+                    await employeeSeeder.SeedAsync();
+
+                    var complianceSeeder = scope.ServiceProvider.GetRequiredService<ComplianceSeeder>();
+                    await complianceSeeder.SeedAsync();
+
+                    var userSeeder = scope.ServiceProvider.GetRequiredService<UserAccountSeeder>();
+                    await userSeeder.SeedAsync();
+
+                    _logger.LogInformation("FRCS tax tables, employee structures, compliance rules/layouts, and admin credentials seeded successfully.");
+
+                    // ── Stage 4: State Recovery ──────────────────────────────────────────
+                    splash.UpdateProgress(75, "Recovering State", "Restoring last session...");
+                    await Task.Delay(200);
+
+                    await stateStore.LoadPersistedStateAsync();
+                    _logger.LogInformation("Application state restored.");
+                }
 
                 bool loginSuccess = false;
                 Dispatcher.Invoke(() =>

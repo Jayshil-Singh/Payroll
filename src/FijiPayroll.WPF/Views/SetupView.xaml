@@ -10,6 +10,7 @@
     <Grid>
         <TabControl Background="Transparent" BorderThickness="0" Margin="0">
             <TabControl.Resources>
+                <BooleanToVisibilityConverter x:Key="BoolToVis" />
                 <Style TargetType="TabItem">
                     <Setter Property="HeaderTemplate">
                         <Setter.Value>
@@ -29,6 +30,32 @@
             
             <TabItem Header="Master Lookups">
                 <views:MasterLookupManagerView DataContext="{Binding LookupManagerViewModel}" />
+            </TabItem>
+            
+            <TabItem Header="System Onboarding" Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVis}}">
+                <Grid Margin="24">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                        <TextBlock Text="System Onboarding Setup Wizard" FontSize="20" FontWeight="Bold" Foreground="#FFFFFF"/>
+                        <TextBlock Text="Rerun the guided 9-step first-time installation and onboarding wizard to configure companies, default rules, settings, policies, or import employees." 
+                                   Foreground="{DynamicResource BrushTextSecondary}" FontSize="13" TextWrapping="Wrap" Margin="0,8,0,0"/>
+                    </StackPanel>
+
+                    <Border Grid.Row="1" Background="#171D2F" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="16" CornerRadius="6" MaxWidth="600" HorizontalAlignment="Left" Margin="0,0,0,24">
+                        <StackPanel>
+                            <TextBlock Text="Warning: Administrative Action Required" Foreground="{DynamicResource BrushAlertOrange}" FontWeight="Bold" FontSize="14" Margin="0,0,0,8"/>
+                            <TextBlock Text="Rerunning the Setup Wizard allows you to reconfigure the database connection, company details, fiscal calendar, and default accounts. Changes to core settings could affect existing payroll runs if data models are overwritten." 
+                                       Foreground="{DynamicResource BrushTextSecondary}" FontSize="12.5" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Grid.Row="2" Command="{Binding LaunchSetupWizardCommand}" Content="Launch Onboarding Setup Wizard" Style="{StaticResource ModernButton}" Width="250" Height="40" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left"/>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>

@@ -1,0 +1,833 @@
+<Window x:Class="FijiPayroll.WPF.Views.Setup.SetupWizardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FijiPayroll.WPF.Views.Setup"
+        mc:Ignorable="d"
+        Title="FEPS Onboarding Setup Wizard" 
+        Height="650" Width="950"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource BrushBgDeep}"
+        FontFamily="{DynamicResource FontMain}"
+        Foreground="{DynamicResource BrushTextPrimary}"
+        BorderThickness="0">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+        
+        <!-- Premium Styled Textbox -->
+        <Style x:Key="WizardTextBox" TargetType="TextBox">
+            <Setter Property="Background" Value="#171D2F"/>
+            <Setter Property="BorderBrush" Value="#2E3656"/>
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Margin" Value="0,4,0,12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="true">
+                                <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}"/>
+                                <Setter Property="Background" Value="#1A2238"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Styled PasswordBox -->
+        <Style x:Key="WizardPasswordBox" TargetType="PasswordBox">
+            <Setter Property="Background" Value="#171D2F"/>
+            <Setter Property="BorderBrush" Value="#2E3656"/>
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Margin" Value="0,4,0,12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="true">
+                                <Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}"/>
+                                <Setter Property="Background" Value="#1A2238"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Premium Styled ComboBox -->
+        <Style x:Key="WizardComboBox" TargetType="ComboBox">
+            <Setter Property="Background" Value="#171D2F"/>
+            <Setter Property="BorderBrush" Value="#2E3656"/>
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Margin" Value="0,4,0,12"/>
+        </Style>
+
+        <!-- Label Style -->
+        <Style x:Key="WizardFieldLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <!-- DatePicker Custom styling -->
+        <Style x:Key="WizardDatePicker" TargetType="DatePicker">
+            <Setter Property="Background" Value="#171D2F"/>
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+            <Setter Property="Margin" Value="0,4,0,12"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- Left Navigation Sidebar -->
+            <ColumnDefinition Width="280" />
+            <!-- Right Main Content Panel -->
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- LEFT PANEL: Guided Step Progress Checklist -->
+        <Grid Grid.Column="0" Background="{DynamicResource BrushBgSidebar}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Brand Header -->
+            <StackPanel Grid.Row="0" Margin="24,32,24,20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border Width="32" Height="32" Background="{DynamicResource BrushAccent}" CornerRadius="6">
+                        <TextBlock Text="FJ" Foreground="#FFFFFF" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    
+                    <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="FIJI PAYROLL" Foreground="{DynamicResource BrushTextPrimary}" FontWeight="Bold" FontSize="14" />
+                        <TextBlock Text="First-Time Installation Wizard" Foreground="{DynamicResource BrushTextSecondary}" FontSize="10" />
+                    </StackPanel>
+                </Grid>
+                <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Margin="0,20,0,0" />
+            </StackPanel>
+
+            <!-- Steps Menu List -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="16,0,16,0">
+                    <ItemsControl ItemsSource="{Binding Frequencies}">
+                        <!-- Custom Checklist representation -->
+                    </ItemsControl>
+                    
+                    <!-- We will manually list the 9 steps for clean presentation -->
+                    <Border CornerRadius="4" Padding="12,10" Margin="0,2">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentStep}" Value="1">
+                                        <Setter Property="Background" Value="#1B2238"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="1" FontWeight="Bold" Foreground="{DynamicResource BrushAccent}" Width="20"/>
+                            <TextBlock Text="Database Configuration" Foreground="{DynamicResource BrushTextPrimary}" FontSize="12.5"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border CornerRadius="4" Padding="12,10" Margin="0,2">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentStep}" Value="2">
+                                        <Setter Property="Background" Value="#1B2238"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="2" FontWeight="Bold" Foreground="{DynamicResource BrushAccent}" Width="20"/>
+                            <TextBlock Text="Fiscal Calendar" Foreground="{DynamicResource BrushTextPrimary}" FontSize="12.5"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border CornerRadius="4" Padding="12,10" Margin="0,2">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentStep}" Value="3">
+                                        <Setter Property="Background" Value="#1B2238"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="3" FontWeight="Bold" Foreground="{DynamicResource BrushAccent}" Width="20"/>
+                            <TextBlock Text="Company Information" Foreground="{DynamicResource BrushTextPrimary}" FontSize="12.5"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border CornerRadius="4" Padding="12,10" Margin="0,2">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentStep}" Value="4">
+                                        <Setter Property="Background" Value="#1B2238"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="4" FontWeight="Bold" Foreground="{DynamicResource BrushAccent}" Width="20"/>
+                            <TextBlock Text="Payroll Defaults" Foreground="{DynamicResource BrushTextPrimary}" FontSize="12.5"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border CornerRadius="4" Padding="12,10" Margin="0,2">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentStep}" Value="5">
+                                        <Setter Property="Background" Value="#1B2238"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="5" FontWeight="Bold" Foreground="{DynamicResource BrushAccent}" Width="20"/>
+                            <TextBlock Text="Earnings &amp; Deductions" Foreground="{DynamicResource BrushTextPrimary}" FontSize="12.5"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border CornerRadius="4" Padding="12,10" Margin="0,2">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentStep}" Value="6">
+                                        <Setter Property="Background" Value="#1B2238"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="6" FontWeight="Bold" Foreground="{DynamicResource BrushAccent}" Width="20"/>
+                            <TextBlock Text="Leave Setup" Foreground="{DynamicResource BrushTextPrimary}" FontSize="12.5"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border CornerRadius="4" Padding="12,10" Margin="0,2">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentStep}" Value="7">
+                                        <Setter Property="Background" Value="#1B2238"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="7" FontWeight="Bold" Foreground="{DynamicResource BrushAccent}" Width="20"/>
+                            <TextBlock Text="Employee Import" Foreground="{DynamicResource BrushTextPrimary}" FontSize="12.5"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border CornerRadius="4" Padding="12,10" Margin="0,2">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentStep}" Value="8">
+                                        <Setter Property="Background" Value="#1B2238"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="8" FontWeight="Bold" Foreground="{DynamicResource BrushAccent}" Width="20"/>
+                            <TextBlock Text="Security &amp; Users" Foreground="{DynamicResource BrushTextPrimary}" FontSize="12.5"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border CornerRadius="4" Padding="12,10" Margin="0,2">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentStep}" Value="9">
+                                        <Setter Property="Background" Value="#1B2238"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="9" FontWeight="Bold" Foreground="{DynamicResource BrushAccent}" Width="20"/>
+                            <TextBlock Text="Review &amp; Finish" Foreground="{DynamicResource BrushTextPrimary}" FontSize="12.5"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Bottom Progress Tracker -->
+            <StackPanel Grid.Row="2" Margin="24,20,24,32">
+                <TextBlock Text="{Binding CurrentStep, StringFormat='Step {0} of 9'}" Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" HorizontalAlignment="Center" Margin="0,0,0,8" />
+                <ProgressBar Value="{Binding CurrentStep}" Maximum="9" Height="6" Background="#1A2035" BorderThickness="0" Foreground="{DynamicResource BrushAccent}">
+                    <ProgressBar.Template>
+                        <ControlTemplate TargetType="ProgressBar">
+                            <Border CornerRadius="3" Background="{TemplateBinding Background}" ClipToBounds="True">
+                                <Grid x:Name="TemplateRoot">
+                                    <Track x:Name="PART_Track">
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Visibility="Collapsed"/>
+                                        </Track.IncreaseRepeatButton>
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Background="{TemplateBinding Foreground}" BorderThickness="0"/>
+                                        </Track.DecreaseRepeatButton>
+                                    </Track>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </ProgressBar.Template>
+                </ProgressBar>
+            </StackPanel>
+        </Grid>
+
+        <!-- RIGHT PANEL: Step Form Main Region -->
+        <Grid Grid.Column="1" Margin="32,24,32,24">
+            <Grid.RowDefinitions>
+                <!-- Title Header -->
+                <RowDefinition Height="Auto"/>
+                <!-- Form Content Area -->
+                <RowDefinition Height="*"/>
+                <!-- Footer Action Controls -->
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,24">
+                <TextBlock Text="{Binding StepTitle}" FontSize="24" FontWeight="Bold" Foreground="#FFFFFF" />
+                <Border BorderBrush="{DynamicResource BrushBorder}" BorderThickness="0,0,0,1" Margin="0,12,0,0" />
+            </StackPanel>
+
+            <!-- Active Form Content switching based on CurrentStep -->
+            <Grid Grid.Row="1" Margin="0,0,0,16">
+
+                <!-- STEP 1: Database Setup -->
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentStep}" Value="1">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource BodyText}" Text="Verify database connectivity and initialize your environment before proceeding. The wizard defaults to local SQL instance." Margin="0,0,0,20"/>
+                        
+                        <TextBlock Style="{StaticResource WizardFieldLabel}" Text="SQL Server Instance"/>
+                        <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding DbServer, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Database Name"/>
+                        <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding DbName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <Grid Margin="0,8,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Command="{Binding TestConnectionCommand}" Content="Test Connection" Style="{StaticResource ModernButton}" Width="150" Height="36"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
+                                <Ellipse Width="10" Height="10" Margin="0,0,8,0" VerticalAlignment="Center">
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Fill" Value="{DynamicResource BrushAlertOrange}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DbIsConnected}" Value="True">
+                                                    <Setter Property="Fill" Value="{DynamicResource BrushAlertGreen}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding DbConnectionStatus}" Value="Connection Failed">
+                                                    <Setter Property="Fill" Value="{DynamicResource BrushAlertRed}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
+                                <TextBlock Text="{Binding DbConnectionStatus}" Foreground="#FFFFFF" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border BorderThickness="1" BorderBrush="{DynamicResource BrushBorder}" Background="#0D111A" CornerRadius="4" Padding="12" Height="100">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <TextBlock Text="{Binding DbStatusDetails, TargetNullValue='Connection status log logs here...'}" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12.5" TextWrapping="Wrap"/>
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <!-- STEP 2: Fiscal Calendar -->
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentStep}" Value="2">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource BodyText}" Text="Define the company's payroll and financial calendar year limits." Margin="0,0,0,20"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Margin="0,0,8,0">
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Financial Year Start Date"/>
+                                <DatePicker SelectedDate="{Binding CalendarStartDate}" Style="{StaticResource WizardDatePicker}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Financial Year End Date"/>
+                                <DatePicker SelectedDate="{Binding CalendarEndDate}" Style="{StaticResource WizardDatePicker}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Payroll Frequency"/>
+                        <ComboBox ItemsSource="{Binding Frequencies}" SelectedItem="{Binding CalendarFrequency}" Style="{StaticResource WizardComboBox}"/>
+
+                        <TextBlock Style="{StaticResource WizardFieldLabel}" Text="First Payroll Processing Date (Optional)"/>
+                        <DatePicker SelectedDate="{Binding FirstPayrollDate}" Style="{StaticResource WizardDatePicker}"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- STEP 3: Company Details -->
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentStep}" Value="3">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Margin="0,0,8,0">
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Company Name *"/>
+                                <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Trading Name"/>
+                                <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding TradingName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="TIN Number (9 digits) *"/>
+                                <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding CompanyTIN, UpdateSourceTrigger=PropertyChanged}" MaxLength="9"/>
+
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="FNPF Employer Number *"/>
+                                <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding CompanyFnpf, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Business Registration Number"/>
+                                <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding CompanyBRN, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                            
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Physical Address"/>
+                                <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding PhysicalAddress, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Postal Address"/>
+                                <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding PostalAddress, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Contact Number"/>
+                                <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding ContactNumber, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Email Address"/>
+                                <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding CompanyEmail, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Website URL"/>
+                                <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding CompanyWebsite, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+
+                <!-- STEP 4: Payroll Defaults -->
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentStep}" Value="4">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource BodyText}" Text="Configure standard default rules for the payroll calculation engine." Margin="0,0,0,20"/>
+
+                        <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Default Pay Frequency"/>
+                        <ComboBox ItemsSource="{Binding Frequencies}" SelectedItem="{Binding DefaultPayFrequency}" Style="{StaticResource WizardComboBox}"/>
+
+                        <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Currency"/>
+                        <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding DefaultCurrency, UpdateSourceTrigger=PropertyChanged}" IsEnabled="False"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Margin="0,0,8,0">
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Default Working Days Per Week"/>
+                                <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding WorkingDaysPerWeek, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Standard Hours Per Week"/>
+                                <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding StandardHoursPerWeek, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Negative Net Pay Policy"/>
+                        <ComboBox ItemsSource="{Binding Policies}" SelectedItem="{Binding NegativeNetPayPolicy}" Style="{StaticResource WizardComboBox}"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- STEP 5: Earnings & Deductions -->
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentStep}" Value="5">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource BodyText}" Text="Seed default standard earnings, deductions, and statutory components." Margin="0,0,0,20"/>
+
+                        <Border Background="#171D2F" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="16" CornerRadius="6">
+                            <StackPanel>
+                                <CheckBox IsChecked="{Binding UseDefaultComponents}" Content="Use FEPS Default Components Library" Foreground="#FFFFFF" FontWeight="Bold" FontSize="14" Margin="0,0,0,12"/>
+                                <TextBlock Text="If enabled, the system will seed:" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12.5" Margin="24,0,0,4"/>
+                                <TextBlock Text="• Earnings: Basic Salary, Overtime (1.5x), Allowance, Bonus" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="24,0,0,2"/>
+                                <TextBlock Text="• Deductions: PAYE Tax, FNPF Employee contribution (8.0%), Loan Deduction, Advance Recovery" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="24,0,0,2"/>
+                                <TextBlock Text="• Employer: FNPF Employer contribution (10.0%)" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12" Margin="24,0,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <!-- STEP 6: Leave Setup -->
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentStep}" Value="6">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource BodyText}" Text="Configure default leave entitlements and parameters for the tenant policies." Margin="0,0,0,16"/>
+
+                            <Border Background="#171D2F" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12" CornerRadius="4" Margin="0,0,0,12">
+                                <StackPanel>
+                                    <TextBlock Text="Annual Leave Policy" Foreground="#FFFFFF" FontWeight="Bold" FontSize="13" Margin="0,0,0,8"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Margin="0,0,4,0">
+                                            <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Days Per Year"/>
+                                            <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding LeaveAnnualDays, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Margin="4,0,4,0">
+                                            <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Max Carry Over"/>
+                                            <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding LeaveAnnualMaxCarry, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Margin="4,0,0,0">
+                                            <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Maximum Balance"/>
+                                            <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding LeaveAnnualMaxBalance, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Background="#171D2F" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12" CornerRadius="4" Margin="0,0,0,12">
+                                <StackPanel>
+                                    <TextBlock Text="Sick Leave Policy" Foreground="#FFFFFF" FontWeight="Bold" FontSize="13" Margin="0,0,0,8"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Margin="0,0,4,0">
+                                            <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Days Per Year"/>
+                                            <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding LeaveSickDays, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Margin="4,0,4,0">
+                                            <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Max Carry Over"/>
+                                            <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding LeaveSickMaxCarry, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Margin="4,0,0,0">
+                                            <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Maximum Balance"/>
+                                            <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding LeaveSickMaxBalance, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,4,0">
+                                    <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Compassionate (Days)"/>
+                                    <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding LeaveCompassionateDays, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="4,0,4,0">
+                                    <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Maternity (Days)"/>
+                                    <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding LeaveMaternityDays, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="4,0,0,0">
+                                    <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Study (Days)"/>
+                                    <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding LeaveStudyDays, UpdateSourceTrigger=PropertyChanged}"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
+                <!-- STEP 7: Employee Import -->
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentStep}" Value="7">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Style="{StaticResource BodyText}" Text="Choose an Excel or CSV file matching standard columns to import employees. You can Skip this for now." Margin="0,0,0,12"/>
+
+                        <Grid Grid.Row="1" Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Text="{Binding ImportFilePath}" Style="{StaticResource WizardTextBox}" Margin="0,0,8,0" IsReadOnly="True" VerticalAlignment="Center"/>
+                            <Button Grid.Column="1" Command="{Binding BrowseFileCommand}" Content="Browse" Style="{StaticResource SecondaryButton}" Width="90" Height="34" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <Button Grid.Column="2" Command="{Binding ParseFileCommand}" Content="Parse &amp; Validate" Style="{StaticResource ModernButton}" Width="130" Height="34" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <Grid Grid.Row="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="{Binding ImportStatusText}" Foreground="{DynamicResource BrushTextSecondary}" FontSize="12.5" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                            <Border Grid.Row="1" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Background="#171D2F" CornerRadius="4" Padding="8">
+                                <ListView ItemsSource="{Binding ImportedEmployees}" Background="Transparent" BorderThickness="0" Foreground="#FFFFFF">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn Header="Emp No" DisplayMemberBinding="{Binding EmployeeNumber}" Width="70"/>
+                                            <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding FirstName}" Width="100"/>
+                                            <GridViewColumn Header="Last Name" DisplayMemberBinding="{Binding LastName}" Width="100"/>
+                                            <GridViewColumn Header="TIN" DisplayMemberBinding="{Binding TIN}" Width="90"/>
+                                            <GridViewColumn Header="FNPF" DisplayMemberBinding="{Binding Fnpf}" Width="90"/>
+                                            <GridViewColumn Header="Department" DisplayMemberBinding="{Binding Department}" Width="90"/>
+                                            <GridViewColumn Header="Position" DisplayMemberBinding="{Binding Position}" Width="90"/>
+                                            <GridViewColumn Header="Rate (FJD)" DisplayMemberBinding="{Binding PayRate}" Width="70"/>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </Grid>
+
+                <!-- STEP 8: Security & Users -->
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentStep}" Value="8">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource BodyText}" Text="Create a mandatory administrator account. Password must be strong (8+ chars, digit, special symbol)." Margin="0,0,0,16"/>
+
+                        <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Administrator Username *"/>
+                        <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding AdminUsername, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Margin="0,0,8,0">
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Password *"/>
+                                <PasswordBox x:Name="TxtPassword" Style="{StaticResource WizardPasswordBox}" PasswordChanged="TxtPassword_PasswordChanged"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Confirm Password *"/>
+                                <PasswordBox x:Name="TxtConfirmPassword" Style="{StaticResource WizardPasswordBox}" PasswordChanged="TxtConfirmPassword_PasswordChanged"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Full Name *"/>
+                        <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding AdminFullName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Style="{StaticResource WizardFieldLabel}" Text="Email Address"/>
+                        <TextBox Style="{StaticResource WizardTextBox}" Text="{Binding AdminEmail, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- STEP 9: Review & Finish -->
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentStep}" Value="9">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource BodyText}" Text="Review the configuration summary below before locking setup." Margin="0,0,0,16"/>
+
+                            <Border Background="#171D2F" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="16" CornerRadius="6" Margin="0,0,0,16">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Text="Company Legal Name:" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,6"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CompanyName}" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,6"/>
+
+                                    <TextBlock Grid.Row="1" Text="TIN &amp; FNPF Number:" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,6"/>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,6">
+                                        <TextBlock Text="{Binding CompanyTIN}" Foreground="#FFFFFF" FontWeight="Bold"/>
+                                        <TextBlock Text=" / " Foreground="{DynamicResource BrushTextSecondary}"/>
+                                        <TextBlock Text="{Binding CompanyFnpf}" Foreground="#FFFFFF" FontWeight="Bold"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="2" Text="Fiscal Calendar:" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,6"/>
+                                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,6">
+                                        <TextBlock Text="{Binding CalendarStartDate, StringFormat='\{0:yyyy-MM-dd\}'}" Foreground="#FFFFFF"/>
+                                        <TextBlock Text=" to " Foreground="{DynamicResource BrushTextSecondary}"/>
+                                        <TextBlock Text="{Binding CalendarEndDate, StringFormat='\{0:yyyy-MM-dd\}'}" Foreground="#FFFFFF"/>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Row="3" Text="Pay Frequency:" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,6"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding CalendarFrequency}" Foreground="#FFFFFF" Margin="0,0,0,6"/>
+
+                                    <TextBlock Grid.Row="4" Text="Imported Employees:" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,6"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding ImportedCount}" Foreground="#FFFFFF" FontWeight="Bold" Margin="0,0,0,6"/>
+
+                                    <TextBlock Grid.Row="5" Text="Admin Username:" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding AdminUsername}" Foreground="#FFFFFF" FontWeight="Bold"/>
+                                </Grid>
+                            </Border>
+
+                            <Button Command="{Binding CompleteSetupCommand}" Content="Confirm &amp; Complete Installation" Style="{StaticResource ModernButton}" Background="#319795" Height="40" FontSize="14" FontWeight="Bold"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+
+            <!-- Bottom Navigation Bar Controls -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Command="{Binding PreviousCommand}" Content="Back" Style="{StaticResource SecondaryButton}" Width="100" Height="36"/>
+                <Button Grid.Column="2" Command="{Binding NextCommand}" Content="Next" Style="{StaticResource ModernButton}" Width="100" Height="36"/>
+            </Grid>
+        </Grid>
+
+        <!-- Global Busy Loader Overlay -->
+        <Grid Grid.ColumnSpan="2" Background="#E00B0E18" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisConverter}}" Panel.ZIndex="1000">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="40" Height="40" Background="Transparent" Foreground="{DynamicResource BrushAccent}" BorderThickness="0"/>
+                <TextBlock Text="Applying configuration and migrating database. Please wait..." Foreground="{DynamicResource BrushTextPrimary}" FontSize="14" FontWeight="SemiBold" Margin="0,16,0,0"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

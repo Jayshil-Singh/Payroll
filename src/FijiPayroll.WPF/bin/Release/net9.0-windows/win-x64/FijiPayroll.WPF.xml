@@ -560,6 +560,19 @@
             InitializeComponent
             </summary>
         </member>
+        <member name="T:FijiPayroll.WPF.Views.Setup.SetupWizardWindow">
+            <summary>
+            Interaction logic for SetupWizardWindow.xaml
+            </summary>
+            <summary>
+            SetupWizardWindow
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Views.Setup.SetupWizardWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
         <member name="T:FijiPayroll.WPF.Views.SplashWindow">
             <summary>
             Interaction logic for SplashWindow.xaml
@@ -1240,6 +1253,42 @@
         <member name="M:FijiPayroll.WPF.Services.INotificationService.Info(System.String,System.String)">
             <summary>
             Dispatches an info notification.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.Services.ISetupWizardService">
+            <summary>
+            Service interface for first-time installation and guided onboarding Setup Wizard.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Services.ISetupWizardService.IsSetupCompletedAsync">
+            <summary>
+            Checks if setup is completed. Returns false if the database is unconfigured,
+            inaccessible, or if no completed company setup state exists.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Services.ISetupWizardService.TestConnectionAsync(System.String)">
+            <summary>
+            Tests database connectivity with a given connection string.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Services.ISetupWizardService.SaveConnectionStringAsync(System.String)">
+            <summary>
+            Saves the database connection string to appsettings.json.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Services.ISetupWizardService.RunMigrationsAndSeedAsync">
+            <summary>
+            Runs Entity Framework migrations and seeds standard reference data.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Services.ISetupWizardService.CompleteSetupAsync(FijiPayroll.WPF.Services.SetupWizardData)">
+            <summary>
+            Completes the guided wizard onboarding setup and commits all configurations.
+            </summary>
+        </member>
+        <member name="M:FijiPayroll.WPF.Services.ISetupWizardService.ParseEmployeesAsync(System.String)">
+            <summary>
+            Parses an employee Excel or CSV file for wizard import.
             </summary>
         </member>
         <member name="T:FijiPayroll.WPF.Services.LoadingService">
@@ -2564,7 +2613,7 @@
             ViewModel managing setup configuration panels (e.g. tax tables, allowances configuration).
             </summary>
         </member>
-        <member name="M:FijiPayroll.WPF.ViewModels.SetupViewModel.#ctor(FijiPayroll.WPF.ViewModels.PayrollComponentViewModel,FijiPayroll.WPF.ViewModels.MasterLookupManagerViewModel)">
+        <member name="M:FijiPayroll.WPF.ViewModels.SetupViewModel.#ctor(FijiPayroll.WPF.ViewModels.PayrollComponentViewModel,FijiPayroll.WPF.ViewModels.MasterLookupManagerViewModel,System.IServiceProvider,FijiPayroll.Application.Common.Interfaces.IAuthSessionStore)">
             <summary>
             Initialises a new instance of the <see cref="T:FijiPayroll.WPF.ViewModels.SetupViewModel"/> class.
             </summary>
@@ -2583,6 +2632,151 @@
             <summary>
             Gets the panel title.
             </summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.SetupViewModel.IsAdmin">
+            <summary>
+            Checks if the current session belongs to an administrator.
+            </summary>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.SetupViewModel.LaunchSetupWizardCommand">
+            <summary>
+            Gets the command to launch the Setup Wizard.
+            </summary>
+        </member>
+        <member name="T:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel">
+            <inheritdoc/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.CurrentStep">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._currentStep"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.StepTitle">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._stepTitle"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.DbServer">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._dbServer"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.DbName">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._dbName"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.DbConnectionStatus">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._dbConnectionStatus"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.DbIsConnected">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._dbIsConnected"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.DbStatusDetails">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._dbStatusDetails"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.CalendarStartDate">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._calendarStartDate"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.CalendarEndDate">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._calendarEndDate"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.CalendarFrequency">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._calendarFrequency"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.FirstPayrollDate">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._firstPayrollDate"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.CompanyName">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._companyName"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.TradingName">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._tradingName"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.CompanyTIN">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._companyTIN"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.CompanyFnpf">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._companyFnpf"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.CompanyBRN">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._companyBRN"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.PhysicalAddress">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._physicalAddress"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.PostalAddress">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._postalAddress"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.ContactNumber">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._contactNumber"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.CompanyEmail">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._companyEmail"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.CompanyWebsite">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._companyWebsite"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.DefaultPayFrequency">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._defaultPayFrequency"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.DefaultCurrency">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._defaultCurrency"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.WorkingDaysPerWeek">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._workingDaysPerWeek"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.StandardHoursPerWeek">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._standardHoursPerWeek"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.NegativeNetPayPolicy">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._negativeNetPayPolicy"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.UseDefaultComponents">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._useDefaultComponents"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.LeaveAnnualDays">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._leaveAnnualDays"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.LeaveAnnualMaxCarry">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._leaveAnnualMaxCarry"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.LeaveAnnualMaxBalance">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._leaveAnnualMaxBalance"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.LeaveSickDays">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._leaveSickDays"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.LeaveSickMaxCarry">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._leaveSickMaxCarry"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.LeaveSickMaxBalance">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._leaveSickMaxBalance"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.LeaveCompassionateDays">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._leaveCompassionateDays"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.LeaveMaternityDays">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._leaveMaternityDays"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.LeaveStudyDays">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._leaveStudyDays"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.ImportFilePath">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._importFilePath"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.ImportStatusText">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._importStatusText"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.ImportedCount">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._importedCount"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.AdminUsername">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._adminUsername"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.AdminPassword">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._adminPassword"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.AdminConfirmPassword">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._adminConfirmPassword"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.AdminFullName">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._adminFullName"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.AdminEmail">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._adminEmail"/>
         </member>
         <member name="T:FijiPayroll.WPF.ViewModels.StagedImportViewModel">
             <summary>
@@ -2640,6 +2834,36 @@
         </member>
         <member name="P:FijiPayroll.WPF.ViewModels.StagedImportViewModel.IsValid">
             <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.StagedImportViewModel._isValid"/>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
+            </summary>
         </member>
         <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs">
             <summary>
@@ -2904,6 +3128,138 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedRunDetail">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedRunDetail" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CurrentStep">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CurrentStep" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.StepTitle">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "StepTitle" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DbServer">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DbServer" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DbName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DbName" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DbConnectionStatus">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DbConnectionStatus" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DbIsConnected">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DbIsConnected" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DbStatusDetails">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DbStatusDetails" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CalendarStartDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CalendarStartDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CalendarEndDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CalendarEndDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CalendarFrequency">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CalendarFrequency" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.FirstPayrollDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "FirstPayrollDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CompanyName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CompanyName" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.TradingName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "TradingName" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CompanyTIN">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CompanyTIN" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CompanyFnpf">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CompanyFnpf" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CompanyBRN">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CompanyBRN" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.PhysicalAddress">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "PhysicalAddress" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.PostalAddress">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "PostalAddress" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ContactNumber">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ContactNumber" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CompanyEmail">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CompanyEmail" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.CompanyWebsite">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "CompanyWebsite" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DefaultPayFrequency">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DefaultPayFrequency" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DefaultCurrency">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DefaultCurrency" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.WorkingDaysPerWeek">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "WorkingDaysPerWeek" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.StandardHoursPerWeek">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "StandardHoursPerWeek" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.NegativeNetPayPolicy">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "NegativeNetPayPolicy" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.UseDefaultComponents">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "UseDefaultComponents" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveAnnualDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveAnnualDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveAnnualMaxCarry">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveAnnualMaxCarry" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveAnnualMaxBalance">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveAnnualMaxBalance" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveSickDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveSickDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveSickMaxCarry">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveSickMaxCarry" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveSickMaxBalance">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveSickMaxBalance" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveCompassionateDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveCompassionateDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveMaternityDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveMaternityDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveStudyDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveStudyDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ImportFilePath">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ImportFilePath" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ImportStatusText">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ImportStatusText" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ImportedCount">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ImportedCount" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.AdminUsername">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "AdminUsername" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.AdminPassword">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "AdminPassword" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.AdminConfirmPassword">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "AdminConfirmPassword" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.AdminFullName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "AdminFullName" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.AdminEmail">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "AdminEmail" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.FilePath">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "FilePath" generated properties.</summary>
@@ -3204,6 +3560,138 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedRunDetail">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedRunDetail" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CurrentStep">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CurrentStep" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.StepTitle">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "StepTitle" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DbServer">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DbServer" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DbName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DbName" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DbConnectionStatus">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DbConnectionStatus" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DbIsConnected">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DbIsConnected" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DbStatusDetails">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DbStatusDetails" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CalendarStartDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CalendarStartDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CalendarEndDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CalendarEndDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CalendarFrequency">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CalendarFrequency" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.FirstPayrollDate">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "FirstPayrollDate" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CompanyName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CompanyName" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.TradingName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "TradingName" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CompanyTIN">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CompanyTIN" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CompanyFnpf">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CompanyFnpf" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CompanyBRN">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CompanyBRN" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.PhysicalAddress">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "PhysicalAddress" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.PostalAddress">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "PostalAddress" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ContactNumber">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ContactNumber" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CompanyEmail">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CompanyEmail" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.CompanyWebsite">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "CompanyWebsite" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DefaultPayFrequency">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DefaultPayFrequency" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DefaultCurrency">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DefaultCurrency" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.WorkingDaysPerWeek">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "WorkingDaysPerWeek" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.StandardHoursPerWeek">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "StandardHoursPerWeek" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.NegativeNetPayPolicy">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "NegativeNetPayPolicy" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.UseDefaultComponents">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "UseDefaultComponents" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveAnnualDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveAnnualDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveAnnualMaxCarry">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveAnnualMaxCarry" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveAnnualMaxBalance">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveAnnualMaxBalance" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveSickDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveSickDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveSickMaxCarry">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveSickMaxCarry" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveSickMaxBalance">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveSickMaxBalance" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveCompassionateDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveCompassionateDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveMaternityDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveMaternityDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveStudyDays">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveStudyDays" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ImportFilePath">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ImportFilePath" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ImportStatusText">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ImportStatusText" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ImportedCount">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ImportedCount" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.AdminUsername">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "AdminUsername" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.AdminPassword">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "AdminPassword" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.AdminConfirmPassword">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "AdminConfirmPassword" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.AdminFullName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "AdminFullName" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.AdminEmail">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "AdminEmail" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.FilePath">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "FilePath" generated properties.</summary>
