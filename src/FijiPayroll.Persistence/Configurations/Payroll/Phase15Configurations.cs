@@ -196,7 +196,7 @@ internal sealed class PayrollLedgerEmployeeConfiguration : IEntityTypeConfigurat
         builder.Property(x => x.Hash).HasColumnType("nvarchar(100)").IsRequired();
 
         builder.HasMany(x => x.Components)
-            .WithOne()
+            .WithOne(x => x.PayrollLedgerEmployee)
             .HasForeignKey(x => x.PayrollLedgerEmployeeId)
             .OnDelete(DeleteBehavior.Cascade);
 
@@ -218,10 +218,7 @@ internal sealed class PayrollLedgerComponentConfiguration : IEntityTypeConfigura
         builder.Property(x => x.Type).HasColumnType("nvarchar(50)").IsRequired().HasConversion<string>();
         builder.Property(x => x.Amount).HasPrecision(18, 4).IsRequired();
 
-        builder.HasOne(x => x.PayrollLedgerEmployee)
-            .WithMany()
-            .HasForeignKey(x => x.PayrollLedgerEmployeeId)
-            .OnDelete(DeleteBehavior.Cascade);
+
     }
 }
 

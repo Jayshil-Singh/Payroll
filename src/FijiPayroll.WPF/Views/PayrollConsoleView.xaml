@@ -53,7 +53,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Border Grid.Column="0" Background="#1D243B" CornerRadius="8" Padding="20" Margin="0,0,10,0">
+                    <Border Grid.Column="0" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="20" Margin="0,0,10,0">
                         <StackPanel>
                             <TextBlock Text="Processing Parameters" Style="{StaticResource Header2}" Margin="0,0,0,15"/>
                             
@@ -67,7 +67,7 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Column="1" Background="#1D243B" CornerRadius="8" Padding="20" Margin="10,0,0,0">
+                    <Border Grid.Column="1" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="20" Margin="10,0,0,0">
                         <StackPanel>
                             <TextBlock Text="Fiji Compliance Core" Style="{StaticResource Header2}" Margin="0,0,0,15"/>
                             <TextBlock Text="This console provides end-to-end management of Fiji statutory reporting, voluntary deductions, and double-entry auditing." Style="{StaticResource BodyText}" TextWrapping="Wrap" />
@@ -92,7 +92,7 @@
 
                     <DockPanel Grid.Column="0" Margin="0,0,15,0">
                         <TextBlock DockPanel.Dock="Top" Text="Active Payroll Periods" Style="{StaticResource Header2}" Margin="0,0,0,10"/>
-                        <DataGrid ItemsSource="{Binding Periods}" SelectedItem="{Binding SelectedPeriod}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="#181D30" BorderBrush="{DynamicResource BrushBorder}">
+                        <DataGrid ItemsSource="{Binding Periods}" SelectedItem="{Binding SelectedPeriod}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="{DynamicResource BrushBgDeep}" BorderBrush="{DynamicResource BrushBorder}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" />
                                 <DataGridTextColumn Header="Code" Binding="{Binding PeriodCode}" Width="100" />
@@ -104,7 +104,7 @@
                         </DataGrid>
                     </DockPanel>
 
-                    <Border Grid.Column="1" Background="#1D243B" CornerRadius="8" Padding="15">
+                    <Border Grid.Column="1" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="15">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel>
                                 <TextBlock Text="Create New Period" Style="{StaticResource Header2}" Margin="0,0,0,10"/>
@@ -144,7 +144,7 @@
 
                     <DockPanel Grid.Column="0" Margin="0,0,15,0">
                         <TextBlock DockPanel.Dock="Top" Text="Registered Payroll Groups" Style="{StaticResource Header2}" Margin="0,0,0,10"/>
-                        <DataGrid ItemsSource="{Binding Groups}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="#181D30" BorderBrush="{DynamicResource BrushBorder}">
+                        <DataGrid ItemsSource="{Binding Groups}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="{DynamicResource BrushBgDeep}" BorderBrush="{DynamicResource BrushBorder}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" />
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="150" />
@@ -154,7 +154,7 @@
                         </DataGrid>
                     </DockPanel>
 
-                    <Border Grid.Column="1" Background="#1D243B" CornerRadius="8" Padding="15">
+                    <Border Grid.Column="1" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="15">
                         <StackPanel>
                             <TextBlock Text="Create New Group" Style="{StaticResource Header2}" Margin="0,0,0,10"/>
                             
@@ -178,7 +178,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Border Grid.Column="0" Background="#1D243B" CornerRadius="8" Padding="20" HorizontalAlignment="Center" Width="400">
+                    <Border Grid.Column="0" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="20" HorizontalAlignment="Center" Width="400">
                         <StackPanel>
                             <TextBlock Text="Stage Manual Adjustment" Style="{StaticResource Header2}" Margin="0,0,0,15"/>
 
@@ -198,7 +198,7 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Column="1" Background="#1D243B" CornerRadius="8" Padding="20" Margin="15,0,0,0">
+                    <Border Grid.Column="1" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="20" Margin="15,0,0,0">
                         <StackPanel>
                             <TextBlock Text="Adjustment Instructions" Style="{StaticResource Header2}" Margin="0,0,0,10"/>
                             <TextBlock Style="{StaticResource BodyText}" TextWrapping="Wrap">
@@ -217,7 +217,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Border Grid.Column="0" Background="#1D243B" CornerRadius="8" Padding="20" Margin="0,0,10,0">
+                    <Border Grid.Column="0" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="20" Margin="0,0,10,0">
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Text="Batch Calculations" Style="{StaticResource Header2}" Margin="0,0,0,20"/>
 
@@ -237,7 +237,7 @@
                             </Grid>
 
                             <TextBlock Text="Overall Progress:" Style="{StaticResource BodyText}" Margin="0,0,0,5"/>
-                            <ProgressBar Value="{Binding BatchProgress}" Height="25" Foreground="{DynamicResource BrushAccent}" Background="#111524"/>
+                            <ProgressBar Value="{Binding BatchProgress}" Height="25" Foreground="{DynamicResource BrushAccent}" Background="{DynamicResource BrushBgDeep}"/>
                             <TextBlock Text="{Binding BatchProgress, StringFormat={}{0:0.0}%}" HorizontalAlignment="Right" Style="{StaticResource BodyText}" Margin="0,5,0,15"/>
 
                             <UniformGrid Columns="2" Margin="0,10,0,0">
@@ -251,7 +251,7 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Column="1" Background="#1D243B" CornerRadius="8" Padding="20" Margin="10,0,0,0">
+                    <Border Grid.Column="1" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="20" Margin="10,0,0,0">
                         <StackPanel>
                             <TextBlock Text="Performance Benchmark Specs" Style="{StaticResource Header2}" Margin="0,0,0,15"/>
                             <TextBlock Text="Batch processing is engineered utilizing TPL Dataflow for high-throughput concurrency." Style="{StaticResource BodyText}" TextWrapping="Wrap"/>
@@ -272,7 +272,7 @@
 
                     <DockPanel Grid.Column="0" Margin="0,0,15,0">
                         <TextBlock DockPanel.Dock="Top" Text="Calculations Exception Queue" Style="{StaticResource Header2}" Margin="0,0,0,10"/>
-                        <DataGrid ItemsSource="{Binding Exceptions}" SelectedItem="{Binding SelectedException}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="#181D30" BorderBrush="{DynamicResource BrushBorder}">
+                        <DataGrid ItemsSource="{Binding Exceptions}" SelectedItem="{Binding SelectedException}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="{DynamicResource BrushBgDeep}" BorderBrush="{DynamicResource BrushBorder}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Emp ID" Binding="{Binding EmployeeId}" Width="60" />
                                 <DataGridTextColumn Header="Name" Binding="{Binding EmployeeName}" Width="120" />
@@ -282,7 +282,7 @@
                         </DataGrid>
                     </DockPanel>
 
-                    <Border Grid.Column="1" Background="#1D243B" CornerRadius="8" Padding="15">
+                    <Border Grid.Column="1" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="15">
                         <StackPanel>
                             <TextBlock Text="Resolve Exception" Style="{StaticResource Header2}" Margin="0,0,0,10"/>
                             
@@ -309,7 +309,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Border Grid.Row="0" Background="#1D243B" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+                    <Border Grid.Row="0" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="15" Margin="0,0,0,15">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -344,7 +344,7 @@
 
                         <DockPanel Grid.Column="0" Margin="0,0,10,0">
                             <TextBlock DockPanel.Dock="Top" Text="Employee Summaries" Style="{StaticResource BodyText}" FontWeight="Bold" Margin="0,0,0,5"/>
-                            <DataGrid ItemsSource="{Binding LedgerEmployees}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="#181D30" BorderBrush="{DynamicResource BrushBorder}">
+                            <DataGrid ItemsSource="{Binding LedgerEmployees}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="{DynamicResource BrushBgDeep}" BorderBrush="{DynamicResource BrushBorder}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Emp ID" Binding="{Binding EmployeeId}" Width="60" />
                                     <DataGridTextColumn Header="Name" Binding="{Binding EmployeeName}" Width="120" />
@@ -356,7 +356,7 @@
 
                         <DockPanel Grid.Column="1" Margin="10,0,0,0">
                             <TextBlock DockPanel.Dock="Top" Text="Double-Entry Transactions" Style="{StaticResource BodyText}" FontWeight="Bold" Margin="0,0,0,5"/>
-                            <DataGrid ItemsSource="{Binding LedgerTransactions}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="#181D30" BorderBrush="{DynamicResource BrushBorder}">
+                            <DataGrid ItemsSource="{Binding LedgerTransactions}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="{DynamicResource BrushBgDeep}" BorderBrush="{DynamicResource BrushBorder}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Account" Binding="{Binding AccountCode}" Width="80" />
                                     <DataGridTextColumn Header="Debit" Binding="{Binding Debit, StringFormat={}{0:C}}" Width="90" />
@@ -377,7 +377,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <Border Grid.Row="0" Background="#1D243B" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+                    <Border Grid.Row="0" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="15" Margin="0,0,0,15">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -402,7 +402,7 @@
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Border Grid.Column="0" Background="#1D243B" CornerRadius="8" Padding="15" Margin="0,0,10,0">
+                        <Border Grid.Column="0" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="15" Margin="0,0,10,0">
                             <StackPanel>
                                 <TextBlock Text="Financial Deltas" Style="{StaticResource Header2}" Margin="0,0,0,15"/>
                                 
@@ -419,7 +419,7 @@
 
                         <DockPanel Grid.Column="1" Margin="10,0,0,0">
                             <TextBlock DockPanel.Dock="Top" Text="Employee Specific Differences" Style="{StaticResource BodyText}" FontWeight="Bold" Margin="0,0,0,5"/>
-                            <DataGrid ItemsSource="{Binding DifferenceReport.EmployeeDifferences}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="#181D30" BorderBrush="{DynamicResource BrushBorder}">
+                            <DataGrid ItemsSource="{Binding DifferenceReport.EmployeeDifferences}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="{DynamicResource BrushBgDeep}" BorderBrush="{DynamicResource BrushBorder}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Emp ID" Binding="{Binding EmployeeId}" Width="60" />
                                     <DataGridTextColumn Header="Name" Binding="{Binding EmployeeName}" Width="120" />
@@ -440,7 +440,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Border Grid.Column="0" Background="#1D243B" CornerRadius="8" Padding="20" Margin="0,0,10,0">
+                    <Border Grid.Column="0" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="20" Margin="0,0,10,0">
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Text="Deterministic Replay Engine" Style="{StaticResource Header2}" Margin="0,0,0,20"/>
 
@@ -451,7 +451,7 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Column="1" Background="#1D243B" CornerRadius="8" Padding="20" Margin="10,0,0,0">
+                    <Border Grid.Column="1" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="20" Margin="10,0,0,0">
                         <StackPanel>
                             <TextBlock Text="Replay Match Result" Style="{StaticResource Header2}" Margin="0,0,0,15"/>
                             
@@ -476,7 +476,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Border Grid.Column="0" Background="#1D243B" CornerRadius="8" Padding="20" Margin="0,0,10,0">
+                    <Border Grid.Column="0" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="20" Margin="0,0,10,0">
                         <StackPanel>
                             <TextBlock Text="Diagnostics Telemetry Metrics" Style="{StaticResource Header2}" Margin="0,0,0,20"/>
 
@@ -491,7 +491,7 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Column="1" Background="#1D243B" CornerRadius="8" Padding="20" Margin="10,0,0,0">
+                    <Border Grid.Column="1" Background="{DynamicResource BrushBgPanel}" CornerRadius="8" Padding="20" Margin="10,0,0,0">
                         <StackPanel>
                             <TextBlock Text="System Stats" Style="{StaticResource Header2}" Margin="0,0,0,20"/>
 

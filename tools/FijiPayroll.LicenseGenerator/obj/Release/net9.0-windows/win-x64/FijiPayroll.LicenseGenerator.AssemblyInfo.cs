@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FijiPayroll.LicenseGenerator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e1f66a3500b3f62829b686672840a3d079623642")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+517418b0c222f431bd6781e6c8bbedacc543d50d")]
 [assembly: System.Reflection.AssemblyProductAttribute("FijiPayroll.LicenseGenerator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FijiPayroll.LicenseGenerator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

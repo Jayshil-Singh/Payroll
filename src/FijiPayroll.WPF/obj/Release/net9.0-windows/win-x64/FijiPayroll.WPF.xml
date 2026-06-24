@@ -1291,6 +1291,11 @@
             Parses an employee Excel or CSV file for wizard import.
             </summary>
         </member>
+        <member name="M:FijiPayroll.WPF.Services.ISetupWizardService.GenerateEmployeeImportTemplateAsync(System.String)">
+            <summary>
+            Generates a blank Excel template for employee imports.
+            </summary>
+        </member>
         <member name="T:FijiPayroll.WPF.Services.LoadingService">
             <summary>
             Service managing the loading overlay status.
@@ -2736,6 +2741,30 @@
         <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.UseDefaultComponents">
             <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._useDefaultComponents"/>
         </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.NewComponentCode">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._newComponentCode"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.NewComponentName">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._newComponentName"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.NewComponentType">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._newComponentType"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.NewCalculationMethod">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._newCalculationMethod"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.NewCalculationValue">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._newCalculationValue"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.NewIsTaxable">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._newIsTaxable"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.NewIsFnpfApplicable">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._newIsFnpfApplicable"/>
+        </member>
+        <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.ShowAddComponentForm">
+            <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._showAddComponentForm"/>
+        </member>
         <member name="P:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel.LeaveAnnualDays">
             <inheritdoc cref="F:FijiPayroll.WPF.ViewModels.Setup.SetupWizardViewModel._leaveAnnualDays"/>
         </member>
@@ -3203,6 +3232,30 @@
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.UseDefaultComponents">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "UseDefaultComponents" generated properties.</summary>
         </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.NewComponentCode">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "NewComponentCode" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.NewComponentName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "NewComponentName" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.NewComponentType">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "NewComponentType" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.NewCalculationMethod">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "NewCalculationMethod" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.NewCalculationValue">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "NewCalculationValue" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.NewIsTaxable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "NewIsTaxable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.NewIsFnpfApplicable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "NewIsFnpfApplicable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ShowAddComponentForm">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ShowAddComponentForm" generated properties.</summary>
+        </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.LeaveAnnualDays">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "LeaveAnnualDays" generated properties.</summary>
         </member>
@@ -3643,6 +3696,30 @@
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.UseDefaultComponents">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "UseDefaultComponents" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.NewComponentCode">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "NewComponentCode" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.NewComponentName">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "NewComponentName" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.NewComponentType">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "NewComponentType" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.NewCalculationMethod">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "NewCalculationMethod" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.NewCalculationValue">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "NewCalculationValue" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.NewIsTaxable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "NewIsTaxable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.NewIsFnpfApplicable">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "NewIsFnpfApplicable" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ShowAddComponentForm">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ShowAddComponentForm" generated properties.</summary>
         </member>
         <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.LeaveAnnualDays">
             <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "LeaveAnnualDays" generated properties.</summary>

@@ -105,8 +105,8 @@
                             <Setter Property="Background" Value="{DynamicResource BrushAccentHover}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="#2A314A" />
-                            <Setter Property="Foreground" Value="#626D8A" />
+                            <Setter Property="Background" Value="{DynamicResource BrushBgSidebar}" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

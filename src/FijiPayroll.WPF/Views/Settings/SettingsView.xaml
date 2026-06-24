@@ -27,7 +27,7 @@
 
         <!-- Input TextBox Style -->
         <Style x:Key="InputBox" TargetType="TextBox">
-            <Setter Property="Background"       Value="#111827" />
+            <Setter Property="Background"       Value="{DynamicResource BrushBgDeep}" />
             <Setter Property="Foreground"       Value="{DynamicResource BrushTextPrimary}" />
             <Setter Property="BorderBrush"      Value="{DynamicResource BrushBorder}" />
             <Setter Property="BorderThickness"  Value="1" />
@@ -57,7 +57,7 @@
 
     <Grid>
         <!-- Loading overlay -->
-        <Border Background="#CC0B0E18"
+        <Border Background="#CCFFFFFF"
                 Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"
                 Panel.ZIndex="50">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -107,17 +107,17 @@
                 <!-- Status Bar -->
                 <Border Grid.Row="1" CornerRadius="6" Margin="0,0,0,16"
                         Padding="12,8"
-                        Background="#1A1F2E"
+                        Background="{DynamicResource BrushBgDeep}"
                         BorderThickness="1">
                     <Border.Style>
                         <Style TargetType="Border">
-                            <Setter Property="BorderBrush" Value="#48BB78"/>
+                            <Setter Property="BorderBrush" Value="{DynamicResource BrushAlertGreen}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding HasError}" Value="True">
-                                    <Setter Property="BorderBrush" Value="#FC8181"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource BrushAlertRed}"/>
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsDirty}" Value="True">
-                                    <Setter Property="BorderBrush" Value="#ED8936"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource BrushAlertOrange}"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -163,7 +163,7 @@
                                 <TextBlock Text="Default Pay Frequency" Style="{StaticResource FieldLabel}"/>
                                 <ComboBox SelectedItem="{Binding DefaultPayFrequency, Mode=TwoWay}"
                                           Height="36" Margin="0,0,0,14"
-                                          Background="#111827"
+                                          Background="{DynamicResource BrushBgDeep}"
                                           Foreground="{DynamicResource BrushTextPrimary}"
                                           BorderBrush="{DynamicResource BrushBorder}">
                                     <ComboBoxItem>Weekly</ComboBoxItem>
@@ -179,7 +179,7 @@
                                 <TextBlock Text="Negative Net Pay Policy" Style="{StaticResource FieldLabel}"/>
                                 <ComboBox SelectedItem="{Binding NegativePayPolicy, Mode=TwoWay}"
                                           Height="36" Margin="0,0,0,0"
-                                          Background="#111827"
+                                          Background="{DynamicResource BrushBgDeep}"
                                           Foreground="{DynamicResource BrushTextPrimary}"
                                           BorderBrush="{DynamicResource BrushBorder}">
                                     <ComboBoxItem>PartialDeduction</ComboBoxItem>
@@ -257,7 +257,7 @@
 
                             <TextBlock Text="Password" Style="{StaticResource FieldLabel}"/>
                             <PasswordBox x:Name="SmtpPasswordBox"
-                                         Background="#111827"
+                                         Background="{DynamicResource BrushBgDeep}"
                                          Foreground="{DynamicResource BrushTextPrimary}"
                                          BorderBrush="{DynamicResource BrushBorder}"
                                          BorderThickness="1"

@@ -4,7 +4,7 @@
         Title="Fiji BRE - Staged Import Pipeline Dashboard"
         Height="550" Width="750"
         WindowStartupLocation="CenterOwner"
-        Background="{DynamicResource BrushBackground}"
+        Background="{DynamicResource BrushBgDeep}"
         Foreground="{DynamicResource BrushTextPrimary}">
     <Window.Resources>
         <ResourceDictionary Source="../Styles/FluentStyles.xaml" />
@@ -63,7 +63,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Left Panel: Session Summary Metrics -->
-            <Border Background="#1D243B" CornerRadius="8" Padding="15" Margin="0,0,10,0">
+            <Border Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,10,0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -78,10 +78,10 @@
                         <TextBlock Text="{Binding RecordsProcessed}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,15"/>
 
                         <TextBlock Text="Valid Records (Passed):" Style="{StaticResource BodyText}" />
-                        <TextBlock Text="{Binding SuccessCount}" FontSize="24" FontWeight="Bold" Foreground="#32CD32" Margin="0,0,0,15"/>
+                        <TextBlock Text="{Binding SuccessCount}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource BrushAlertGreen}" Margin="0,0,0,15"/>
 
                         <TextBlock Text="Invalid Records (Failed):" Style="{StaticResource BodyText}" />
-                        <TextBlock Text="{Binding FailureCount}" FontSize="24" FontWeight="Bold" Foreground="#FF4500" Margin="0,0,0,15"/>
+                        <TextBlock Text="{Binding FailureCount}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource BrushAlertRed}" Margin="0,0,0,15"/>
                     </StackPanel>
 
                     <TextBlock Grid.Row="2" Text="{Binding StatusText}" Style="{StaticResource BodyText}" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="{DynamicResource BrushAccent}"/>
@@ -91,7 +91,7 @@
             <!-- Right Panel: Validation Error Log Grid -->
             <DockPanel Grid.Column="1">
                 <TextBlock DockPanel.Dock="Top" Text="Staged Validation Errors:" Style="{StaticResource BodyText}" Margin="0,0,0,5" FontWeight="SemiBold"/>
-                <DataGrid ItemsSource="{Binding Errors}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="#1D243B" BorderBrush="{DynamicResource BrushBorder}">
+                <DataGrid ItemsSource="{Binding Errors}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Row" Binding="{Binding Row}" Width="50" />
                         <DataGridTextColumn Header="Column" Binding="{Binding Column}" Width="100" />

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -1798,7 +1798,6 @@ namespace FijiPayroll.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PayrollLedgerEmployeeId = table.Column<int>(type: "int", nullable: false),
-                    PayrollLedgerEmployeeId1 = table.Column<int>(type: "int", nullable: false),
                     ComponentCode = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     ComponentName = table.Column<string>(type: "nvarchar(200)", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(50)", nullable: false),
@@ -1810,13 +1809,6 @@ namespace FijiPayroll.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_PayrollLedgerComponents_PayrollLedgerEmployees_PayrollLedgerEmployeeId",
                         column: x => x.PayrollLedgerEmployeeId,
-                        principalSchema: "payroll",
-                        principalTable: "PayrollLedgerEmployees",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PayrollLedgerComponents_PayrollLedgerEmployees_PayrollLedgerEmployeeId1",
-                        column: x => x.PayrollLedgerEmployeeId1,
                         principalSchema: "payroll",
                         principalTable: "PayrollLedgerEmployees",
                         principalColumn: "Id",
@@ -2078,11 +2070,7 @@ namespace FijiPayroll.Persistence.Migrations
                 table: "PayrollLedgerComponents",
                 column: "PayrollLedgerEmployeeId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_PayrollLedgerComponents_PayrollLedgerEmployeeId1",
-                schema: "payroll",
-                table: "PayrollLedgerComponents",
-                column: "PayrollLedgerEmployeeId1");
+
 
             migrationBuilder.CreateIndex(
                 name: "IX_PayrollLedgerEmployees_CompanyId_PayrollLedgerId",

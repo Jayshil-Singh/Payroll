@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FijiPayroll.WPF.Views"
-             xmlns:services="clr-namespace:FijiPayroll.Application.Common.Interfaces;assembly=FijiPayroll.Application"
+             xmlns:services="clr-namespace:FijiPayroll.WPF.Services"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="900"
              Background="Transparent">
@@ -69,8 +69,8 @@
         </Border>
 
         <!-- ── 3. Health Diagnostics Bar ── -->
-        <Border Grid.Row="2" CornerRadius="6,6,0,0" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1,1,1,0">
-            <Grid Height="38" Background="{DynamicResource BrushBgDeep}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" Padding="12,8">
+        <Border Grid.Row="2" CornerRadius="6,6,0,0" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1,1,1,0" Background="{DynamicResource BrushBgDeep}" Padding="12,8">
+            <Grid Height="38">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="Live ViewModels: " Foreground="{DynamicResource BrushTextSecondary}" FontSize="11" VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding LiveViewModelCount}" Foreground="{DynamicResource BrushTextPrimary}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>

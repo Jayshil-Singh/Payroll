@@ -4,7 +4,7 @@
         Title="Fiji BRE - Statutory Package Manager"
         Height="550" Width="750"
         WindowStartupLocation="CenterOwner"
-        Background="{DynamicResource BrushBackground}"
+        Background="{DynamicResource BrushBgDeep}"
         Foreground="{DynamicResource BrushTextPrimary}">
     <Window.Resources>
         <ResourceDictionary Source="../Styles/FluentStyles.xaml" />
@@ -47,14 +47,14 @@
 
             <DockPanel Grid.Column="1">
                 <TextBlock DockPanel.Dock="Top" Text="Verification Trace Log:" Style="{StaticResource BodyText}" Margin="0,0,0,5" FontWeight="SemiBold"/>
-                <TextBox Text="{Binding ValidationLogs, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Background="#171C2E" Foreground="#32CD32" FontFamily="Consolas"/>
+                <TextBox Text="{Binding ValidationLogs, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Background="{DynamicResource BrushBgDeep}" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Consolas"/>
             </DockPanel>
         </Grid>
 
         <!-- Bottom Section: Installed Packages -->
         <DockPanel Grid.Row="2" Margin="0,0,0,15">
             <TextBlock DockPanel.Dock="Top" Text="Installed Statutory Packages:" Style="{StaticResource BodyText}" Margin="0,0,0,5" FontWeight="SemiBold"/>
-            <DataGrid ItemsSource="{Binding InstalledPackages}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="#1D243B" BorderBrush="{DynamicResource BrushBorder}">
+            <DataGrid ItemsSource="{Binding InstalledPackages}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Package Name" Binding="{Binding Name}" Width="2*" />
                     <DataGridTextColumn Header="Version" Binding="{Binding Version}" Width="*" />

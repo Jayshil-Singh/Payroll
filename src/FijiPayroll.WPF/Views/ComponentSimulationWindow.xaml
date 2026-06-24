@@ -4,7 +4,7 @@
         Title="Fiji BRE - Rule Simulation Panel"
         Height="600" Width="800"
         WindowStartupLocation="CenterOwner"
-        Background="{DynamicResource BrushBackground}"
+        Background="{DynamicResource BrushBgDeep}"
         Foreground="{DynamicResource BrushTextPrimary}">
     <Window.Resources>
         <ResourceDictionary Source="../Styles/FluentStyles.xaml" />
@@ -47,11 +47,11 @@
                 <TextBox Text="{Binding ExpressionText, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Height="100" DockPanel.Dock="Top" Margin="0,0,0,10"/>
                 
                 <TextBlock DockPanel.Dock="Top" Text="Simulation Evaluation Trace Logs:" Margin="0,0,0,5" Style="{StaticResource BodyText}" FontWeight="SemiBold" />
-                <TextBox Text="{Binding ExecutionLog, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Background="#171C2E" Foreground="#32CD32" FontFamily="Consolas"/>
+                <TextBox Text="{Binding ExecutionLog, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Background="{DynamicResource BrushBgDeep}" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Consolas"/>
             </DockPanel>
 
             <!-- Results display panel -->
-            <Border Grid.Column="1" Background="#1D243B" CornerRadius="8" Padding="15">
+            <Border Grid.Column="1" Background="{DynamicResource BrushBgPanel}" BorderBrush="{DynamicResource BrushBorder}" BorderThickness="1" CornerRadius="8" Padding="15">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -69,7 +69,7 @@
                         <TextBlock Text="{Binding SimulatedResultValue, StringFormat='FJD {0:N2}'}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource BrushAccent}" Margin="0,0,0,15"/>
 
                         <TextBlock Text="Net Variance" Style="{StaticResource BodyText}" />
-                        <TextBlock Text="{Binding DifferenceValue, StringFormat='FJD {0:N2}'}" FontSize="20" FontWeight="SemiBold" Foreground="#32CD32" />
+                        <TextBlock Text="{Binding DifferenceValue, StringFormat='FJD {0:N2}'}" FontSize="20" FontWeight="SemiBold" Foreground="{DynamicResource BrushAlertGreen}" />
                     </StackPanel>
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">

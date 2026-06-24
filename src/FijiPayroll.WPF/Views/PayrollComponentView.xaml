@@ -72,7 +72,7 @@
                     <Button Content="📦 Package Manager"
                             Command="{Binding OpenPackageManagerCommand}"
                             Style="{StaticResource SecondaryButton}"
-                            Padding="14,8" Margin="0,0,10,0" />       </Button>
+                            Padding="14,8" Margin="0,0,10,0" />
 
                     <!-- New Component Button -->
                     <Button Content="+ New Component"
